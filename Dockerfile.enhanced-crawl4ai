@@ -1,0 +1,72 @@
+# Enhanced Crawl4AI RAG with Global Knowledge Graph Integration
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY crawl4ai-rag/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install additional dependencies for global integration
+RUN pip install --no-cache-dir \
+    neo4j \
+    python-dotenv \
+    fastapi \
+    uvicorn \
+    requests
+
+# Copy the enhanced crawl4ai source code
+COPY crawl4ai-rag/ ./
+
+# Create health check endpoint
+COPY <<EOF ./health_endpoint.py
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+import uvicorn
+import os
+
+app = FastAPI(title="Enhanced Crawl4AI RAG Service")
+
+@app.get("/health")
+async def health_check():
+    return JSONResponse({
+        "status": "healthy",
+        "service": "Enhanced Crawl4AI RAG with Global KG",
+        "neo4j_uri": os.getenv("NEO4J_URI", "not_configured"),
+        "features": [
+            "Global Knowledge Graph Integration",
+            "Sports Organization Analysis", 
+            "Technical Debt Detection",
+            "Business Intelligence Signals",
+            "Premier League Intelligence"
+        ]
+    })
+
+@app.get("/")
+async def root():
+    return {"message": "Enhanced Crawl4AI RAG Service with Global Knowledge Graph Integration"}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+EOF
+
+# Set environment variables
+ENV PYTHONPATH=/app:/app/knowledge_graphs
+ENV PYTHONUNBUFFERED=1
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Default command
+CMD ["python", "health_endpoint.py"] 

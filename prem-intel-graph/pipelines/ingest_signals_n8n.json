@@ -1,0 +1,384 @@
+{
+  "name": "Premier League Signal Ingestion",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "webhook"
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "prem-intel-signals"
+    },
+    {
+      "parameters": {
+        "schedule": "0 */2 * * *",
+        "triggerAtStartup": true
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.cronTrigger",
+      "typeVersion": 1,
+      "position": [240, 400]
+    },
+    {
+      "parameters": {
+        "url": "https://crawl4ai.yourapi.com/crawl",
+        "method": "POST",
+        "body": {
+          "sources": [
+            "https://www.premierleague.com/news",
+            "https://www.bbc.com/sport/football/premier-league",
+            "https://www.skysports.com/premier-league-news",
+            "https://theathletic.com/premier-league/"
+          ],
+          "keywords": [
+            "digital transformation",
+            "fan engagement",
+            "technology investment",
+            "new hire",
+            "partnership",
+            "innovation",
+            "marketing director",
+            "chief digital officer"
+          ]
+        }
+      },
+      "name": "Crawl News Sources",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://linkedin.com/jobs/search",
+        "method": "GET",
+        "qs": {
+          "keywords": "premier league digital marketing technology",
+          "locationId": "101165590",
+          "f_C": "football-clubs"
+        }
+      },
+      "name": "LinkedIn Jobs Scraper",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [480, 400]
+    },
+    {
+      "parameters": {
+        "operation": "execute",
+        "query": "MATCH (c:Club) RETURN c.name as clubName, c.website as website"
+      },
+      "name": "Get Club Websites",
+      "type": "n8n-nodes-base.neo4j",
+      "typeVersion": 1,
+      "position": [480, 500],
+      "credentials": {
+        "neo4j": {
+          "id": "neo4j-prem-intel",
+          "name": "Premier League Neo4j"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// GPT Signal Processing Function\nconst processSignals = (items) => {\n  return items.map(item => {\n    const signal = item.json;\n    \n    // Extract club mentions\n    const clubs = [\n      'Arsenal', 'Chelsea', 'Liverpool', 'Manchester City', \n      'Manchester United', 'Tottenham', 'Brighton', 'Newcastle'\n    ];\n    \n    const mentionedClub = clubs.find(club => \n      signal.headline.includes(club) || signal.content.includes(club)\n    );\n    \n    // Determine signal type\n    let signalType = 'General';\n    if (signal.headline.includes('hire') || signal.headline.includes('appoint')) {\n      signalType = 'Hiring';\n    } else if (signal.headline.includes('digital') || signal.headline.includes('tech')) {\n      signalType = 'Tech Investment';\n    } else if (signal.headline.includes('fan') || signal.headline.includes('engagement')) {\n      signalType = 'Fan Innovation';\n    } else if (signal.headline.includes('partner') || signal.headline.includes('sponsor')) {\n      signalType = 'Partnership';\n    }\n    \n    // Calculate relevance score (0-10)\n    let score = 5.0;\n    const keywords = ['digital', 'innovation', 'technology', 'engagement', 'hire', 'director', 'chief'];\n    keywords.forEach(keyword => {\n      if (signal.headline.toLowerCase().includes(keyword)) score += 0.5;\n      if (signal.content.toLowerCase().includes(keyword)) score += 0.3;\n    });\n    \n    // Cap at 10\n    score = Math.min(score, 10.0);\n    \n    return {\n      json: {\n        headline: signal.headline,\n        summary: signal.content.substring(0, 200) + '...',\n        source: signal.source || 'unknown',\n        date: new Date().toISOString().split('T')[0],\n        score: parseFloat(score.toFixed(1)),\n        intelType: signalType,\n        club: mentionedClub || 'Unknown',\n        sourceUrl: signal.url || ''\n      }\n    };\n  });\n};\n\nreturn processSignals(items);"
+      },
+      "name": "Process Signals with GPT",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "create",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an expert at analyzing Premier League business intelligence signals. Score each signal from 0-10 for commercial opportunity potential for a digital innovation agency."
+            },
+            {
+              "role": "user", 
+              "content": "Analyze this signal: {{$json.headline}} - {{$json.summary}}"
+            }
+          ]
+        }
+      },
+      "name": "GPT Signal Scoring",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [960, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-prem-intel",
+          "name": "OpenAI Premier Intel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "execute",
+        "query": "MERGE (c:Club {name: $clubName})\nMERGE (st:SignalType {name: $signalType})\nCREATE (s:Signal {\n  headline: $headline,\n  summary: $summary,\n  source: $source,\n  date: date($date),\n  score: $score,\n  intelType: $intelType,\n  sourceUrl: $sourceUrl\n})\nMERGE (c)-[:emits]->(s)\nMERGE (s)-[:type]->(st)\nRETURN s"
+      },
+      "name": "Store in Neo4j",
+      "type": "n8n-nodes-base.neo4j",
+      "typeVersion": 1,
+      "position": [1200, 300],
+      "credentials": {
+        "neo4j": {
+          "id": "neo4j-prem-intel",
+          "name": "Premier League Neo4j"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.score}}",
+              "operation": "larger",
+              "value2": 8.5
+            }
+          ]
+        }
+      },
+      "name": "High Priority Filter",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1440, 300]
+    },
+    {
+      "parameters": {
+        "channel": "prem-intel-alerts",
+        "text": "🔥 HIGH-IMPACT SIGNAL DETECTED\\nClub: {{$json.club}}\\nSignal: {{$json.headline}}\\nScore: {{$json.score}}/10\\nType: {{$json.intelType}}\\nDate: {{$json.date}}\\n\\nView in Graph: https://graph.yellowpanther.com/signals/{{$json.id}}"
+      },
+      "name": "Teams Alert",
+      "type": "n8n-nodes-base.microsoftTeams",
+      "typeVersion": 1,
+      "position": [1680, 300],
+      "credentials": {
+        "microsoftTeamsOAuth2Api": {
+          "id": "teams-prem-intel",
+          "name": "Teams Premier Intel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "execute",
+        "query": "MATCH (c:Club {name: $clubName})-[:emits]->(s:Signal)\nWHERE s.date >= date() - duration({days: 60})\n  AND s.intelType IN ['Tech Investment', 'Fan Innovation', 'Digital Transformation']\nRETURN count(s) as signalCount"
+      },
+      "name": "Check Innovation Cycle",
+      "type": "n8n-nodes-base.neo4j",
+      "typeVersion": 1,
+      "position": [1440, 500],
+      "credentials": {
+        "neo4j": {
+          "id": "neo4j-prem-intel",
+          "name": "Premier League Neo4j"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.signalCount}}",
+              "operation": "largerEqual",
+              "value2": 3
+            }
+          ]
+        }
+      },
+      "name": "Innovation Cycle Filter",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1680, 500]
+    },
+    {
+      "parameters": {
+        "channel": "#opportunities",
+        "text": "🚀 INNOVATION CYCLE DETECTED\\nClub: {{$json.club}}\\nSignals: {{$json.signalCount}} innovation signals in 60 days\\n\\nRecommendation: High-priority outreach opportunity\\nTimeline: Contact within 2 weeks while momentum is high"
+      },
+      "name": "Slack Innovation Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1920, 500],
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "slack-prem-intel",
+          "name": "Slack Premier Intel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Log successful ingestion\nconst timestamp = new Date().toISOString();\nconst signalCount = items.length;\n\nconsole.log(`Successfully ingested ${signalCount} signals at ${timestamp}`);\n\nreturn [{\n  json: {\n    timestamp,\n    signalCount,\n    status: 'success'\n  }\n}];"
+      },
+      "name": "Log Success",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [2160, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Crawl News Sources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Crawl News Sources",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn Jobs Scraper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crawl News Sources": {
+      "main": [
+        [
+          {
+            "node": "Process Signals with GPT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Jobs Scraper": {
+      "main": [
+        [
+          {
+            "node": "Process Signals with GPT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Signals with GPT": {
+      "main": [
+        [
+          {
+            "node": "GPT Signal Scoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT Signal Scoring": {
+      "main": [
+        [
+          {
+            "node": "Store in Neo4j",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store in Neo4j": {
+      "main": [
+        [
+          {
+            "node": "High Priority Filter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Innovation Cycle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Priority Filter": {
+      "main": [
+        [
+          {
+            "node": "Teams Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Teams Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Innovation Cycle": {
+      "main": [
+        [
+          {
+            "node": "Innovation Cycle Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Innovation Cycle Filter": {
+      "main": [
+        [
+          {
+            "node": "Slack Innovation Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Innovation Alert": {
+      "main": [
+        [
+          {
+            "node": "Log Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2024-01-20T10:00:00.000Z",
+  "updatedAt": "2024-01-20T10:00:00.000Z",
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "1.0.0"
+} 

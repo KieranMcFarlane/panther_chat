@@ -1,0 +1,36 @@
+{
+  "name": "yellow-panther-ai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "seed-graph": "node scripts/seedGraph.js",
+    "setup": "npm run seed-graph && echo 'Yellow Panther AI setup complete!'"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^1.0.7",
+    "ai": "^4.0.5",
+    "dotenv": "^16.4.7",
+    "neo4j-driver": "^5.27.0",
+    "next": "15.1.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "uuid": "^11.0.4",
+    "vercel": "^39.2.4",
+    "zod": "^3.25.2"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@tailwindcss/postcss": "0.0.0-insiders.7141030",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "15.1.4",
+    "tailwindcss": "^3.5.7",
+    "typescript": "^5.7.3"
+  }
+} 

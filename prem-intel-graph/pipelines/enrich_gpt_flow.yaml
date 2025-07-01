@@ -1,0 +1,369 @@
+# Premier League Intelligence Graph - GPT Enrichment Pipeline
+# This YAML defines the GPT-powered enrichment workflows for signals and stakeholders
+
+name: "Premier League GPT Enrichment Pipeline"
+version: "1.0.0"
+description: "Enhanced signal analysis and stakeholder intelligence using GPT-4"
+
+triggers:
+  - type: "webhook"
+    path: "/enrich-signal"
+    method: "POST"
+  - type: "schedule"
+    cron: "0 4 * * *"  # Daily at 4 AM
+    enabled: true
+
+workflows:
+  
+  signal_enrichment:
+    name: "Signal Intelligence Enrichment"
+    description: "Enhance raw signals with GPT analysis, scoring, and relationship mapping"
+    
+    steps:
+      - name: "validate_input"
+        type: "validation"
+        schema:
+          required: ["headline", "content", "source"]
+          properties:
+            headline:
+              type: "string"
+              maxLength: 200
+            content:
+              type: "string"
+              maxLength: 2000
+            source:
+              type: "string"
+              format: "uri"
+      
+      - name: "extract_entities"
+        type: "gpt_analysis"
+        model: "gpt-4"
+        prompt: |
+          Analyze this Premier League signal and extract key entities and relationships:
+          
+          Headline: {{ headline }}
+          Content: {{ content }}
+          Source: {{ source }}
+          
+          Extract and structure the following information:
+          1. Club(s) mentioned (exact name matching Premier League clubs)
+          2. Stakeholder names and titles mentioned
+          3. Signal type classification: Hiring, Tech Investment, Fan Innovation, Partnership, Digital Transformation, Sponsorship
+          4. Key topics and themes
+          5. Urgency level (1-5)
+          6. Business impact assessment
+          
+          Respond in JSON format with the extracted entities.
+        
+        output_schema:
+          type: "object"
+          properties:
+            clubs:
+              type: "array"
+              items:
+                type: "string"
+            stakeholders:
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+                  title:
+                    type: "string"
+                  club:
+                    type: "string"
+            signal_type:
+              type: "string"
+              enum: ["Hiring", "Tech Investment", "Fan Innovation", "Partnership", "Digital Transformation", "Sponsorship"]
+            topics:
+              type: "array"
+              items:
+                type: "string"
+            urgency:
+              type: "integer"
+              minimum: 1
+              maximum: 5
+            business_impact:
+              type: "string"
+      
+      - name: "score_opportunity"
+        type: "gpt_analysis"
+        model: "gpt-4"
+        prompt: |
+          Score this Premier League signal for commercial opportunity potential for Yellow Panther (digital innovation agency):
+          
+          Signal: {{ headline }}
+          Club(s): {{ clubs }}
+          Type: {{ signal_type }}
+          Content: {{ content }}
+          
+          Score from 0-10 considering:
+          1. Relevance to digital innovation/fan engagement (0-3 points)
+          2. Decision-maker accessibility (0-2 points)
+          3. Project scale potential (0-2 points)
+          4. Timing urgency (0-2 points)
+          5. Competitive landscape (0-1 points)
+          
+          Provide:
+          - Total score (0-10)
+          - Breakdown by category
+          - 2-sentence reasoning
+          - Recommended action priority (Low/Medium/High/Critical)
+        
+        output_schema:
+          type: "object"
+          properties:
+            score:
+              type: "number"
+              minimum: 0
+              maximum: 10
+            breakdown:
+              type: "object"
+              properties:
+                relevance:
+                  type: "number"
+                accessibility:
+                  type: "number"
+                scale:
+                  type: "number"
+                timing:
+                  type: "number"
+                competition:
+                  type: "number"
+            reasoning:
+              type: "string"
+            priority:
+              type: "string"
+              enum: ["Low", "Medium", "High", "Critical"]
+      
+      - name: "identify_stakeholders"
+        type: "gpt_analysis"
+        model: "gpt-4"
+        prompt: |
+          Based on this signal about {{ clubs }}, identify key stakeholders who would be involved in digital innovation decisions:
+          
+          Signal: {{ headline }}
+          Type: {{ signal_type }}
+          
+          For each club mentioned, identify:
+          1. Likely decision makers for this type of initiative
+          2. Influence level (1-5)
+          3. Department/function
+          4. Why they would be involved
+          
+          Consider typical Premier League club structures and this specific signal type.
+        
+        output_schema:
+          type: "object"
+          properties:
+            stakeholders:
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  name:
+                    type: "string"
+                  title:
+                    type: "string"
+                  club:
+                    type: "string"
+                  department:
+                    type: "string"
+                  influence_level:
+                    type: "integer"
+                    minimum: 1
+                    maximum: 5
+                  involvement_reason:
+                    type: "string"
+      
+      - name: "generate_insights"
+        type: "gpt_analysis"
+        model: "gpt-4"
+        prompt: |
+          Generate strategic insights for Yellow Panther based on this Premier League signal:
+          
+          Signal: {{ headline }}
+          Score: {{ score }}
+          Priority: {{ priority }}
+          Clubs: {{ clubs }}
+          
+          Provide:
+          1. Market opportunity assessment
+          2. Competitive positioning advice
+          3. Outreach strategy recommendations
+          4. Timing considerations
+          5. Success probability estimate
+        
+        output_schema:
+          type: "object"
+          properties:
+            market_opportunity:
+              type: "string"
+            competitive_advice:
+              type: "string"
+            outreach_strategy:
+              type: "array"
+              items:
+                type: "string"
+            timing_notes:
+              type: "string"
+            success_probability:
+              type: "integer"
+              minimum: 0
+              maximum: 100
+
+  stakeholder_analysis:
+    name: "Stakeholder Intelligence Analysis"
+    description: "Analyze and enrich stakeholder profiles with GPT insights"
+    
+    steps:
+      - name: "analyze_profile"
+        type: "gpt_analysis"
+        model: "gpt-4"
+        prompt: |
+          Analyze this Premier League stakeholder for partnership potential:
+          
+          Name: {{ name }}
+          Title: {{ title }}
+          Club: {{ club }}
+          LinkedIn: {{ linkedin_url }}
+          Background: {{ background }}
+          Recent signals: {{ recent_signals }}
+          
+          Assess:
+          1. Decision-making authority (0-3)
+          2. Innovation focus (0-2)
+          3. External agency openness (0-2)
+          4. Budget influence (0-2)
+          5. Career trajectory (0-1)
+          
+          Provide influence score (0-10) and recommend outreach approach.
+        
+        output_schema:
+          type: "object"
+          properties:
+            authority_score:
+              type: "number"
+            innovation_score:
+              type: "number"
+            openness_score:
+              type: "number"
+            budget_score:
+              type: "number"
+            trajectory_score:
+              type: "number"
+            total_influence:
+              type: "number"
+            outreach_approach:
+              type: "string"
+            best_contact_method:
+              type: "string"
+            timing_recommendation:
+              type: "string"
+
+  relationship_mapping:
+    name: "Relationship Network Analysis"
+    description: "Map and analyze stakeholder relationships and connection paths"
+    
+    steps:
+      - name: "identify_connections"
+        type: "gpt_analysis"
+        model: "gpt-4"
+        prompt: |
+          Based on the career histories and backgrounds, identify potential relationship connections:
+          
+          Target: {{ target_stakeholder }}
+          Network: {{ stakeholder_list }}
+          
+          Find:
+          1. Direct connections (same company, overlapping roles)
+          2. Indirect connections (shared contacts, industry events)
+          3. Professional communities (associations, conferences)
+          4. Educational backgrounds
+          
+          Recommend warm introduction paths.
+        
+        output_schema:
+          type: "object"
+          properties:
+            direct_connections:
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  connector:
+                    type: "string"
+                  relationship_type:
+                    type: "string"
+                  strength:
+                    type: "number"
+                  context:
+                    type: "string"
+
+configurations:
+  gpt_settings:
+    model: "gpt-4"
+    temperature: 0.3
+    max_tokens: 1500
+    timeout: 30
+    retry_attempts: 3
+  
+  data_sources:
+    neo4j:
+      connection_string: "${NEO4J_CONNECTION}"
+      database: "prem-intel"
+    
+    external_apis:
+      linkedin:
+        enabled: true
+        rate_limit: 100  # requests per hour
+      
+      companies_house:
+        enabled: true
+        api_key: "${COMPANIES_HOUSE_API_KEY}"
+  
+  output_destinations:
+    neo4j:
+      enabled: true
+      batch_size: 50
+    
+    webhook:
+      enabled: true
+      url: "${DASHBOARD_WEBHOOK_URL}"
+      headers:
+        authorization: "Bearer ${DASHBOARD_API_KEY}"
+    
+    alerts:
+      teams:
+        enabled: true
+        webhook_url: "${TEAMS_WEBHOOK_URL}"
+        high_priority_threshold: 8.5
+      
+      slack:
+        enabled: true
+        channel: "#opportunities"
+        innovation_cycle_threshold: 3
+
+monitoring:
+  logging:
+    level: "INFO"
+    retention_days: 30
+  
+  metrics:
+    - name: "signals_processed"
+      type: "counter"
+    - name: "gpt_api_calls"
+      type: "counter"
+    - name: "enrichment_duration"
+      type: "histogram"
+    - name: "signal_scores"
+      type: "gauge"
+  
+  alerts:
+    - name: "high_failure_rate"
+      condition: "failure_rate > 0.1"
+      action: "send_alert"
+    - name: "gpt_quota_exceeded"
+      condition: "gpt_calls_per_hour > 1000"
+      action: "throttle_requests" 

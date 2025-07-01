@@ -1,0 +1,162 @@
+{
+  "agencies": [
+    {
+      "name": "Yellow Panther",
+      "specialty": "Digital Innovation & Fan Engagement",
+      "pastWork": "Man City digital transformation, Arsenal fan app development",
+      "partnerships": [
+        {
+          "club": "Manchester City",
+          "startDate": "2023-01-15",
+          "projectType": "Digital Transformation",
+          "status": "active"
+        }
+      ],
+      "stakeholder_connections": [
+        {
+          "name": "Sarah Johnson",
+          "title": "Head of Digital Innovation",
+          "club": "Manchester City",
+          "relationship": "direct_contact"
+        }
+      ]
+    },
+    {
+      "name": "Lagardère Sports",
+      "specialty": "Sports Marketing & Digital",
+      "pastWork": "Chelsea partnerships, Liverpool sponsorship activation",
+      "partnerships": [
+        {
+          "club": "Chelsea FC",
+          "startDate": "2022-08-01",
+          "projectType": "Sponsorship Activation",
+          "status": "active"
+        },
+        {
+          "club": "Liverpool FC",
+          "startDate": "2023-03-10",
+          "projectType": "Commercial Partnerships",
+          "status": "active"
+        }
+      ],
+      "stakeholder_connections": [
+        {
+          "name": "Tom Glick",
+          "title": "Chief Operating Officer",
+          "club": "Chelsea FC",
+          "relationship": "partnership_lead"
+        }
+      ]
+    },
+    {
+      "name": "Octagon",
+      "specialty": "Sports Marketing",
+      "pastWork": "Premier League digital rights, club partnerships",
+      "partnerships": [
+        {
+          "club": "Tottenham Hotspur",
+          "startDate": "2023-06-01",
+          "projectType": "Stadium Naming Rights",
+          "status": "active"
+        }
+      ],
+      "stakeholder_connections": []
+    },
+    {
+      "name": "Two Circles",
+      "specialty": "Data-Driven Sports Marketing",
+      "pastWork": "Arsenal data analytics, Brighton fan segmentation",
+      "partnerships": [
+        {
+          "club": "Arsenal",
+          "startDate": "2023-09-15",
+          "projectType": "Fan Analytics Platform",
+          "status": "active"
+        }
+      ],
+      "stakeholder_connections": [
+        {
+          "name": "Juliet Slot",
+          "title": "Chief Marketing Officer",
+          "club": "Arsenal",
+          "relationship": "project_sponsor"
+        }
+      ]
+    },
+    {
+      "name": "Wasserman",
+      "specialty": "Sports Marketing & Talent",
+      "pastWork": "Manchester United commercial deals, Newcastle sponsorships",
+      "partnerships": [
+        {
+          "club": "Manchester United",
+          "startDate": "2022-11-20",
+          "projectType": "Commercial Strategy",
+          "status": "active"
+        }
+      ],
+      "stakeholder_connections": []
+    },
+    {
+      "name": "Endeavor",
+      "specialty": "Entertainment & Sports Marketing",
+      "pastWork": "Global Premier League rights management",
+      "partnerships": [],
+      "stakeholder_connections": []
+    }
+  ],
+  "unpartnered_opportunities": [
+    {
+      "club": "Brighton & Hove Albion",
+      "tier": "Mid-Table",
+      "digitalMaturity": "High",
+      "opportunity_type": "Digital Innovation Partnership",
+      "signals": [
+        "Recent hire of Head of Digital",
+        "Investment in fan engagement technology",
+        "Focus on data-driven decision making"
+      ]
+    },
+    {
+      "club": "Brentford",
+      "tier": "Mid-Table", 
+      "digitalMaturity": "High",
+      "opportunity_type": "Analytics & Fan Engagement",
+      "signals": [
+        "Data-driven recruitment success",
+        "Innovative stadium technology",
+        "Growing fan base engagement"
+      ]
+    },
+    {
+      "club": "Newcastle United",
+      "tier": "Mid-Table",
+      "digitalMaturity": "Medium",
+      "opportunity_type": "Digital Transformation",
+      "signals": [
+        "New ownership investment",
+        "Stadium modernization plans",
+        "Global brand expansion"
+      ]
+    },
+    {
+      "club": "Aston Villa",
+      "tier": "Mid-Table",
+      "digitalMaturity": "Medium", 
+      "opportunity_type": "Fan Engagement Platform",
+      "signals": [
+        "European competition return",
+        "Young fanbase growth",
+        "Digital content expansion"
+      ]
+    }
+  ],
+  "market_intelligence": {
+    "total_clubs": 20,
+    "partnered_clubs": 6,
+    "unpartnered_clubs": 14,
+    "high_digital_maturity_unpartnered": 3,
+    "big_6_unpartnered": 3,
+    "emerging_opportunities": 8
+  }
+} 

@@ -1,0 +1,21 @@
+name,tier,location,digitalMaturity,website,founded,stadium
+Arsenal,Big 6,London,High,https://www.arsenal.com,1886,Emirates Stadium
+Chelsea FC,Big 6,London,High,https://www.chelseafc.com,1905,Stamford Bridge
+Liverpool FC,Big 6,Liverpool,Very High,https://www.liverpoolfc.com,1892,Anfield
+Manchester City,Big 6,Manchester,Very High,https://www.mancity.com,1880,Etihad Stadium
+Manchester United,Big 6,Manchester,High,https://www.manutd.com,1878,Old Trafford
+Tottenham Hotspur,Big 6,London,Medium,https://www.tottenhamhotspur.com,1882,Tottenham Hotspur Stadium
+Brighton & Hove Albion,Mid-Table,Brighton,High,https://www.brightonandhovealbion.com,1901,American Express Community Stadium
+Aston Villa,Mid-Table,Birmingham,Medium,https://www.avfc.co.uk,1874,Villa Park
+Newcastle United,Mid-Table,Newcastle,Medium,https://www.nufc.co.uk,1892,St. James' Park
+West Ham United,Mid-Table,London,Medium,https://www.whufc.com,1895,London Stadium
+Crystal Palace,Mid-Table,London,Low,https://www.cpfc.co.uk,1905,Selhurst Park
+Fulham,Mid-Table,London,Medium,https://www.fulhamfc.com,1879,Craven Cottage
+Brentford,Mid-Table,London,High,https://www.brentfordfc.com,1889,Brentford Community Stadium
+Wolverhampton Wanderers,Mid-Table,Wolverhampton,Low,https://www.wolves.co.uk,1877,Molineux Stadium
+Everton,Mid-Table,Liverpool,Low,https://www.evertonfc.com,1878,Goodison Park
+Nottingham Forest,Mid-Table,Nottingham,Low,https://www.nottinghamforest.co.uk,1865,City Ground
+Bournemouth,Lower-Table,Bournemouth,Medium,https://www.afcb.co.uk,1899,Vitality Stadium
+Sheffield United,Lower-Table,Sheffield,Low,https://www.sufc.co.uk,1889,Bramall Lane
+Burnley,Lower-Table,Burnley,Low,https://www.burnleyfc.com,1882,Turf Moor
+Luton Town,Lower-Table,Luton,Low,https://www.lutontown.co.uk,1885,Kenilworth Road 
