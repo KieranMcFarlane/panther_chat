@@ -1,0 +1,40 @@
+,Federation,Sport,Website URL,Mobile App,Digital Weakness,Opportunity Type,Notes
+0,World Aquatics,Swimming/Diving/Water Polo,worldaquatics.com,Yes,Site shows legacy design; app unclear or limited,Website (potential app audit),"Major IF, undergoing rebrand"
+1,Federation Internationale de Volleyball (FIVB),Volleyball,fivb.com,Yes,"UX dated, limited content interactivity",App + Website,"Large global audience, potential for richer content and fan data layer"
+2,International Canoe Federation (ICF),Canoeing,canoeicf.com,No,Basic layout; no fan-data capture; non-responsive design,Website,Likely no recent audit or personalization strategy
+3,World Rowing,Rowing,worldrowing.com,Yes,"Minimal push notifications, dated UX",App + Website,"Olympic IF, presence but limited mobile engagement"
+4,International Weightlifting Federation (IWF),Weightlifting,iwf.sport,No,"Static site, no personalization or data tools",Website,High-profile but low digital evolution
+5,International Table Tennis Federation (ITTF),Table Tennis,worldtabletennis.com,No,"Non-responsive, lacks fan engagement funnel",Website,Undergoing digital roadmap effort; timing good
+6,International Fencing Federation (FIE),Fencing,fie.org,No,Functional but lacking live/dynamic features,Website,"MSI tenant, ripe for modernization"
+7,World Boxing,Amateur Boxing,worldboxing.sport,No,"New federation, no digital infra",Website + App,"IOC-recognized (2025), greenfield opportunity"
+8,Global Esports Federation,Esports,globalesports.org,No,"No mobile app, limited site personalization",App + Website,Backed by Amazon and MGM; still immature digitally
+9,International Esports Federation,Esports,iesf.org,No,"Basic UX, low engagement features",App + Website,Growing fast; lacks full fan digital framework
+10,World Lacrosse,Lacrosse,worldlacrosse.sport,No,"Event-focused, no mobile strategy",App + Website,Post-Olympic growth IF; ready for foundational systems
+11,International Korfball Federation (IKF),Korfball,korfball.sport,No,"Relies on YouTube, no integrated platform",App + Website,Desire to modernize previously expressed
+12,International Chess Federation (FIDE),Chess,fide.com,Yes,App lacks community tools,App + Website,Growing esport crossover potential
+13,World Athletics,Athletics,worldathletics.org,Yes,Well-developed but could improve personalization,App + Website,Strong engagement but complexity in navigation
+14,Federation Internationale de Football Association,Football,fifa.com,Yes,"Highly polished, but legacy systems under the hood",Website Optimization,"High maturity, room for modular innovation"
+15,International Tennis Federation,Tennis,itftennis.com,Yes,Outdated interface in sections,App + Website,Fan personalization not fully implemented
+16,Federation Internationale de Basketball,Basketball,fiba.basketball,Yes,Some usability issues in live stats,App + Website,"Strong platform, could benefit from interactive upgrades"
+17,Union Cycliste Internationale,Cycling,uci.org,Yes,Low content dynamism; dated architecture,Website,Could benefit from better visual storytelling
+18,Federation Internationale de Gymnastique,Gymnastics,gymnastics.sport,No,"Lacks mobile app, some navigation issues",Website + App,"Strong sport presence, digital backend limited"
+19,United World Wrestling,Wrestling,uww.org,Yes,"Solid base, not mobile-first in some areas",Website Optimization,Can optimize for fan data collection
+20,International Judo Federation,Judo,ijf.org,Yes,No app presence; web is info-heavy,Website + App,Needs simplification and fan flow design
+21,International Ski and Snowboard Federation,Ski & Snowboard,fis-ski.com,Yes,"Complex layout, inconsistent UX",Website Optimization,"Deep content, poor discoverability"
+22,International Skating Union,Ice Skating,isu.org,Yes,No real-time updates; fragmented media,App + Website,Visual UX refresh needed
+23,International Biathlon Union,Biathlon,biathlonworld.com,Yes,"Heavy and slow, poor interactivity",App + Website,Could benefit from performance upgrades
+24,World Archery Federation,Archery,worldarchery.sport,Yes,Limited content refresh cycles,App + Website,"Well-structured, lacks personalization"
+25,World Taekwondo,Taekwondo,worldtaekwondo.org,No,"Static, lacks modern UX",Website + App,Dated CMS structure
+26,World Rugby,Rugby Union,world.rugby,Yes,"Strong platform, UX complexity",Website Optimization,Commercial pathways strong
+27,World Sailing,Sailing,sailing.org,No,"Poor responsiveness, minimal engagement",Website,Opportunity to rebuild UX from ground up
+28,Badminton World Federation,Badminton,bwfbadminton.com,Yes,"Low engagement on app, generic structure",App + Website,Needs enhanced fan interaction
+29,International Shooting Sport Federation,Shooting,issf-sports.org,No,"Dense info, not mobile-friendly",Website + App,Technical language; lacks user flow
+30,Union Internationale de Pentathlon Moderne,Modern Pentathlon,uipmworld.org,No,"No fan features, event-only focus",Website + App,Could reframe for community building
+31,International Golf Federation,Golf,igfgolf.org,No,"Institutional style, low fan pathway",Website,Elite sport but digital story underplayed
+32,International Handball Federation,Handball,ihf.info,Yes,"Confusing nav, heavy layout",App + Website,"Good data, poor delivery"
+33,International Cricket Council,Cricket,icc-cricket.com,Yes,"Strong engagement, some legacy tech",App Optimization,"Global reach, local variation"
+34,World Baseball Softball Confederation,Baseball/Softball,wbsc.org,Yes,"Limited user flows, few interactive features",Website + App,Growing Olympic relevance
+35,World Squash Federation,Squash,worldsquash.org,No,"Highly static, poor design",Website + App,Needs rethinking digital journey
+36,World Netball,Netball,netball.sport,No,Minimal digital toolkit,Website + App,"High global participation, low digital activation"
+37,World Karate Federation,Karate,wkf.net,Yes,Limited live or fan components,App + Website,"Engaged audience, under-leveraged"
+38,International Federation of American Football,American Football,ifaf.org,No,"No app, dated pages",Website + App,Growth-focused federation

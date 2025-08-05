@@ -1,0 +1,17 @@
+[Unit]
+Description=Yellow Panther AI Dashboard (Port 3217)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/yellow-panther-ai
+Environment=PORT=3217
+ExecStart=/usr/bin/npm run dev -- -p 3217
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target 

@@ -1,0 +1,186 @@
+{
+  "name": "International Federations Monitoring Pipeline",
+  "description": "Monitor international sports federations for RFP and digital project opportunities",
+  "version": "1.0.0",
+  "monitoring_sources": {
+    "tier_1_federations": [
+      {
+        "name": "FIFA",
+        "website": "fifa.com",
+        "sources": [
+          "https://fifa.com/news",
+          "https://fifa.com/about-fifa/commercial",
+          "https://fifa.com/about-fifa/media-centre"
+        ],
+        "linkedin": "https://www.linkedin.com/company/fifa",
+        "priority": "high",
+        "keywords": ["digital transformation", "mobile app", "fan engagement", "technology platform"]
+      },
+      {
+        "name": "World Athletics",
+        "website": "worldathletics.org",
+        "sources": [
+          "https://worldathletics.org/news",
+          "https://worldathletics.org/about-iaaf/structure"
+        ],
+        "linkedin": "https://www.linkedin.com/company/world-athletics",
+        "priority": "high",
+        "keywords": ["digital innovation", "broadcasting technology", "fan experience"]
+      },
+      {
+        "name": "FIBA",
+        "website": "fiba.basketball",
+        "sources": [
+          "https://fiba.basketball/news",
+          "https://fiba.basketball/en/Module/OlympicGames/Tokyo2020/news"
+        ],
+        "linkedin": "https://www.linkedin.com/company/fiba---international-basketball-federation",
+        "priority": "high",
+        "keywords": ["live streaming", "mobile app", "digital platform"]
+      },
+      {
+        "name": "World Rugby",
+        "website": "world.rugby",
+        "sources": [
+          "https://world.rugby/news",
+          "https://world.rugby/organisation/commercial"
+        ],
+        "linkedin": "https://www.linkedin.com/company/world-rugby",
+        "priority": "high",
+        "keywords": ["digital transformation", "fan engagement", "technology partnership"]
+      },
+      {
+        "name": "ICC",
+        "website": "icc-cricket.com",
+        "sources": [
+          "https://icc-cricket.com/news",
+          "https://icc-cricket.com/about/commercial"
+        ],
+        "linkedin": "https://www.linkedin.com/company/international-cricket-council",
+        "priority": "high",
+        "keywords": ["digital platform", "mobile app", "fan experience"]
+      },
+      {
+        "name": "Global Esports Federation",
+        "website": "globalesports.org",
+        "sources": [
+          "https://globalesports.org/news",
+          "https://globalesports.org/partners"
+        ],
+        "linkedin": "https://www.linkedin.com/company/global-esports-federation",
+        "priority": "very_high",
+        "keywords": ["digital platform", "mobile gaming", "fan engagement", "streaming technology"]
+      }
+    ],
+    "tier_2_federations": [
+      {
+        "name": "FIVB",
+        "website": "fivb.com",
+        "sources": ["https://fivb.com/en/news"],
+        "linkedin": "https://www.linkedin.com/company/fivb",
+        "priority": "medium",
+        "keywords": ["digital content", "mobile app", "fan data"]
+      },
+      {
+        "name": "World Boxing",
+        "website": "worldboxing.sport",
+        "sources": ["https://worldboxing.sport/news"],
+        "linkedin": "https://www.linkedin.com/company/world-boxing",
+        "priority": "very_high",
+        "keywords": ["digital infrastructure", "mobile app", "greenfield opportunity"]
+      },
+      {
+        "name": "International Table Tennis Federation",
+        "website": "worldtabletennis.com",
+        "sources": ["https://worldtabletennis.com/news"],
+        "linkedin": "https://www.linkedin.com/company/ittf",
+        "priority": "medium",
+        "keywords": ["digital roadmap", "website modernization", "fan engagement"]
+      },
+      {
+        "name": "World Netball",
+        "website": "netball.sport", 
+        "sources": ["https://netball.sport/news"],
+        "linkedin": "https://www.linkedin.com/company/world-netball",
+        "priority": "medium",
+        "keywords": ["digital activation", "mobile app", "global participation"]
+      }
+    ],
+    "tier_3_federations": [
+      {
+        "name": "International Canoe Federation",
+        "website": "canoeicf.com",
+        "sources": ["https://canoeicf.com/news"],
+        "linkedin": "https://www.linkedin.com/company/international-canoe-federation",
+        "priority": "low",
+        "keywords": ["website audit", "responsive design", "fan data"]
+      },
+      {
+        "name": "World Sailing",
+        "website": "sailing.org",
+        "sources": ["https://sailing.org/news"],
+        "linkedin": "https://www.linkedin.com/company/world-sailing",
+        "priority": "medium",
+        "keywords": ["UX rebuild", "responsive design", "engagement platform"]
+      }
+    ]
+  },
+  "rfp_keywords": {
+    "primary": [
+      "request for proposal",
+      "RFP",
+      "tender",
+      "procurement",
+      "expression of interest",
+      "EOI",
+      "request for tender",
+      "RFT",
+      "invitation to tender",
+      "ITT"
+    ],
+    "digital_projects": [
+      "mobile app development",
+      "digital transformation",
+      "website redesign",
+      "digital platform",
+      "fan engagement platform",
+      "mobile application",
+      "app development",
+      "digital innovation",
+      "technology upgrade",
+      "digital modernization"
+    ],
+    "technology_terms": [
+      "streaming technology",
+      "live broadcasting",
+      "content management system",
+      "CMS",
+      "customer relationship management",
+      "CRM",
+      "data analytics platform",
+      "mobile-first design",
+      "responsive design",
+      "user experience",
+      "UX design"
+    ]
+  },
+  "alert_configuration": {
+    "rfp_multiplier": 3.0,
+    "digital_project_multiplier": 2.5,
+    "partnership_multiplier": 2.0,
+    "hiring_multiplier": 1.2,
+    "thresholds": {
+      "critical": 9.0,
+      "high": 8.5,
+      "medium": 7.0,
+      "low": 5.0
+    }
+  },
+  "scraping_schedule": {
+    "tier_1": "every_2_hours",
+    "tier_2": "every_4_hours", 
+    "tier_3": "daily",
+    "linkedin_jobs": "daily",
+    "news_sources": "every_2_hours"
+  }
+} 
