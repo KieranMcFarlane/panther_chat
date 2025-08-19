@@ -1,9 +1,9 @@
 const neo4j = require('neo4j-driver');
-require('dotenv').config({ path: '.env.local' });
 
+// Direct connection to local Neo4j Docker container
 const driver = neo4j.driver(
-  process.env.NEO4J_URI,
-  neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
+  'bolt://localhost:7687',
+  neo4j.auth.basic('neo4j', 'pantherpassword')
 );
 
 async function seedYellowPantherGraph() {

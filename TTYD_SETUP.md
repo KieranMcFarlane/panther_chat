@@ -218,3 +218,5 @@ If you encounter issues:
 2. Review the logs: `./manage-ttyd.sh logs`
 3. Verify the service status: `./manage-ttyd.sh status`
 4. Check the TTYD documentation: https://github.com/tsl0922/ttyd
+
+
