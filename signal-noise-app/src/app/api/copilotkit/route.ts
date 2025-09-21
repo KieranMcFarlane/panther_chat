@@ -1,13 +1,16 @@
 import {
   CopilotRuntime,
-  ExperimentalEmptyAdapter,
+  OpenAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
 } from "@copilotkit/runtime";
 import { NextRequest } from "next/server";
 import { canvasAgent } from "@/mastra/agents";
 
-// 1. You can use any service adapter here for multi-agent support.
-const serviceAdapter = new ExperimentalEmptyAdapter();
+// 1. Use OpenAI adapter for proper LLM integration
+const serviceAdapter = new OpenAIAdapter({
+  model: "gpt-4o-mini",
+  apiKey: process.env.OPENAI_API_KEY!,
+});
 
 // 2. Build a Next.js API route that handles the CopilotKit runtime requests.
 export const POST = async (req: NextRequest) => {
