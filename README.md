@@ -1,3 +1,25 @@
+# 🐆 Yellow Panther AI - Sports Intelligence & Knowledge Graph System
+
+## 📚 **Documentation**
+
+All documentation has been organized in the [`/docs`](./docs/) directory:
+
+- **[📖 Documentation Index](./docs/README.md)** - Complete documentation overview
+- **🏆 [Sports Intelligence](./docs/sports-intelligence/)** - Sports entity enrichment and targeting
+- **🏗️ [Schemas & Frameworks](./docs/schemas/)** - Database schemas and enrichment frameworks  
+- **⚙️ [System Guides](./docs/system-guides/)** - Technical setup and configuration
+- **🚀 [Deployment](./docs/deployment/)** - Deployment guides and server configuration
+- **🔗 [Integrations](./docs/integrations/)** - API integrations and MCP servers
+- **📋 [Projects](./docs/projects/)** - Project overviews and documentation
+
+## 🎯 **Quick Start**
+
+1. **Sports Intelligence**: Start with [Yellow Panther Optimized Targeting Schema](./docs/sports-intelligence/YELLOW_PANTHER_OPTIMIZED_TARGETING_SCHEMA.md)
+2. **System Setup**: Begin with [Neo4j Connection Guide](./docs/system-guides/NEO4J_CONNECTION_GUIDE.md)  
+3. **Project Overview**: Read [Project Summary](./docs/projects/PROJECT_SUMMARY.md)
+
+---
+
 # Yellow Panther AI - Sales Intelligence System
 
 A powerful Next.js application that combines **Agentic RAG**, **LinkedIn Scraping via BrightData MCP**, and **Neo4j Knowledge Graph** to help Yellow Panther win and maintain mobile app projects for Premier League, Team GB, and Premier Padel.

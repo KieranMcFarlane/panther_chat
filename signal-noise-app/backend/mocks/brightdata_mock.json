@@ -1,0 +1,18 @@
+{
+  "source": "brightdata",
+  "data": {
+    "company": "Manchester United",
+    "website": "https://www.manutd.com",
+    "recent_news": [
+      {"title": "Manchester United secures new sponsorship with Adidas", "date": "2025-08-15"},
+      {"title": "Expansion plans for Old Trafford stadium", "date": "2025-08-10"}
+    ],
+    "contacts": [
+      {"name": "Richard Arnold", "role": "CEO"},
+      {"name": "Erik ten Hag", "role": "Manager"}
+    ]
+  }
+}
+
+
+

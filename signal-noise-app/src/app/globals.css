@@ -1,0 +1,343 @@
+@import url('/fonts/satoshi.css');
+@import url('/fonts/bebas-neue.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 24, 30, 44;
+  --background-end-rgb: 24, 30, 44;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 24, 30, 44;
+    --background-end-rgb: 24, 30, 44;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+/* Football Manager Style Font Hierarchy */
+
+/* 🟣 Title/Header - Bebas Neue */
+.font-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 1.75rem; /* 28px */
+  line-height: 1.1;
+}
+
+.font-header-large {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 2rem; /* 32px */
+  line-height: 1.1;
+}
+
+.font-header-small {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.1;
+}
+
+/* 🔵 Subheader/Entity Name - Satoshi Bold */
+.font-subheader {
+  font-family: 'Satoshi-Bold', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.3;
+}
+
+.font-subheader-large {
+  font-family: 'Satoshi-Bold', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.3;
+}
+
+.font-subheader-small {
+  font-family: 'Satoshi-Bold', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 1rem; /* 16px */
+  line-height: 1.3;
+}
+
+/* 🟡 Primary Body - Satoshi Regular/Medium */
+.font-body-primary {
+  font-family: 'Satoshi-Regular', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  font-size: 1rem; /* 16px */
+  line-height: 1.5;
+}
+
+.font-body-primary-large {
+  font-family: 'Satoshi-Regular', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.5;
+}
+
+.font-body-medium {
+  font-family: 'Satoshi-Medium', sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  font-size: 1rem; /* 16px */
+  line-height: 1.5;
+}
+
+.font-body-medium-small {
+  font-family: 'Satoshi-Medium', sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.4;
+}
+
+/* ⚪ Secondary Body - Satoshi Regular */
+.font-body-secondary {
+  font-family: 'Satoshi-Regular', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.4;
+}
+
+.font-body-secondary-small {
+  font-family: 'Satoshi-Regular', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.4;
+}
+
+/* 🔘 Meta/Hint Text - Satoshi Regular Italic */
+.font-meta {
+  font-family: 'Satoshi-Italic', sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.005em;
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.4;
+}
+
+.font-meta-medium {
+  font-family: 'Satoshi-Italic', sans-serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.005em;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.4;
+}
+
+/* 🟠 Value/Price Highlights - Satoshi Bold */
+.font-highlight {
+  font-family: 'Satoshi-Bold', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.3;
+}
+
+.font-highlight-large {
+  font-family: 'Satoshi-Bold', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.3;
+}
+
+.font-highlight-small {
+  font-family: 'Satoshi-Bold', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.3;
+}
+
+/* Football Manager Color Hierarchy */
+.text-header {
+  color: #FFFFFF; /* Pure white for headers */
+}
+
+.text-subheader {
+  color: #F5F5F5; /* Off-white for entity names */
+}
+
+.text-body-primary {
+  color: #E0E0E0; /* Light grey for main content */
+}
+
+.text-body-primary-dimmed {
+  color: #D0D0D0; /* Slightly dimmed primary */
+}
+
+.text-body-secondary {
+  color: #A0A0A0; /* Medium grey for less important content */
+}
+
+.text-body-tertiary {
+  color: #909090; /* Darker grey for subtle content */
+}
+
+.text-meta {
+  color: #888888; /* Dark grey for timestamps, footnotes */
+}
+
+.text-meta-subtle {
+  color: #757575; /* Even subtler for disclaimers */
+}
+
+.text-highlight {
+  color: #FDCB58; /* Football Manager yellow for values */
+}
+
+.text-highlight-white {
+  color: #FFFFFF; /* White highlights for emphasis */
+}
+
+.text-highlight-success {
+  color: #4ADE80; /* Green for positive values */
+}
+
+.text-highlight-warning {
+  color: #FB923C; /* Orange for warnings */
+}
+
+.text-highlight-danger {
+  color: #F87171; /* Red for negative values */
+}
+
+/* Responsive Font Sizing - Football Manager Style */
+
+/* Headers - Mobile First */
+@media (max-width: 767px) {
+  .font-header { font-size: 1.5rem; } /* 24px */
+  .font-header-large { font-size: 1.75rem; } /* 28px */
+  .font-header-small { font-size: 1.25rem; } /* 20px */
+  
+  .font-subheader { font-size: 1rem; } /* 16px */
+  .font-subheader-large { font-size: 1.125rem; } /* 18px */
+  .font-subheader-small { font-size: 0.875rem; } /* 14px */
+  
+  .font-body-primary { font-size: 0.875rem; } /* 14px */
+  .font-body-primary-large { font-size: 1rem; } /* 16px */
+  .font-body-medium { font-size: 0.875rem; } /* 14px */
+  .font-body-medium-small { font-size: 0.75rem; } /* 12px */
+  
+  .font-body-secondary { font-size: 0.75rem; } /* 12px */
+  .font-body-secondary-small { font-size: 0.6875rem; } /* 11px */
+  
+  .font-meta { font-size: 0.6875rem; } /* 11px */
+  .font-meta-medium { font-size: 0.75rem; } /* 12px */
+  
+  .font-highlight { font-size: 1rem; } /* 16px */
+  .font-highlight-large { font-size: 1.125rem; } /* 18px */
+  .font-highlight-small { font-size: 0.875rem; } /* 14px */
+}
+
+/* Desktop Overrides */
+@media (min-width: 768px) {
+  .font-header { font-size: 1.75rem; } /* 28px */
+  .font-header-large { font-size: 2rem; } /* 32px */
+  .font-header-small { font-size: 1.5rem; } /* 24px */
+  
+  .font-subheader { font-size: 1.125rem; } /* 18px */
+  .font-subheader-large { font-size: 1.25rem; } /* 20px */
+  .font-subheader-small { font-size: 1rem; } /* 16px */
+  
+  .font-body-primary { font-size: 1rem; } /* 16px */
+  .font-body-primary-large { font-size: 1.125rem; } /* 18px */
+  .font-body-medium { font-size: 1rem; } /* 16px */
+  .font-body-medium-small { font-size: 0.875rem; } /* 14px */
+  
+  .font-body-secondary { font-size: 0.875rem; } /* 14px */
+  .font-body-secondary-small { font-size: 0.75rem; } /* 12px */
+  
+  .font-meta { font-size: 0.75rem; } /* 12px */
+  .font-meta-medium { font-size: 0.875rem; } /* 14px */
+  
+  .font-highlight { font-size: 1.125rem; } /* 18px */
+  .font-highlight-large { font-size: 1.25rem; } /* 20px */
+  .font-highlight-small { font-size: 0.9375rem; } /* 15px */
+}
+
+/* Icon Sizes */
+.icon-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+.icon-md {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.icon-lg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.icon-xl {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.icon-2xl {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Responsive Icon Sizes */
+@media (min-width: 768px) {
+  .icon-sm {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .icon-md {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  
+  .icon-lg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .icon-xl {
+    width: 3rem;
+    height: 3rem;
+  }
+  
+  .icon-2xl {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
+
+
+
