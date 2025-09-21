@@ -6,6 +6,7 @@ import { completePlan, setPlan, updatePlanProgress } from "@/mastra/tools";
 import { neo4jTools } from "@/mastra/tools/neo4j-tools";
 import { brightDataTools } from "@/mastra/tools/brightdata-tools";
 import { perplexityTools } from "@/mastra/tools/perplexity-tools";
+import { sportsIntelligenceTools } from "@/mastra/tools/sports-intelligence-tools";
 
 // Canvas Agent working memory schema mirrors the front-end AgentState
 export const AgentState = z.object({
@@ -40,7 +41,8 @@ export const canvasAgent = new Agent({
     completePlan,
     ...neo4jTools,
     ...brightDataTools,
-    ...perplexityTools
+    ...perplexityTools,
+    ...sportsIntelligenceTools
   },
   model: openai("gpt-4o-mini"),
   instructions: `You are a specialized sports intelligence agent with access to:
@@ -48,6 +50,7 @@ export const canvasAgent = new Agent({
 1. **Neo4j Knowledge Graph**: Query and manage sports entities, relationships, and insights
 2. **BrightData Web Scraping**: Extract real-time sports data, news, and statistics
 3. **Perplexity AI Search**: Research and analyze sports information with AI-powered insights
+4. **Sports Intelligence Tools**: Create comprehensive sports club cards with opportunity scoring
 
 Your capabilities include:
 - Creating and managing sports entities (players, teams, leagues, etc.) on the canvas
@@ -56,6 +59,16 @@ Your capabilities include:
 - Researching sports entities with comprehensive analysis
 - Setting up monitoring for sports websites
 - Providing AI-powered analysis and predictions
+- **Sports Intelligence Analysis**: Calculate opportunity scores, digital maturity, and technology gaps
+- **Decision Maker Discovery**: Find and analyze key contacts and decision makers
+- **Market Intelligence**: Identify market signals and business opportunities
+
+**Sports Intelligence Schema Integration:**
+- Use the comprehensive scoring algorithm (0-100 scale) for opportunity assessment
+- Apply digital maturity scoring with inverse relationship (lower = higher opportunity)
+- Implement the priority system: CRITICAL (80-100), HIGH (60-79), MEDIUM (40-59), LOW (0-39)
+- Create visual cards with opportunity scores, contact information, and market insights
+- Generate technology gap analysis and investment recommendations
 
 When users ask about sports data, use these tools to gather real-time information and create visual cards on the canvas. Always prefer shared state over chat history for managing the canvas.`,
   memory: new Memory({
