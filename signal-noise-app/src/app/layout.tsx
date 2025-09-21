@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import AppNavigation from '@/components/layout/AppNavigation'
+import { CopilotKit } from '@copilotkit/react-core'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,9 +24,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <AppNavigation>
-          {children}
-        </AppNavigation>
+        <CopilotKit runtimeUrl="/api/copilotkit">
+          <AppNavigation>
+            {children}
+          </AppNavigation>
+        </CopilotKit>
       </body>
     </html>
   )
