@@ -24,7 +24,10 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
       </head>
       <body className={`${inter.className} antialiased`}>
-        <CopilotKit runtimeUrl="/api/copilotkit">
+        <CopilotKit 
+          runtimeUrl="/api/copilotkit"
+          publicLicenseKey="ck_pub_bd1e53be48f766e0ff4240c224db7a22"
+        >
           <AppNavigation>
             {children}
           </AppNavigation>
