@@ -22,30 +22,10 @@ const initialState: AgentState = {
 };
 
 export default function CopilotKitPage() {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   const { state, setState } = useCoAgent<AgentState>({
     name: "sample_agent",
     initialState,
   });
-
-  // Prevent hydration mismatch by not rendering until mounted
-  if (!isMounted) {
-    return (
-      <div className="flex h-screen bg-gray-50">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-2 text-gray-600">Loading Canvas...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
