@@ -1,5 +1,6 @@
 @import url('/fonts/satoshi.css');
 @import url('/fonts/bebas-neue.css');
+@import '@copilotkit/react-ui/dist/index.css';
 
 @tailwind base;
 @tailwind components;
