@@ -3,6 +3,9 @@ import { Agent } from "@mastra/core/agent";
 import { z } from "zod";
 import { Memory } from "@mastra/memory";
 import { completePlan, setPlan, updatePlanProgress } from "@/mastra/tools";
+import { neo4jTools } from "@/mastra/tools/neo4j-tools";
+import { brightDataTools } from "@/mastra/tools/brightdata-tools";
+import { perplexityTools } from "@/mastra/tools/perplexity-tools";
 
 // Canvas Agent working memory schema mirrors the front-end AgentState
 export const AgentState = z.object({
@@ -29,11 +32,32 @@ export const AgentState = z.object({
 });
 
 export const canvasAgent = new Agent({
-  name: "sample_agent",
-  description: "Canvas agent powering CopilotKit AG-UI interactions.",
-  tools: { setPlan, updatePlanProgress, completePlan },
+  name: "sports_intelligence_agent",
+  description: "AI-powered sports intelligence agent with access to Neo4j knowledge graph, BrightData web scraping, and Perplexity search capabilities.",
+  tools: { 
+    setPlan, 
+    updatePlanProgress, 
+    completePlan,
+    ...neo4jTools,
+    ...brightDataTools,
+    ...perplexityTools
+  },
   model: openai("gpt-4o-mini"),
-  instructions: "You are a helpful assistant managing a canvas of items. Prefer shared state over chat history.",
+  instructions: `You are a specialized sports intelligence agent with access to:
+
+1. **Neo4j Knowledge Graph**: Query and manage sports entities, relationships, and insights
+2. **BrightData Web Scraping**: Extract real-time sports data, news, and statistics
+3. **Perplexity AI Search**: Research and analyze sports information with AI-powered insights
+
+Your capabilities include:
+- Creating and managing sports entities (players, teams, leagues, etc.) on the canvas
+- Scraping real-time sports data and news
+- Querying the knowledge graph for relationships and insights
+- Researching sports entities with comprehensive analysis
+- Setting up monitoring for sports websites
+- Providing AI-powered analysis and predictions
+
+When users ask about sports data, use these tools to gather real-time information and create visual cards on the canvas. Always prefer shared state over chat history for managing the canvas.`,
   memory: new Memory({
     options: {
       workingMemory: {
