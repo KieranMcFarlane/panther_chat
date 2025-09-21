@@ -2,6 +2,11 @@
 
 import { useCoAgent, useCopilotAction, useCoAgentStateRender, useCopilotAdditionalInstructions } from "@copilotkit/react-core";
 import { CopilotKitCSSProperties, CopilotChat, CopilotPopup } from "@copilotkit/react-ui";
+import dynamic from "next/dynamic";
+
+// Client-side only components to prevent hydration mismatch
+const ClientOnlyCopilotChat = dynamic(() => Promise.resolve(CopilotChat), { ssr: false });
+const ClientOnlyCopilotPopup = dynamic(() => Promise.resolve(CopilotPopup), { ssr: false });
 import { useCallback, useEffect, useRef, useState } from "react";
 import type React from "react";
 import { Button } from "@/components/ui/button"
@@ -882,7 +887,7 @@ export default function CopilotKitPage() {
   );
             })()}
             {isDesktop && (
-              <CopilotChat
+              <ClientOnlyCopilotChat
                 className="flex-1 overflow-auto w-full"
                 labels={{
                   title: "Agent",
@@ -1011,7 +1016,7 @@ export default function CopilotKitPage() {
         </div>
       <div className="md:hidden">
         {!isDesktop && (
-          <CopilotPopup
+          <ClientOnlyCopilotPopup
             Header={PopupHeader}
             labels={{
               title: "Agent",
