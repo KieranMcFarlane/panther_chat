@@ -38,7 +38,7 @@ export default function Home() {
       setError(null)
       try {
         // Backend FastAPI exposes this in logs: GET /sports-entities 200 OK
-        const res = await fetch('http://localhost:8000/sports-entities', {
+        const res = await fetch('http://localhost:3000/sports-entities', {
           next: { revalidate: 0 },
         })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)

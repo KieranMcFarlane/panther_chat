@@ -1,119 +1,127 @@
+import { createTool } from '@mastra/core/tools';
 import { z } from "zod";
 
-export const neo4jTools = {
-  queryKnowledgeGraph: {
-    description: "Query the Neo4j knowledge graph to find sports entities, relationships, and insights",
-    parameters: z.object({
-      query: z.string().describe("Cypher query to execute on the knowledge graph"),
-      params: z.record(z.any()).optional().describe("Parameters for the Cypher query")
-    }),
-    execute: async ({ query, params = {} }: { query: string; params?: Record<string, any> }) => {
-      try {
-        // This would integrate with your existing Neo4j MCP server
-        // For now, return a mock response structure
-        return {
-          success: true,
-          data: {
-            query,
-            results: [
-              {
-                entity: "Manchester United",
-                type: "Football Club",
-                properties: {
-                  founded: 1878,
-                  league: "Premier League",
-                  country: "England"
-                }
-              }
-            ],
-            message: "Knowledge graph query executed successfully"
-          }
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error: `Neo4j query failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-        };
-      }
-    }
-  },
+const NEO4J_MCP_URL = process.env.NEO4J_MCP_URL || "http://localhost:3004";
 
-  createEntity: {
-    description: "Create a new entity in the Neo4j knowledge graph",
-    parameters: z.object({
-      entityType: z.string().describe("Type of entity (e.g., 'Club', 'Player', 'League')"),
-      properties: z.record(z.any()).describe("Properties of the entity"),
-      relationships: z.array(z.object({
-        type: z.string(),
-        target: z.string(),
-        properties: z.record(z.any()).optional()
-      })).optional().describe("Relationships to create")
-    }),
-    execute: async ({ entityType, properties, relationships = [] }: {
-      entityType: string;
-      properties: Record<string, any>;
-      relationships?: Array<{ type: string; target: string; properties?: Record<string, any> }>;
-    }) => {
-      try {
-        // Mock implementation - would integrate with Neo4j MCP
-        return {
-          success: true,
-          data: {
-            entityId: `entity_${Date.now()}`,
-            entityType,
-            properties,
-            relationships,
-            message: `Created ${entityType} entity successfully`
-          }
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error: `Failed to create entity: ${error instanceof Error ? error.message : 'Unknown error'}`
-        };
+// Simple, direct call to native Neo4j MCP tools
+async function callNativeMCP(toolName: string, args: Record<string, any>): Promise<any> {
+  const response = await fetch(`${NEO4J_MCP_URL}/mcp`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      method: 'tools/call',
+      params: {
+        name: toolName,
+        arguments: args
       }
-    }
-  },
+    }),
+    signal: AbortSignal.timeout(30000)
+  });
 
-  findRelatedEntities: {
-    description: "Find entities related to a specific entity in the knowledge graph",
-    parameters: z.object({
-      entityId: z.string().describe("ID or name of the entity to find relationships for"),
-      relationshipTypes: z.array(z.string()).optional().describe("Types of relationships to follow"),
-      maxDepth: z.number().optional().describe("Maximum depth to traverse (default: 2)")
-    }),
-    execute: async ({ entityId, relationshipTypes = [], maxDepth = 2 }: {
-      entityId: string;
-      relationshipTypes?: string[];
-      maxDepth?: number;
-    }) => {
-      try {
-        // Mock implementation
-        return {
-          success: true,
-          data: {
-            entityId,
-            relatedEntities: [
-              {
-                id: "related_1",
-                type: "Player",
-                name: "Marcus Rashford",
-                relationship: "PLAYS_FOR",
-                properties: {
-                  position: "Forward",
-                  age: 26
-                }
-              }
-            ],
-            message: `Found ${1} related entities for ${entityId}`
-          }
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error: `Failed to find related entities: ${error instanceof Error ? error.message : 'Unknown error'}`
-        };
-      }
+  if (!response.ok) {
+    throw new Error(`Neo4j MCP error: ${response.status} - ${await response.text()}`);
+  }
+
+  const result = await response.json();
+  
+  if (!result.success) {
+    throw new Error(result.error || 'Neo4j MCP call failed');
+  }
+
+  // Parse JSON from content if available
+  if (result.result?.content?.[0]?.text) {
+    try {
+      return JSON.parse(result.result.content[0].text);
+    } catch {
+      return result.result.content[0].text;
     }
   }
+  
+  return result.result;
+}
+
+export const neo4jTools = {
+  queryKnowledgeGraph: createTool({
+    id: 'query_knowledge_graph',
+    description: "Execute Cypher queries directly using native Neo4j MCP execute_query tool",
+    inputSchema: z.object({
+      query: z.string().describe("Cypher query (e.g., 'MATCH (n) WHERE n.name CONTAINS $name RETURN n LIMIT 10')"),
+      params: z.record(z.any()).optional().default({}).describe("Query parameters (e.g., {name: 'Arsenal'})")
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      data: z.any().optional(),
+      error: z.string().optional(),
+    }),
+    execute: async ({ query, params = {} }) => {
+      try {
+        console.log(`🔧 Neo4j Query: ${query}`, params);
+        const data = await callNativeMCP('execute_query', { query, params });
+        return { success: true, data };
+      } catch (error) {
+        console.error('Neo4j query failed:', error);
+        return { success: false, error: `Query failed: ${error instanceof Error ? error.message : 'Unknown error'}` };
+      }
+    },
+  }),
+
+  createEntity: createTool({
+    id: 'create_entity',
+    description: "Create nodes directly using native Neo4j MCP create_node tool",
+    inputSchema: z.object({
+      label: z.string().describe("Node label (e.g., 'Person', 'Club', 'Entity')"),
+      properties: z.record(z.any()).describe("Node properties")
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      data: z.any().optional(),
+      error: z.string().optional(),
+    }),
+    execute: async ({ label, properties }) => {
+      try {
+        console.log(`🔧 Neo4j Create: ${label}`, properties);
+        const data = await callNativeMCP('create_node', { label, properties });
+        return { success: true, data };
+      } catch (error) {
+        console.error('Neo4j create failed:', error);
+        return { success: false, error: `Create failed: ${error instanceof Error ? error.message : 'Unknown error'}` };
+      }
+    },
+  }),
+
+  // Simple query-based approach for finding related entities
+  findRelatedEntities: createTool({
+    id: 'find_related_entities',
+    description: "Find related entities using Cypher query via native execute_query tool",
+    inputSchema: z.object({
+      entityName: z.string().describe("Name of the entity"),
+      maxDepth: z.number().optional().default(2).describe("Maximum relationship depth")
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      data: z.any().optional(),
+      error: z.string().optional(),
+    }),
+    execute: async ({ entityName, maxDepth = 2 }) => {
+      try {
+        const query = `
+          MATCH (start)
+          WHERE start.name CONTAINS $entityName OR start.clubName CONTAINS $entityName
+          MATCH (start)-[*1..${maxDepth}]-(related)
+          RETURN DISTINCT related
+          LIMIT 20
+        `;
+        
+        console.log(`🔧 Neo4j Find Related: ${entityName}`);
+        const data = await callNativeMCP('execute_query', { 
+          query, 
+          params: { entityName } 
+        });
+        return { success: true, data };
+      } catch (error) {
+        console.error('Neo4j find related failed:', error);
+        return { success: false, error: `Find related failed: ${error instanceof Error ? error.message : 'Unknown error'}` };
+      }
+    },
+  }),
 };

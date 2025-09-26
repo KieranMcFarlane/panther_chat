@@ -84,7 +84,7 @@ export default function SportsDashboard() {
     try {
       setLoading(true)
       console.log('Fetching data from sports-entities endpoint...')
-      const response = await fetch('http://localhost:8000/sports-entities')
+      const response = await fetch('http://localhost:3000/sports-entities')
       console.log('Response status:', response.status)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)

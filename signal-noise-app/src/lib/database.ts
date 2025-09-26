@@ -116,7 +116,7 @@ export class DatabaseService {
   // Health check
   async healthCheck(): Promise<{ status: string; connection: string }> {
     try {
-      const response = await fetch(`${this.baseUrl}/health`);
+      const response = await fetch(`${this.baseUrl}/api/health`);
       if (response.ok) {
         return { status: 'healthy', connection: 'connected' };
       }
@@ -129,7 +129,7 @@ export class DatabaseService {
   // Get all entities with scoring
   async getEntities(): Promise<Entity[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/sports-entities`);
+      const response = await fetch(`${this.baseUrl}/api/sports-entities`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       
       const data = await response.json();
@@ -143,7 +143,7 @@ export class DatabaseService {
   // Get entities by type
   async getEntitiesByType(type: BaseEntity['entity_type']): Promise<Entity[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/entities/${type}`);
+      const response = await fetch(`${this.baseUrl}/api/sports-entities?type=${type}`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       
       const data = await response.json();

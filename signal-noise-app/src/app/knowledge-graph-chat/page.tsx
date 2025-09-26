@@ -11,7 +11,7 @@ export default function KnowledgeGraphChatPage() {
   const [iframeKey, setIframeKey] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
 
-  const chatUrl = 'http://13.60.60.50:7681/';
+  const chatUrl = process.env.NEXT_PUBLIC_CHAT_URL || 'http://localhost:7681';
 
   useEffect(() => {
     // Check if the external service is accessible

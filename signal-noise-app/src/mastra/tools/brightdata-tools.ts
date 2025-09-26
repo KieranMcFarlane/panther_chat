@@ -1,144 +1,109 @@
+import { createTool } from '@mastra/core/tools';
 import { z } from "zod";
+import { scrapeAsMarkdown, searchEngine, extractLinkedInProfiles, extractSearchResults } from './brightdata-helper';
 
 export const brightDataTools = {
-  scrapeWebsite: {
-    description: "Scrape a website for sports data, news, or information using BrightData",
-    parameters: z.object({
+  scrapeWebsite: createTool({
+    id: 'scrape_website',
+    description: "Scrape a website for sports data, news, or information using BrightData MCP HTTP bridge",
+    inputSchema: z.object({
       url: z.string().url().describe("URL to scrape"),
-      selectors: z.record(z.string()).optional().describe("CSS selectors to extract specific data"),
-      waitFor: z.string().optional().describe("Element to wait for before scraping"),
-      screenshot: z.boolean().optional().describe("Take a screenshot of the page")
+      format: z.enum(["markdown", "html", "json"]).optional().default("markdown").describe("Format of the scraped content"),
     }),
-    execute: async ({ url, selectors = {}, waitFor, screenshot = false }: {
-      url: string;
-      selectors?: Record<string, string>;
-      waitFor?: string;
-      screenshot?: boolean;
-    }) => {
-      try {
-        // Mock implementation - would integrate with BrightData MCP
-        return {
-          success: true,
-          data: {
-            url,
-            title: "Sports News - Latest Updates",
-            content: "Mock scraped content about sports news and updates...",
-            extractedData: {
-              headlines: [
-                "Manchester United signs new striker",
-                "Premier League transfer window updates",
-                "Champions League fixtures announced"
-              ],
-              metadata: {
-                scrapedAt: new Date().toISOString(),
-                wordCount: 1500,
-                language: "en"
-              }
-            },
-            screenshot: screenshot ? "screenshot_url_placeholder" : null,
-            message: "Website scraped successfully"
+    outputSchema: z.object({
+      success: z.boolean(),
+      data: z.object({
+        url: z.string(),
+        content: z.string(),
+        format: z.string(),
+      }).optional(),
+      error: z.string().optional(),
+    }),
+        execute: async ({ url, format = "markdown" }) => {
+          try {
+            const content = await scrapeAsMarkdown(url);
+            return { success: true, data: { url, content, format } };
+          } catch (error) {
+            return { success: false, error: `BrightData scraping failed: ${error instanceof Error ? error.message : 'Unknown error'}` };
           }
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error: `BrightData scraping failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-        };
-      }
-    }
-  },
+        },
+  }),
 
-  scrapeSportsData: {
-    description: "Scrape sports-specific data like player stats, match results, or team information",
-    parameters: z.object({
-      sport: z.string().describe("Sport to scrape data for (e.g., 'football', 'basketball')"),
-      dataType: z.string().describe("Type of data to scrape (e.g., 'player_stats', 'match_results', 'team_info')"),
-      league: z.string().optional().describe("Specific league or competition"),
-      dateRange: z.object({
-        start: z.string().optional(),
-        end: z.string().optional()
-      }).optional().describe("Date range for the data")
+  searchLinkedInProfiles: createTool({
+    id: 'search_linkedin_profiles',
+    description: "Search LinkedIn profiles for persons of interest using BrightData MCP HTTP bridge",
+    inputSchema: z.object({
+      query: z.string().describe("Search query for LinkedIn profiles (e.g., 'CEO Arsenal FC')"),
+      limit: z.number().int().min(1).max(10).optional().default(3).describe("Maximum number of profiles to return"),
     }),
-    execute: async ({ sport, dataType, league, dateRange }: {
-      sport: string;
-      dataType: string;
-      league?: string;
-      dateRange?: { start?: string; end?: string };
-    }) => {
-      try {
-        // Mock implementation
-        return {
-          success: true,
-          data: {
-            sport,
-            dataType,
-            league: league || "Premier League",
-            scrapedData: {
-              players: [
-                {
-                  name: "Erling Haaland",
-                  team: "Manchester City",
-                  goals: 25,
-                  assists: 8,
-                  position: "Striker"
-                }
-              ],
-              matches: [
-                {
-                  homeTeam: "Manchester United",
-                  awayTeam: "Liverpool",
-                  score: "2-1",
-                  date: "2024-01-15"
-                }
-              ]
-            },
-            scrapedAt: new Date().toISOString(),
-            message: `Successfully scraped ${dataType} for ${sport}`
+    outputSchema: z.object({
+      success: z.boolean(),
+      profiles: z.array(z.object({
+        id: z.string(),
+        name: z.string(),
+        title: z.string(),
+        company: z.string(),
+        profileUrl: z.string().url(),
+        snippet: z.string().optional(),
+        connections: z.number().optional(),
+      })).optional(),
+      totalResults: z.number().optional(),
+      error: z.string().optional(),
+    }),
+        execute: async ({ query, limit = 3 }) => {
+          try {
+            // Use search_engine with LinkedIn-specific query
+            const linkedinQuery = `site:linkedin.com/in ${query}`;
+            const searchContent = await searchEngine(linkedinQuery, 'google');
+            
+            // Process search results to extract LinkedIn profile data
+            const profiles = extractLinkedInProfiles(searchContent, limit);
+            
+            return { 
+              success: true, 
+              profiles: profiles, 
+              totalResults: profiles.length 
+            };
+          } catch (error) {
+            return { success: false, error: `LinkedIn profile search failed: ${error instanceof Error ? error.message : 'Unknown error'}` };
           }
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error: `Sports data scraping failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-        };
-      }
-    }
-  },
+        },
+  }),
 
-  monitorWebsite: {
-    description: "Set up monitoring for a website to track changes in sports data",
-    parameters: z.object({
-      url: z.string().url().describe("URL to monitor"),
-      checkInterval: z.number().describe("Check interval in minutes"),
-      selectors: z.array(z.string()).describe("CSS selectors to monitor for changes"),
-      alertThreshold: z.number().optional().describe("Threshold for change detection")
+  searchSerp: createTool({
+    id: 'search_serp',
+    description: "Perform a search engine query using BrightData MCP HTTP bridge to find relevant web pages",
+    inputSchema: z.object({
+      query: z.string().describe("Search query (e.g., 'Arsenal FC official website')"),
+      engine: z.string().optional().default("google").describe("Search engine to use (e.g., 'google', 'bing')"),
+      limit: z.number().int().min(1).max(10).optional().default(5).describe("Maximum number of search results to return"),
     }),
-    execute: async ({ url, checkInterval, selectors, alertThreshold = 0.1 }: {
-      url: string;
-      checkInterval: number;
-      selectors: string[];
-      alertThreshold?: number;
-    }) => {
-      try {
-        // Mock implementation
-        return {
-          success: true,
-          data: {
-            monitorId: `monitor_${Date.now()}`,
-            url,
-            checkInterval,
-            selectors,
-            alertThreshold,
-            status: "active",
-            message: "Website monitoring started successfully"
+    outputSchema: z.object({
+      success: z.boolean(),
+      results: z.array(z.object({
+        title: z.string(),
+        url: z.string().url(),
+        snippet: z.string().optional(),
+      })).optional(),
+      totalResults: z.number().optional(),
+      error: z.string().optional(),
+    }),
+        execute: async ({ query, engine = "google", limit = 5 }) => {
+          try {
+            const searchContent = await searchEngine(query, engine);
+            
+            // Process search results to extract structured data
+            const results = extractSearchResults(searchContent, limit);
+            
+            return { 
+              success: true, 
+              results: results, 
+              totalResults: results.length 
+            };
+          } catch (error) {
+            return { success: false, error: `SERP search failed: ${error instanceof Error ? error.message : 'Unknown error'}` };
           }
-        };
-      } catch (error) {
-        return {
-          success: false,
-          error: `Website monitoring setup failed: ${error instanceof Error ? error.message : 'Unknown error'}`
-        };
-      }
-    }
-  }
+        },
+  }),
+
 };
