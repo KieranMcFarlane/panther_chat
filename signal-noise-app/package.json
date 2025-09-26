@@ -34,6 +34,7 @@
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.294.0",
     "motion": "^12.23.16",
+    "neo4j-driver": "^5.28.2",
     "next": "^14.0.0",
     "openai": "^5.13.1",
     "react": "^18.0.0",
