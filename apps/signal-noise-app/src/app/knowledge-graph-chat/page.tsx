@@ -12,6 +12,7 @@ export default function KnowledgeGraphChatPage() {
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
 
   const chatUrl = process.env.NEXT_PUBLIC_CHAT_URL || 'http://localhost:7681';
+  const [terminalCommand, setTerminalCommand] = useState('ttyd -p 7681 ssh -i /home/ec2-user/yellowpanther.pem ec2-user@13.60.60.50');
 
   useEffect(() => {
     // Check if the external service is accessible
@@ -94,6 +95,36 @@ export default function KnowledgeGraphChatPage() {
     }, 1000);
   };
 
+  const startTerminal = async () => {
+    setIsLoading(true);
+    setConnectionStatus('connecting');
+    
+    try {
+      const response = await fetch('/api/terminal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'start' })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        setConnectionStatus('connected');
+        // Update the iframe URL with the terminal
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000);
+      } else {
+        setConnectionStatus('error');
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error('Failed to start terminal:', error);
+      setConnectionStatus('error');
+      setIsLoading(false);
+    }
+  };
+
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
   };
@@ -111,6 +142,15 @@ export default function KnowledgeGraphChatPage() {
               </p>
             </div>
             <div className="flex items-center gap-3">
+              <Button
+                onClick={startTerminal}
+                variant="outline"
+                size="sm"
+                className="border-custom-border text-fm-light-grey hover:bg-custom-border bg-custom-box"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Start Terminal
+              </Button>
               <Button
                 onClick={handleRefresh}
                 variant="outline"
@@ -173,26 +213,69 @@ export default function KnowledgeGraphChatPage() {
         <div className={`mt-6 ${isFullscreen ? 'hidden' : ''}`}>
           <Card className="bg-custom-box border-custom-border">
             <CardHeader>
-              <CardTitle className="font-subheader text-fm-white">How to Use</CardTitle>
+              <CardTitle className="font-subheader text-fm-white">EC2 Terminal Setup</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-body-medium text-fm-white mb-3">Chat Commands</h4>
-                  <ul className="space-y-2 font-body-secondary text-fm-medium-grey">
-                    <li>• Ask questions about sports entities</li>
-                    <li>• Query the knowledge graph</li>
-                    <li>• Get insights about organizations</li>
-                    <li>• Explore relationships between entities</li>
-                  </ul>
+              <div className="space-y-6">
+                {/* Connection Status */}
+                <div className="bg-custom-bg border border-custom-border rounded-lg p-4">
+                  <h4 className="font-body-medium text-fm-white mb-2">Connection Status</h4>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-3 h-3 rounded-full ${
+                      connectionStatus === 'connected' ? 'bg-green-500' : 
+                      connectionStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}></div>
+                    <span className="text-fm-light-grey">
+                      {connectionStatus === 'connected' ? 'Connected to EC2 Terminal' :
+                       connectionStatus === 'connecting' ? 'Connecting...' : 'Not Connected'}
+                    </span>
+                  </div>
                 </div>
+
+                {/* Manual Setup Instructions */}
                 <div>
-                  <h4 className="font-body-medium text-fm-white mb-3">Features</h4>
+                  <h4 className="font-body-medium text-fm-white mb-3">Manual Terminal Setup</h4>
+                  <div className="bg-custom-bg border border-custom-border rounded-lg p-4">
+                    <p className="font-body-secondary text-fm-medium-grey mb-3">
+                      If the automatic start doesn't work, run this command in your terminal:
+                    </p>
+                    <code className="block bg-custom-border text-fm-light-grey p-3 rounded text-sm font-mono">
+                      ./start-terminal.sh
+                    </code>
+                  </div>
+                </div>
+
+                {/* EC2 Connection Details */}
+                <div>
+                  <h4 className="font-body-medium text-fm-white mb-3">EC2 Connection Info</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-fm-medium-grey">Host:</span>
+                      <span className="text-fm-light-grey ml-2">13.60.60.50</span>
+                    </div>
+                    <div>
+                      <span className="text-fm-medium-grey">User:</span>
+                      <span className="text-fm-light-grey ml-2">ec2-user</span>
+                    </div>
+                    <div>
+                      <span className="text-fm-medium-grey">Port:</span>
+                      <span className="text-fm-light-grey ml-2">7681</span>
+                    </div>
+                    <div>
+                      <span className="text-fm-medium-grey">Key:</span>
+                      <span className="text-fm-light-grey ml-2">yellowpanther.pem</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Features */}
+                <div>
+                  <h4 className="font-body-medium text-fm-white mb-3">Terminal Features</h4>
                   <ul className="space-y-2 font-body-secondary text-fm-medium-grey">
-                    <li>• Natural language queries</li>
-                    <li>• Real-time graph visualization</li>
-                    <li>• Interactive chat interface</li>
-                    <li>• Neo4j integration</li>
+                    <li>• Full SSH access to your EC2 instance</li>
+                    <li>• Browser-based terminal interface</li>
+                    <li>• Dark theme optimized for development</li>
+                    <li>• Direct Neo4j database access</li>
                   </ul>
                 </div>
               </div>
