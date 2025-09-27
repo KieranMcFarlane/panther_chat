@@ -109,7 +109,7 @@ export default function EntityBrowserPage() {
     if (typeof window !== 'undefined') {
       fetchEntities()
     }
-  }, [fetchEntities])
+  }, [fetchEntities, filters, currentPage])
 
   const formatPropertyValue = (value: any): string => {
     if (value === null || value === undefined) return "null"

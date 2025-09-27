@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Search, Filter, RefreshCw, Database, Zap } from "lucide-react"
+import { Search, Filter, RefreshCw, Database, Zap, Grid3X3 } from "lucide-react"
 
 
 export function VectorSearch() {
@@ -31,9 +31,20 @@ export function VectorSearch() {
               <Database className="h-8 w-8 text-primary" />
               <h1 className="text-3xl font-bold">Knowledge Graph Search</h1>
             </div>
-            <Badge variant="secondary" className="ml-auto">
-              {results.length} results
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.location.href = '/entity-browser'}
+                className="flex items-center gap-2"
+              >
+                <Grid3X3 className="h-4 w-4" />
+                Browse All Entities
+              </Button>
+              <Badge variant="secondary">
+                {results.length} results
+              </Badge>
+            </div>
           </div>
           <p className="text-muted-foreground">
             AI-powered semantic search across your Neo4j knowledge graph

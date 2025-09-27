@@ -30,10 +30,10 @@ export class Neo4jService {
 
   constructor() {
     this.driver = neo4j.driver(
-      process.env.NEO4J_URI || 'neo4j+s://8ea452cf.databases.neo4j.io',
+      process.env.NEO4J_URI || process.env.NEXT_PUBLIC_NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
       neo4j.auth.basic(
-        process.env.NEO4J_USER || 'neo4j',
-        process.env.NEO4J_PASSWORD || '03mCRD_G1heKdVGiVKHQ1TvR0mIlb1zLxiLa9ouMjIw'
+        process.env.NEO4J_USERNAME || process.env.NEO4J_USER || process.env.NEXT_PUBLIC_NEO4J_USER || 'neo4j',
+        process.env.NEO4J_PASSWORD || process.env.NEXT_PUBLIC_NEO4J_PASSWORD || 'llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0'
       )
     )
   }
@@ -51,7 +51,7 @@ export class Neo4jService {
           CREATE VECTOR INDEX entity_embeddings IF NOT EXISTS
           FOR (n:Entity)
           ON n.embedding
-          OPTIONS { 
+          OPTIONS {
             indexConfig: {
               \`vector.dimensions\`: 1536,
               \`vector.similarity_function\`: 'cosine'
@@ -79,13 +79,12 @@ export class Neo4jService {
       
       const session = this.driver.session()
       try {
+        // First try vector search, fallback to text search if no results
         const result = await session.run(`
           CALL db.index.vector.queryNodes('entity_embeddings', $limit, $embedding)
           YIELD node, score
           WHERE score >= $threshold
           WITH node, score
-          // Apply entity type filter if specified
-          WHERE ($entityType IS NULL OR $entityType IN labels(node))
           // Get relationships and additional context
           OPTIONAL MATCH (node)-[r]-(related)
           RETURN node, score, collect({
@@ -97,9 +96,55 @@ export class Neo4jService {
           LIMIT $limit
         `, {
           embedding,
-          limit: options.limit || 10,
-          threshold: options.threshold || 0.7,
-          entityType: options.entityType || null
+          limit: neo4j.int(parseInt((options.limit || 10).toString())),
+          threshold: options.threshold || 0.7
+        })
+        
+        if (result.records.length > 0) {
+          return result.records.map(record => ({
+            entity: this.formatNode(record.get('node')),
+            similarity: record.get('score'),
+            connections: record.get('connections').filter((conn: any) => conn.target)
+          }))
+        }
+        
+        // Fallback to text search if no vector results
+        console.log('📝 No vector results, falling back to text search')
+        return await this.fallbackVectorSearch(query, options)
+        
+      } finally {
+        await session.close()
+      }
+    } catch (error) {
+      console.error('❌ Vector search failed:', error)
+      return await this.fallbackVectorSearch(query, options)
+    }
+  }
+
+  private async fallbackVectorSearch(query: string, options: VectorSearchOptions = {}): Promise<SearchResult[]> {
+    try {
+      const session = this.driver.session()
+      try {
+        const result = await session.run(`
+          MATCH (n)
+          WHERE n.name CONTAINS $query 
+             OR n.description CONTAINS $query
+             OR n.type CONTAINS $query
+             OR n.sport CONTAINS $query
+             OR n.country CONTAINS $query
+          WITH n, 0.8 as score // Default similarity for text matches
+          // Get relationships and additional context
+          OPTIONAL MATCH (n)-[r]-(related)
+          RETURN n as node, score, collect({
+            relationship: type(r),
+            target: related.name,
+            target_type: labels(related)[0]
+          }) as connections
+          ORDER BY score DESC
+          LIMIT $limit
+        `, {
+          query,
+          limit: neo4j.int(parseInt((options.limit || 10).toString()))
         })
         
         return result.records.map(record => ({
@@ -111,7 +156,7 @@ export class Neo4jService {
         await session.close()
       }
     } catch (error) {
-      console.error('❌ Vector search failed:', error)
+      console.error('❌ Fallback search failed:', error)
       return []
     }
   }
@@ -123,18 +168,18 @@ export class Neo4jService {
       const session = this.driver.session()
       try {
         const result = await session.run(`
-          MATCH (n:Entity)
+          MATCH (n)
           WHERE n.name CONTAINS $query 
              OR n.description CONTAINS $query
-             OR n.title CONTAINS $query
-             OR n.email CONTAINS $query
-          WHERE ($entityType IS NULL OR $entityType IN labels(n))
+             OR n.type CONTAINS $query
+             OR n.sport CONTAINS $query
+             OR n.country CONTAINS $query
+             OR n.website CONTAINS $query
           RETURN n
           LIMIT $limit
         `, {
           query,
-          limit: options.limit || 10,
-          entityType: options.entityType || null
+          limit: neo4j.int(parseInt((options.limit || 10).toString()))
         })
         
         return result.records.map(record => this.formatNode(record.get('n')))

@@ -1,52 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { Neo4jService } from '@/lib/neo4j'
+
+const neo4jService = new Neo4jService()
 
 export async function POST(request: NextRequest) {
   try {
-    const { query, searchType, options } = await request.json()
+    const { query, searchType, options = {} } = await request.json()
     
     if (!query) {
       return NextResponse.json({ error: 'Query is required' }, { status: 400 })
     }
 
-    // For now, return mock results for demonstration
-    // In a real implementation, this would connect to the live Neo4j service
-    const mockResults = [
-      {
-        entity: {
-          id: '1',
-          labels: ['Person', 'Contact'],
-          properties: {
-            name: 'Arsenal Commercial Director',
-            title: 'Commercial Director',
-            company: 'Arsenal FC',
-            email: 'commercial@arsenal.com',
-            source: 'LinkedIn'
-          }
-        },
-        similarity: 0.95,
-        connections: [
-          { relationship: 'WORKS_AT', target: 'Arsenal FC', target_type: 'Organization' }
-        ]
-      },
-      {
-        entity: {
-          id: '2',
-          labels: ['Organization', 'Club'],
-          properties: {
-            name: 'Arsenal FC',
-            location: 'London, UK',
-            source: 'Premier League'
-          }
-        },
-        similarity: 0.88,
-        connections: [
-          { relationship: 'HAS_DIRECTOR', target: 'Arsenal Commercial Director', target_type: 'Person' }
-        ]
-      }
-    ]
+    console.log('🔍 Searching Neo4j:', { query, searchType, options })
+
+    let results = []
+    
+    if (searchType === 'vector') {
+      // Use vector search with embeddings
+      const vectorResults = await neo4jService.vectorSearch(query, {
+        limit: options.limit || 12,
+        threshold: options.threshold || 0.7,
+        entityType: options.entityType
+      })
+      results = vectorResults
+    } else {
+      // Use text search
+      const textResults = await neo4jService.textSearch(query, {
+        limit: options.limit || 12,
+        entityType: options.entityType
+      })
+      // Convert text search results to match vector search format
+      results = textResults.map(entity => ({
+        entity,
+        similarity: 1.0, // Text search doesn't have similarity scores
+        connections: []
+      }))
+    }
+
+    console.log(`✅ Found ${results.length} results for query: "${query}"`)
 
     return NextResponse.json({
-      results: mockResults,
+      results,
       searchType,
       query,
       options
