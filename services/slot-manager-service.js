@@ -371,6 +371,13 @@ class SlotManagerService extends EventEmitter {
   }
 
   /**
+   * Check if slot exists
+   */
+  hasSlot(slotId) {
+    return this.slots.has(slotId);
+  }
+
+  /**
    * Get slot information
    */
   getSlotInfo(slotId) {
