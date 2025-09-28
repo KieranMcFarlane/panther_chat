@@ -29,10 +29,12 @@ import {
   UserX,
   TrendingUp,
   TrendingDown,
-  Plus
+  Plus,
+  Archive
 } from 'lucide-react';
 import HealthMonitoring from '@/components/monitoring/HealthMonitoring';
 import LoggingAnalytics from '@/components/logging/LoggingAnalytics';
+import BackupRecovery from '@/components/backup/BackupRecovery';
 
 interface User {
   id: string;
@@ -294,6 +296,7 @@ export default function AdminDashboard() {
           <TabsTrigger value="auth">Auth Providers</TabsTrigger>
           <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
           <TabsTrigger value="logging">Logging</TabsTrigger>
+          <TabsTrigger value="backup">Backup</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -539,6 +542,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="logging" className="space-y-6">
           <LoggingAnalytics />
+        </TabsContent>
+
+        <TabsContent value="backup" className="space-y-6">
+          <BackupRecovery />
         </TabsContent>
       </Tabs>
     </div>
