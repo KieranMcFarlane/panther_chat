@@ -37,6 +37,7 @@ import LoggingAnalytics from '@/components/logging/LoggingAnalytics';
 import BackupRecovery from '@/components/backup/BackupRecovery';
 import PerformanceOptimization from '@/components/performance/PerformanceOptimization';
 import AutoScalingDashboard from '@/components/auto-scaling/AutoScalingDashboard';
+import LoadTestingDashboard from '@/components/load-testing/LoadTestingDashboard';
 
 interface User {
   id: string;
@@ -301,6 +302,7 @@ export default function AdminDashboard() {
           <TabsTrigger value="backup">Backup</TabsTrigger>
           <TabsTrigger value="performance">Performance</TabsTrigger>
           <TabsTrigger value="scaling">Auto-scaling</TabsTrigger>
+          <TabsTrigger value="loadtesting">Load Testing</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -558,6 +560,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="scaling" className="space-y-6">
           <AutoScalingDashboard />
+        </TabsContent>
+
+        <TabsContent value="loadtesting" className="space-y-6">
+          <LoadTestingDashboard />
         </TabsContent>
       </Tabs>
     </div>
