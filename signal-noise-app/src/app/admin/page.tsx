@@ -32,6 +32,7 @@ import {
   Plus
 } from 'lucide-react';
 import HealthMonitoring from '@/components/monitoring/HealthMonitoring';
+import LoggingAnalytics from '@/components/logging/LoggingAnalytics';
 
 interface User {
   id: string;
@@ -292,6 +293,7 @@ export default function AdminDashboard() {
           <TabsTrigger value="slots">Slot Management</TabsTrigger>
           <TabsTrigger value="auth">Auth Providers</TabsTrigger>
           <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+          <TabsTrigger value="logging">Logging</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -533,6 +535,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="monitoring" className="space-y-6">
           <HealthMonitoring />
+        </TabsContent>
+
+        <TabsContent value="logging" className="space-y-6">
+          <LoggingAnalytics />
         </TabsContent>
       </Tabs>
     </div>
