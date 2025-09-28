@@ -41,6 +41,7 @@ const navItems = [
   { icon: Search, label: 'Knowledge Graph', href: '/knowledge-graph' },
   { icon: MessageSquare, label: 'Knowledge Graph Chat', href: '/knowledge-graph-chat' },
   { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
+  { icon: Shield, label: 'Admin', href: '/admin' },
   { icon: Zap, label: 'Terminal', href: '/terminal' },
 ];
 
