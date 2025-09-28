@@ -35,6 +35,7 @@ import {
 import HealthMonitoring from '@/components/monitoring/HealthMonitoring';
 import LoggingAnalytics from '@/components/logging/LoggingAnalytics';
 import BackupRecovery from '@/components/backup/BackupRecovery';
+import PerformanceOptimization from '@/components/performance/PerformanceOptimization';
 
 interface User {
   id: string;
@@ -297,6 +298,7 @@ export default function AdminDashboard() {
           <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
           <TabsTrigger value="logging">Logging</TabsTrigger>
           <TabsTrigger value="backup">Backup</TabsTrigger>
+          <TabsTrigger value="performance">Performance</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -546,6 +548,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="backup" className="space-y-6">
           <BackupRecovery />
+        </TabsContent>
+
+        <TabsContent value="performance" className="space-y-6">
+          <PerformanceOptimization />
         </TabsContent>
       </Tabs>
     </div>
