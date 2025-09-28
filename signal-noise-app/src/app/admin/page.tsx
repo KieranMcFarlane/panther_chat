@@ -31,6 +31,7 @@ import {
   TrendingDown,
   Plus
 } from 'lucide-react';
+import HealthMonitoring from '@/components/monitoring/HealthMonitoring';
 
 interface User {
   id: string;
@@ -531,68 +532,7 @@ export default function AdminDashboard() {
         </TabsContent>
 
         <TabsContent value="monitoring" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Performance Metrics */}
-            <Card className="bg-custom-box border-custom-border">
-              <CardHeader>
-                <CardTitle className="font-header-md text-header flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4" />
-                  Performance Metrics
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-400 mb-1">
-                    {systemMetrics?.activeSlots || 0}
-                  </div>
-                  <div className="text-sm text-slate-400">Active Slots</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-400 mb-1">
-                    {systemMetrics?.activeUsers || 0}
-                  </div>
-                  <div className="text-sm text-slate-400">Active Users</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-400 mb-1">
-                    {systemMetrics?.systemCpuUsage.toFixed(1)}%
-                  </div>
-                  <div className="text-sm text-slate-400">Avg CPU Load</div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* System Health */}
-            <Card className="bg-custom-box border-custom-border">
-              <CardHeader>
-                <CardTitle className="font-header-md text-header flex items-center gap-2">
-                  <Activity className="w-4 h-4" />
-                  System Health
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-300">Service Status</span>
-                  <Badge variant="outline" className="text-green-400 border-green-400">
-                    <CheckCircle className="w-3 h-3 mr-1" />
-                    Healthy
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-300">Response Time</span>
-                  <span className="text-sm text-white">245ms</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-300">Error Rate</span>
-                  <span className="text-sm text-white">0.02%</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-300">Last Check</span>
-                  <span className="text-sm text-white">2 min ago</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <HealthMonitoring />
         </TabsContent>
       </Tabs>
     </div>
