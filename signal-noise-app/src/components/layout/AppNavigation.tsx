@@ -21,7 +21,8 @@ import {
   Zap,
   MessageSquare,
   Database,
-  Search
+  Search,
+  LayoutDashboard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,8 +39,9 @@ const navItems = [
   { icon: Users, label: 'Contacts', href: '/contacts' },
   { icon: BarChart3, label: 'Graph', href: '/graph' },
   { icon: Search, label: 'Knowledge Graph', href: '/knowledge-graph' },
-  { icon: Zap, label: 'Terminal', href: '/terminal' },
   { icon: MessageSquare, label: 'Knowledge Graph Chat', href: '/knowledge-graph-chat' },
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
+  { icon: Zap, label: 'Terminal', href: '/terminal' },
 ];
 
 interface AppNavigationProps {
