@@ -1,6 +1,8 @@
 "use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
+import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -25,6 +27,7 @@ import {
   Settings,
   Image
 } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface Entity {
   id: string
@@ -50,8 +53,11 @@ interface EntityBrowserResponse {
   }
 }
 
-export default function EntityBrowserPage() {
+function EntityBrowserPageContent() {
   console.log("🔍 EntityBrowserPage: Component mounting")
+  
+  const router = useRouter()
+  const searchParams = useSearchParams()
   
   const [data, setData] = useState<EntityBrowserResponse | null>(null)
   const [initialLoading, setInitialLoading] = useState(true)
@@ -62,7 +68,9 @@ export default function EntityBrowserPage() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
   const [showBadgeInfo, setShowBadgeInfo] = useState(false)
 
-  const [currentPage, setCurrentPage] = useState(1)
+  // Get page from URL or default to 1
+  const urlPage = searchParams.get('page')
+  const [currentPage, setCurrentPage] = useState(parseInt(urlPage) || 1)
 
   // Filter and sort state
   const [filters, setFilters] = useState({
@@ -129,6 +137,28 @@ export default function EntityBrowserPage() {
 
     return () => clearTimeout(timer)
   }, [searchTerm])
+
+  // Update URL when page changes
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString())
+    if (currentPage === 1) {
+      params.delete('page')
+    } else {
+      params.set('page', currentPage.toString())
+    }
+    
+    const newUrl = `/entity-browser${params.toString() ? `?${params.toString()}` : ''}`
+    router.push(newUrl, { scroll: false })
+  }, [currentPage, searchParams, router])
+
+  // Update page when URL changes
+  useEffect(() => {
+    const urlPage = searchParams.get('page')
+    const newPage = parseInt(urlPage) || 1
+    if (newPage !== currentPage) {
+      setCurrentPage(newPage)
+    }
+  }, [searchParams, currentPage])
 
   // Reset page when filters change
   useEffect(() => {
@@ -411,7 +441,18 @@ export default function EntityBrowserPage() {
           <div className="flex items-center justify-between mt-8">
             <Button
               variant="outline"
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              onClick={() => {
+                const prevPage = Math.max(1, currentPage - 1)
+                setCurrentPage(prevPage)
+                const params = new URLSearchParams(searchParams.toString())
+                if (prevPage === 1) {
+                  params.delete('page')
+                } else {
+                  params.set('page', prevPage.toString())
+                }
+                const newUrl = `/entity-browser${params.toString() ? `?${params.toString()}` : ''}`
+                router.push(newUrl, { scroll: false })
+              }}
               disabled={!data.pagination.hasPrev}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -427,7 +468,14 @@ export default function EntityBrowserPage() {
 
             <Button
               variant="outline"
-              onClick={() => setCurrentPage(prev => Math.min(data.pagination.totalPages, prev + 1))}
+              onClick={() => {
+                const nextPage = Math.min(data.pagination.totalPages, currentPage + 1)
+                setCurrentPage(nextPage)
+                const params = new URLSearchParams(searchParams.toString())
+                params.set('page', nextPage.toString())
+                const newUrl = `/entity-browser${params.toString() ? `?${params.toString()}` : ''}`
+                router.push(newUrl, { scroll: false })
+              }}
               disabled={!data.pagination.hasNext}
             >
               Next
@@ -437,5 +485,21 @@ export default function EntityBrowserPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function EntityBrowserPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Database className="h-12 w-12 animate-spin mx-auto mb-4 text-primary" />
+          <h2 className="text-xl font-semibold mb-2">Loading Entities</h2>
+          <p className="text-muted-foreground">Loading search parameters...</p>
+        </div>
+      </div>
+    }>
+      <EntityBrowserPageContent />
+    </Suspense>
   )
 }
