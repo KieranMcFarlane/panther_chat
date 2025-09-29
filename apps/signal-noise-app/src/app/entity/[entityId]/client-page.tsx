@@ -106,6 +106,11 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     
     // Handle objects
     if (typeof value === 'object') {
+      // If object has low and high properties (Neo4j number type), extract the low value
+      if ('low' in value && 'high' in value && value.low !== undefined) {
+        return formatValue(value.low)
+      }
+      
       // If object has a value property, use that
       if ('value' in value && value.value !== undefined) {
         return formatValue(value.value)
