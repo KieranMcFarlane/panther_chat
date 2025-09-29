@@ -33,7 +33,10 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
   }
 
   const handleCardClick = () => {
-    router.push(`/entity/${entity.neo4j_id}`)
+    // Get current page from URL and pass it to the entity profile
+    const urlParams = new URLSearchParams(window.location.search)
+    const currentPage = urlParams.get('page') || '1'
+    router.push(`/entity/${entity.neo4j_id}?from=${currentPage}`)
   }
 
   return (
@@ -161,7 +164,10 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
             className="w-full"
             onClick={(e) => {
               e.stopPropagation()
-              router.push(`/entity/${entity.neo4j_id}`)
+              // Get current page from URL and pass it to the entity profile
+              const urlParams = new URLSearchParams(window.location.search)
+              const currentPage = urlParams.get('page') || '1'
+              router.push(`/entity/${entity.neo4j_id}?from=${currentPage}`)
             }}
           >
             View Full Profile
