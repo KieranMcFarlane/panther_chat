@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Mail, Linkedin } from "lucide-react"
 import { Entity, Connection } from "@/lib/neo4j"
+import { EntityBadge } from "@/components/badge/EntityBadge"
 
 interface EntityCardProps {
   entity: Entity
@@ -52,21 +53,29 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
       )}
 
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg leading-tight pr-12">
-          {entity.properties.name}
-        </CardTitle>
-        <div className="flex gap-2 flex-wrap">
-          {entity.labels.map((label: string) => (
-            <Badge key={label} variant="outline" className="text-xs">
-              {label}
-            </Badge>
-          ))}
+        <div className="flex items-start gap-4">
+          {/* Entity Badge */}
+          <EntityBadge entity={entity} size="lg" />
+          
+          {/* Entity Info */}
+          <div className="flex-1 min-w-0">
+            <CardTitle className="text-lg leading-tight">
+              {entity.properties.name}
+            </CardTitle>
+            <div className="flex gap-2 flex-wrap mt-1">
+              {entity.labels.map((label: string) => (
+                <Badge key={label} variant="outline" className="text-xs">
+                  {label}
+                </Badge>
+              ))}
+            </div>
+            {entity.properties.title && (
+              <p className="text-sm text-muted-foreground mt-1">
+                {entity.properties.title}
+              </p>
+            )}
+          </div>
         </div>
-        {entity.properties.title && (
-          <p className="text-sm text-muted-foreground">
-            {entity.properties.title}
-          </p>
-        )}
       </CardHeader>
 
       <CardContent className="space-y-3">

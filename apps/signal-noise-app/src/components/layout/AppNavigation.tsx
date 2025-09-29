@@ -21,13 +21,17 @@ import {
   Zap,
   MessageSquare,
   Database,
-  Search
+  Search,
+  LayoutDashboard,
+  LogIn,
+  Shield
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PageTransition from './PageTransition';
 import VectorSearch from '@/components/ui/VectorSearch';
+import { authClient } from '@/lib/auth-client';
 
 // Navigation items
 const navItems = [
@@ -40,6 +44,9 @@ const navItems = [
   { icon: Search, label: 'Knowledge Graph', href: '/knowledge-graph' },
   { icon: Zap, label: 'Terminal', href: '/terminal' },
   { icon: MessageSquare, label: 'Knowledge Graph Chat', href: '/knowledge-graph-chat' },
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
+  { icon: Shield, label: 'Admin', href: '/admin' },
+  { icon: LogIn, label: 'Login', href: '/login' },
 ];
 
 interface AppNavigationProps {

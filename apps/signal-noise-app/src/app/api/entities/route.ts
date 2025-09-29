@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import neo4j from 'neo4j-driver'
 import { Neo4jService } from '@/lib/neo4j'
+import { EntityCacheService } from '@/services/EntityCacheService'
 
 const neo4jService = new Neo4jService()
+const cacheService = new EntityCacheService()
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,15 +16,65 @@ export async function GET(request: NextRequest) {
     const sortBy = searchParams.get('sortBy') || 'name'
     const sortOrder = searchParams.get('sortOrder') || 'asc'
     const search = searchParams.get('search') || ''
+    const useCache = searchParams.get('useCache') !== 'false' // Default to true
     
+    if (useCache) {
+      // Try to get cached entities from Supabase first with timeout
+      try {
+        // Set a timeout for cache operations to prevent hanging
+        const cachePromise = Promise.resolve().then(async () => {
+          await cacheService.initialize()
+          return await cacheService.getCachedEntities({
+            page,
+            limit,
+            entityType,
+            search,
+            sortBy,
+            sortOrder: sortOrder as 'asc' | 'desc'
+          })
+        })
+        
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Cache operation timeout')), 5000)
+        })
+        
+        const cachedResult = await Promise.race([cachePromise, timeoutPromise]) as any
+        
+        // If we have cached data, return it
+        console.log('Cache result:', cachedResult)
+        if (cachedResult.entities.length > 0 || cachedResult.pagination.total === 0) {
+          console.log('✅ Using cached data, entities:', cachedResult.entities.length)
+          return NextResponse.json({
+            ...cachedResult,
+            source: 'cache',
+            cachedAt: new Date().toISOString()
+          })
+        } else {
+          console.log('⚠️ Cache is empty, falling back to Neo4j')
+        }
+      } catch (cacheError) {
+        console.warn('⚠️ Cache fetch failed, falling back to Neo4j:', cacheError)
+        // Continue to Neo4j fallback
+      }
+    }
+    
+    // Fallback to Neo4j if cache fails or is disabled
     // Ensure parameters are integers
     const skip = parseInt(((page - 1) * limit).toString())
     const limitInt = parseInt(limit.toString())
     
         
-    await neo4jService.initialize()
+    // Initialize Neo4j with timeout
+    const neo4jPromise = Promise.resolve().then(async () => {
+      await neo4jService.initialize()
+      return neo4jService.driver.session()
+    })
     
-    const session = neo4jService.driver.session()
+    const neo4jTimeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Neo4j connection timeout')), 10000)
+    })
+    
+    const session = await Promise.race([neo4jPromise, neo4jTimeoutPromise]) as any
     try {
       // Build the WHERE clause for filtering
       let whereClause = ''
@@ -47,13 +99,17 @@ export async function GET(request: NextRequest) {
       const sortField = validSortFields.includes(sortBy) ? sortBy : 'name'
       const orderDirection = sortOrder.toLowerCase() === 'desc' ? 'DESC' : 'ASC'
       
-      // Get total count for pagination
+      // Get total count for pagination with timeout
       const countQuery = whereClause 
         ? `MATCH (n) ${whereClause} RETURN count(n) as total`
         : 'MATCH (n) RETURN count(n) as total'
       
-            
-      const countResult = await session.run(countQuery, params)
+      const countPromise = session.run(countQuery, params)
+      const countTimeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Count query timeout')), 5000)
+      })
+      
+      const countResult = await Promise.race([countPromise, countTimeoutPromise]) as any
       const total = countResult.records[0].get('total').toNumber()
       
             
@@ -94,7 +150,8 @@ export async function GET(request: NextRequest) {
           entityType,
           sortBy,
           sortOrder
-        }
+        },
+        source: 'neo4j'
       })
     } finally {
       await session.close()

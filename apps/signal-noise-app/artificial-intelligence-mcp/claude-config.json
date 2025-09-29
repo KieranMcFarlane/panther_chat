@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "artificial-intelligence-mcp": {
+      "command": "node",
+      "args": ["dist/index.js"],
+      "cwd": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/artificial-intelligence-mcp",
+      "env": {}
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase",
+        "--project-ref=itlcuazbybqlkicsaola"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_8421d6c18ec244bbfbacb9536edb207ed8ddce0b"
+      }
+    }
+  }
+}

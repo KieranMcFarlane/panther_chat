@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { EntityBadge } from "@/components/badge/EntityBadge"
 import { 
   Database, 
   Search, 
@@ -19,11 +20,14 @@ import {
   Hash,
   SearchIcon,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Settings,
+  Image
 } from "lucide-react"
 
 interface Entity {
   id: string
+  neo4j_id: string | number
   labels: string[]
   properties: Record<string, any>
 }
@@ -46,12 +50,16 @@ interface EntityBrowserResponse {
 }
 
 export default function EntityBrowserPage() {
+  console.log("🔍 EntityBrowserPage: Component mounting")
+  
   const [data, setData] = useState<EntityBrowserResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [dataSource, setDataSource] = useState<'cache' | 'neo4j' | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
+  const [showBadgeInfo, setShowBadgeInfo] = useState(false)
 
   // Filter and sort state
   const [filters, setFilters] = useState({
@@ -74,6 +82,7 @@ export default function EntityBrowserPage() {
         entityType: filters.entityType,
         sortBy: filters.sortBy,
         sortOrder: filters.sortOrder
+        // useCache defaults to true
       })
 
       // Add search term if provided
@@ -88,6 +97,7 @@ export default function EntityBrowserPage() {
       
       const result = await response.json()
       setData(result)
+      setDataSource(result.source || null)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch entities")
     } finally {
@@ -109,7 +119,8 @@ export default function EntityBrowserPage() {
     if (typeof window !== 'undefined') {
       fetchEntities()
     }
-  }, [fetchEntities, filters, currentPage])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, filters, debouncedSearchTerm])
 
   const formatPropertyValue = (value: any): string => {
     if (value === null || value === undefined) return "null"
@@ -197,6 +208,25 @@ export default function EntityBrowserPage() {
               <h1 className="text-3xl font-bold">Entity Browser</h1>
             </div>
             <div className="flex items-center gap-2 ml-auto">
+              {/* Cache Status Indicator */}
+              {dataSource && (
+                <Badge 
+                  variant={dataSource === 'cache' ? 'default' : 'secondary'}
+                  className="flex items-center gap-1"
+                >
+                  <Database className="h-3 w-3" />
+                  {dataSource === 'cache' ? 'Cached' : 'Live'}
+                </Badge>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowBadgeInfo(!showBadgeInfo)}
+                className="flex items-center gap-2"
+              >
+                <Image className="h-4 w-4" />
+                {showBadgeInfo ? 'Hide' : 'Show'} Badge Info
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -214,6 +244,35 @@ export default function EntityBrowserPage() {
           <p className="text-muted-foreground">
             Browse all entities in your Neo4j knowledge graph with their complete schemas
           </p>
+          
+          {/* Badge Info Panel */}
+          {showBadgeInfo && (
+            <Card className="mt-4 border-blue-200 bg-blue-50">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Image className="h-5 w-5 text-blue-600" />
+                  <h3 className="font-semibold text-blue-800">Badge System Active</h3>
+                </div>
+                <div className="text-sm text-blue-700 space-y-1">
+                  <p>• Entity badges are automatically displayed for each entity</p>
+                  <p>• Badges are sourced from TheSportsDB and local files</p>
+                  <p>• Fallback initials/icons show when badges aren't available</p>
+                  <p>• Badge colors indicate entity type: <span className="font-medium">Blue=Club, Yellow=League, Green=Event, Gray=Organization</span></p>
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <Badge variant="outline" className="text-xs">
+                    5 Badges Loaded
+                  </Badge>
+                  <Badge variant="outline" className="text-xs">
+                    Auto-mapping Active
+                  </Badge>
+                  <Badge variant="outline" className="text-xs">
+                    Smart Fallbacks
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
 
@@ -311,8 +370,12 @@ export default function EntityBrowserPage() {
           {entities.map((entity) => (
             <Card key={entity.id} className="hover:shadow-lg transition-shadow">
               <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
+                <div className="flex items-start gap-4">
+                  {/* Entity Badge */}
+                  <EntityBadge entity={entity} size="lg" />
+                  
+                  {/* Entity Info */}
+                  <div className="flex-1 min-w-0">
                     <CardTitle className="text-lg leading-tight mb-2">
                       {entity.properties.name || `Entity ${entity.id}`}
                     </CardTitle>
