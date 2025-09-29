@@ -100,6 +100,24 @@ class BadgeService {
         s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/2-bundesliga-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'local'
+      },
+      {
+        entityId: '126',
+        entityName: 'Arsenal',
+        badgePath: '/badges/arsenal-badge.png',
+        badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
+        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/arsenal-badge.png',
+        lastUpdated: new Date().toISOString(),
+        source: 'thesportsdb'
+      },
+      {
+        entityId: '4406',
+        entityName: 'Arsenal Football Club',
+        badgePath: '/badges/arsenal-badge.png',
+        badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
+        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/arsenal-badge.png',
+        lastUpdated: new Date().toISOString(),
+        source: 'thesportsdb'
       }
     ]
   }
@@ -143,26 +161,53 @@ class BadgeService {
 
   // Generate badge mapping based on naming conventions
   private generateBadgeMapping(entityId: string | number, entityName: string): BadgeMapping | null {
-    const normalizedName = entityName
+    // Extract the main name by removing common suffixes
+    const mainName = entityName
+      .replace(/ Football Club$/i, '')
+      .replace(/ FC$/i, '')
+      .replace(/ AFC$/i, '')
+      .replace(/ FC$/i, '')
+      .replace(/ Club$/i, '')
+      .replace(/ United$/i, ' United')
+      .replace(/ City$/i, ' City')
+      .replace(/ Rovers$/i, ' Rovers')
+      .replace(/ Rangers$/i, ' Rangers')
+      .replace(/ Celtic$/i, ' Celtic')
+      .trim()
+    
+    const normalizedName = mainName
       .toLowerCase()
       .replace(/[^a-z0-9\s]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-
+    
+    // Try simplified naming patterns first, then more complex ones
     const possiblePaths = [
-      `${this.config.baseUrl}/${normalizedName}-badge.png`,
-      `${this.config.baseUrl}/${normalizedName}.png`,
-      `${this.config.baseUrl}/${entityId}-badge.png`
+      `${this.config.baseUrl}/${normalizedName}-badge.png`,  // Simple name
+      `${this.config.baseUrl}/${normalizedName}.png`,       // Simple name no suffix
+      `${this.config.baseUrl}/${entityId}-badge.png`,      // Fallback to ID
     ]
+    
+    // Try the original full name as last resort
+    const fullNameNormalized = entityName
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+    
+    if (fullNameNormalized !== normalizedName) {
+      possiblePaths.push(`${this.config.baseUrl}/${fullNameNormalized}-badge.png`)
+      possiblePaths.push(`${this.config.baseUrl}/${fullNameNormalized}.png`)
+    }
 
-    // Generate S3 URL based on naming convention
+    // Use simplified name for S3 URL (most likely to exist)
     const s3Url = `https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/${normalizedName}-badge.png`
 
-    // Return the first plausible mapping
+    // Return the mapping with multiple path options
     return {
       entityId,
       entityName,
-      badgePath: possiblePaths[0],
+      badgePath: possiblePaths[0], // Use the simplified name as primary
       s3Url,
       lastUpdated: new Date().toISOString(),
       source: 'local'
@@ -175,19 +220,49 @@ class BadgeService {
       return this.getFallbackBadgeUrl()
     }
 
-    // Try different URL sources in order of preference - prioritize S3 URLs
-    // Convert local paths to absolute URLs for better compatibility
-    const localPath = mapping.badgePath.startsWith('/') 
-      ? mapping.badgePath 
-      : `${this.config.baseUrl}/${mapping.badgePath}`
+    // Generate multiple possible URLs for better fallback handling
+    const urls = []
     
-    const urls = [
-      mapping.s3Url, // Prioritize S3 URLs first
-      localPath,
-      mapping.badgeUrl,
-      `${this.config.baseUrl}/placeholder-badge.png`
-    ]
+    // Always try S3 URL first (most reliable)
+    if (mapping.s3Url) {
+      urls.push(mapping.s3Url)
+    }
+    
+    // Try the primary badge path
+    if (mapping.badgePath) {
+      const localPath = mapping.badgePath.startsWith('/') 
+        ? mapping.badgePath 
+        : `${this.config.baseUrl}/${mapping.badgePath}`
+      urls.push(localPath)
+    }
+    
+    // Generate additional fallback URLs based on entity name
+    const mainName = mapping.entityName
+      .replace(/ Football Club$/i, '')
+      .replace(/ FC$/i, '')
+      .replace(/ AFC$/i, '')
+      .replace(/ Club$/i, '')
+      .trim()
+    
+    const normalizedName = mainName
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+    
+    // Try simplified variations
+    urls.push(`${this.config.baseUrl}/${normalizedName}-badge.png`)
+    urls.push(`${this.config.baseUrl}/${normalizedName}.png`)
+    
+    // Try theSportsDB URL if available
+    if (mapping.badgeUrl) {
+      urls.push(mapping.badgeUrl)
+    }
+    
+    // Final fallback
+    urls.push(`${this.config.baseUrl}/placeholder-badge.png`)
 
+    // Return the first URL that seems valid (we'll let the component handle actual loading errors)
     const selectedUrl = urls.find(url => url) || this.getFallbackBadgeUrl()
     console.log('Badge URL selected:', selectedUrl, 'for entity:', mapping.entityName)
     return selectedUrl
