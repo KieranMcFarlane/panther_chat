@@ -138,7 +138,16 @@ function EntityBrowserPageContent() {
     return () => clearTimeout(timer)
   }, [searchTerm])
 
-  // Update URL when page changes
+  // Update page when URL changes (external navigation)
+  useEffect(() => {
+    const urlPage = searchParams.get('page')
+    const newPage = parseInt(urlPage) || 1
+    if (newPage !== currentPage) {
+      setCurrentPage(newPage)
+    }
+  }, [searchParams])
+
+  // Update URL when page changes (internal navigation)
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString())
     if (currentPage === 1) {
@@ -150,15 +159,6 @@ function EntityBrowserPageContent() {
     const newUrl = `/entity-browser${params.toString() ? `?${params.toString()}` : ''}`
     router.push(newUrl, { scroll: false })
   }, [currentPage, searchParams, router])
-
-  // Update page when URL changes
-  useEffect(() => {
-    const urlPage = searchParams.get('page')
-    const newPage = parseInt(urlPage) || 1
-    if (newPage !== currentPage) {
-      setCurrentPage(newPage)
-    }
-  }, [searchParams, currentPage])
 
   // Reset page when filters change
   useEffect(() => {
@@ -441,18 +441,7 @@ function EntityBrowserPageContent() {
           <div className="flex items-center justify-between mt-8">
             <Button
               variant="outline"
-              onClick={() => {
-                const prevPage = Math.max(1, currentPage - 1)
-                setCurrentPage(prevPage)
-                const params = new URLSearchParams(searchParams.toString())
-                if (prevPage === 1) {
-                  params.delete('page')
-                } else {
-                  params.set('page', prevPage.toString())
-                }
-                const newUrl = `/entity-browser${params.toString() ? `?${params.toString()}` : ''}`
-                router.push(newUrl, { scroll: false })
-              }}
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
               disabled={!data.pagination.hasPrev}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -468,14 +457,7 @@ function EntityBrowserPageContent() {
 
             <Button
               variant="outline"
-              onClick={() => {
-                const nextPage = Math.min(data.pagination.totalPages, currentPage + 1)
-                setCurrentPage(nextPage)
-                const params = new URLSearchParams(searchParams.toString())
-                params.set('page', nextPage.toString())
-                const newUrl = `/entity-browser${params.toString() ? `?${params.toString()}` : ''}`
-                router.push(newUrl, { scroll: false })
-              }}
+              onClick={() => setCurrentPage(prev => Math.min(data.pagination.totalPages, prev + 1))}
               disabled={!data.pagination.hasNext}
             >
               Next
