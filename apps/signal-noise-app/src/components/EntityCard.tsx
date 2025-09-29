@@ -3,9 +3,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Mail, Linkedin } from "lucide-react"
+import { ExternalLink, Mail, Linkedin, ArrowRight } from "lucide-react"
 import { Entity, Connection } from "@/lib/neo4j"
 import { EntityBadge } from "@/components/badge/EntityBadge"
+import { useRouter } from "next/navigation"
 
 interface EntityCardProps {
   entity: Entity
@@ -15,6 +16,8 @@ interface EntityCardProps {
 }
 
 export function EntityCard({ entity, similarity, connections, rank }: EntityCardProps) {
+  const router = useRouter()
+  
   const getSimilarityColor = (score: number) => {
     if (score >= 0.9) return "bg-green-500"
     if (score >= 0.8) return "bg-blue-500"
@@ -29,8 +32,15 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
     return email
   }
 
+  const handleCardClick = () => {
+    router.push(`/entity/${entity.neo4j_id}`)
+  }
+
   return (
-    <Card className="relative hover:shadow-lg transition-shadow">
+    <Card 
+      className="relative hover:shadow-lg transition-shadow cursor-pointer hover:scale-[1.02] transition-transform duration-200"
+      onClick={handleCardClick}
+    >
       {/* Similarity Score */}
       {similarity && (
         <div className="absolute top-2 right-2">
@@ -96,7 +106,10 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
                 variant="outline"
                 size="sm"
                 className="w-full"
-                onClick={() => window.open(entity.properties.linkedinUrl, '_blank')}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  window.open(entity.properties.linkedinUrl, '_blank')
+                }}
               >
                 <Linkedin className="h-4 w-4 mr-2" />
                 View LinkedIn Profile
@@ -139,6 +152,22 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
             </div>
           </div>
         )}
+
+        {/* View Profile Button */}
+        <div className="border-t pt-3">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full"
+            onClick={(e) => {
+              e.stopPropagation()
+              router.push(`/entity/${entity.neo4j_id}`)
+            }}
+          >
+            View Full Profile
+            <ArrowRight className="h-4 w-4 ml-2" />
+          </Button>
+        </div>
 
         {/* Source Information */}
         {entity.properties.source && (

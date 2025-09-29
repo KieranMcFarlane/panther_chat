@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { EntityBadge } from "@/components/badge/EntityBadge"
+import { EntityCard } from "@/components/EntityCard"
 import { 
   Database, 
   Search, 
@@ -53,31 +54,35 @@ export default function EntityBrowserPage() {
   console.log("🔍 EntityBrowserPage: Component mounting")
   
   const [data, setData] = useState<EntityBrowserResponse | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [initialLoading, setInitialLoading] = useState(true)
+  const [gridLoading, setGridLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [dataSource, setDataSource] = useState<'cache' | 'neo4j' | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
-  const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
   const [showBadgeInfo, setShowBadgeInfo] = useState(false)
+
+  const [currentPage, setCurrentPage] = useState(1)
 
   // Filter and sort state
   const [filters, setFilters] = useState({
     entityType: "all",
     sortBy: "name",
     sortOrder: "asc" as "asc" | "desc",
-    limit: "20"
+    limit: "10" // Show 10 per page
   })
 
-  const [currentPage, setCurrentPage] = useState(1)
-
-  const fetchEntities = useCallback(async () => {
-    setLoading(true)
+  const fetchEntities = useCallback(async (page: number = currentPage, isInitial: boolean = false) => {
+    if (isInitial) {
+      setInitialLoading(true)
+    } else {
+      setGridLoading(true)
+    }
     setError(null)
     
     try {
       const params = new URLSearchParams({
-        page: currentPage.toString(),
+        page: page.toString(),
         limit: filters.limit,
         entityType: filters.entityType,
         sortBy: filters.sortBy,
@@ -96,14 +101,25 @@ export default function EntityBrowserPage() {
       }
       
       const result = await response.json()
+      
       setData(result)
       setDataSource(result.source || null)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch entities")
     } finally {
-      setLoading(false)
+      if (isInitial) {
+        setInitialLoading(false)
+      } else {
+        setGridLoading(false)
+      }
     }
-  }, [currentPage, filters, debouncedSearchTerm])
+  }, [currentPage, filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
+
+  // Reset and reload when filters change
+  const resetAndReload = useCallback(() => {
+    setCurrentPage(1)
+    fetchEntities(1)
+  }, [fetchEntities])
 
   // Debounce search term to prevent excessive API calls
   useEffect(() => {
@@ -114,31 +130,20 @@ export default function EntityBrowserPage() {
     return () => clearTimeout(timer)
   }, [searchTerm])
 
+  // Reset page when filters change
   useEffect(() => {
-    // Only fetch on client side
     if (typeof window !== 'undefined') {
-      fetchEntities()
+      setCurrentPage(1)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, filters, debouncedSearchTerm])
+  }, [filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
 
-  const formatPropertyValue = (value: any): string => {
-    if (value === null || value === undefined) return "null"
-    if (typeof value === 'string') return value
-    if (typeof value === 'number') return value.toString()
-    if (typeof value === 'boolean') return value ? "true" : "false"
-    if (Array.isArray(value)) return `[${value.length} items]`
-    if (typeof value === 'object') return JSON.stringify(value, null, 2)
-    return String(value)
-  }
-
-  const getPropertyType = (value: any): string => {
-    if (value === null || value === undefined) return "null"
-    if (Array.isArray(value)) return "array"
-    return typeof value
-  }
-
-  const entities = data?.entities || []
+  // Fetch entities when page or filters change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isInitial = !data
+      fetchEntities(currentPage, isInitial)
+    }
+  }, [currentPage, filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
 
   const exportToJSON = () => {
     if (!data) return
@@ -164,13 +169,13 @@ export default function EntityBrowserPage() {
     URL.revokeObjectURL(url)
   }
 
-  if (loading) {
+  if (initialLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <Database className="h-12 w-12 animate-spin mx-auto mb-4 text-primary" />
           <h2 className="text-xl font-semibold mb-2">Loading Entities</h2>
-          <p className="text-muted-foreground">Fetching entities from Neo4j...</p>
+          <p className="text-muted-foreground">Loading first page quickly...</p>
         </div>
       </div>
     )
@@ -184,7 +189,7 @@ export default function EntityBrowserPage() {
             <Database className="h-12 w-12 text-destructive mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Error Loading Entities</h2>
             <p className="text-muted-foreground mb-4">{error}</p>
-            <Button onClick={fetchEntities} variant="outline">
+            <Button onClick={() => fetchEntities(currentPage, false)} variant="outline">
               Try Again
             </Button>
           </CardContent>
@@ -196,6 +201,8 @@ export default function EntityBrowserPage() {
   if (!data) {
     return null
   }
+
+  const entities = data.entities || []
 
   return (
     <div className="min-h-screen bg-background">
@@ -340,17 +347,17 @@ export default function EntityBrowserPage() {
                   <SelectValue placeholder="Per Page" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="10">10 per page</SelectItem>
+                  <SelectItem value="5">5 per page (Fast)</SelectItem>
+                  <SelectItem value="10">10 per page (Default)</SelectItem>
                   <SelectItem value="20">20 per page</SelectItem>
                   <SelectItem value="50">50 per page</SelectItem>
-                  <SelectItem value="100">100 per page</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             {/* Action Buttons */}
             <div className="flex gap-2 mt-4">
-              <Button onClick={fetchEntities} variant="outline" size="sm">
+              <Button onClick={resetAndReload} variant="outline" size="sm">
                 <Filter className="h-4 w-4 mr-2" />
                 Apply Filters
               </Button>
@@ -359,7 +366,7 @@ export default function EntityBrowserPage() {
                 Export JSON
               </Button>
               <Badge variant="outline" className="ml-auto">
-                Showing {entities.length} of {data.pagination.total.toLocaleString()} entities
+                Showing {entities.length} of {data?.pagination.total?.toLocaleString() || '...'} entities
               </Badge>
             </div>
           </CardContent>
@@ -367,146 +374,67 @@ export default function EntityBrowserPage() {
 
         {/* Entity Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {entities.map((entity) => (
-            <Card key={entity.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-start gap-4">
-                  {/* Entity Badge */}
-                  <EntityBadge entity={entity} size="lg" />
-                  
-                  {/* Entity Info */}
-                  <div className="flex-1 min-w-0">
-                    <CardTitle className="text-lg leading-tight mb-2">
-                      {entity.properties.name || `Entity ${entity.id}`}
-                    </CardTitle>
-                    <div className="flex gap-2 flex-wrap">
-                      {entity.labels.map((label) => (
-                        <Badge key={label} variant="secondary" className="text-xs">
-                          {label}
-                        </Badge>
-                      ))}
+          {gridLoading ? (
+            // Show loading placeholders while maintaining grid layout
+            Array.from({ length: parseInt(filters.limit) || 10 }).map((_, index) => (
+              <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm">
+                <div className="flex flex-col space-y-1.5 p-6 pb-3">
+                  <div className="flex items-start gap-4">
+                    <div className="relative rounded-lg overflow-hidden w-16 h-16 bg-gray-200 animate-pulse"></div>
+                    <div className="flex-1 min-w-0">
+                      <div className="h-6 bg-gray-200 rounded animate-pulse mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded animate-pulse w-20"></div>
                     </div>
                   </div>
                 </div>
-              </CardHeader>
-
-              <CardContent className="space-y-4">
-                {/* Key Properties */}
-                {entity.properties.type && (
-                  <div>
-                    <span className="text-sm font-medium text-muted-foreground">Type:</span>
-                    <span className="ml-2 text-sm">{entity.properties.type}</span>
+                <div className="p-6 pt-0 space-y-3">
+                  <div className="border-t pt-3">
+                    <div className="h-9 bg-gray-200 rounded animate-pulse"></div>
                   </div>
-                )}
-
-                {entity.properties.sport && (
-                  <div>
-                    <span className="text-sm font-medium text-muted-foreground">Sport:</span>
-                    <span className="ml-2 text-sm">{entity.properties.sport}</span>
-                  </div>
-                )}
-
-                {entity.properties.country && (
-                  <div>
-                    <span className="text-sm font-medium text-muted-foreground">Country:</span>
-                    <span className="ml-2 text-sm">{entity.properties.country}</span>
-                  </div>
-                )}
-
-                {entity.properties.description && (
-                  <div>
-                    <span className="text-sm font-medium text-muted-foreground">Description:</span>
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                      {entity.properties.description}
-                    </p>
-                  </div>
-                )}
-
-                {/* Property Count */}
-                <div className="flex items-center justify-between text-xs text-muted-foreground border-t pt-2">
-                  <div className="flex items-center">
-                    <Hash className="inline h-3 w-3 mr-1" />
-                    {Object.keys(entity.properties).length} properties
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSelectedEntity(selectedEntity?.id === entity.id ? null : entity)}
-                    className="h-6 px-2 text-xs"
-                  >
-                    {selectedEntity?.id === entity.id ? (
-                      <>
-                        <EyeOff className="h-3 w-3 mr-1" />
-                        Hide
-                      </>
-                    ) : (
-                      <>
-                        <Eye className="h-3 w-3 mr-1" />
-                        Show Properties
-                      </>
-                    )}
-                  </Button>
+                  <div className="h-3 bg-gray-200 rounded animate-pulse w-16"></div>
                 </div>
-
-                {/* Full Schema (Expanded) */}
-                {selectedEntity?.id === entity.id && (
-                  <div className="border-t pt-4 mt-4 animate-in fade-in-0 zoom-in-95 duration-200">
-                    <div className="flex items-center gap-2 mb-3">
-                      <ChevronDown className="h-4 w-4 text-primary" />
-                      <h4 className="text-sm font-medium">All Properties ({Object.keys(entity.properties).length})</h4>
-                    </div>
-                    <div className="space-y-2 max-h-96 overflow-y-auto">
-                      {Object.entries(entity.properties).map(([key, value]) => (
-                        <div key={key} className="group bg-muted/30 hover:bg-muted/50 p-3 rounded-lg border border-border/50 transition-all duration-200">
-                          <div className="flex items-start justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                              <ChevronRight className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors" />
-                              <span className="font-mono font-medium text-sm">{key}</span>
-                            </div>
-                            <Badge variant="secondary" className="text-xs">
-                              {getPropertyType(value)}
-                            </Badge>
-                          </div>
-                          <div className="ml-5 text-sm text-muted-foreground break-all">
-                            {formatPropertyValue(value)}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            ))
+          ) : (
+            entities.map((entity) => (
+              <EntityCard
+                key={`${entity.id}-${entity.neo4j_id}`}
+                entity={entity}
+              />
+            ))
+          )}
         </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between mt-8">
-          <Button
-            variant="outline"
-            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            disabled={!data.pagination.hasPrev}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Previous
-          </Button>
 
-          <div className="text-sm text-muted-foreground">
-            Page {data.pagination.page} of {data.pagination.totalPages}
-            <span className="ml-2">
-              ({((data.pagination.page - 1) * data.pagination.limit + 1)} - {Math.min(data.pagination.page * data.pagination.limit, data.pagination.total)} of {data.pagination.total})
-            </span>
+        {/* Traditional Pagination (for accessibility) */}
+        {data && (
+          <div className="flex items-center justify-between mt-8">
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={!data.pagination.hasPrev}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Previous
+            </Button>
+
+            <div className="text-sm text-muted-foreground">
+              Page {data.pagination.page} of {data.pagination.totalPages}
+              <span className="ml-2">
+                ({((data.pagination.page - 1) * data.pagination.limit + 1)} - {Math.min(data.pagination.page * data.pagination.limit, data.pagination.total)} of {data.pagination.total})
+              </span>
+            </div>
+
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage(prev => Math.min(data.pagination.totalPages, prev + 1))}
+              disabled={!data.pagination.hasNext}
+            >
+              Next
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
           </div>
-
-          <Button
-            variant="outline"
-            onClick={() => setCurrentPage(prev => Math.min(data.pagination.totalPages, prev + 1))}
-            disabled={!data.pagination.hasNext}
-          >
-            Next
-            <ArrowRight className="h-4 w-4 ml-2" />
-          </Button>
-        </div>
+        )}
       </div>
     </div>
   )
