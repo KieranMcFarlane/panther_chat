@@ -28,6 +28,10 @@ export class Neo4jService {
   private driver: any
   private initialized = false
 
+  public getDriver() {
+    return this.driver
+  }
+
   constructor() {
     this.driver = neo4j.driver(
       process.env.NEO4J_URI || process.env.NEXT_PUBLIC_NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',

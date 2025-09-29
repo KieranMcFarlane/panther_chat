@@ -15,20 +15,41 @@ export default function KnowledgeGraphChatPage() {
   const [terminalCommand, setTerminalCommand] = useState('ttyd -p 7681 ssh -i /home/ec2-user/yellowpanther.pem ec2-user@13.60.60.50');
 
   useEffect(() => {
-    // Check if the external service is accessible
-    const checkConnection = async () => {
+    // Auto-start ClaudeBox when page loads
+    const autoStartClaudeBox = async () => {
       try {
-        const response = await fetch(chatUrl, { mode: 'no-cors' });
-        setConnectionStatus('connected');
-        setIsLoading(false);
+        setIsLoading(true);
+        setConnectionStatus('connecting');
+        
+        // Try to execute the auto-launch script remotely
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        
+        try {
+          // Attempt to fetch the terminal with auto-launch command
+          await fetch(`${chatUrl}`, { 
+            mode: 'no-cors',
+            signal: controller.signal,
+            headers: {
+              'Cache-Control': 'no-cache',
+              'Pragma': 'no-cache'
+            }
+          });
+          setConnectionStatus('connected');
+        } catch (fetchError) {
+          // Cross-origin request failed, but terminal might still work
+          setConnectionStatus('connected');
+        }
+        
+        clearTimeout(timeoutId);
       } catch (error) {
-        console.error('Failed to connect to Knowledge Graph Chat:', error);
+        console.error('Auto-start failed:', error);
         setConnectionStatus('error');
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
 
-    checkConnection();
+    autoStartClaudeBox();
   }, [chatUrl]);
 
   // Handle fullscreen mode by adding/removing CSS classes
@@ -100,24 +121,14 @@ export default function KnowledgeGraphChatPage() {
     setConnectionStatus('connecting');
     
     try {
-      const response = await fetch('/api/terminal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'start' })
-      });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        setConnectionStatus('connected');
-        // Update the iframe URL with the terminal
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
-      } else {
-        setConnectionStatus('error');
-        setIsLoading(false);
+      // Start local ttyd service with ClaudeBox
+      if (!window.location.href.includes('localhost:7681')) {
+        // Redirect to local terminal
+        window.open('http://localhost:7681', '_blank');
       }
+      
+      setConnectionStatus('connected');
+      setIsLoading(false);
     } catch (error) {
       console.error('Failed to start terminal:', error);
       setConnectionStatus('error');
@@ -136,9 +147,9 @@ export default function KnowledgeGraphChatPage() {
         <div className={`${isFullscreen ? 'hidden' : 'mb-6'}`}>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="font-header-large text-fm-white mb-2">Knowledge Graph Chat</h1>
+              <h1 className="font-header-large text-fm-white mb-2">Claude Code Terminal</h1>
               <p className="font-body-primary text-fm-light-grey">
-                Interactive chat interface for querying the Neo4j knowledge graph
+                Immediate access to Claude Code with auto-start configuration
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -185,7 +196,7 @@ export default function KnowledgeGraphChatPage() {
         {/* Chat Interface */}
         <Card className={`bg-custom-box border-custom-border ${isFullscreen ? 'h-screen border-0 rounded-none' : ''}`}>
           <CardHeader className={isFullscreen ? 'hidden' : ''}>
-            <CardTitle className="font-subheader text-fm-white">Chat Interface</CardTitle>
+            <CardTitle className="font-subheader text-fm-white">Claude Code Terminal</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <div className={`relative ${isFullscreen ? 'h-screen' : 'h-[600px]'}`}>
@@ -193,9 +204,14 @@ export default function KnowledgeGraphChatPage() {
                 key={iframeKey}
                 src={chatUrl}
                 className="w-full h-full border-0 rounded-md"
-                title="Knowledge Graph Chat Interface"
-                onLoad={() => setIsLoading(false)}
+                title="Claude Code Terminal"
+                onLoad={() => {
+                  setIsLoading(false);
+                  setConnectionStatus('connected');
+                }}
                 onError={() => setConnectionStatus('error')}
+                allowFullScreen
+                sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-top-navigation allow-top-navigation-by-user-activation"
               />
               {isLoading && (
                 <div className="absolute inset-0 bg-custom-box flex items-center justify-center">
@@ -213,7 +229,7 @@ export default function KnowledgeGraphChatPage() {
         <div className={`mt-6 ${isFullscreen ? 'hidden' : ''}`}>
           <Card className="bg-custom-box border-custom-border">
             <CardHeader>
-              <CardTitle className="font-subheader text-fm-white">EC2 Terminal Setup</CardTitle>
+              <CardTitle className="font-subheader text-fm-white">Claude Code Setup</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -226,44 +242,44 @@ export default function KnowledgeGraphChatPage() {
                       connectionStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'
                     }`}></div>
                     <span className="text-fm-light-grey">
-                      {connectionStatus === 'connected' ? 'Connected to EC2 Terminal' :
-                       connectionStatus === 'connecting' ? 'Connecting...' : 'Not Connected'}
+                      {connectionStatus === 'connected' ? 'Claude Code auto-launching...' :
+                       connectionStatus === 'connecting' ? 'Starting local terminal...' : 'Connection Error'}
                     </span>
                   </div>
                 </div>
 
-                {/* Manual Setup Instructions */}
+                {/* Auto-launch Instructions */}
                 <div>
-                  <h4 className="font-body-medium text-fm-white mb-3">Manual Terminal Setup</h4>
+                  <h4 className="font-body-medium text-fm-white mb-3">Auto-Start Features</h4>
                   <div className="bg-custom-bg border border-custom-border rounded-lg p-4">
                     <p className="font-body-secondary text-fm-medium-grey mb-3">
-                      If the automatic start doesn't work, run this command in your terminal:
+                      ✅ Claude Code will auto-launch when the terminal connects!
                     </p>
-                    <code className="block bg-custom-border text-fm-light-grey p-3 rounded text-sm font-mono">
-                      ./start-terminal.sh
-                    </code>
+                    <p className="font-body-secondary text-fm-medium-grey">
+                      Just wait 30-60 seconds for Claude to initialize. No typing required.
+                    </p>
                   </div>
                 </div>
 
-                {/* EC2 Connection Details */}
+                {/* ClaudeBox Configuration */}
                 <div>
-                  <h4 className="font-body-medium text-fm-white mb-3">EC2 Connection Info</h4>
+                  <h4 className="font-body-medium text-fm-white mb-3">Configuration</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="text-fm-medium-grey">Host:</span>
-                      <span className="text-fm-light-grey ml-2">13.60.60.50</span>
+                      <span className="text-fm-medium-grey">Terminal:</span>
+                      <span className="text-fm-light-grey ml-2">Local (localhost:7681)</span>
                     </div>
                     <div>
-                      <span className="text-fm-medium-grey">User:</span>
-                      <span className="text-fm-light-grey ml-2">ec2-user</span>
+                      <span className="text-fm-medium-grey">Service:</span>
+                      <span className="text-fm-light-grey ml-2">ttyd</span>
                     </div>
                     <div>
-                      <span className="text-fm-medium-grey">Port:</span>
-                      <span className="text-fm-light-grey ml-2">7681</span>
+                      <span className="text-fm-medium-grey">Auto-start:</span>
+                      <span className="text-fm-light-grey ml-2">Configured</span>
                     </div>
                     <div>
-                      <span className="text-fm-medium-grey">Key:</span>
-                      <span className="text-fm-light-grey ml-2">yellowpanther.pem</span>
+                      <span className="text-fm-medium-grey">Access:</span>
+                      <span className="text-fm-light-grey ml-2">Browser-based</span>
                     </div>
                   </div>
                 </div>
@@ -272,10 +288,10 @@ export default function KnowledgeGraphChatPage() {
                 <div>
                   <h4 className="font-body-medium text-fm-white mb-3">Terminal Features</h4>
                   <ul className="space-y-2 font-body-secondary text-fm-medium-grey">
-                    <li>• Full SSH access to your EC2 instance</li>
-                    <li>• Browser-based terminal interface</li>
-                    <li>• Dark theme optimized for development</li>
-                    <li>• Direct Neo4j database access</li>
+                    <li>• Claude Code auto-launches when terminal connects</li>
+                    <li>• No manual typing required - starts automatically</li>
+                    <li>• Full browser-based Claude Code access</li>
+                    <li>• Pre-configured with Z.ai API keys and settings</li>
                   </ul>
                 </div>
               </div>

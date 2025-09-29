@@ -25,11 +25,60 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
     return "bg-gray-500"
   }
 
-  const formatEmail = (email: any) => {
-    if (Array.isArray(email)) {
-      return email.filter(e => e && typeof e === 'string').join(", ")
+  const formatValue = (value: any): string => {
+    if (value === null || value === undefined) return ""
+    if (typeof value === 'string') return value
+    if (typeof value === 'number') return value.toString()
+    if (typeof value === 'boolean') return value ? "Yes" : "No"
+    if (Array.isArray(value)) return value.map(item => formatValue(item)).join(", ")
+    
+    // Handle objects
+    if (typeof value === 'object') {
+      // If object has a value property, use that
+      if ('value' in value && value.value !== undefined) {
+        return formatValue(value.value)
+      }
+      
+      // If object has name property, use that
+      if ('name' in value && value.name !== undefined) {
+        return formatValue(value.name)
+      }
+      
+      // If object has email property, use that
+      if ('email' in value && value.email !== undefined) {
+        return formatValue(value.email)
+      }
+      
+      // If object has address property, use that
+      if ('address' in value && value.address !== undefined) {
+        return formatValue(value.address)
+      }
+      
+      // If object has title property, use that
+      if ('title' in value && value.title !== undefined) {
+        return formatValue(value.title)
+      }
+      
+      // If empty object, return empty string
+      if (Object.keys(value).length === 0) {
+        return ""
+      }
+      
+      // Last resort: return JSON stringified version
+      try {
+        const stringValue = JSON.stringify(value)
+        return stringValue === '{}' ? '' : stringValue
+      } catch {
+        return String(value)
+      }
     }
-    return email
+    
+    return String(value)
+  }
+
+  const formatEmail = (email: any) => {
+    const formatted = formatValue(email)
+    return formatted || ""
   }
 
   const handleCardClick = () => {
@@ -84,7 +133,7 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
             </div>
             {entity.properties.title && (
               <p className="text-sm text-muted-foreground mt-1">
-                {entity.properties.title}
+                {formatValue(entity.properties.title)}
               </p>
             )}
           </div>
@@ -124,7 +173,7 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
         {/* Additional Properties */}
         {entity.properties.company && (
           <div className="text-sm">
-            <span className="font-medium">Company:</span> {entity.properties.company}
+            <span className="font-medium">Company:</span> {formatValue(entity.properties.company)}
           </div>
         )}
 

@@ -102,36 +102,97 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     if (typeof value === 'string') return value
     if (typeof value === 'number') return value.toString()
     if (typeof value === 'boolean') return value ? "Yes" : "No"
-    if (Array.isArray(value)) return value.join(", ")
+    if (Array.isArray(value)) return value.map(item => formatValue(item)).join(", ")
+    
+    // Handle objects
+    if (typeof value === 'object') {
+      // If object has a value property, use that
+      if ('value' in value && value.value !== undefined) {
+        return formatValue(value.value)
+      }
+      
+      // If object has name property, use that
+      if ('name' in value && value.name !== undefined) {
+        return formatValue(value.name)
+      }
+      
+      // If object has score property, use that
+      if ('score' in value && value.score !== undefined) {
+        return formatValue(value.score)
+      }
+      
+      // If object has text property, use that
+      if ('text' in value && value.text !== undefined) {
+        return formatValue(value.text)
+      }
+      
+      // If object has amount property, use that
+      if ('amount' in value && value.amount !== undefined) {
+        return formatValue(value.amount)
+      }
+      
+      // If object has currency properties
+      if ('value' in value && 'currency' in value) {
+        return `${value.currency}${formatValue(value.value)}`
+      }
+      
+      // If empty object, return N/A
+      if (Object.keys(value).length === 0) {
+        return "N/A"
+      }
+      
+      // Last resort: return JSON stringified version (but nicely formatted)
+      try {
+        const stringValue = JSON.stringify(value)
+        return stringValue === '{}' ? 'N/A' : stringValue
+      } catch {
+        return String(value)
+      }
+    }
+    
     return String(value)
   }
 
   const formatCurrency = (value: any): string => {
     if (!value || value === "N/A") return "N/A"
-    const num = parseFloat(value.toString().replace(/[£,$,M,K]/g, ''))
-    if (isNaN(num)) return value
     
-    if (value.toString().includes('M')) return `£${num}M`
-    if (value.toString().includes('K')) return `£${num}K`
+    // First, format the value to handle objects
+    const formattedValue = formatValue(value)
+    if (formattedValue === "N/A") return "N/A"
+    
+    const num = parseFloat(formattedValue.toString().replace(/[£,$,M,K]/g, ''))
+    if (isNaN(num)) return formattedValue
+    
+    if (formattedValue.toString().includes('M')) return `£${num}M`
+    if (formattedValue.toString().includes('K')) return `£${num}K`
     return `£${num.toLocaleString()}`
   }
 
   const formatPercentage = (value: any): string => {
     if (!value || value === "N/A") return "N/A"
-    const num = parseFloat(value.toString())
-    if (isNaN(num)) return value
+    
+    // First, format the value to handle objects
+    const formattedValue = formatValue(value)
+    if (formattedValue === "N/A") return "N/A"
+    
+    const num = parseFloat(formattedValue.toString())
+    if (isNaN(num)) return formattedValue
     return `${num}%`
   }
 
-  const getScoreColor = (score: number): string => {
-    if (score >= 80) return "text-green-600"
-    if (score >= 60) return "text-yellow-600"
+  const getScoreColor = (score: any): string => {
+    const numScore = parseInt(formatValue(score))
+    if (isNaN(numScore)) return "text-gray-600"
+    if (numScore >= 80) return "text-green-600"
+    if (numScore >= 60) return "text-yellow-600"
     return "text-red-600"
   }
 
-  const getPriorityColor = (priority: number): string => {
-    if (priority >= 90) return "bg-red-100 text-red-800 border-red-200"
-    if (priority >= 70) return "bg-yellow-100 text-yellow-800 border-yellow-200"
+  const getPriorityColor = (priority: any): string => {
+    const numPriority = parseInt(formatValue(priority))
+    if (isNaN(numPriority)) return "bg-gray-100 text-gray-800 border-gray-200"
+    if (numPriority >= 90) return "bg-red-100 text-red-800 border-red-200"
+    if (numPriority >= 70) return "bg-yellow-100 text-yellow-800 border-yellow-200"
     return "bg-green-100 text-green-800 border-green-200"
   }
 
@@ -421,7 +482,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                     {properties.digitalMaturity && (
                       <div className="text-center p-4 border rounded-lg">
-                        <div className={`text-2xl font-bold ${getScoreColor(parseInt(properties.digitalMaturity))}`}>
+                        <div className={`text-2xl font-bold ${getScoreColor(properties.digitalMaturity)}`}>
                           {formatValue(properties.digitalMaturity)}
                         </div>
                         <div className="text-sm text-muted-foreground">Digital Maturity</div>
@@ -430,7 +491,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
                     
                     {properties.digitalScore && (
                       <div className="text-center p-4 border rounded-lg">
-                        <div className={`text-2xl font-bold ${getScoreColor(parseInt(properties.digitalScore))}`}>
+                        <div className={`text-2xl font-bold ${getScoreColor(properties.digitalScore)}`}>
                           {formatValue(properties.digitalScore)}
                         </div>
                         <div className="text-sm text-muted-foreground">Transformation Score</div>
@@ -439,7 +500,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
                     
                     {properties.websiteModernness && (
                       <div className="text-center p-4 border rounded-lg">
-                        <div className={`text-2xl font-bold ${getScoreColor(parseInt(properties.websiteModernness))}`}>
+                        <div className={`text-2xl font-bold ${getScoreColor(properties.websiteModernness)}`}>
                           {formatValue(properties.websiteModernness)}
                         </div>
                         <div className="text-sm text-muted-foreground">Website Modernness</div>
@@ -577,7 +638,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
                         <Star className="h-4 w-4 text-red-600" />
                         <span className="font-medium">Priority Score</span>
                       </div>
-                      <div className={`text-lg font-bold ${getScoreColor(parseInt(properties.yellowPantherPriority))}`}>
+                      <div className={`text-lg font-bold ${getScoreColor(properties.yellowPantherPriority)}`}>
                         {formatValue(properties.yellowPantherPriority)}/100
                       </div>
                     </div>
@@ -589,7 +650,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
                         <Target className="h-4 w-4 text-green-600" />
                         <span className="font-medium">Opportunity Score</span>
                       </div>
-                      <div className={`text-lg font-bold ${getScoreColor(parseInt(properties.opportunityScore))}`}>
+                      <div className={`text-lg font-bold ${getScoreColor(properties.opportunityScore)}`}>
                         {formatValue(properties.opportunityScore)}/100
                       </div>
                     </div>
