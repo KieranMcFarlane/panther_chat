@@ -160,12 +160,29 @@ function EntityBrowserPageContent() {
     router.push(newUrl, { scroll: false })
   }, [currentPage, searchParams, router])
 
-  // Reset page when filters change
+  // Reset page to 1 when search term changes (new search)
+  useEffect(() => {
+    if (debouncedSearchTerm !== searchTerm) {
+      // Search is being debounced, don't reset yet
+      return
+    }
+    
+    // Only reset if we have an actual search term that changed
+    if (searchTerm) {
+      const urlPage = searchParams.get('page')
+      const currentPage = parseInt(urlPage) || 1
+      if (currentPage !== 1) {
+        setCurrentPage(1)
+      }
+    }
+  }, [debouncedSearchTerm, searchTerm, searchParams])
+
+  // Reset page when other filters change
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setCurrentPage(1)
     }
-  }, [filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
+  }, [filters.entityType, filters.sortBy, filters.sortOrder, filters.limit])
 
   // Fetch entities when page or filters change
   useEffect(() => {
