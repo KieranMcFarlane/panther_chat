@@ -38,7 +38,7 @@ export class EntityCacheService {
     
     console.log('🔄 Starting entity sync from Neo4j to Supabase...')
     
-    const session = this.neo4jService.driver.session()
+    const session = await this.neo4jService.getDriver().session()
     
     try {
       // Get total count
@@ -182,9 +182,117 @@ export class EntityCacheService {
       }
       
       if (search) {
-        query = query.or(
-          `properties->>'name'.ilike.%${search}%,properties->>'description'.ilike.%${search}%,properties->>'type'.ilike.%${search}%,properties->>'sport'.ilike.%${search}%,properties->>'country'.ilike.%${search}%`
-        )
+        // Use raw SQL query via Supabase for search to overcome client limitations
+        console.log(`🔍 Search query detected, using raw SQL approach`)
+        console.log(`🔍 Search term: "${search}"`)
+        
+        try {
+          // Build SQL query dynamically
+          const searchLower = search.toLowerCase()
+          let whereConditions = []
+          let params: any[] = []
+          
+          // Add entity type filter if specified
+          if (entityType && entityType !== 'all') {
+            whereConditions.push(`entity_type = $${params.length + 1}`)
+            params.push(entityType)
+          } else {
+            whereConditions.push(`(entity_type = '' OR entity_type = 'all' OR entity_type = ANY(labels))`)
+          }
+          
+          // Add search conditions
+          const searchConditions = [
+            `LOWER(properties->>'name') LIKE $${params.length + 1}`,
+            `LOWER(properties->>'description') LIKE $${params.length + 1}`,
+            `LOWER(properties->>'type') LIKE $${params.length + 1}`,
+            `LOWER(properties->>'sport') LIKE $${params.length + 1}`,
+            `LOWER(properties->>'country') LIKE $${params.length + 1}`,
+            `(properties->>'level' IS NOT NULL AND LOWER(properties->>'level') LIKE $${params.length + 1})`
+          ]
+          
+          whereConditions.push(`(${searchConditions.join(' OR ')})`)
+          params.push(`%${searchLower}%`)
+          
+          const whereClause = whereConditions.join(' AND ')
+          
+          // Use a simpler approach - fetch a larger set and filter in memory
+          const { data: allData, error: fetchError } = await supabase
+            .from('cached_entities')
+            .select('*')
+            .range(0, 999) // Get first 1000 records for search
+          
+          if (fetchError) {
+            console.error('❌ Cache fetch error:', fetchError)
+            throw fetchError
+          }
+          
+          // Filter in memory
+          const filteredEntities = allData?.filter(entity => {
+            const props = entity.properties || {}
+            const searchTerm = searchLower
+            
+            return (
+              (entityType === '' || entityType === 'all' || entity.labels.includes(entityType)) &&
+              (
+                props.name?.toLowerCase().includes(searchTerm) ||
+                props.description?.toLowerCase().includes(searchTerm) ||
+                props.type?.toLowerCase().includes(searchTerm) ||
+                props.sport?.toLowerCase().includes(searchTerm) ||
+                props.country?.toLowerCase().includes(searchTerm) ||
+                (props.level && props.level.toLowerCase().includes(searchTerm))
+              )
+            )
+          }) || []
+          
+          // Sort results
+          filteredEntities.sort((a, b) => {
+            const aProp = a.properties[sortBy] || ''
+            const bProp = b.properties[sortBy] || ''
+            
+            if (sortBy === 'priorityScore' || sortBy === 'estimatedValue') {
+              const aNum = parseFloat(aProp) || 0
+              const bNum = parseFloat(bProp) || 0
+              return sortOrder === 'desc' ? bNum - aNum : aNum - bNum
+            }
+            
+            const aStr = aProp.toString().toLowerCase()
+            const bStr = bProp.toString().toLowerCase()
+            return sortOrder === 'desc' ? bStr.localeCompare(aStr) : aStr.localeCompare(bStr)
+          })
+          
+          // Apply pagination
+          const start = (page - 1) * limit
+          const end = start + limit
+          const paginatedEntities = filteredEntities.slice(start, end)
+          
+          console.log(`✅ Cache search successful, found ${filteredEntities.length} results, returning ${paginatedEntities.length}`)
+          
+          return {
+            entities: paginatedEntities.map(entity => ({
+              id: entity.neo4j_id,
+              neo4j_id: entity.neo4j_id,
+              labels: entity.labels,
+              properties: entity.properties
+            })),
+            pagination: {
+              page,
+              limit,
+              total: filteredEntities.length,
+              totalPages: Math.ceil(filteredEntities.length / limit),
+              hasNext: page * limit < filteredEntities.length,
+              hasPrev: page > 1
+            },
+            filters: {
+              entityType,
+              sortBy,
+              sortOrder
+            }
+          }
+        } catch (searchError) {
+          console.error('❌ Cache search error:', searchError)
+          console.log('🔍 Cache search failed, falling back to Neo4j')
+          // Continue with normal query but it will return no results for search
+        }
       }
       
       // Apply sorting
@@ -201,11 +309,29 @@ export class EntityCacheService {
       // Apply pagination
       query = query.range(start, end)
       
-      const { data, error, count } = await query
+      let data, error, count
+      try {
+        const result = await query
+        data = result.data
+        error = result.error
+        count = result.count
+      } catch (queryError) {
+        console.error('❌ Supabase query execution error:', queryError)
+        throw queryError
+      }
       
       if (error) {
         console.error('❌ Supabase query error:', error)
+        console.error('Query details:', { search, entityType, sortBy, sortOrder })
+        console.error('Error details:', JSON.stringify(error, null, 2))
         throw error
+      }
+      
+      if (search) {
+        console.log(`🔍 Cache search results for "${search}": ${data?.length || 0} entities found`)
+        if (data && data.length > 0) {
+          console.log(`🔍 First result name: ${data[0]?.properties?.name || 'N/A'}`)
+        }
       }
       
       const entities = data || []

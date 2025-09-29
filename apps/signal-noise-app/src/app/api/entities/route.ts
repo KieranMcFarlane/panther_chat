@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
     // Initialize Neo4j with timeout
     const neo4jPromise = Promise.resolve().then(async () => {
       await neo4jService.initialize()
-      return neo4jService.driver.session()
+      return neo4jService.getDriver().session()
     })
     
     const neo4jTimeoutPromise = new Promise((_, reject) => {
