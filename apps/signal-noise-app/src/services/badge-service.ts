@@ -68,7 +68,7 @@ class BadgeService {
       {
         entityId: '197',
         entityName: '1. FC Köln',
-        badgePath: '/badges/manchester-united-badge.png',
+        badgePath: '/badges/1-fc-koln-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
         s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/1-fc-koln-badge.png',
         lastUpdated: new Date().toISOString(),
@@ -77,7 +77,7 @@ class BadgeService {
       {
         entityId: '191',
         entityName: '1. FC Nürnberg',
-        badgePath: '/badges/manchester-united-badge.png',
+        badgePath: '/badges/1-fc-nurnberg-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
         s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/1-fc-nurnberg-badge.png',
         lastUpdated: new Date().toISOString(),
@@ -86,7 +86,7 @@ class BadgeService {
       {
         entityId: '201',
         entityName: 'AC Milan',
-        badgePath: '/badges/manchester-united-badge.png',
+        badgePath: '/badges/ac-milan-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
         s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/ac-milan-badge.png',
         lastUpdated: new Date().toISOString(),
@@ -95,7 +95,7 @@ class BadgeService {
       {
         entityId: '450',
         entityName: '2. Bundesliga',
-        badgePath: '/badges/premier-league-badge.png',
+        badgePath: '/badges/2-bundesliga-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/league/badge/gasy9d1737743125.png',
         s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/2-bundesliga-badge.png',
         lastUpdated: new Date().toISOString(),

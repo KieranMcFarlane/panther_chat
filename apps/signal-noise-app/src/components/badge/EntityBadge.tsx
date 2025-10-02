@@ -25,6 +25,7 @@ export function EntityBadge({ entity, size = 'md', className, showFallback = tru
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [badgeSource, setBadgeSource] = useState<BadgeSource>('fallback')
+  const [imageLoading, setImageLoading] = useState(true)
 
   useEffect(() => {
     const loadBadge = async () => {
@@ -42,19 +43,11 @@ export function EntityBadge({ entity, size = 'md', className, showFallback = tru
           setBadgeUrl(url)
           setBadgeSource(mapping.source)
           
-          // Verify the image loads
-          const img = new Image()
-          img.onload = () => {
-            console.log('Badge image loaded successfully:', url)
-            setLoading(false)
-            setError(false)
-          }
-          img.onerror = (error) => {
-            console.error('Badge image failed to load:', url, error)
-            setLoading(false)
-            setError(true)
-          }
-          img.src = url
+          // Reset image loading state for new URL
+          setImageLoading(true)
+          
+          // Set loading to false immediately - let the img tag handle its own loading
+          setLoading(false)
         } else {
           console.log('No badge mapping found for entity:', entity.properties.name)
           setLoading(false)
@@ -156,16 +149,28 @@ export function EntityBadge({ entity, size = 'md', className, showFallback = tru
       onClick={onClick}
       title={entity.properties.name}
     >
+      {/* Show loading skeleton while image is loading */}
+      {imageLoading && (
+        <div className="absolute inset-0 bg-gray-100 animate-pulse flex items-center justify-center">
+          <Loader2 className="animate-spin text-gray-400" size={iconSize[size]} />
+        </div>
+      )}
+      
       <img
         src={badgeUrl}
         alt={`${entity.properties.name} badge`}
-        className="w-full h-full object-cover"
+        className={cn(
+          "w-full h-full object-cover transition-opacity duration-200",
+          imageLoading ? "opacity-0" : "opacity-100"
+        )}
         onError={() => {
           console.error('Image failed to load in img tag:', badgeUrl)
           setError(true)
+          setImageLoading(false)
         }}
         onLoad={() => {
           console.log('Image loaded successfully in img tag:', badgeUrl)
+          setImageLoading(false)
         }}
       />
     </div>
