@@ -68,30 +68,81 @@ export default function LeagueNav() {
       })))
     }
   
-  // Enhanced club filtering with comprehensive validation
-  const leaguesData = useMemo(() => {
+  // Group clubs by sport first, then by league
+  const sportsData = useMemo(() => {
     if (!entitiesData?.entities) {
       return []
     }
     
-    console.log('🏆 Total entities received:', entitiesData.entities.length)
+    // Sport categorization mapping
+    const getSportCategory = (sport: string, leagueName: string) => {
+      const sportLower = sport.toLowerCase()
+      const leagueLower = leagueName.toLowerCase()
+      
+      // Football/Soccer
+      if (sportLower.includes('football') || sportLower.includes('soccer') || 
+          leagueLower.includes('premier') || leagueLower.includes('liga') || 
+          leagueLower.includes('bundesliga') || leagueLower.includes('serie') ||
+          leagueLower.includes('ligue') || leagueLower.includes('champions')) {
+        return 'Football'
+      }
+      
+      // Basketball
+      if (sportLower.includes('basketball') || leagueLower.includes('basketball') ||
+          leagueLower.includes('nba') || leagueLower.includes('euro')) {
+        return 'Basketball'
+      }
+      
+      // Rugby
+      if (sportLower.includes('rugby') || leagueLower.includes('rugby')) {
+        return 'Rugby'
+      }
+      
+      // Cricket
+      if (sportLower.includes('cricket') || leagueLower.includes('cricket') ||
+          leagueLower.includes('premiership') || leagueLower.includes('trophy')) {
+        return 'Cricket'
+      }
+      
+      // Handball
+      if (sportLower.includes('handball') || leagueLower.includes('handball')) {
+        return 'Handball'
+      }
+      
+      // Motorsports
+      if (sportLower.includes('racing') || sportLower.includes('formula') || 
+          leagueLower.includes('formula') || leagueLower.includes('indycar') ||
+          leagueLower.includes('nascar') || leagueLower.includes('motogp')) {
+        return 'Motorsports'
+      }
+      
+      // Baseball
+      if (sportLower.includes('baseball') || leagueLower.includes('baseball') ||
+          leagueLower.includes('mlb') || leagueLower.includes('baseball')) {
+        return 'Baseball'
+      }
+      
+      // Hockey
+      if (sportLower.includes('hockey') || leagueLower.includes('hockey') ||
+          leagueLower.includes('nhl') || leagueLower.includes('hockey')) {
+        return 'Hockey'
+      }
+      
+      // Volleyball
+      if (sportLower.includes('volleyball') || leagueLower.includes('volleyball')) {
+        return 'Volleyball'
+      }
+      
+      // Cycling
+      if (sportLower.includes('cycling') || leagueLower.includes('uci') ||
+          leagueLower.includes('tour') || leagueLower.includes('cycling')) {
+        return 'Cycling'
+      }
+      
+      return 'Other Sports'
+    }
     
-    // Comprehensive analysis of all entities
-    const manchesterEntities = entitiesData.entities.filter((entity: any) => 
-      entity.properties?.name?.toLowerCase().includes('manchester')
-    )
-    
-    console.log('🔍 Manchester entities analysis:', manchesterEntities.map((entity, index) => ({
-      index,
-      name: entity.properties?.name,
-      type: entity.properties?.type,
-      level: entity.properties?.level,
-      sport: entity.properties?.sport,
-      country: entity.properties?.country,
-      labels: entity.labels
-    })))
-    
-    // Enhanced club filtering - more inclusive to catch variations
+    // Filter clubs same as before
     const clubs = entitiesData.entities.filter((entity: any) => {
       const name = entity.properties?.name?.toLowerCase() || ''
       const type = entity.properties?.type?.toLowerCase() || ''
@@ -99,137 +150,88 @@ export default function LeagueNav() {
       const level = entity.properties?.level
       const sport = entity.properties?.sport?.toLowerCase() || ''
       
-      // Multiple ways to identify clubs
       const isClubByType = type.includes('club') || type.includes('team')
       const isClubByLabel = labels.some(label => label.includes('club') || label.includes('team'))
       const isClubBySport = sport.includes('football') || sport.includes('soccer')
       
-      // Must have a league/level to be included in navigation
       const hasLeague = !!level && level.trim().length > 0
-      
       const isClub = isClubByType || isClubByLabel
-      
-      // Special logging for Manchester clubs
-      if (name.includes('manchester')) {
-        console.log(`🔍 Manchester entity "${entity.properties?.name}":`, {
-          isClub,
-          isClubByType,
-          isClubByLabel,
-          hasLeague,
-          level,
-          type,
-          labels
-        })
-      }
       
       return isClub && hasLeague
     }) as Club[]
     
-    console.log('🏆 Filtered clubs count:', clubs.length)
-    console.log('🏆 All filtered clubs:', clubs.map(c => ({ 
-      name: c.properties.name, 
-      level: c.properties.level, 
-      type: c.properties.type,
-      sport: c.properties.sport
-    })))
-    
-    // League name normalization mapping
-    const normalizeLeagueName = (leagueName: string) => {
-      const normalized = leagueName.toLowerCase().trim()
-      const leagueMapping: Record<string, string> = {
-        'premier league': 'Premier League',
-        'english premier league': 'Premier League',
-        'epl': 'Premier League',
-        'la liga': 'La Liga',
-        'laliga': 'La Liga',
-        'serie a': 'Serie A',
-        'serie a tim': 'Serie A',
-        'bundesliga': 'Bundesliga',
-        'ligue 1': 'Ligue 1',
-        'champions league': 'Champions League',
-        'europa league': 'Europa League',
-        'scottish premier league': 'Scottish Premier League',
-        'scottish premiership': 'Scottish Premiership'
-      }
-      
-      return leagueMapping[normalized] || leagueName
-    }
-    
-    // Group by normalized league names
-    const leagueMap = new Map<string, Club[]>()
+    // Group by sport first
+    const sportMap = new Map<string, Array<{league: string, clubs: Club[]}>>()
     
     clubs.forEach(club => {
-      const rawLeague = club.properties.level
-      const normalizedLeague = normalizeLeagueName(rawLeague)
+      const sportCategory = getSportCategory(club.properties.sport || '', club.properties.level || '')
       
-      if (!leagueMap.has(normalizedLeague)) {
-        leagueMap.set(normalizedLeague, [])
+      if (!sportMap.has(sportCategory)) {
+        sportMap.set(sportCategory, [])
       }
-      leagueMap.get(normalizedLeague)!.push(club)
-    })
-    
-    // Sort clubs alphabetically within each league
-    leagueMap.forEach(clubs => {
-      clubs.sort((a, b) => a.properties.name.localeCompare(b.properties.name))
-    })
-    
-    // Convert to array and sort leagues alphabetically
-    const result = Array.from(leagueMap.entries())
-      .map(([league, clubs]) => ({ league, clubs }))
-      .sort((a, b) => a.league.localeCompare(b.league))
-    
-    // Detailed Premier League analysis
-    const premierLeague = result.find(l => l.league === 'Premier League')
-    if (premierLeague) {
-      console.log('✅ Premier League found with', premierLeague.clubs.length, 'clubs:')
-      premierLeague.clubs.forEach((club, index) => {
-        console.log(`  ${index + 1}. ${club.properties.name} (${club.properties.country})`)
-      })
       
-      // Check for Manchester clubs specifically
-      const manchesterInPremierLeague = premierLeague.clubs.filter(c => 
-        c.properties.name.toLowerCase().includes('manchester')
-      )
-      console.log('🔍 Manchester clubs in Premier League:', manchesterInPremierLeague.map(c => c.properties.name))
-    } else {
-      console.log('❌ No Premier League found. Available leagues:')
-      result.forEach(league => {
-        console.log(`  - ${league.league} (${league.clubs.length} clubs)`)
-      })
-    }
+      const sportLeagues = sportMap.get(sportCategory)!
+      
+      // Find existing league or create new one
+      let leagueEntry = sportLeagues.find(l => l.league === club.properties.level)
+      if (!leagueEntry) {
+        leagueEntry = { league: club.properties.level, clubs: [] }
+        sportLeagues.push(leagueEntry)
+      }
+      
+      leagueEntry.clubs.push(club)
+    })
     
-    // Check if any Manchester clubs were filtered out
-    const manchesterClubsInResults = result.flatMap(league => 
-      league.clubs.filter(club => club.properties.name.toLowerCase().includes('manchester'))
-    )
-    console.log('🏆 Manchester clubs in final results:', manchesterClubsInResults.map(c => c.properties.name))
+    // Sort clubs within each league
+    sportMap.forEach(sportLeagues => {
+      sportLeagues.forEach(leagueEntry => {
+        leagueEntry.clubs.sort((a, b) => a.properties.name.localeCompare(b.properties.name))
+      })
+      // Sort leagues alphabetically within sport
+      sportLeagues.sort((a, b) => a.league.localeCompare(b.league))
+    })
+    
+    // Convert to array and sort sports
+    const result = Array.from(sportMap.entries())
+      .map(([sport, leagues]) => ({ sport, leagues }))
+      .sort((a, b) => a.sport.localeCompare(b.sport))
+    
+    console.log('🏆 Sports data structure:', result.map(s => ({ 
+      sport: s.sport, 
+      leagueCount: s.leagues.length,
+      totalClubs: s.leagues.reduce((sum, l) => sum + l.clubs.length, 0)
+    })))
     
     return result
   }, [entitiesData])
   
-  // Find the current entity's league and club index
-  const { currentLeagueIndex, currentClubIndex } = useMemo(() => {
-    if (!currentEntityData?.entity || !leaguesData.length) {
-      return { currentLeagueIndex: 0, currentClubIndex: 0 }
+  // Find the current entity's sport, league and club index
+  const { currentSportIndex, currentLeagueIndex, currentClubIndex } = useMemo(() => {
+    if (!currentEntityData?.entity || !sportsData.length) {
+      return { currentSportIndex: 0, currentLeagueIndex: 0, currentClubIndex: 0 }
     }
     
     const currentClub = currentEntityData.entity as Club
     const currentClubLeague = currentClub.properties?.level
     
-    for (let leagueIndex = 0; leagueIndex < leaguesData.length; leagueIndex++) {
-      const league = leaguesData[leagueIndex]
-      if (league.league === currentClubLeague) {
-        const clubIndex = league.clubs.findIndex(club => club.id === currentClub.id)
-        if (clubIndex !== -1) {
-          return { currentLeagueIndex: leagueIndex, currentClubIndex: clubIndex }
+    for (let sportIndex = 0; sportIndex < sportsData.length; sportIndex++) {
+      const sport = sportsData[sportIndex]
+      for (let leagueIndex = 0; leagueIndex < sport.leagues.length; leagueIndex++) {
+        const league = sport.leagues[leagueIndex]
+        if (league.league === currentClubLeague) {
+          const clubIndex = league.clubs.findIndex(club => club.id === currentClub.id)
+          if (clubIndex !== -1) {
+            return { currentSportIndex: sportIndex, currentLeagueIndex, currentClubIndex: clubIndex }
+          }
         }
       }
     }
     
-    // If current club not found, default to first league and club
-    return { currentLeagueIndex: 0, currentClubIndex: 0 }
-  }, [currentEntityData, leaguesData])
+    // If current club not found, default to first sport, league and club
+    return { currentSportIndex: 0, currentLeagueIndex: 0, currentClubIndex: 0 }
+  }, [currentEntityData, sportsData])
   
+  const [selectedSportIndex, setSelectedSportIndex] = useState(currentSportIndex)
   const [selectedLeagueIndex, setSelectedLeagueIndex] = useState(currentLeagueIndex)
   const [selectedClubIndex, setSelectedClubIndex] = useState(currentClubIndex)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -238,8 +240,23 @@ export default function LeagueNav() {
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   
-  const currentLeague = leaguesData[selectedLeagueIndex]
+  // Two-step modal state
+  const [modalStep, setModalStep] = useState<'sport' | 'league'>('sport')
+  const [selectedSportInModal, setSelectedSportInModal] = useState<string | null>(null)
+  
+  const currentSport = sportsData[selectedSportIndex]
+  const currentLeague = currentSport?.leagues[selectedLeagueIndex]
   const currentClub = currentLeague?.clubs[selectedClubIndex]
+  
+  // Compatibility: Generate flat leaguesData for existing code
+  const leaguesData = useMemo(() => {
+    return sportsData.flatMap(sport => 
+      sport.leagues.map(league => ({
+        league: league.league,
+        clubs: league.clubs
+      }))
+    )
+  }, [sportsData])
   
   // CRITICAL: Debug current selection state and potential sync issues
   console.log('🏆 LeagueNav: Current selection state', {
@@ -283,24 +300,36 @@ export default function LeagueNav() {
     return () => clearTimeout(timer)
   }, [searchTerm])
 
-  // Filter leagues based on search term
-  const filteredLeaguesData = useMemo(() => {
+  // Filter sports based on search term (for sport selection step)
+  const filteredSportsData = useMemo(() => {
     if (!debouncedSearchTerm) {
-      return leaguesData
+      return sportsData
     }
 
     const searchTermLower = debouncedSearchTerm.toLowerCase()
-    return leaguesData
-      .map(league => ({
-        ...league,
-        clubs: league.clubs.filter(club => 
-          club.properties.name.toLowerCase().includes(searchTermLower) ||
-          league.league.toLowerCase().includes(searchTermLower) ||
-          (club.properties.country && club.properties.country.toLowerCase().includes(searchTermLower))
-        )
+    return sportsData
+      .map(sport => ({
+        ...sport,
+        leagues: sport.leagues.map(league => ({
+          ...league,
+          clubs: league.clubs.filter(club => 
+            club.properties.name.toLowerCase().includes(searchTermLower) ||
+            league.league.toLowerCase().includes(searchTermLower) ||
+            sport.sport.toLowerCase().includes(searchTermLower) ||
+            (club.properties.country && club.properties.country.toLowerCase().includes(searchTermLower))
+          )
+        })).filter(league => league.clubs.length > 0) // Only show leagues that have matching clubs
       }))
-      .filter(league => league.clubs.length > 0) // Only show leagues that have matching clubs
-  }, [leaguesData, debouncedSearchTerm])
+      .filter(sport => sport.leagues.length > 0) // Only show sports that have matching leagues/clubs
+  }, [sportsData, debouncedSearchTerm])
+
+  // Get filtered leagues for selected sport (for league selection step)
+  const filteredLeaguesForSelectedSport = useMemo(() => {
+    if (!selectedSportInModal) return []
+    
+    const selectedSport = filteredSportsData.find(s => s.sport === selectedSportInModal)
+    return selectedSport?.leagues || []
+  }, [selectedSportInModal, filteredSportsData])
 
   // Sync navigation state with current entity from URL
   useEffect(() => {
@@ -611,13 +640,15 @@ export default function LeagueNav() {
   const canGoUp = currentLeague && selectedClubIndex > 0
   const canGoDown = currentLeague && selectedClubIndex < currentLeague.clubs.length - 1
   
-  // Handle league selection in modal
-  const handleLeagueSelect = (leagueIndex: number) => {
-    console.log('🏆 LEAGUE SELECTED:', {
+  // Handle sport + league selection in modal
+  const handleSportLeagueSelect = (sportIndex: number, leagueIndex: number) => {
+    console.log('🏆 SPORT + LEAGUE SELECTED:', {
+      newSportIndex: sportIndex,
       newLeagueIndex: leagueIndex,
-      newLeagueName: leaguesData[leagueIndex]?.league,
-      firstClub: leaguesData[leagueIndex]?.clubs[0]?.properties?.name,
-      firstClubId: leaguesData[leagueIndex]?.clubs[0]?.id
+      newSportName: sportsData[sportIndex]?.sport,
+      newLeagueName: sportsData[sportIndex]?.leagues[leagueIndex]?.league,
+      firstClub: sportsData[sportIndex]?.leagues[leagueIndex]?.clubs[0]?.properties?.name,
+      firstClubId: sportsData[sportIndex]?.leagues[leagueIndex]?.clubs[0]?.id
     })
     
     // CRITICAL: Set loading state IMMEDIATELY to show skeleton right away
@@ -626,12 +657,13 @@ export default function LeagueNav() {
     
     // Small delay to ensure skeleton renders before navigation
     setTimeout(() => {
-      // Update the selected league and club
+      // Update the selected sport, league and club
+      setSelectedSportIndex(sportIndex)
       setSelectedLeagueIndex(leagueIndex)
       setSelectedClubIndex(0)
       
       // Navigate to the first club in the selected league
-      const firstClub = leaguesData[leagueIndex]?.clubs[0]
+      const firstClub = sportsData[sportIndex]?.leagues[leagueIndex]?.clubs[0]
       if (firstClub) {
         console.log('🚀 NAVIGATING TO FIRST CLUB:', firstClub.properties?.name)
         router.push(`/entity/${firstClub.id}`)
@@ -708,7 +740,15 @@ export default function LeagueNav() {
       </div> */}
       
       {/* Club Badge with Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <Dialog open={isModalOpen} onOpenChange={(open) => {
+          setIsModalOpen(open)
+          if (open) {
+            // Reset modal state when opening
+            setModalStep('sport')
+            setSelectedSportInModal(null)
+            setSearchTerm('')
+          }
+        }}>
         <DialogTrigger asChild>
           <div className="flex flex-col items-center">
             <div className={`relative rounded-lg flex items-center justify-center overflow-hidden cursor-pointer group transition-all duration-200 ${
@@ -749,68 +789,143 @@ export default function LeagueNav() {
           style={{ backgroundColor: '#1c1e2d' }}
         >
           <DialogHeader>
-            <DialogTitle>Select League</DialogTitle>
+            <DialogTitle>
+              {modalStep === 'sport' ? 'Select Sport' : `Select League in ${selectedSportInModal}`}
+            </DialogTitle>
             <DialogDescription>
-              Choose a league to browse clubs alphabetically. Current: {currentLeague?.league || 'None'}
+              {modalStep === 'sport' 
+                ? 'Choose a sport to browse available leagues and clubs.'
+                : `Choose a league to browse clubs alphabetically. Current: ${currentLeague?.league || 'None'}`
+              }
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
+            {/* Breadcrumb navigation */}
+            {modalStep === 'league' && (
+              <div className="flex items-center gap-2 text-sm text-white/60">
+                <button 
+                  onClick={() => setModalStep('sport')}
+                  className="hover:text-white transition-colors"
+                >
+                  All Sports
+                </button>
+                <span>/</span>
+                <span className="text-white font-medium">{selectedSportInModal}</span>
+              </div>
+            )}
+            
             {/* Search Input */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search leagues and clubs..."
+                placeholder={modalStep === 'sport' ? 'Search sports...' : 'Search leagues and clubs...'}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:bg-white/15 focus:border-white/30"
               />
             </div>
             
-            <div className="max-h-[400px] overflow-y-auto space-y-2">
-              {filteredLeaguesData.map((league, index) => {
-                // Get the original index from the full leaguesData array
-                const originalIndex = leaguesData.findIndex(l => l.league === league.league)
-                
-                return (
-                  <div 
-                  key={league.league} 
-                  className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
-                    index === selectedLeagueIndex 
-                      ? 'bg-blue-600 text-white' 
-                      : 'hover:bg-white/10 text-white'
-                  }`}
-                  onClick={() => handleLeagueSelect(originalIndex)}
-                >
-                  <div>
-                    <div className="font-medium">{league.league}</div>
-                    <div className={`text-sm ${index === selectedLeagueIndex ? 'text-blue-100' : 'text-white/60'}`}>
-                      {league.clubs.length} clubs
+            {/* Sport Selection Step */}
+            {modalStep === 'sport' && (
+              <div className="max-h-[400px] overflow-y-auto space-y-2">
+                {filteredSportsData.map((sport) => {
+                  const totalClubs = sport.leagues.reduce((acc, league) => acc + league.clubs.length, 0)
+                  
+                  return (
+                    <div 
+                      key={sport.sport} 
+                      className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors hover:bg-white/10 text-white`}
+                      onClick={() => {
+                        setSelectedSportInModal(sport.sport)
+                        setModalStep('league')
+                        setSearchTerm('') // Clear search when moving to leagues
+                      }}
+                    >
+                      <div>
+                        <div className="font-medium">{sport.sport}</div>
+                        <div className="text-sm text-white/60">
+                          {sport.leagues.length} leagues • {totalClubs} clubs
+                        </div>
+                      </div>
+                      <div className="text-sm text-white/60">
+                        →
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-sm">
-                    {league.clubs[0]?.properties.country || 'International'}
-                  </div>
-                  </div>
-                )
-              })}
-            </div>
+                  )
+                })}
+              </div>
+            )}
+            
+            {/* League Selection Step */}
+            {modalStep === 'league' && (
+              <div className="max-h-[400px] overflow-y-auto space-y-2">
+                {filteredLeaguesForSelectedSport.map((league) => {
+                  // Find the original indices in the full data structure
+                  const sportIndex = sportsData.findIndex(s => s.sport === selectedSportInModal)
+                  const leagueIndex = sportsData[sportIndex]?.leagues.findIndex(l => l.league === league.league) || 0
+                  const isCurrentlySelected = sportIndex === selectedSportIndex && leagueIndex === selectedLeagueIndex
+                  
+                  return (
+                    <div 
+                      key={league.league} 
+                      className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
+                        isCurrentlySelected 
+                          ? 'bg-blue-600 text-white' 
+                          : 'hover:bg-white/10 text-white'
+                      }`}
+                      onClick={() => handleSportLeagueSelect(sportIndex, leagueIndex)}
+                    >
+                      <div>
+                        <div className="font-medium">{league.league}</div>
+                        <div className={`text-sm ${isCurrentlySelected ? 'text-blue-100' : 'text-white/60'}`}>
+                          {league.clubs.length} clubs
+                        </div>
+                      </div>
+                      <div className="text-sm">
+                        {league.clubs[0]?.properties.country || 'International'}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
             
             <div className="flex items-center justify-between pt-4 border-t border-white/20">
               <div className="text-sm text-white/60">
                 {debouncedSearchTerm ? (
                   <span>
-                    Found {filteredLeaguesData.reduce((acc, league) => acc + league.clubs.length, 0)} clubs in {filteredLeaguesData.length} leagues
+                    {modalStep === 'sport' 
+                      ? `Found ${filteredSportsData.reduce((acc, sport) => acc + sport.leagues.length, 0)} leagues in ${filteredSportsData.length} sports`
+                      : `Found ${filteredLeaguesForSelectedSport.reduce((acc, league) => acc + league.clubs.length, 0)} clubs in ${filteredLeaguesForSelectedSport.length} leagues`
+                    }
                   </span>
                 ) : (
                   <span>
-                    Currently browsing: <span className="text-white font-medium">{currentLeague?.league}</span>
+                    Currently browsing: <span className="text-white font-medium">{currentSport?.sport} → {currentLeague?.league}</span>
                   </span>
                 )}
               </div>
-              <Button size="sm" onClick={() => setIsModalOpen(false)}>
-                Close
-              </Button>
+              <div className="flex gap-2">
+                {modalStep === 'league' && (
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => setModalStep('sport')}
+                    className="border-white/20 text-white hover:bg-white/10"
+                  >
+                    Back
+                  </Button>
+                )}
+                <Button size="sm" onClick={() => {
+                  setIsModalOpen(false)
+                  setModalStep('sport')
+                  setSelectedSportInModal(null)
+                  setSearchTerm('')
+                }}>
+                  Close
+                </Button>
+              </div>
             </div>
           </div>
         </DialogContent>
