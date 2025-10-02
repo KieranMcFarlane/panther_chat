@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -10,6 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import Header from '@/components/header/Header'
+import { useSportsEntities } from '@/lib/swr-config'
 
 type Entity = {
   name?: string
@@ -22,52 +24,23 @@ type Entity = {
 }
 
 export default function Home() {
-  const [entities, setEntities] = useState<Entity[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
-
+  const { data: response, error, isLoading, mutate } = useSportsEntities()
+  const entities = response?.entities || []
+  
   const [query, setQuery] = useState<string>("")
   const [sportFilter, setSportFilter] = useState<string>("all")
   const [countryFilter, setCountryFilter] = useState<string>("all")
   const [levelFilter, setLevelFilter] = useState<string>("all")
-
-  useEffect(() => {
-    let cancelled = false
-    async function fetchEntities() {
-      setLoading(true)
-      setError(null)
-      try {
-        // Backend FastAPI exposes this in logs: GET /sports-entities 200 OK
-        const res = await fetch('http://localhost:3000/sports-entities', {
-          next: { revalidate: 0 },
-        })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data = await res.json()
-        if (!cancelled) {
-          // Expect an array; fallback to nested field if used
-          const list: Entity[] = Array.isArray(data) ? data : (data?.entities ?? [])
-          setEntities(list)
-        }
-      } catch (e: any) {
-        if (!cancelled) setError(e?.message ?? 'Failed to load entities')
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
-    }
-    fetchEntities()
-    return () => {
-      cancelled = true
-    }
-  }, [])
 
   const uniqueOptions = useMemo(() => {
     const sports = new Set<string>()
     const countries = new Set<string>()
     const levels = new Set<string>()
     for (const e of entities) {
-      if (e.sport) sports.add(e.sport)
-      if (e.country) countries.add(e.country)
-      if (e.level) levels.add(e.level)
+      const props = e.properties || {}
+      if (props.sport) sports.add(props.sport)
+      if (props.country) countries.add(props.country)
+      if (props.level) levels.add(props.level)
     }
     return {
       sports: Array.from(sports).sort(),
@@ -79,19 +52,22 @@ export default function Home() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return entities.filter(e => {
+      const props = e.properties || {}
       const matchesQuery = q
-        ? (e.name ?? '').toLowerCase().includes(q) || (e.sport ?? '').toLowerCase().includes(q)
+        ? (props.name ?? '').toLowerCase().includes(q) || (props.sport ?? '').toLowerCase().includes(q)
         : true
-      const matchesSport = sportFilter === 'all' || (e.sport ?? '') === sportFilter
-      const matchesCountry = countryFilter === 'all' || (e.country ?? '') === countryFilter
-      const matchesLevel = levelFilter === 'all' || (e.level ?? '') === levelFilter
+      const matchesSport = sportFilter === 'all' || (props.sport ?? '') === sportFilter
+      const matchesCountry = countryFilter === 'all' || (props.country ?? '') === countryFilter
+      const matchesLevel = levelFilter === 'all' || (props.level ?? '') === levelFilter
       return matchesQuery && matchesSport && matchesCountry && matchesLevel
     })
   }, [entities, query, sportFilter, countryFilter, levelFilter])
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-custom-bg">
-      <div className="z-10 max-w-5xl w-full items-center justify-between">
+    <div className="min-h-screen bg-custom-bg">
+      <Header />
+      <main className="flex min-h-screen flex-col items-center justify-center p-24">
+        <div className="z-10 max-w-5xl w-full items-center justify-between">
         <h1 className="font-header-large text-fm-white text-center mb-8">
           Signal Noise App
         </h1>
@@ -142,7 +118,7 @@ export default function Home() {
         <div className="bg-custom-box border border-custom-border rounded-lg p-6 mb-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <h3 className="font-subheader text-fm-white">
-              📚 Entities {loading ? <span className="text-fm-medium-grey">(loading...)</span> : <span className="text-fm-light-grey">({filtered.length}{filtered.length !== entities.length ? ` of ${entities.length}` : ''})</span>}
+              📚 Entities {isLoading ? <span className="text-fm-medium-grey">(loading...)</span> : <span className="text-fm-light-grey">({filtered.length}{filtered.length !== entities.length ? ` of ${entities.length}` : ''})</span>}
             </h3>
             <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
               <Input
@@ -188,24 +164,27 @@ export default function Home() {
           </div>
 
           {error && (
-            <div className="mt-4 text-fm-orange font-body-secondary">Error loading entities: {error}</div>
+            <div className="mt-4 text-fm-orange font-body-secondary">Error loading entities: {error instanceof Error ? error.message : String(error)}</div>
           )}
 
           {/* Preview list */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3">
-            {filtered.slice(0, 10).map((e, idx) => (
-              <div key={`${e.name}-${idx}`} className="border border-custom-border rounded-md p-4 bg-custom-bg">
-                <div className="font-body-primary text-fm-white">{e.name ?? 'Unnamed Entity'}</div>
-                <div className="font-body-secondary text-fm-medium-grey mt-1">
-                  {(e.sport ?? 'Unknown sport')} • {(e.country ?? 'Unknown country')} {e.level ? `• ${e.level}` : ''}
+            {filtered.slice(0, 10).map((e, idx) => {
+              const props = e.properties || {}
+              return (
+                <div key={`${props.name || e.id}-${idx}`} className="border border-custom-border rounded-md p-4 bg-custom-bg">
+                  <div className="font-body-primary text-fm-white">{props.name ?? 'Unnamed Entity'}</div>
+                  <div className="font-body-secondary text-fm-medium-grey mt-1">
+                    {(props.sport ?? 'Unknown sport')} • {(props.country ?? 'Unknown country')} {props.level ? `• ${props.level}` : ''}
+                  </div>
+                  {props.website && (
+                    <a href={props.website} target="_blank" rel="noreferrer" className="font-body-secondary text-fm-green underline mt-2 inline-block">
+                      Website
+                    </a>
+                  )}
                 </div>
-                {e.website && (
-                  <a href={e.website} target="_blank" rel="noreferrer" className="font-body-secondary text-fm-green underline mt-2 inline-block">
-                    Website
-                  </a>
-                )}
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
 
@@ -237,6 +216,7 @@ export default function Home() {
         </div>
       </div>
     </main>
+    </div>
   )
 }
 
