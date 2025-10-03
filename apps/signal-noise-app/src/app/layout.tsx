@@ -3,7 +3,17 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import AppNavigation from '@/components/layout/AppNavigation'
 import BackgroundAnimation from '@/components/layout/BackgroundAnimation'
-import { CopilotKit } from '@copilotkit/react-core'
+import SWRProvider from '@/components/providers/SWRProvider'
+import { UserProvider } from '@/contexts/UserContext'
+import { CopilotKit } from "@copilotkit/react-core"
+import "@copilotkit/react-ui/styles.css"
+import dynamic from 'next/dynamic'
+
+const SimpleStreamingChat = dynamic(() => import('@/components/chat/SimpleStreamingChat'), {
+  ssr: false,
+  loading: () => null
+})
+// import { ClubNavigationProvider } from '@/contexts/ClubNavigationContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -26,14 +36,26 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} antialiased`} suppressHydrationWarning={true}>
         <BackgroundAnimation />
-        <CopilotKit 
-          runtimeUrl="/api/copilotkit"
-          publicLicenseKey="ck_pub_bd1e53be48f766e0ff4240c224db7a22"
-        >
-          <AppNavigation>
-            {children}
-          </AppNavigation>
-        </CopilotKit>
+        <UserProvider>
+          <SWRProvider>
+            {console.log('CopilotKit initializing with runtime URL:', '/api/copilotkit')}
+            <CopilotKit 
+              runtimeUrl="/api/copilotkit"
+              publicLicenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
+              publicApiKey={process.env.COPILOT_CLOUD_PUBLIC_API_KEY}
+              headers={{
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type',
+              }}
+            >
+              <AppNavigation>
+                {children}
+              </AppNavigation>
+              <SimpleStreamingChat />
+            </CopilotKit>
+          </SWRProvider>
+        </UserProvider>
       </body>
     </html>
   )
