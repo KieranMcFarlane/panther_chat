@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Mail, Linkedin, ArrowRight } from "lucide-react"
+import { ExternalLink, Mail, Linkedin, ArrowRight, FileText, Target } from "lucide-react"
 import { Entity, Connection } from "@/lib/neo4j"
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { useRouter } from "next/navigation"
@@ -91,6 +91,14 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
     const urlParams = new URLSearchParams(window.location.search)
     const currentPage = urlParams.get('page') || '1'
     router.push(`/entity/${entity.neo4j_id}?from=${currentPage}`)
+  }
+
+  const handleGenerateDossier = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    // Get current page from URL and pass it to the dossier page
+    const urlParams = new URLSearchParams(window.location.search)
+    const currentPage = urlParams.get('page') || '1'
+    router.push(`/entity-browser/${entity.neo4j_id}/dossier?from=${currentPage}`)
   }
 
   return (
@@ -210,8 +218,8 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
           </div>
         )}
 
-        {/* View Profile Button */}
-        <div className="border-t pt-3">
+        {/* Action Buttons */}
+        <div className="border-t pt-3 space-y-2">
           <Button 
             variant="outline" 
             size="sm" 
@@ -226,6 +234,16 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
           >
             View Full Profile
             <ArrowRight className="h-4 w-4 ml-2" />
+          </Button>
+          
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="w-full bg-blue-600 hover:bg-blue-700"
+            onClick={handleGenerateDossier}
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Generate Intelligence Dossier
           </Button>
         </div>
 
