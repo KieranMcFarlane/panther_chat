@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const EC2_HOST = '13.60.60.50';
 const EC2_USER = 'ec2-user';
-const KEY_PATH = '/home/ec2-user/yellowpanther.pem';
+const KEY_PATH = process.env.NODE_ENV === 'production' 
+  ? '/home/ec2-user/yellowpanther.pem' 
+  : '/Users/kieranmcfarlane/Downloads/panther_chat/yellowpanther.pem';
 
 export async function POST(request: NextRequest) {
   try {

@@ -52,18 +52,37 @@
 .shiny-text {
   background: linear-gradient(
     105deg,
-    transparent 45%,
-    rgba(255, 255, 255, 0.6) 50%,
-    transparent 55%
+    rgba(255, 255, 255, 0.2) 40%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.2) 60%
   );
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   display: inline-block;
-  animation: shine 4s ease-in-out infinite;
+  animation: shine 2.5s ease-in-out infinite;
   /* Make the base color darker so the shimmer is more visible */
   color: #3B82F6;
   font-weight: 600;
+  position: relative;
+}
+
+/* Enhanced shine with more contrast */
+.shiny-text::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    transparent 100%
+  );
+  animation: shine-enhanced 2.5s ease-in-out infinite;
+  z-index: 1;
 }
 
 @keyframes shine {
@@ -75,19 +94,40 @@
   }
 }
 
-/* Subtle version */
+@keyframes shine-enhanced {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* High contrast version */
 .shiny-text.high-contrast {
   background: linear-gradient(
     105deg,
-    transparent 45%,
-    rgba(255, 255, 255, 0.7) 50%,
-    transparent 55%
+    rgba(255, 255, 255, 0.1) 35%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(255, 255, 255, 0.1) 65%
   );
-  background-size: 200% 100%;
+  background-size: 300% 100%;
   color: #3B82F6;
   -webkit-background-clip: text;
   background-clip: text;
-  animation: shine 3.5s ease-in-out infinite;
+  animation: shine-bold 2s ease-in-out infinite;
+}
+
+@keyframes shine-bold {
+  0% {
+    background-position: -150%;
+  }
+  100% {
+    background-position: 250%;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

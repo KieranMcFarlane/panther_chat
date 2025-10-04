@@ -612,7 +612,7 @@ const AutoScalingDashboard: React.FC = () => {
                     </div>
                     {event.errorMessage && (
                       <div className="mt-2 p-2 bg-red-100 border border-red-200 rounded text-sm text-red-700">
-                        <strong>Error:</strong> {event.errorMessage}
+                        <strong>Error:</strong> {event.errorMessage instanceof Error ? event.errorMessage.message : String(event.errorMessage)}
                       </div>
                     )}
                   </div>

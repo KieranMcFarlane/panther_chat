@@ -1,0 +1,40 @@
+{
+  "mcpServers": {
+    "neo4j-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@alanse/mcp-neo4j-server"
+      ],
+      "env": {
+        "NEO4J_URI": "neo4j+s://cce1f84b.databases.neo4j.io",
+        "NEO4J_USERNAME": "neo4j",
+        "NEO4J_PASSWORD": "YOUR_NEO4J_PASSWORD_HERE",
+        "NEO4J_DATABASE": "neo4j",
+        "AURA_INSTANCEID": "cce1f84b",
+        "AURA_INSTANCENAME": "Instance01"
+      }
+    },
+    "brightData": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@brightdata/mcp"
+      ],
+      "env": {
+        "API_TOKEN": "YOUR_BRIGHTDATA_API_TOKEN_HERE",
+        "PRO_MODE": "true"
+      }
+    },
+    "perplexity-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-perplexity-search"
+      ],
+      "env": {
+        "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE"
+      }
+    }
+  }
+}

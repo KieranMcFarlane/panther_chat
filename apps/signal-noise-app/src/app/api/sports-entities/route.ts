@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error fetching sports entities:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch sports entities' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch sports entities' },
       { status: 500 }
     );
   }
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating sports entity:', error);
     return NextResponse.json(
-      { error: 'Failed to create sports entity' },
+      { error: error instanceof Error ? error.message : 'Failed to create sports entity' },
       { status: 500 }
     );
   }

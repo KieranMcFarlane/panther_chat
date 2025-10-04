@@ -38,7 +38,6 @@ export default function RootLayout({
         <BackgroundAnimation />
         <UserProvider>
           <SWRProvider>
-            {console.log('CopilotKit initializing with runtime URL:', '/api/copilotkit')}
             <CopilotKit 
               runtimeUrl="/api/copilotkit"
               publicLicenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}

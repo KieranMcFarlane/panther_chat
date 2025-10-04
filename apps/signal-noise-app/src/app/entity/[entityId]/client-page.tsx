@@ -7,6 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { EntityBadge } from "@/components/badge/EntityBadge"
+import Header from "@/components/header/Header"
+import { useEntity } from "@/lib/swr-config"
+// import { useClubNavigation } from "@/contexts/ClubNavigationContext"
+// import { EntityProfileSkeleton, BadgeSkeleton } from "@/components/ui/skeleton"
 import { 
   ArrowLeft,
   Globe,
@@ -63,39 +67,116 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   const router = useRouter()
   const actualEntityId = params.entityId as string || entityId
   
-  const [entity, setEntity] = useState<Entity | null>(null)
-  const [connections, setConnections] = useState<Connection[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [dataSource, setDataSource] = useState<'cache' | 'neo4j' | null>(null)
+  // const { currentClub } = useClubNavigation()
+  // const [isTransitioning, setIsTransitioning] = useState(false)
+  // const [displayEntityId, setDisplayEntityId] = useState(actualEntityId)
+  
+  // Use the actual entity ID for data fetching
+  const { data: entityData, error, isLoading } = useEntity(actualEntityId)
+  
+  const entity = entityData?.entity || null
+  const connections = entityData?.connections || []
+  const dataSource = entityData?.source || null
 
-  useEffect(() => {
-    const fetchEntityDetails = async () => {
-      setLoading(true)
-      setError(null)
+  // Club navigation features temporarily disabled
+  // useEffect(() => {
+  //   if (currentClub && currentClub.id !== displayEntityId) {
+  //     setIsTransitioning(true)
       
-      try {
-        // Fetch entity details
-        const entityResponse = await fetch(`/api/entities/${actualEntityId}`)
-        if (!entityResponse.ok) {
-          throw new Error(`Failed to fetch entity: ${entityResponse.status}`)
-        }
-        
-        const entityData = await entityResponse.json()
-        setEntity(entityData.entity)
-        setConnections(entityData.connections || [])
-        setDataSource(entityData.source || null)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch entity details")
-      } finally {
-        setLoading(false)
-      }
-    }
+  //     // Update URL without full page reload
+  //     router.replace(`/entity/${currentClub.id}`, { scroll: false })
+      
+  //     // Update the displayed entity after a short delay for smooth transition
+  //     setTimeout(() => {
+  //       setDisplayEntityId(currentClub.id)
+  //       setIsTransitioning(false)
+  //     }, 150)
+  //   }
+  // }, [currentClub, displayEntityId, router])
 
-    if (actualEntityId) {
-      fetchEntityDetails()
-    }
-  }, [actualEntityId])
+  // Show loading state - use skeleton structure
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-8 bg-[#1c1e2d]">
+          {/* Header skeleton */}
+          <div className="rounded-lg bg-card text-card-foreground mb-8 border-2 shadow-lg">
+            <div className="flex flex-col space-y-1.5 p-6 pb-6">
+              <div className="flex items-start gap-6">
+                <div className="flex-shrink-0">
+                  <div className="w-20 h-20 bg-gray-600 rounded-lg animate-pulse"></div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="tracking-tight text-3xl font-bold mb-2 flex items-center gap-3">
+                    <div className="h-8 w-8 bg-gray-600 rounded animate-pulse"></div>
+                    <div className="h-8 w-48 bg-gray-600 rounded animate-pulse"></div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                    <div className="flex items-center gap-2">
+                      <div className="h-4 w-4 bg-gray-600 rounded animate-pulse"></div>
+                      <div className="h-4 w-16 bg-gray-600 rounded animate-pulse"></div>
+                      <div className="h-4 w-24 bg-gray-600/60 rounded animate-pulse"></div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-4 w-4 bg-gray-600 rounded animate-pulse"></div>
+                      <div className="h-4 w-16 bg-gray-600 rounded animate-pulse"></div>
+                      <div className="h-4 w-20 bg-gray-600/60 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 mt-4">
+                    <div className="h-9 w-24 bg-gray-600 rounded animate-pulse"></div>
+                    <div className="h-9 w-24 bg-gray-600 rounded animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Content skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              <div className="rounded-lg border p-6 space-y-4">
+                <div className="h-6 w-32 bg-gray-600 rounded animate-pulse"></div>
+                <div className="space-y-2">
+                  <div className="h-4 w-full bg-gray-600 rounded animate-pulse"></div>
+                  <div className="h-4 w-full bg-gray-600 rounded animate-pulse"></div>
+                  <div className="h-4 w-3/4 bg-gray-600 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-6">
+              <div className="rounded-lg border p-6 space-y-4">
+                <div className="h-6 w-32 bg-gray-600 rounded animate-pulse"></div>
+                <div className="space-y-3">
+                  <div className="h-4 w-24 bg-gray-600 rounded animate-pulse"></div>
+                  <div className="h-8 w-32 bg-gray-600/60 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Handle error state
+  if (error || !entity) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-bold">Entity Not Found</h1>
+          <p className="text-muted-foreground">
+            {error ? 'Error loading entity data.' : 'The requested entity could not be found.'}
+          </p>
+          <Button onClick={() => router.back()}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Go Back
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   const formatValue = (value: any): string => {
     if (value === null || value === undefined) return "N/A"
@@ -209,18 +290,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
     return Building2
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <Database className="h-12 w-12 animate-spin mx-auto mb-4 text-primary" />
-          <h2 className="text-xl font-semibold mb-2">Loading Entity Profile</h2>
-          <p className="text-muted-foreground">Fetching entity details...</p>
-        </div>
-      </div>
-    )
-  }
-
+  
   if (error) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -228,7 +298,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
           <CardContent className="p-6 text-center">
             <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Error Loading Entity</h2>
-            <p className="text-muted-foreground mb-4">{error}</p>
+            <p className="text-muted-foreground mb-4">{error instanceof Error ? error.message : String(error)}</p>
             <Button onClick={() => router.back()} variant="outline">
               Go Back
             </Button>
@@ -260,69 +330,9 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header with Breadcrumbs */}
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-6">
-          {/* Breadcrumbs */}
-          <nav className="flex items-center space-x-1 text-sm text-muted-foreground mb-4">
-            <Link href="/" className="flex items-center hover:text-foreground transition-colors">
-              <Home className="h-4 w-4" />
-            </Link>
-            <ChevronRight className="h-4 w-4" />
-            <Link href="/entity-browser" className="hover:text-foreground transition-colors">
-              Entity Browser
-            </Link>
-            <ChevronRight className="h-4 w-4" />
-            <span className="text-foreground font-medium truncate max-w-xs">
-              {entity?.properties.name || 'Entity Profile'}
-            </span>
-          </nav>
-          
-          <div className="flex items-center gap-4 mb-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                // Try to go back to entity browser, if available
-                const referrer = document.referrer
-                if (referrer && referrer.includes('/entity-browser')) {
-                  router.back()
-                } else {
-                  // Fallback to entity browser with preserved page if possible
-                  const urlParams = new URLSearchParams(window.location.search)
-                  const pageParam = urlParams.get('from')
-                  const targetUrl = pageParam ? `/entity-browser?page=${pageParam}` : '/entity-browser'
-                  router.push(targetUrl)
-                }
-              }}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Browser
-            </Button>
-            
-            {dataSource && (
-              <Badge 
-                variant={dataSource === 'cache' ? 'default' : 'secondary'}
-                className="flex items-center gap-1"
-              >
-                <Database className="h-3 w-3" />
-                {dataSource === 'cache' ? 'Cached' : 'Live'}
-              </Badge>
-            )}
-            
-            <div className="flex items-center gap-2 ml-auto">
-              {entity?.labels.map((label) => (
-                <Badge key={label} variant="outline">
-                  {label}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      <Header />
 
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="container mx-auto px-4 py-8 bg-[#1c1e2d]">
         {/* Main Entity Header */}
         <Card className="mb-8 border-2 shadow-lg">
           <CardHeader className="pb-6">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 
 const actionVerbs = [
   "Accomplishing", "Actioning", "Actualizing", "Analyzing", "Baking", "Brewing",
@@ -30,12 +30,14 @@ const toolActionMap: { [key: string]: string[] } = {
 interface DynamicStatusProps {
   currentTool?: string;
   isLoading?: boolean;
+  statusMessage?: string;
 }
 
-export default function DynamicStatus({ currentTool, isLoading = true }: DynamicStatusProps) {
+function DynamicStatus({ currentTool, isLoading = true, statusMessage }: DynamicStatusProps) {
   const [verb, setVerb] = useState("Analyzing");
   const [displayTool, setDisplayTool] = useState<string>("");
   const [counter, setCounter] = useState(0);
+  const [currentStatus, setCurrentStatus] = useState<string>("");
 
   useEffect(() => {
     if (!isLoading) return;
@@ -74,6 +76,12 @@ export default function DynamicStatus({ currentTool, isLoading = true }: Dynamic
     }
   }, [currentTool]);
 
+  useEffect(() => {
+    if (statusMessage) {
+      setCurrentStatus(statusMessage);
+    }
+  }, [statusMessage]);
+
   if (!isLoading) return null;
 
   return (
@@ -84,7 +92,14 @@ export default function DynamicStatus({ currentTool, isLoading = true }: Dynamic
         </div>
       </div>
       
-      {displayTool && (
+      {/* Show single status message that replaces previous ones */}
+      {currentStatus && (
+        <div className="text-xs text-gray-600 text-center max-w-xs">
+          {currentStatus}
+        </div>
+      )}
+      
+      {displayTool && !currentStatus && (
         <div className="text-sm text-gray-600 text-center max-w-xs">
           Using <span className="font-medium text-blue-500">{displayTool}</span>
         </div>
@@ -92,3 +107,5 @@ export default function DynamicStatus({ currentTool, isLoading = true }: Dynamic
     </div>
   );
 }
+
+export default DynamicStatus;

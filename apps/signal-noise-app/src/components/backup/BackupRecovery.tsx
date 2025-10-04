@@ -327,7 +327,7 @@ export default function BackupRecovery() {
                       
                       {job.error && (
                         <div className="p-3 bg-red-900 border border-red-700 rounded">
-                          <p className="text-sm text-red-400">{job.error}</p>
+                          <p className="text-sm text-red-400">{job.error instanceof Error ? job.error.message : String(job.error)}</p>
                         </div>
                       )}
                       
@@ -429,7 +429,7 @@ export default function BackupRecovery() {
                       
                       {job.error && (
                         <div className="p-3 bg-red-900 border border-red-700 rounded">
-                          <p className="text-sm text-red-400">{job.error}</p>
+                          <p className="text-sm text-red-400">{job.error instanceof Error ? job.error.message : String(job.error)}</p>
                         </div>
                       )}
                       

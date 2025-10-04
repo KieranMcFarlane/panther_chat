@@ -140,7 +140,7 @@ export default function TerminalPage() {
       setCommands(prev => 
         prev.map(cmd => 
           cmd.id === newCommand.id 
-            ? { ...cmd, output: `Error: ${error}`, status: 'error' }
+            ? { ...cmd, output: `Error: ${error instanceof Error ? error.message : String(error)}`, status: 'error' }
             : cmd
         )
       );

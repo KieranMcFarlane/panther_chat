@@ -1,10 +1,8 @@
 "use client";
 
-import { useCoAgent, useCopilotAction, useCoAgentStateRender, useCopilotAdditionalInstructions } from "@copilotkit/react-core";
-import { CopilotKitCSSProperties, CopilotChat, CopilotPopup } from "@copilotkit/react-ui";
-import { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import type React from "react";
-import ThinkingDisplay from "@/components/ThinkingDisplay";
+import EmbeddedStreamingChat from "@/components/chat/EmbeddedStreamingChat";
 
 // Simple types for testing
 interface AgentState {
@@ -20,54 +18,34 @@ const initialState: AgentState = {
 };
 
 export default function CopilotKitPage() {
-  // Use a completely static conversation ID to prevent resets
-  const conversationId = "sports-intelligence-stable-v2";
+  const [thinking, setThinking] = useState<any[]>([]);
   
-  // Temporarily disable agent state to prevent conversation resets
-  // const { state, setState } = useCoAgent<AgentState>({
-  //   name: "sample_agent",
-  //   initialState,
-  // });
-  const state = initialState;
-  const setState = () => {};
-
-  // Debug logging disabled to prevent unnecessary re-renders
-
   // Memoize suggestions to prevent unnecessary re-renders
   const suggestions = useMemo(() => [
-    { title: "Analyze a Club", message: "Analyze Manchester United's digital maturity and business opportunities" },
-    { title: "Find Decision Makers", message: "Find key decision makers at Premier League clubs with high opportunity scores" },
-    { title: "Market Research", message: "Research La Liga clubs for partnership development opportunities" },
-    { title: "Technology Gaps", message: "Assess technology gaps in Championship clubs for digital transformation" },
-    { title: "Transfer Intelligence", message: "Monitor transfer news and identify clubs with changing leadership" },
-    { title: "Opportunity Scoring", message: "Score business opportunities for targeting specific sports clubs" },
+    "Analyze Manchester United's digital maturity and business opportunities",
+    "Find key decision makers at Premier League clubs with high opportunity scores", 
+    "Research La Liga clubs for partnership development opportunities",
+    "Assess technology gaps in Championship clubs for digital transformation",
+    "Monitor transfer news and identify clubs with changing leadership",
+    "Score business opportunities for targeting specific sports clubs"
   ], []);
 
   return (
-    <div
-      style={{ "--copilot-kit-primary-color": "#2563eb" } as CopilotKitCSSProperties}
-      className="h-screen flex flex-col"
-    >
+    <div className="h-screen flex flex-col">
       <div className="flex flex-1 overflow-hidden">
-        <aside className="-order-1 max-md:hidden flex flex-col min-w-80 w-[30vw] max-w-120 p-4 pr-0">
+        <aside className="-order-1 max-md:hidden flex flex-col min-w-80 w-[30vw] max-w-120 p-4 pr-0" style={{ background: '#1c1e2d' }}>
           <div className="h-full flex flex-col align-start w-full shadow-lg rounded-2xl border border-sidebar-border overflow-hidden">
-            <div className="p-4 border-b">
+            <div className="p-4 border-b flex-shrink-0">
               <h2 className="text-lg font-semibold">AI Canvas</h2>
-              <p className="text-sm text-gray-600">Sports Intelligence Agent</p>
-                            </div>
-                    <CopilotChat
-                      key="sports-chat-stable" // Prevent remounting
-                      conversationId={conversationId}
-                      className="flex-1 overflow-auto w-full"
-                      labels={{
-                        title: "Sports Intelligence Agent",
-                        initial: "🏆 Welcome to the Sports Intelligence Platform! I can help you analyze sports clubs, identify business opportunities, assess digital maturity, and find key decision makers. What would you like to explore?",
-                      }}
-                      showToolCalls={true}
-                      showThinking={true}
-                      suggestions={suggestions}
-                      // Callbacks removed to prevent conversation resets
-                    />
+              <p className="text-sm text-gray-600">Claude Agent SDK - Sports Intelligence</p>
+            </div>
+            <div className="flex-1 relative min-h-0">
+              <EmbeddedStreamingChat 
+                className="h-full"
+                suggestions={suggestions}
+                onThinkingChange={setThinking}
+              />
+            </div>
           </div>
         </aside>
         <main className="flex-1 overflow-auto p-4">
@@ -78,11 +56,6 @@ export default function CopilotKitPage() {
                 Analyze sports clubs, identify business opportunities, and discover key decision makers with AI-powered intelligence.
               </p>
               
-              {/* Thinking Display */}
-              <ThinkingDisplay 
-                thinking={state?.thinking || []} 
-                isVisible={true} 
-              />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="bg-gray-800 p-4 rounded-lg">
                   <h3 className="text-lg font-semibold text-white mb-2">🎯 Opportunity Analysis</h3>
@@ -99,7 +72,7 @@ export default function CopilotKitPage() {
         </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {state?.cards?.map((card, index) => (
+              {initialState.cards?.map((card, index) => (
                 <div key={index} className="p-4 border rounded-lg bg-white shadow-sm">
                   <h3 className="font-semibold">{card.title || `Card ${index + 1}`}</h3>
                   <p className="text-sm text-gray-600">{card.description || "No description"}</p>

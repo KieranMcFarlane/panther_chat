@@ -371,7 +371,7 @@ export default function LoggingAnalytics() {
                 <CardContent className="space-y-3">
                   {analytics.topErrorMessages.map((error, index) => (
                     <div key={index} className="flex items-center justify-between">
-                      <span className="text-sm text-white truncate flex-1">{error.message}</span>
+                      <span className="text-sm text-white truncate flex-1">{error.message instanceof Error ? error.message.message : String(error.message)}</span>
                       <Badge variant="destructive" className="ml-2">
                         {error.count}
                       </Badge>

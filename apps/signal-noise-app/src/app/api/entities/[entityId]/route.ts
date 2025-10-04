@@ -25,6 +25,14 @@ export async function GET(
 ) {
   try {
     const { entityId } = params
+    
+    // Validate entityId parameter
+    if (!entityId) {
+      return NextResponse.json(
+        { error: 'Entity ID is required' },
+        { status: 400 }
+      )
+    }
     const { searchParams } = new URL(request.url)
     const useCache = searchParams.get('useCache') !== 'false' // Default to true
     
@@ -57,17 +65,25 @@ export async function GET(
 
     // If not found in cache or cache disabled, get from Neo4j
     if (!entity) {
-      const neo4jService = new Neo4jService()
-      await neo4jService.initialize()
-
-      const session = neo4jService.driver.session()
+      let session;
+      try {
+        const neo4jService = new Neo4jService()
+        await neo4jService.initialize()
+        session = neo4jService.driver.session()
+      } catch (neo4jError) {
+        console.error('Failed to initialize Neo4j:', neo4jError)
+        return NextResponse.json(
+          { error: neo4jError instanceof Error ? neo4jError.message : 'Failed to connect to database' },
+          { status: 500 }
+        )
+      }
       try {
         // Get entity details
         const entityResult = await session.run(`
           MATCH (n) 
           WHERE id(n) = $entityId
           RETURN n
-        `, { entityId: parseInt(entityId) })
+        `, { entityId: parseInt(entityId) || 0 })
 
         if (entityResult.records.length > 0) {
           const node = entityResult.records[0].get('n')
@@ -87,7 +103,7 @@ export async function GET(
                    related.name as target, 
                labels(related)[0] as target_type
             LIMIT 50
-          `, { entityId: parseInt(entityId) })
+          `, { entityId: parseInt(entityId) || 0 })
 
           connections = connectionResult.records.map(record => ({
             relationship: record.get('relationship'),
@@ -96,8 +112,9 @@ export async function GET(
           }))
         }
       } finally {
-        await session.close()
-        await neo4jService.close()
+        if (session) {
+          await session.close()
+        }
       }
     }
 
@@ -117,7 +134,7 @@ export async function GET(
   } catch (error) {
     console.error('❌ Failed to fetch entity details:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch entity details' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch entity details' },
       { status: 500 }
     )
   }

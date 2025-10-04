@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import DynamicStatus from '@/components/ui/DynamicStatus';
+import { Markdown } from '@copilotkit/react-ui';
 
 interface SimpleStreamingChatProps {
   className?: string;
@@ -141,8 +142,8 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
                   break;
 
                 case 'tool_use':
-                  // Don't set generic status text - let DynamicStatus handle the display
-                  // setCurrentStatus(chunk.message || `Using ${chunk.tool}...`);
+                  // Set tool-specific status message that replaces previous one
+                  setCurrentStatus(chunk.message || `Executing ${chunk.tool}...`);
                   setCurrentTool(chunk.tool || '');
                   console.log('Frontend tool execution:', {
                     tool: chunk.tool,
@@ -198,7 +199,7 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
                   break;
 
                 case 'tool_result':
-                  const resultStatus = `Processed ${chunk.tool} results`;
+                  const resultStatus = `Completed ${chunk.tool} operation`;
                   setCurrentStatus(resultStatus);
                   console.log('Frontend tool result received:', {
                     tool: chunk.tool,
@@ -284,19 +285,7 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
     }
   };
 
-  // Simple text formatter for basic markdown-like rendering
-  const formatText = (text: string) => {
-    // Convert basic markdown to HTML
-    let formatted = text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">$1</code>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br />');
-    
-    return `<p>${formatted}</p>`;
-  };
-
+  
   if (!isOpen) {
     return (
       <button
@@ -329,15 +318,14 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
       </div>
 
       {/* Status Bar */}
-      {(isLoading || currentStatus) && (
+      {isLoading && (
         <div className="bg-gray-50 border-b p-3">
           <div className="flex flex-col items-center space-y-2">
-            <DynamicStatus currentTool={currentTool} isLoading={isLoading} />
-            {currentStatus && (
-              <div className="text-xs text-gray-500 text-center max-w-xs">
-                {currentStatus}
-              </div>
-            )}
+            <DynamicStatus 
+              currentTool={currentTool} 
+              isLoading={isLoading} 
+              statusMessage={currentStatus} 
+            />
             {isLoading && (
               <button
                 onClick={handleStopGeneration}
@@ -379,10 +367,9 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
               } ${message.isStreaming ? 'animate-pulse' : ''}`}
             >
               {message.role === 'assistant' ? (
-                <div 
-                  className="text-sm leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: formatText(message.content) }}
-                />
+                <div className="text-sm leading-relaxed">
+                  <Markdown content={message.content} />
+                </div>
               ) : (
                 <div className="whitespace-pre-wrap text-sm">{message.content}</div>
               )}

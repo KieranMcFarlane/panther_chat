@@ -132,7 +132,7 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 						</div>
 					)}
 
-					{error && (<div className="p-4 text-fm-orange text-sm">{error}</div>)}
+					{error && (<div className="p-4 text-fm-orange text-sm">{error instanceof Error ? error.message : String(error)}</div>)}
 
 					{!loading && !error && results.length > 0 && (
 						<div className="p-2">
