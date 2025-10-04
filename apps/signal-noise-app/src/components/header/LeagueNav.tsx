@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,19 +40,113 @@ export default function LeagueNav() {
   console.log('🏆 LeagueNav: Component render', {
     entityId,
     timestamp: new Date().toISOString(),
-    url: typeof window !== 'undefined' ? window.location.pathname : 'server'
+    url: typeof window !== 'undefined' ? window.location.pathname : 'server',
+    isClient: typeof window !== 'undefined',
+    isServer: typeof window === 'undefined'
   })
   
-  const { data: entitiesData, isLoading, error } = useApi('/api/entities?limit=2000')
-  const { data: currentEntityData } = useEntity(entityId) // Get current entity data
+  // Force client-side data loading
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    console.log('🏆 LeagueNav: Component mounted on client', {
+      isClient: typeof window !== 'undefined',
+      timestamp: new Date().toISOString()
+    })
+    setMounted(true)
+  }, [])
+  
+  // Simplified direct data fetching - proven to work from SimpleTest
+  const [entitiesData, setEntitiesData] = useState(null)
+  const [entitiesError, setEntitiesError] = useState(null)
+  const [entitiesLoading, setEntitiesLoading] = useState(false)
+  
+  // Get current entity data using SWR (this one should work)
+  const { data: currentEntityData } = useEntity(
+    entityId
+  )
+  
+  // Fetch entities data - direct approach that we verified works
+  // CRITICAL: Only run on client side after component mounts
+  useEffect(() => {
+    if (!mounted) {
+      console.log('🏆 LeagueNav: Skipping data fetch - not mounted yet')
+      return
+    }
+    
+    console.log('🏆 LeagueNav: Starting entities data fetch (client side)')
+    setEntitiesLoading(true)
+    setEntitiesError(null)
+    
+    fetch('/api/entities?limit=1000')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`)
+        }
+        return res.json()
+      })
+      .then(data => {
+        console.log('🏆 LeagueNav: Entities data loaded successfully', {
+          entitiesCount: data.entities?.length || 0
+        })
+        setEntitiesData(data)
+        setEntitiesLoading(false)
+      })
+      .catch(err => {
+        console.error('🏆 LeagueNav: Failed to load entities data', err)
+        setEntitiesError(err)
+        setEntitiesLoading(false)
+      })
+  }, [mounted]) // Depend on mounted state to ensure client-side execution
+  
+  // Use the entities data directly
+  const finalData = entitiesData
+  const finalError = entitiesError
+  const finalLoading = entitiesLoading
+  
+  // Debug: Log when hooks are called and their initial state
+  console.log('🏆 LeagueNav: Component state', {
+    hookCallTime: new Date().toISOString(),
+    entityId: entityId,
+    entitiesDataExists: !!entitiesData,
+    entitiesDataLength: entitiesData?.entities?.length,
+    entitiesLoading: finalLoading,
+    entitiesError: finalError?.message,
+    mounted
+  })
+
+  // Debug: Monitor component mounting and data changes
+  useEffect(() => {
+    console.log('🏆 LeagueNav: Component mounted or data changed', {
+      mounted: true,
+      isClient: typeof window !== 'undefined',
+      entitiesData: !!entitiesData,
+      entitiesCount: entitiesData?.entities?.length,
+      entitiesLoading: finalLoading,
+      entitiesError: finalError?.message,
+      timestamp: new Date().toISOString()
+    })
+  }, [entitiesData, finalLoading, finalError])
+
+  // Use final loading state - simplified, but only show skeleton on client side
+  const isActuallyLoading = mounted && finalLoading && !entitiesData && !finalError
   
   console.log('🏆 LeagueNav: API state', { 
-    isLoading, 
-    error, 
+    isActuallyLoading,
+    error: finalError, 
     hasData: !!entitiesData, 
+    entitiesCount: entitiesData?.entities?.length || 0,
+    totalAvailable: entitiesData?.pagination?.total || 0,
+    showingPercentage: entitiesData?.entities?.length && entitiesData?.pagination?.total ? 
+      Math.round((entitiesData.entities.length / entitiesData.pagination.total) * 100) : 0,
     currentEntity: currentEntityData?.entity?.properties?.name, 
     currentId: currentEntityData?.entity?.id,
-    entityIdParam: entityId
+    entityIdParam: entityId,
+    rawEntitiesData: entitiesData,
+    isLoading: finalLoading,
+    // Check if we're on client side
+    isClient: typeof window !== 'undefined',
+    isServer: typeof window === 'undefined'
   })
     
     // Debug: Check if Manchester clubs are in the raw data
@@ -684,8 +778,22 @@ export default function LeagueNav() {
     setTimeout(() => setIsNavigating(false), 500)
   }
 
-  if (isLoading) {
-    console.log('🏆 LeagueNav: Loading state - showing skeleton indicator')
+  // Show simple loading state only on client side during initial load
+  if (!mounted) {
+    return (
+      <div className="flex items-center gap-2">
+        <div className="w-[100px] h-[100px] bg-gray-600 rounded-lg animate-pulse"></div>
+        <div className="flex flex-col gap-2">
+          <div className="h-8 w-32 bg-gray-600 rounded animate-pulse"></div>
+          <div className="h-6 w-40 bg-gray-600/60 rounded animate-pulse"></div>
+        </div>
+      </div>
+    )
+  }
+
+  // Loading state is now defined at the top of the component
+  if (isActuallyLoading) {
+    console.log('🏆 LeagueNav: Loading state - showing skeleton indicator', { isActuallyLoading, hasData: !!entitiesData?.entities })
     return (
       <div className="flex items-center gap-2">
         {/* Badge skeleton */}
@@ -708,8 +816,16 @@ export default function LeagueNav() {
     )
   }
 
-  if (error || !currentClub || leaguesData.length === 0) {
-    console.log('🏆 LeagueNav: Error state', { error, currentClub: !!currentClub, leaguesCount: leaguesData.length })
+  if (entitiesError || (!currentClub && !isActuallyLoading && sportsData.length > 0)) {
+    console.log('🏆 LeagueNav: Error state', { 
+      error: entitiesError, 
+      currentClub: !!currentClub, 
+      leaguesCount: leaguesData.length, 
+      isLoading: isActuallyLoading,
+      hasSportsData: sportsData.length > 0,
+      hasEntityData: !!currentEntityData,
+      entityId
+    })
     return (
       <div className="flex items-center gap-2">
         {/* Badge skeleton */}
@@ -732,6 +848,41 @@ export default function LeagueNav() {
     )
   }
 
+  // Fallback: If no current club but we have sports data, show the first available club
+  const fallbackClub = !currentClub && sportsData.length > 0 ? 
+    sportsData[0]?.leagues[0]?.clubs[0] : null
+
+  console.log('🏆 LeagueNav: Final render state', {
+    currentClub: currentClub?.properties?.name,
+    fallbackClub: fallbackClub?.properties?.name,
+    sportsDataLength: sportsData.length,
+    leaguesDataLength: leaguesData.length,
+    isUsingFallback: !!fallbackClub && !currentClub,
+    isLoading: isActuallyLoading,
+    error: !!entitiesError,
+    entityId,
+    hasEntityData: !!currentEntityData?.entity
+  })
+
+  const displayClub = currentClub || fallbackClub
+
+  // Additional fallback: If still no display club and we have raw entities data, create a fallback from the first club entity
+  let emergencyFallback = null
+  if (!displayClub && entitiesData?.entities?.length > 0) {
+    const firstClubEntity = entitiesData.entities.find((entity: any) => {
+      const type = entity.properties?.type?.toLowerCase() || ''
+      const level = entity.properties?.level
+      return (type.includes('club') || type.includes('team')) && level
+    })
+    if (firstClubEntity) {
+      emergencyFallback = firstClubEntity
+      console.log('🚨 Emergency fallback created:', firstClubEntity.properties?.name)
+    }
+  }
+
+  const finalDisplayClub = displayClub || emergencyFallback
+
+  console.log('🏆 About to render with finalDisplayClub:', finalDisplayClub?.properties?.name)
   return (
     <div className="flex items-center gap-2">
       {/* Debug info */}
@@ -739,51 +890,52 @@ export default function LeagueNav() {
         CLUBS: {leaguesData.reduce((total, league) => total + league.clubs.length, 0)}
       </div> */}
       
-      {/* Club Badge with Modal */}
-      <Dialog open={isModalOpen} onOpenChange={(open) => {
-          setIsModalOpen(open)
-          if (open) {
-            // Reset modal state when opening
-            setModalStep('sport')
-            setSelectedSportInModal(null)
-            setSearchTerm('')
-          }
-        }}>
-        <DialogTrigger asChild>
-          <div className="flex flex-col items-center">
-            <div className={`relative rounded-lg flex items-center justify-center overflow-hidden cursor-pointer group transition-all duration-200 ${
-              isNavigating ? 'opacity-70 scale-95' : ''
-            }`} 
-                 title={currentClub.properties?.name || 'Club'}
-                 style={{ width: '6.25rem', height: '6.25rem' }}
-                 onMouseEnter={() => setIsHoveringBadge(true)}
-                 onMouseLeave={() => setIsHoveringBadge(false)}>
-              <EntityBadge entity={currentClub} size="xl" className={`transition-all duration-200 ${
-                isNavigating ? 'opacity-60' : ''
-              }`} />
-              
-              {/* Subtle loading skeleton overlay */}
-              {isNavigating && (
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-10">
-                  {/* Subtle pulse effect */}
-                  <div className="w-full h-full bg-white/10 animate-pulse"></div>
-                </div>
-              )}
-              
-              {/* Hover overlay with hint */}
-              <div className={`absolute inset-0 bg-black/60 flex items-center justify-center transition-opacity duration-200 ${
-                isHoveringBadge && !isNavigating ? 'opacity-100' : 'opacity-0'
-              }`}>
-                <div className="text-white text-center px-2">
-                  <div className="text-xs font-medium">Click to change</div>
-                  <div className="text-xs font-medium">league</div>
-                  <div className="text-xs opacity-75 mt-1">↑↓ keys to navigate</div>
+      {/* Render actual content - SWR handles client-side data fetching */}
+      <>
+          {/* Club Badge with Modal */}
+          <Dialog open={isModalOpen} onOpenChange={(open) => {
+            setIsModalOpen(open)
+            if (open) {
+              // Reset modal state when opening
+              setModalStep('sport')
+              setSelectedSportInModal(null)
+              setSearchTerm('')
+            }
+          }}>
+            <DialogTrigger asChild>
+              <div className="flex flex-col items-center">
+                <div className={`relative rounded-lg flex items-center justify-center overflow-hidden cursor-pointer group transition-all duration-200 ${
+                  isNavigating ? 'opacity-70 scale-95' : ''
+                }`} 
+                     title={finalDisplayClub?.properties?.name || 'Club'}
+                     style={{ width: '6.25rem', height: '6.25rem' }}
+                     onMouseEnter={() => setIsHoveringBadge(true)}
+                     onMouseLeave={() => setIsHoveringBadge(false)}>
+                  <EntityBadge entity={finalDisplayClub} size="xl" className={`transition-all duration-200 ${
+                    isNavigating ? 'opacity-60' : ''
+                  }`} />
+                  
+                  {/* Subtle loading skeleton overlay */}
+                  {isNavigating && (
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-10">
+                      {/* Subtle pulse effect */}
+                      <div className="w-full h-full bg-white/10 animate-pulse"></div>
+                    </div>
+                  )}
+                  
+                  {/* Hover overlay with hint */}
+                  <div className={`absolute inset-0 bg-black/60 flex items-center justify-center transition-opacity duration-200 ${
+                    isHoveringBadge && !isNavigating ? 'opacity-100' : 'opacity-0'
+                  }`}>
+                    <div className="text-white text-center px-2">
+                      <div className="text-xs font-medium">Click to change</div>
+                      <div className="text-xs font-medium">league</div>
+                      <div className="text-xs opacity-75 mt-1">↑↓ keys to navigate</div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            </div>
-        </DialogTrigger>
+            </DialogTrigger>
         <DialogContent 
           className="sm:max-w-[500px]" 
           style={{ backgroundColor: '#1c1e2d' }}
@@ -986,7 +1138,7 @@ export default function LeagueNav() {
         }`}>
           {!isNavigating && (
             <span className="text-white text-3xl font-extrabold font-medium">
-              {currentClub.properties.name}
+              {displayClub?.properties?.name}
             </span>
           )}
         </div>
@@ -997,11 +1149,12 @@ export default function LeagueNav() {
         }`}>
           {!isNavigating && (
             <span className="text-white/60 text-xl">
-              {currentLeague.league} / {currentClub.properties.country}
+              {currentLeague?.league || 'Unknown League'} / {displayClub?.properties?.country || 'Unknown Country'}
             </span>
           )}
         </div>
       </div>
+      </>
     </div>
   )
 }

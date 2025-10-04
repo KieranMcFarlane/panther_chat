@@ -20,6 +20,7 @@ export class EntityCacheService {
   private neo4jService: Neo4jService
   private readonly CACHE_TTL = 30 * 60 * 1000 // 30 minutes
   private readonly BATCH_SIZE = 100
+  public isInitialized = false
 
   constructor() {
     this.neo4jService = new Neo4jService()
@@ -27,6 +28,7 @@ export class EntityCacheService {
 
   async initialize() {
     await this.neo4jService.initialize()
+    this.isInitialized = true
   }
 
   async syncEntitiesFromNeo4j(options: {
@@ -215,11 +217,11 @@ export class EntityCacheService {
           
           const whereClause = whereConditions.join(' AND ')
           
-          // Use a simpler approach - fetch a larger set and filter in memory
+          // Use a more efficient approach - fetch a larger set for search
           const { data: allData, error: fetchError } = await supabase
             .from('cached_entities')
             .select('*')
-            .range(0, 999) // Get first 1000 records for search
+            .range(0, 1999) // Get first 2000 records for search to improve results
           
           if (fetchError) {
             console.error('❌ Cache fetch error:', fetchError)
@@ -290,8 +292,24 @@ export class EntityCacheService {
           }
         } catch (searchError) {
           console.error('❌ Cache search error:', searchError)
-          console.log('🔍 Cache search failed, falling back to Neo4j')
-          // Continue with normal query but it will return no results for search
+          console.log('🔍 Cache search failed, returning empty results')
+          // Return empty results for failed search instead of falling back to non-search query
+          return {
+            entities: [],
+            pagination: {
+              page,
+              limit,
+              total: 0,
+              totalPages: 0,
+              hasNext: false,
+              hasPrev: false
+            },
+            filters: {
+              entityType,
+              sortBy,
+              sortOrder
+            }
+          }
         }
       }
       

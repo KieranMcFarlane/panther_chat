@@ -301,7 +301,7 @@ export default function HealthMonitoring() {
                     </div>
                     {service.errorMessage && (
                       <div className="text-red-400 text-xs">
-                        {service.errorMessage}
+                        {service.errorMessage instanceof Error ? service.errorMessage.message : String(service.errorMessage)}
                       </div>
                     )}
                   </div>

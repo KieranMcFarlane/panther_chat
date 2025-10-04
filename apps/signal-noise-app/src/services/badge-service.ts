@@ -25,7 +25,7 @@ class BadgeService {
         entityName: 'Manchester United',
         badgePath: '/badges/manchester-united-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/manchester-united-badge.png',
+        s3Url: '/api/badges/manchester-united-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'thesportsdb'
       },
@@ -34,7 +34,7 @@ class BadgeService {
         entityName: 'São Paulo FC',
         badgePath: '/badges/sao-paulo-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/sxpupx1473538135.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/sao-paulo-badge.png',
+        s3Url: '/api/badges/sao-paulo-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'thesportsdb'
       },
@@ -43,7 +43,7 @@ class BadgeService {
         entityName: 'Premier League',
         badgePath: '/badges/premier-league-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/league/badge/gasy9d1737743125.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/premier-league-badge.png',
+        s3Url: '/api/badges/premier-league-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'thesportsdb'
       },
@@ -52,7 +52,7 @@ class BadgeService {
         entityName: 'Indian Premier League',
         badgePath: '/badges/indian-premier-league-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/league/badge/gaiti11741709844.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/indian-premier-league-badge.png',
+        s3Url: '/api/badges/indian-premier-league-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'thesportsdb'
       },
@@ -61,7 +61,7 @@ class BadgeService {
         entityName: 'Australian Football League',
         badgePath: '/badges/australian-football-league-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/league/badge/wvx4721525519372.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/australian-football-league-badge.png',
+        s3Url: '/api/badges/australian-football-league-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'thesportsdb'
       },
@@ -70,7 +70,7 @@ class BadgeService {
         entityName: '1. FC Köln',
         badgePath: '/badges/1-fc-koln-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/1-fc-koln-badge.png',
+        s3Url: '/api/badges/1-fc-koln-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'local'
       },
@@ -79,7 +79,7 @@ class BadgeService {
         entityName: '1. FC Nürnberg',
         badgePath: '/badges/1-fc-nurnberg-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/1-fc-nurnberg-badge.png',
+        s3Url: '/api/badges/1-fc-nurnberg-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'local'
       },
@@ -88,7 +88,7 @@ class BadgeService {
         entityName: 'AC Milan',
         badgePath: '/badges/ac-milan-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/ac-milan-badge.png',
+        s3Url: '/api/badges/ac-milan-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'local'
       },
@@ -97,7 +97,7 @@ class BadgeService {
         entityName: '2. Bundesliga',
         badgePath: '/badges/2-bundesliga-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/league/badge/gasy9d1737743125.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/2-bundesliga-badge.png',
+        s3Url: '/api/badges/2-bundesliga-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'local'
       },
@@ -106,7 +106,7 @@ class BadgeService {
         entityName: 'Arsenal',
         badgePath: '/badges/arsenal-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/arsenal-badge.png',
+        s3Url: '/api/badges/arsenal-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'thesportsdb'
       },
@@ -115,7 +115,7 @@ class BadgeService {
         entityName: 'Arsenal Football Club',
         badgePath: '/badges/arsenal-badge.png',
         badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: 'https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/arsenal-badge.png',
+        s3Url: '/api/badges/arsenal-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'thesportsdb'
       }
@@ -200,15 +200,15 @@ class BadgeService {
       possiblePaths.push(`${this.config.baseUrl}/${fullNameNormalized}.png`)
     }
 
-    // Use simplified name for S3 URL (most likely to exist)
-    const s3Url = `https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/${normalizedName}-badge.png`
+    // Use API route for S3 proxy (avoids CORS issues)
+    const apiUrl = `/api/badges/${normalizedName}-badge.png`
 
     // Return the mapping with multiple path options
     return {
       entityId,
       entityName,
       badgePath: possiblePaths[0], // Use the simplified name as primary
-      s3Url,
+      s3Url: apiUrl,
       lastUpdated: new Date().toISOString(),
       source: 'local'
     }
@@ -264,7 +264,7 @@ class BadgeService {
 
     // Return the first URL that seems valid (we'll let the component handle actual loading errors)
     const selectedUrl = urls.find(url => url) || this.getFallbackBadgeUrl()
-    console.log('Badge URL selected:', selectedUrl, 'for entity:', mapping.entityName)
+    console.log('Badge URL selected:', selectedUrl, 'for entity:', mapping.entityName, 'URLs tried:', urls)
     return selectedUrl
   }
 
@@ -314,18 +314,18 @@ class BadgeService {
     this.cache.clear()
   }
 
-  // Add S3 badge mapping
+  // Add S3 badge mapping (using API proxy to avoid CORS)
   addS3BadgeMapping(entityId: string | number, entityName: string, s3Key?: string): BadgeMapping {
     const key = s3Key || `${entityName.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-')}-badge.png`
-    const s3Url = `https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/${key}`
+    const apiUrl = `/api/badges/${key}`
     
     const mapping: BadgeMapping = {
       entityId,
       entityName,
       badgePath: `/badges/${key}`,
-      s3Url,
+      s3Url: apiUrl,
       lastUpdated: new Date().toISOString(),
-      source: 's3'
+      source: 'api-proxy'
     }
 
     this.addBadgeMapping(mapping)
@@ -358,6 +358,9 @@ class BadgeService {
 
 // Export singleton instance
 export const badgeService = new BadgeService()
+
+// Clear cache on module load to ensure fresh mappings
+badgeService.clearCache()
 
 // Export utility functions
 export const getBadgeForEntity = (entityId: string | number, entityName: string) => 

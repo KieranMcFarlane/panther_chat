@@ -1,0 +1,64 @@
+# LinkedIn Procurement Monitor Environment Configuration
+# Copy to .env.local and fill in your actual values
+
+# BrightData Configuration
+BRIGHTDATA_TOKEN=your_brightdata_api_token_here
+BRIGHTDATA_ZONE=linkedin_posts_monitor
+BRIGHTDATA_API_URL=https://api.brightdata.com
+BRIGHTDATA_WEBHOOK_SECRET=your_webhook_secret_key_here
+
+# Next.js/Supabase Configuration  
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+SUPABASE_ANON_KEY=your_supabase_anonymous_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# Email Services
+RESEND_API_KEY=your_resend_api_key_for_alerts
+TO_EMAIL_ADDRESSES=sales@yellow-panther.com,opportunities@yellow-panther.com
+
+# Slack Integration
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK
+SLACK_CHANNEL=#rfp-alerts
+
+# Neo4j Configuration (for MCP integration)
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your_neo4j_password
+
+# Webhook Configuration
+WEBHOOK_PORT=8002
+WEBHOOK_HOST=0.0.0.0
+
+# Monitoring Settings
+LINKDIN_MONITOR_INTERVAL=300000  # 5 minutes<｜tool▁calls▁end｜> milliseconds
+HIGH_PRIORITY_THRESHOLD=70       # Minimum fit score for high priority
+CONFIDENCE_THRESHOLD=0.6        # Minimum confidence for processing
+
+# Notification Settings
+ENABLE_EMAIL_NOTIFICATIONS=true
+ENABLE_SLACK_NOTIFICATIONS=true
+ENABLE_DASHBOARD_UPDATES=true
+NOTIFICATION_COOLDOWN=3600000   # 1 hour in milliseconds
+
+# Debug Settings
+DEBUG_MODE=false
+LOG_LEVEL=INFO                 # DEBUG, INFO, WARNING, ERROR
+
+# Performance Settings
+MAX_CONCURRENT_SCANS=3
+RATE_LIMIT_PER_MINUTE=10
+BATCH_SIZE=50
+
+# Sports Industry Focus
+PRIORITY_SPORTS=["football", "rugby", "cricket", "tennis", "basketball"]
+INTERNATIONAL_TARGETS=["UK", "EU", "US", "Canada", "Australia"]
+
+# Value Range Targeting
+MIN_ESTIMATED_VALUE=50000     # £50K minimum
+MAX_ESTIMATED_VALUE=2000000   # £2M maximum
+PREFERRED_VALUE_RANGES=["100K-500K", "500K-1M", "1M-2M"]
+
+# LinkedIn API Limits (if using direct API)
+LINKEDIN_API_RATE_LIMIT=100   # requests per hour
+LINKEDIN_API_BURST_LIMIT=10   # burst requests

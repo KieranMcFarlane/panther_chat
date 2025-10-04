@@ -23,7 +23,11 @@ export async function GET(request: NextRequest) {
       try {
         // Set a timeout for cache operations to prevent hanging
         const cachePromise = Promise.resolve().then(async () => {
-          await cacheService.initialize()
+          // Only initialize if not already initialized
+          if (!cacheService['isInitialized']) {
+            await cacheService.initialize()
+            cacheService['isInitialized'] = true
+          }
           return await cacheService.getCachedEntities({
             page,
             limit,
@@ -35,7 +39,7 @@ export async function GET(request: NextRequest) {
         })
         
         const timeoutPromise = new Promise((_, reject) => {
-          setTimeout(() => reject(new Error('Cache operation timeout')), 5000)
+          setTimeout(() => reject(new Error('Cache operation timeout')), 15000) // Increased to 15 seconds
         })
         
         const cachedResult = await Promise.race([cachePromise, timeoutPromise]) as any
@@ -159,7 +163,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('❌ Failed to fetch entities:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch entities' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch entities' },
       { status: 500 }
     )
   }
@@ -196,7 +200,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error creating entity:', error);
     return NextResponse.json(
-      { error: 'Failed to create entity' },
+      { error: error instanceof Error ? error.message : 'Failed to create entity' },
       { status: 500 }
     );
   }

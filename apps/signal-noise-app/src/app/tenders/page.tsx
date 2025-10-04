@@ -347,7 +347,7 @@ export default function TendersPage() {
       <div className="min-h-screen bg-custom-bg flex items-center justify-center">
         <div className="text-center">
           <div className="text-fm-red text-xl mb-4 font-subheader">⚠️ Error loading tenders</div>
-          <p className="font-body-primary text-fm-medium-grey mb-4">{error}</p>
+          <p className="font-body-primary text-fm-medium-grey mb-4">{error instanceof Error ? error.message : String(error)}</p>
           <button 
             onClick={loadMockTenders}
             className="px-4 py-2 bg-fm-yellow text-custom-bg font-body-medium rounded hover:bg-yellow-400 transition-colors"

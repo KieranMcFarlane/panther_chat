@@ -173,7 +173,7 @@ export default function IframeViewer({ slot, userSession }: IframeViewerProps) {
             <Alert className="border-red-500 bg-red-500 bg-opacity-10">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription className="text-red-300">
-                {error}
+                {error instanceof Error ? error.message : String(error)}
               </AlertDescription>
             </Alert>
             <div className="mt-4 flex gap-2">

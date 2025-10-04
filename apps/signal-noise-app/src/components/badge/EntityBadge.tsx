@@ -20,7 +20,21 @@ const iconSize = {
 }
 
 export function EntityBadge({ entity, size = 'md', className, showFallback = true, onClick }: BadgeComponentProps) {
-  console.log('EntityBadge component mounted for:', entity.properties.name, 'neo4j_id:', entity.neo4j_id)
+  console.log('EntityBadge component mounted for:', entity?.properties?.name || 'null entity', 'neo4j_id:', entity?.neo4j_id || 'null')
+  
+  // Handle null entity case immediately
+  if (!entity) {
+    return (
+      <div className={cn(
+        'flex items-center justify-center rounded-lg bg-gray-600 animate-pulse',
+        sizeClasses[size],
+        className
+      )}>
+        <div className="w-full h-full bg-gray-600 rounded-lg animate-pulse" />
+      </div>
+    )
+  }
+  
   const [badgeUrl, setBadgeUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -28,6 +42,8 @@ export function EntityBadge({ entity, size = 'md', className, showFallback = tru
   const [imageLoading, setImageLoading] = useState(true)
 
   useEffect(() => {
+    if (!entity) return
+    
     const loadBadge = async () => {
       setLoading(true)
       setError(false)
@@ -61,7 +77,7 @@ export function EntityBadge({ entity, size = 'md', className, showFallback = tru
     }
 
     loadBadge()
-  }, [entity.neo4j_id, entity.properties.name, size])
+  }, [entity?.neo4j_id, entity?.properties?.name, size])
 
   const getEntityTypeIcon = () => {
     const labels = entity.labels || []
@@ -210,7 +226,7 @@ export function CompactEntityBadge({ entity, size = 'sm', className, onClick }: 
     }
 
     loadBadge()
-  }, [entity.neo4j_id, entity.properties.name, size])
+  }, [entity?.neo4j_id, entity?.properties?.name, size])
 
   const getInitials = () => {
     const name = entity.properties.name || ''

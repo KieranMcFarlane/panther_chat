@@ -116,7 +116,7 @@ export default function LoginPage() {
             
             {error && (
               <div className="text-red-600 text-sm bg-red-50 p-3 rounded">
-                {error}
+                {error instanceof Error ? error.message : String(error)}
               </div>
             )}
             

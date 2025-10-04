@@ -194,7 +194,7 @@ export function VectorSearch() {
           <Card className="border-destructive">
             <CardContent className="p-6">
               <h3 className="text-lg font-medium text-destructive mb-2">Search Error</h3>
-              <p className="text-sm text-destructive/80">{error}</p>
+              <p className="text-sm text-destructive/80">{error instanceof Error ? error.message : String(error)}</p>
             </CardContent>
           </Card>
         )}

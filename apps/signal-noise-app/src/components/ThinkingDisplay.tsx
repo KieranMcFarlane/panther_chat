@@ -12,12 +12,136 @@ interface ThinkingStep {
 }
 
 interface ThinkingDisplayProps {
-  thinking: ThinkingStep[];
+  thinking: ThinkingStep[] | string[];
   isVisible: boolean;
 }
 
+const parseThinkingContent = (thinking: ThinkingStep[] | string[]): ThinkingStep[] => {
+  if (!thinking || !Array.isArray(thinking)) return [];
+  
+  // If already structured, return as is
+  if (thinking.length > 0 && typeof thinking[0] === 'object' && 'step' in thinking[0]) {
+    return thinking as ThinkingStep[];
+  }
+  
+  // Convert string-based thinking to structured steps
+  const structuredSteps: ThinkingStep[] = [];
+  let stepNumber = 1;
+  
+  (thinking as string[]).forEach((content, index) => {
+    if (!content || typeof content !== 'string') return;
+    
+    let step: ThinkingStep = {
+      step: stepNumber++,
+      action: 'Processing',
+      reasoning: content,
+    };
+    
+    // Parse specific patterns from the backend
+    if (content.includes('Processing request with MCP tools')) {
+      step = {
+        step: step.step,
+        action: '🚀 Initializing Analysis',
+        reasoning: 'Setting up MCP tools and preparing sports intelligence analysis',
+      };
+    } else if (content.includes('Available MCP servers')) {
+      step = {
+        step: step.step,
+        action: '🔗 Connecting to Database',
+        reasoning: 'Establishing connection to Neo4j graph database via MCP',
+      };
+    } else if (content.includes('Allowed tools')) {
+      step = {
+        step: step.step,
+        action: '🛠️ Loading Intelligence Tools',
+        reasoning: 'Preparing Cypher query execution and entity search capabilities',
+      };
+    } else if (content.includes('TOOL DETECTED')) {
+      const toolName = content.match(/TOOL DETECTED: (.+)/)?.[1] || 'Unknown Tool';
+      step = {
+        step: step.step,
+        action: `🎯 Using Tool: ${toolName}`,
+        reasoning: 'Executing database query to retrieve sports intelligence',
+        tool: toolName,
+      };
+    } else if (content.includes('Query:')) {
+      try {
+        const queryMatch = content.match(/Query: (.+)/);
+        if (queryMatch) {
+          const queryData = JSON.parse(queryMatch[1]);
+          step = {
+            step: step.step,
+            action: '📝 Executing Cypher Query',
+            reasoning: `Running query: ${queryData.query || 'Unknown query'}`,
+            tool: 'Neo4j Database',
+          };
+        }
+      } catch (e) {
+        step = {
+          step: step.step,
+          action: '📝 Executing Query',
+          reasoning: 'Running Cypher query on sports database',
+          tool: 'Neo4j Database',
+        };
+      }
+    } else if (content.includes('QUERY EXECUTED SUCCESSFULLY')) {
+      step = {
+        step: step.step,
+        action: '✅ Query Successful',
+        reasoning: 'Database query completed successfully, processing results',
+        tool: 'Neo4j Database',
+      };
+    } else if (content.includes('Results:')) {
+      step = {
+        step: step.step,
+        action: '📊 Analyzing Results',
+        reasoning: 'Processing retrieved data and generating insights',
+        tool: 'Analysis Engine',
+      };
+    } else if (content.includes('Connected to') && content.includes('MCP servers')) {
+      step = {
+        step: step.step,
+        action: '🔗 Systems Online',
+        reasoning: 'All MCP servers connected and ready for analysis',
+      };
+    } else if (content.includes('Available tools:')) {
+      step = {
+        step: step.step,
+        action: '🛠️ Tools Ready',
+        reasoning: 'Neo4j database tools are available for intelligence gathering',
+      };
+    } else if (content.includes('AI Response:')) {
+      step = {
+        step: step.step,
+        action: '🤖 Generating Intelligence',
+        reasoning: 'AI analyzing results and preparing comprehensive insights',
+      };
+    } else if (content.includes('CRITICAL ISSUE')) {
+      step = {
+        step: step.step,
+        action: '⚠️ System Issue Detected',
+        reasoning: 'Identified a problem with tool integration',
+        tool: 'System Monitor',
+      };
+    } else {
+      // Generic processing step
+      step = {
+        step: step.step,
+        action: '🔄 Processing',
+        reasoning: content.length > 100 ? content.substring(0, 100) + '...' : content,
+      };
+    }
+    
+    structuredSteps.push(step);
+  });
+  
+  return structuredSteps;
+};
+
 export const ThinkingDisplay: React.FC<ThinkingDisplayProps> = ({ thinking, isVisible }) => {
   if (!isVisible || !thinking.length) return null;
+
+  const structuredSteps = parseThinkingContent(thinking);
 
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
@@ -27,7 +151,7 @@ export const ThinkingDisplay: React.FC<ThinkingDisplayProps> = ({ thinking, isVi
       </div>
       
       <div className="space-y-3">
-        {thinking.map((step, index) => (
+        {structuredSteps.map((step, index) => (
           <div key={index} className="bg-white rounded-md p-3 border border-blue-100">
             <div className="flex items-start justify-between">
               <div className="flex-1">
