@@ -343,7 +343,7 @@ export function StreamingChatSidebar({
 
       {/* Chat Sidebar */}
       {isOpen && (
-        <div className={`fixed right-0 top-0 h-full w-96 bg-white shadow-2xl z-40 flex flex-col ${className}`}>
+        <div className={`fixed right-0 top-0 h-full w-96 bg-white shadow-2xl z-40 flex flex-col ${className} flex items-center mt-6 mb-4`}>
           {/* Header */}
           <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
             <div>
