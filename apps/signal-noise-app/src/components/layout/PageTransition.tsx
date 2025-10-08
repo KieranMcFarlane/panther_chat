@@ -26,12 +26,18 @@ export default function PageTransition({ children }: PageTransitionProps) {
       initial={false}
       animate={transitionStage}
       variants={{
-        hidden: { opacity: 0 },
-        visible: { opacity: 1 }
+        hidden: { 
+          opacity: 0,
+          y: 20 // Move down while fading out
+        },
+        visible: { 
+          opacity: 1,
+          y: 0 // Return to original position
+        }
       }}
       transition={{
-        duration: 0.15,
-        ease: "easeInOut"
+        duration: 0.2, // Slightly longer for smooth animation
+        ease: "easeOut" // Smooth easing
       }}
       onAnimationComplete={() => {
         if (transitionStage === 'hidden') {
