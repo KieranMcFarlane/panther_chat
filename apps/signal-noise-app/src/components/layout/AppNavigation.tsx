@@ -24,7 +24,18 @@ import {
   Search,
   LayoutDashboard,
   LogIn,
-  Shield
+  Shield,
+  MessagesSquare,
+  Target,
+  Brain,
+  Trophy,
+  ChevronDown,
+  ChevronRight,
+  Network,
+  Monitor,
+  Eye,
+  Bot,
+  Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -33,20 +44,40 @@ import PageTransition from './PageTransition';
 import VectorSearch from '@/components/ui/VectorSearch';
 import { authClient } from '@/lib/auth-client';
 
-// Navigation items
+// Navigation items - Core demo functionality only
 const navItems = [
   { icon: Home, label: 'Home', href: '/' },
-  { icon: Team, label: 'Sports', href: '/sports' },
-  { icon: Document, label: 'Tenders', href: '/tenders' },
-  { icon: Work, label: 'Opportunities', href: '/opportunities' },
-  { icon: Users, label: 'Contacts', href: '/contacts' },
-  { icon: BarChart3, label: 'Graph', href: '/graph' },
-  { icon: Search, label: 'Knowledge Graph', href: '/knowledge-graph' },
-  { icon: Zap, label: 'Terminal', href: '/terminal' },
-  { icon: MessageSquare, label: 'Knowledge Graph Chat', href: '/knowledge-graph-chat' },
-  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
-  { icon: Shield, label: 'Admin', href: '/admin' },
-  { icon: LogIn, label: 'Login', href: '/login' },
+  { icon: Search, label: 'Entities', href: '/entity-browser' },
+  { icon: FileText, label: 'Tenders', href: '/tenders' },
+  { 
+    icon: Brain, 
+    label: 'Entity Enrichment', 
+    href: '/entity-enrichment',
+    badge: { text: 'NEW', variant: 'secondary' as const }
+  },
+  { 
+    icon: Bot, 
+    label: 'Claude Agent', 
+    href: '/claude-agent',
+    badge: { text: 'AI', variant: 'default' as const }
+  },
+  { 
+    icon: Monitor, 
+    label: 'Live Agent Logs', 
+    href: '/agent-logs',
+    badge: { text: 'LIVE', variant: 'destructive' as const }
+  },
+  { 
+    icon: BarChart3, 
+    label: 'Graph', 
+    href: '/graph',
+    hasSubmenu: true,
+    subItems: [
+      { icon: Network, label: '2D Network', href: '/graph' },
+      { icon: Monitor, label: 'VR Visualization', href: '/graph/vr' },
+      { icon: Eye, label: 'AR Visualization', href: '/graph/ar' },
+    ]
+  },
 ];
 
 interface AppNavigationProps {
@@ -59,11 +90,17 @@ export default function AppNavigation({ children }: AppNavigationProps) {
 
   const renderNavItem = (item: typeof navItems[0]) => {
     const [isOpen, setIsOpen] = useState(false);
-    const isActive = pathname === item.href;
+    const isActive = pathname === item.href || (item.hasSubmenu && pathname.startsWith(item.href));
+    
+    const handleClick = (e: React.MouseEvent) => {
+      if (item.hasSubmenu) {
+        e.preventDefault();
+        setIsOpen(!isOpen);
+      }
+    };
     
     const linkContent = (
-      <Link
-        href={item.href}
+      <div
         className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
           isActive 
             ? 'bg-yellow-500 text-black font-body-medium'
@@ -71,8 +108,22 @@ export default function AppNavigation({ children }: AppNavigationProps) {
         } ${!sidebarExpanded ? 'justify-center px-3' : ''}`}
       >
         <item.icon className="w-5 h-5 flex-shrink-0" />
-        {sidebarExpanded && <span>{item.label}</span>}
-      </Link>
+        {sidebarExpanded && (
+          <>
+            <span className="flex-1">{item.label}</span>
+            <div className="flex items-center gap-2">
+              {item.badge && (
+                <Badge variant={item.badge.variant} className="text-xs">
+                  {item.badge.text}
+                </Badge>
+              )}
+              {item.hasSubmenu && (
+                <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+              )}
+            </div>
+          </>
+        )}
+      </div>
     );
 
     // When collapsed, wrap in popover for tooltip
@@ -84,7 +135,9 @@ export default function AppNavigation({ children }: AppNavigationProps) {
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
           >
-            {linkContent}
+            <Link href={item.hasSubmenu ? '#' : item.href}>
+              {linkContent}
+            </Link>
           </PopoverTrigger>
           <PopoverContent 
             side="right" 
@@ -94,12 +147,61 @@ export default function AppNavigation({ children }: AppNavigationProps) {
             onMouseLeave={() => setIsOpen(false)}
           >
             <p className="text-sm font-medium">{item.label}</p>
+            {item.hasSubmenu && item.subItems && (
+              <div className="mt-1 space-y-1 border-t border-custom-border pt-1">
+                {item.subItems.map((subItem) => (
+                  <Link
+                    key={subItem.href}
+                    href={subItem.href}
+                    className="flex items-center gap-2 px-2 py-1 text-xs hover:bg-custom-bg rounded"
+                  >
+                    <subItem.icon className="w-3 h-3" />
+                    <span>{subItem.label}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
           </PopoverContent>
         </Popover>
       );
     }
 
-    return linkContent;
+    return (
+      <div key={item.href} className="w-full">
+        {item.hasSubmenu ? (
+          // For items with submenus, keep the clickable div behavior
+          <div onClick={handleClick}>
+            {linkContent}
+          </div>
+        ) : (
+          // For regular navigation items, use proper Link
+          <Link href={item.href} onClick={handleClick}>
+            {linkContent}
+          </Link>
+        )}
+        {item.hasSubmenu && sidebarExpanded && isOpen && (
+          <div className="ml-4 mt-1 space-y-1">
+            {item.subItems?.map((subItem) => {
+              const isSubActive = pathname === subItem.href;
+              return (
+                <Link
+                  key={subItem.href}
+                  href={subItem.href}
+                  className={`flex items-center gap-2 px-3 py-1 text-sm rounded transition-colors ${
+                    isSubActive 
+                      ? 'bg-yellow-500 text-black font-medium'
+                      : 'text-fm-light-grey hover:bg-custom-border hover:text-white'
+                  }`}
+                >
+                  <subItem.icon className="w-4 h-4" />
+                  <span>{subItem.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -112,7 +214,7 @@ export default function AppNavigation({ children }: AppNavigationProps) {
               <img 
                 src="/yp_logo.svg" 
                 alt="Yellow Panther Logo" 
-                className="icon-xl transition-opacity opacity-100 group-hover:opacity-0 z-10 relative duration-300" style={{transitionTimingFunction: 'cubic-bezier(0.37, 0, 0.63, 1)'}} 
+                className="icon-xl transition-opacity opacity-100 group-hover:opacity-0 z-10 relative duration-300" style={{ transitionTimingFunction: 'cubic-bezier(0.37, 0, 0.63, 1)' }} 
               />
             </div>
             {!sidebarExpanded && (
