@@ -1,12 +1,9 @@
 import useSWR, { useSWRConfig, SWRConfig, SWRConfiguration } from 'swr'
 
 export const fetcher = async (url: string) => {
-  console.log(`🔄 fetcher called with url: ${url}`, {
-    isClient: typeof window !== 'undefined',
-    isServer: typeof window === 'undefined',
-    timestamp: new Date().toISOString(),
-    userAgent: typeof window !== 'undefined' ? window.navigator?.userAgent : 'server'
-  })
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`🔄 fetcher called with url: ${url}`)
+  }
   
   const res = await fetch(url)
   if (!res.ok) {
@@ -30,18 +27,9 @@ export const fetcher = async (url: string) => {
   
   try {
     const data = await res.json()
-    console.log(`✅ fetcher successfully fetched ${data.entities?.length || 0} entities from ${url}`)
-    console.log(`🔍 Raw data structure:`, {
-      hasEntities: !!data.entities,
-      entitiesLength: data.entities?.length,
-      hasPagination: !!data.pagination,
-      paginationKeys: data.pagination ? Object.keys(data.pagination) : null,
-      sampleEntity: data.entities?.[0] ? {
-        id: data.entities[0].id,
-        name: data.entities[0].properties?.name,
-        type: data.entities[0].properties?.type
-      } : null
-    })
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`✅ fetcher successfully fetched ${data.entities?.length || 0} entities from ${url}`)
+    }
     return data
   } catch (parseError) {
     console.error(`❌ Parse error for ${url}:`, parseError)
@@ -51,65 +39,46 @@ export const fetcher = async (url: string) => {
 
 // Global SWR configuration - serializable part only
 export const swrConfig: SWRConfiguration = {
-  revalidateOnFocus: true,
+  revalidateOnFocus: false, // Disable to prevent excessive revalidation
   revalidateOnReconnect: true,
-  refreshInterval: 300000, // 5 minutes
-  dedupingInterval: 2000, // 2 seconds
-  errorRetryCount: 3,
-  errorRetryInterval: 5000,
-  loadingTimeout: 10000, // 10 seconds
+  refreshInterval: 0, // Disable auto-refresh
+  dedupingInterval: 10000, // Increase to prevent rapid re-calls
+  errorRetryCount: 2,
+  errorRetryInterval: 1000,
+  loadingTimeout: 15000, // 15 seconds
 }
 
 // Custom hook for API calls with caching
 export function useApi<T>(url: string | null, config?: SWRConfiguration) {
-  const isClient = typeof window !== 'undefined'
-  const isServer = typeof window === 'undefined'
-  
-  console.log(`🔄 useApi called with url: ${url}`, {
-    isClient,
-    isServer,
-    timestamp: new Date().toISOString(),
-    config: config
-  })
+  // Don't call SWR with null URL
+  if (!url) {
+    return {
+      data: undefined,
+      error: undefined,
+      isLoading: false,
+      isValidating: false,
+      mutate: () => {}
+    } as any
+  }
   
   const result = useSWR<T>(url, fetcher, {
     ...swrConfig,
-    // Force revalidation on client side to fix SSR hydration issues
+    // More conservative settings to prevent infinite loading
     revalidateOnMount: true,
-    // Always revalidate on focus to ensure fresh data
-    revalidateOnFocus: true,
-    // Disable SSR caching for this hook to ensure client-side data fetching
+    revalidateOnFocus: false, // Keep disabled to prevent excessive calls
     fallbackData: undefined,
-    // Ensure no caching that prevents client-side calls
-    dedupingInterval: 0,
-    // Disable suspense to force normal loading behavior
     suspense: false,
     onError: (error, key) => {
-      console.error(`❌ SWR Error for key "${key}":`, error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`❌ SWR Error for key "${key}":`, error)
+      }
     },
     onLoadingSlow: (key, config) => {
-      console.warn(`⏰ SWR Loading Slow for key "${key}" with config:`, config)
-    },
-    onSuccess: (data, key) => {
-      console.log(`✅ SWR Success for key "${key}":`, {
-        dataType: typeof data,
-        hasData: !!data,
-        dataLength: Array.isArray(data) ? data.length : 
-                   (data && typeof data === 'object' && 'entities' in data) ? data.entities?.length : 
-                   'N/A',
-        timestamp: new Date().toISOString(),
-        isClient
-      })
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`⏰ SWR Loading Slow for key "${key}"`)
+      }
     },
     ...config
-  })
-  
-  console.log(`🔄 useApi returning result for ${url}:`, {
-    data: result.data,
-    error: result.error,
-    isLoading: result.isLoading,
-    isValidating: result.isValidating,
-    mutate: result.mutate ? 'function' : 'undefined'
   })
   
   return result
@@ -117,10 +86,14 @@ export function useApi<T>(url: string | null, config?: SWRConfiguration) {
 
 // Hook for entity data with longer cache time
 export function useEntity(entityId: string | null) {
-  return useApi(`/api/entities/${entityId}`, {
+  return useApi(entityId ? `/api/entities/${entityId}` : null, {
     revalidateOnFocus: false,
-    refreshInterval: 600000, // 10 minutes for entity data
-    dedupingInterval: 5000,
+    refreshInterval: 0, // Disable auto-refresh for entity data
+    dedupingInterval: 60000, // Increase deduplication to prevent rapid re-calls
+    revalidateOnMount: true,
+    errorRetryCount: 2,
+    errorRetryInterval: 1000,
+    loadingTimeout: 15000, // 15 seconds timeout
   })
 }
 
@@ -128,13 +101,18 @@ export function useEntity(entityId: string | null) {
 export function useSportsEntities() {
   return useApi('/api/entities?limit=1000', {
     revalidateOnFocus: false,
-    refreshInterval: 300000, // 5 minutes
-    dedupingInterval: 1000,
+    refreshInterval: 0, // Disable auto-refresh to prevent constant API calls
+    dedupingInterval: 60000, // 1 minute deduplication
   })
 }
 
 // Hook for paginated entities
-export function usePaginatedEntities(page: number = 1, filters: any = {}, searchTerm: string = '') {
+export function usePaginatedEntities(page: number | null, filters: any = {}, searchTerm: string = '') {
+  // Ensure we have valid parameters
+  if (!page || page < 1) {
+    page = 1
+  }
+
   const params = new URLSearchParams({
     page: page.toString(),
     limit: filters.limit || '10',
@@ -151,9 +129,12 @@ export function usePaginatedEntities(page: number = 1, filters: any = {}, search
   
   return useApi(url, {
     revalidateOnFocus: false,
-    refreshInterval: 600000, // 10 minutes for paginated data
-    dedupingInterval: 2000,
+    refreshInterval: 0, // Disable auto-refresh to prevent constant API calls
+    dedupingInterval: 30000, // Increase deduplication to 30 seconds
     keepPreviousData: true, // Keep showing previous data while loading new page
+    errorRetryCount: 2,
+    errorRetryInterval: 1000,
+    loadingTimeout: 8000, // 8 seconds
   })
 }
 
@@ -188,6 +169,31 @@ export function usePaginatedPrefetch() {
 
     const url = `/api/entities?${params}`
     mutate(url, undefined, { revalidate: true })
+  }
+  
+  return { prefetchPage }
+}
+
+// Hook for prefetching navigation pages
+export function useNavigationPrefetch() {
+  const { mutate } = useSWRConfig()
+  
+  const prefetchPage = (path: string) => {
+    // Prefetch common API endpoints for different pages
+    const apiEndpoints: Record<string, string[]> = {
+      '/': ['/api/entities?limit=10'],
+      '/entity-browser': ['/api/entities?limit=20'],
+      '/tenders': ['/api/entities?limit=50'],
+      '/rfp-intelligence': ['/api/entities?limit=100'],
+      '/graph': ['/api/entities?limit=200']
+    }
+    
+    const endpoints = apiEndpoints[path]
+    if (endpoints) {
+      endpoints.forEach(endpoint => {
+        mutate(endpoint, undefined, { revalidate: true })
+      })
+    }
   }
   
   return { prefetchPage }
