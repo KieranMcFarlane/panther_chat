@@ -170,3 +170,4 @@ environment_config:
     webhook_url: "https://yellow-panther.com/webhook/brightdata/linkedin"
     brightdata_zone: "linkedin_posts_monitor"
     log_level: "INFO"
+

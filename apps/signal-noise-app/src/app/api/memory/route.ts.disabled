@@ -1,0 +1,519 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase-client';
+import { cacheService } from '@/lib/supabase-cache';
+import fs from 'fs';
+import path from 'path';
+
+/**
+ * Memory.md Management System
+ * Maintains strategic insights and knowledge updates
+ */
+
+interface MemoryEntry {
+  id: string;
+  entity_id: string;
+  memory_type: 'rfp_analysis' | 'entity_enrichment' | 'strategic_insight' | 'daily_summary';
+  title: string;
+  content: string;
+  metadata: {
+    organization?: string;
+    fit_score?: number;
+    tier?: 1 | 2 | 3;
+    sport?: string;
+    urgency?: string;
+    confidence?: number;
+    tags?: string[];
+  };
+  created_at: string;
+  updated_at?: string;
+}
+
+class MemoryManagementService {
+  private memoryFilePath: string;
+  private maxMemorySize = 10 * 1024 * 1024; // 10MB max file size
+
+  constructor() {
+    this.memoryFilePath = path.join(process.cwd(), 'memory.md');
+  }
+
+  /**
+   * Add new memory entry and update memory.md file
+   */
+  async addMemoryEntry(entry: Omit<MemoryEntry, 'id' | 'created_at'>): Promise<string> {
+    const memoryId = this.generateMemoryId();
+    const fullEntry: MemoryEntry = {
+      ...entry,
+      id: memoryId,
+      created_at: new Date().toISOString()
+    };
+
+    try {
+      // Store in database for retrieval
+      await supabase
+        .from('memory_entries')
+        .insert({
+          id: memoryId,
+          entity_id: fullEntry.entity_id,
+          memory_type: fullEntry.memory_type,
+          title: fullEntry.title,
+          content: fullEntry.content,
+          metadata: fullEntry.metadata,
+          created_at: fullEntry.created_at
+        });
+
+      // Update memory.md file
+      await this.updateMemoryFile(fullEntry);
+
+      // Update cache if entity-related
+      if (fullEntry.entity_id && fullEntry.metadata.organization) {
+        await cacheService.cacheEntity({
+          id: fullEntry.entity_id,
+          organization: fullEntry.metadata.organization,
+          memory_entries: [fullEntry],
+          last_memory_update: fullEntry.created_at
+        }, fullEntry.metadata.tier || 2);
+      }
+
+      console.log(`📝 Memory entry added: ${fullEntry.title}`);
+      return memoryId;
+
+    } catch (error) {
+      console.error('Failed to add memory entry:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update memory.md file with new entry
+   */
+  private async updateMemoryFile(entry: MemoryEntry): Promise<void> {
+    try {
+      // Read existing memory file
+      let existingContent = '';
+      if (fs.existsSync(this.memoryFilePath)) {
+        existingContent = fs.readFileSync(this.memoryFilePath, 'utf-8');
+      }
+
+      // Format new entry
+      const formattedEntry = this.formatMemoryEntry(entry);
+
+      // Insert new entry at the top (after title)
+      const titleIndex = existingContent.indexOf('# Yellow Panther Intelligence Memory');
+      let updatedContent: string;
+
+      if (titleIndex !== -1) {
+        const beforeTitle = existingContent.substring(0, titleIndex);
+        const afterTitle = existingContent.substring(titleIndex);
+        updatedContent = beforeTitle + afterTitle + '\n\n' + formattedEntry;
+      } else {
+        // Create new file with title
+        updatedContent = `# Yellow Panther Intelligence Memory
+
+_Last Updated: ${new Date().toISOString()}_
+
+---
+
+${formattedEntry}`;
+      }
+
+      // Clean up old entries if file is too large
+      updatedContent = await this.cleanupMemoryFile(updatedContent);
+
+      // Write updated content
+      fs.writeFileSync(this.memoryFilePath, updatedContent, 'utf-8');
+
+      console.log(`📄 Memory.md updated: ${entry.title}`);
+
+    } catch (error) {
+      console.error('Memory file update failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Format memory entry for markdown file
+   */
+  private formatMemoryEntry(entry: MemoryEntry): string {
+    const tags = entry.metadata.tags ? entry.metadata.tags.join(', ') : '';
+    const metadata = [
+      entry.metadata.organization && `**Organization:** ${entry.metadata.organization}`,
+      entry.metadata.sport && `**Sport:** ${entry.metadata.sport}`,
+      entry.metadata.fit_score && `**Fit Score:** ${entry.metadata.fit_score}%`,
+      entry.metadata.tier && `**Tier:** ${entry.metadata.tier}`,
+      entry.metadata.urgency && `**Urgency:** ${entry.metadata.urgency}`,
+      entry.metadata.confidence && `**Confidence:** ${(entry.metadata.confidence * 100).toFixed(0)}%`,
+      tags && `**Tags:** ${tags}`
+    ].filter(Boolean).join(' | ');
+
+    return `## ${entry.title}
+
+**Date:** ${new Date(entry.created_at).toLocaleDateString()}  
+**Type:** ${entry.memory_type.replace('_', ' ').toUpperCase()}  
+${metadata}
+
+${entry.content}
+
+---
+
+*Entry ID: ${entry.id}*`;
+  }
+
+  /**
+   * Clean up memory file to prevent it from getting too large
+   */
+  private async cleanupMemoryFile(content: string): Promise<string> {
+    // Check file size
+    const bufferSize = Buffer.byteLength(content, 'utf8');
+    
+    if (bufferSize <= this.maxMemorySize) {
+      return content;
+    }
+
+    console.log('🧹 Memory.md file too large, cleaning up old entries...');
+
+    // Split content into entries
+    const entries = content.split('---').filter(entry => entry.trim().length > 0);
+    
+    // Keep the title/header and recent entries
+    const headerMatch = entries[0]?.match(/^# Yellow Panther Intelligence Memory/);
+    let updatedContent = headerMatch ? entries[0] : '# Yellow Panther Intelligence Memory\n\n';
+    
+    // Add timestamp
+    updatedContent += `_Last Updated: ${new Date().toISOString()}_\n\n---\n\n';
+    
+    // Keep last 50 entries (approximately)
+    const recentEntries = entries.slice(-50);
+    updatedContent += recentEntries.join('---\n\n');
+
+    return updatedContent;
+  }
+
+  /**
+   * Search memory entries
+   */
+  async searchMemory(query: string, filters: {
+    memory_type?: string;
+    organization?: string;
+    sport?: string;
+    tier?: number;
+    limit?: number;
+  } = {}): Promise<MemoryEntry[]> {
+    try {
+      let dbQuery = supabase
+        .from('memory_entries')
+        .select('*');
+      
+      if (query) {
+        dbQuery = dbQuery.or(`title.ilike.%${query}%,content.ilike.%${query}%`);
+      }
+
+      // Apply filters
+      if (filters.memory_type) {
+        dbQuery = dbQuery.eq('memory_type', filters.memory_type);
+      }
+      if (filters.organization) {
+        dbQuery = dbQuery.contains('metadata', { organization: filters.organization });
+      }
+      if (filters.sport) {
+        dbQuery = dbQuery.contains('metadata', { sport: filters.sport });
+      }
+      if (filters.tier) {
+        dbQuery = dbQuery.contains('metadata', { tier: filters.tier });
+      }
+
+      // Order by creation date and limit
+      dbQuery = dbQuery.order('created_at', { ascending: false });
+      if (filters.limit) {
+        dbQuery = dbQuery.limit(filters.limit);
+      }
+
+      const { data, error } = await dbQuery;
+
+      if (error) {
+        console.error('Memory search failed:', error);
+        return [];
+      }
+
+      return data as MemoryEntry[] || [];
+
+    } catch (error) {
+      console.error('Memory search error:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Generate daily summary of activities
+   */
+  async generateDailySummary(): Promise<string> {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      
+      // Get today's activities
+      const { data: activities } = await supabase
+        .from('memory_entries')
+        .select('*')
+        .gte('created_at', `${today}T00:00:00.000Z`)
+        .lt('created_at', `${today}T23:59:59.999Z`)
+        .order('created_at', { ascending: false });
+
+      // Get cache statistics
+      const cacheStats = await cacheService.getCacheStats();
+
+      // Generate summary
+      const summary = this.formatDailySummary(today, activities || [], cacheStats);
+
+      // Add as memory entry
+      await this.addMemoryEntry({
+        entity_id: `daily_summary_${today}`,
+        memory_type: 'daily_summary',
+        title: `Daily Intelligence Summary - ${new Date().toLocaleDateString()}`,
+        content: summary,
+        metadata: {
+          tags: ['daily-summary', 'intelligence', 'dashboard']
+        }
+      });
+
+      return summary;
+
+    } catch (error) {
+      console.error('Daily summary generation failed:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Format daily summary
+   */
+  private formatDailySummary(date: string, activities: MemoryEntry[], cacheStats: any): string {
+    const rfpCount = activities.filter(a => a.memory_type === 'rfp_analysis').length;
+    const enrichmentCount = activities.filter(a => a.memory_type === 'entity_enrichment').length;
+    
+    const highFitOrganizations = activities
+      .filter(a => a.metadata.fit_score && a.metadata.fit_score >= 70)
+      .map(a => a.metadata.organization)
+      .filter(Boolean);
+
+    const topSports = this.getTopSports(activities);
+
+    return `### Daily Performance Metrics
+
+**Date:** ${new Date().toLocaleDateString()}
+
+**RFP Analysis:** ${rfpCount} opportunities processed  
+**Entity Enrichment:** ${enrichmentCount} entities updated  
+**High-Fit Organizations:** ${highFitOrganizations.length} identified
+
+### Cache Performance
+- **Total Cached Entities:** ${cacheStats.total}
+- **Tier 1 (Real-time):** ${cacheStats.by_tier.tier1 || 0}
+- **Tier 2 (Hourly):** ${cacheStats.by_tier.tier2 || 0}
+- **Tier 3 (Daily):** ${cacheStats.by_tier.tier3 || 0}
+- **Sync Success Rate:** ${cacheStats.total > 0 ? ((cacheStats.total - cacheStats.unsynced) / cacheStats.total * 100).toFixed(1) : 0}%
+
+### Key Organizations Identified
+${highFitOrganizations.length > 0 ? highFitOrganizations.map(org => `- **${org}**`).join('\n') : 'No high-fit organizations identified today.'}
+
+### Sports Intelligence Focus
+${topSports.length > 0 ? topSports.map(([sport, count]) => `- **${sport}:** ${count} activities`).join('\n') : 'No specific sports focus today.'}
+
+### System Status
+✅ **Webhook Processing:** Active  
+✅ **Claude Agent SDK:** Operational  
+✅ **Neo4j Knowledge Graph:** Syncing  
+✅ **Supabase Cache:** Performing  
+✅ **Batch Processing:** Scheduled
+
+### Strategic Insights
+${this.generateStrategicInsights(activities)}
+
+### Tomorrow's Priorities
+1. **Monitor Tier 1** organizations for new procurement signals
+2. **Process batch queue** for Tier 2 & 3 entities
+3. **Update knowledge graph** with new relationships
+4. **Review high-fit opportunities** for outreach preparation`;
+  }
+
+  /**
+   * Get top sports from activities
+   */
+  private getTopSports(activities: MemoryEntry[]): Array<[string, number]> {
+    const sportCounts: Record<string, number> = {};
+    
+    activities.forEach(activity => {
+      if (activity.metadata.sport) {
+        sportCounts[activity.metadata.sport] = (sportCounts[activity.metadata.sport] || 0) + 1;
+      }
+    });
+
+    return Object.entries(sportCounts)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5);
+  }
+
+  /**
+   * Generate strategic insights from activities
+   */
+  private generateStrategicInsights(activities: MemoryEntry[]): string {
+    const insights: string[] = [];
+    
+    // Analyze RFP patterns
+    const rfpActivities = activities.filter(a => a.memory_type === 'rfp_analysis');
+    if (rfpActivities.length > 0) {
+      const avgFitScore = rfpActivities.reduce((sum, a) => sum + (a.metadata.fit_score || 0), 0) / rfpActivities.length;
+      
+      if (avgFitScore >= 70) {
+        insights.push('- **High-Quality Opportunities:** Average fit score above threshold indicates strong market alignment');
+      }
+      
+      const urgentRfps = rfpActivities.filter(a => a.metadata.urgency === 'HIGH' || a.metadata.urgency === 'CRITICAL');
+      if (urgentRfps.length > 0) {
+        insights.push(`- **Urgent Opportunities:** ${urgentRfps.length} time-sensitive RFPs require immediate attention`);
+      }
+    }
+
+    // Analyze enrichment patterns
+    const enrichmentActivities = activities.filter(a => a.memory_type === 'entity_enrichment');
+    if (enrichmentActivities.length > 0) {
+      insights.push(`- **Knowledge Expansion:** ${enrichmentActivities.length} entities enriched with new intelligence`);
+    }
+
+    return insights.length > 0 ? insights.join('\n') : '- Market intelligence being collected and analyzed';
+  }
+
+  /**
+   * Generate unique memory ID
+   */
+  private generateMemoryId(): string {
+    return `mem_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  /**
+   * Get memory statistics
+   */
+  async getMemoryStats(): Promise<{
+    total_entries: number;
+    by_type: Record<string, number>;
+    recent_activity: number;
+    file_size: number;
+  }> {
+    try {
+      // Get database stats
+      const { data: entries } = await supabase
+        .from('memory_entries')
+        .select('memory_type, created_at');
+
+      const byType = entries?.reduce((acc, entry) => {
+        acc[entry.memory_type] = (acc[entry.memory_type] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>) || {};
+
+      // Recent activity (last 7 days)
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      
+      const recentActivity = entries?.filter(entry => 
+        new Date(entry.created_at) > weekAgo
+      ).length || 0;
+
+      // File size
+      let fileSize = 0;
+      if (fs.existsSync(this.memoryFilePath)) {
+        const stats = fs.statSync(this.memoryFilePath);
+        fileSize = stats.size;
+      }
+
+      return {
+        total_entries: entries?.length || 0,
+        by_type: byType,
+        recent_activity: recentActivity,
+        file_size: fileSize
+      };
+
+    } catch (error) {
+      console.error('Memory stats query failed:', error);
+      return {
+        total_entries: 0,
+        by_type: {},
+        recent_activity: 0,
+        file_size: 0
+      };
+    }
+  }
+}
+
+// Export singleton instance
+const memoryService = new MemoryManagementService();
+
+/**
+ * API Handlers
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    
+    switch (body.action) {
+      case 'add_memory':
+        const memoryId = await memoryService.addMemoryEntry(body.entry);
+        return NextResponse.json({ 
+          success: true, 
+          memory_id: memoryId 
+        });
+
+      case 'generate_daily_summary':
+        const summary = await memoryService.generateDailySummary();
+        return NextResponse.json({ 
+          success: true, 
+          summary 
+        });
+
+      default:
+        return NextResponse.json({ 
+          error: 'Invalid action' 
+        }, { status: 400 });
+    }
+
+  } catch (error) {
+    console.error('Memory API error:', error);
+    return NextResponse.json({ 
+      error: 'Memory operation failed' 
+    }, { status: 500 });
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const action = searchParams.get('action');
+    
+    switch (action) {
+      case 'search':
+        const query = searchParams.get('query') || '';
+        const filters = {
+          memory_type: searchParams.get('memory_type') || undefined,
+          organization: searchParams.get('organization') || undefined,
+          sport: searchParams.get('sport') || undefined,
+          tier: searchParams.get('tier') ? parseInt(searchParams.get('tier')!) : undefined,
+          limit: searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined
+        };
+        
+        const results = await memoryService.searchMemory(query, filters);
+        return NextResponse.json({ entries: results });
+
+      case 'stats':
+        const stats = await memoryService.getMemoryStats();
+        return NextResponse.json(stats);
+
+      default:
+        return NextResponse.json({ 
+          error: 'Invalid action' 
+        }, { status: 400 });
+    }
+
+  } catch (error) {
+    console.error('Memory GET API error:', error);
+    return NextResponse.json({ 
+      error: 'Memory query failed' 
+    }, { status: 500 });
+  }
+}

@@ -1,0 +1,229 @@
+[
+  {
+    "entity_id": "node_1759786158164_0.5578496926821206",
+    "name": "Australian Football League (AFL) (json_seed)",
+    "type": "Entity",
+    "sport": "",
+    "tier": "tier_1",
+    "properties": {
+      "estimatedValue": "£100K-£500K",
+      "badgeDownloadedAt": {
+        "year": {
+          "low": 2025,
+          "high": 0
+        },
+        "month": {
+          "low": 9,
+          "high": 0
+        },
+        "day": {
+          "low": 28,
+          "high": 0
+        },
+        "hour": {
+          "low": 12,
+          "high": 0
+        },
+        "minute": {
+          "low": 10,
+          "high": 0
+        },
+        "second": {
+          "low": 5,
+          "high": 0
+        },
+        "nanosecond": {
+          "low": 520000000,
+          "high": 0
+        },
+        "timeZoneOffsetSeconds": {
+          "low": 0,
+          "high": 0
+        }
+      },
+      "originalName": "Australian Football League (AFL)",
+      "tier": "tier_1",
+      "linkedin_company_url": "https://www.linkedin.com/company/australian-football-league/",
+      "type": "Organization",
+      "entityType": "League",
+      "linkedin_recent_posts": [
+        "Digital fan experience innovations",
+        "AFL Women's league expansion",
+        "Sustainable stadium initiatives"
+      ],
+      "leagueId": "1248",
+      "mobileApp": false,
+      "level": "",
+      "description": "AFL Live Pass (WatchAFL internationally), advanced fan data analytics, personalized marketing, club apps, AR/VR initiatives [3, 4]",
+      "linkedin_follower_count": {
+        "low": 500000,
+        "high": 0
+      },
+      "name": "Australian Football League (AFL) (json_seed)",
+      "priorityScore": 5,
+      "linkedin_key_competitors": [
+        "NRL",
+        "A-League",
+        "NBL"
+      ],
+      "opportunityType": "",
+      "linkedin_market_position": "Leading Australian sports league with strong digital engagement",
+      "badgePath": "/badges/australian-football-league-badge.png",
+      "leagueBadgeDownloadedAt": {
+        "year": {
+          "low": 2025,
+          "high": 0
+        },
+        "month": {
+          "low": 9,
+          "high": 0
+        },
+        "day": {
+          "low": 28,
+          "high": 0
+        },
+        "hour": {
+          "low": 12,
+          "high": 0
+        },
+        "minute": {
+          "low": 2,
+          "high": 0
+        },
+        "second": {
+          "low": 2,
+          "high": 0
+        },
+        "nanosecond": {
+          "low": 652000000,
+          "high": 0
+        },
+        "timeZoneOffsetSeconds": {
+          "low": 0,
+          "high": 0
+        }
+      },
+      "linkedin_industry": "Professional Sports",
+      "linkedin_headquarters": "Melbourne, Australia",
+      "leagueBadgePath": "badges/leagues/australian-football-league-league-badge.png",
+      "linkedin_digital_maturity_score": {
+        "low": 85,
+        "high": 0
+      },
+      "website": "",
+      "linkedin": "",
+      "digitalWeakness": "",
+      "linkedin_employee_count": {
+        "low": 800,
+        "high": 0
+      },
+      "sport": "",
+      "linkedin_founded_year": {
+        "low": 1896,
+        "high": 0
+      },
+      "country": "",
+      "source": "json_seed",
+      "linkedin_engagement_rate": 4.2,
+      "notes": "",
+      "linkedin_tech_stack": [
+        "AWS",
+        "Salesforce",
+        "Adobe Experience Cloud",
+        "Tableau"
+      ],
+      "relationship_count": 6
+    }
+  },
+  {
+    "entity_id": "node_1759786158165_0.13208482780522568",
+    "name": "PGA TOUR (json_seed)",
+    "type": "Entity",
+    "sport": "",
+    "tier": "tier_1",
+    "properties": {
+      "estimatedValue": "£100K-£500K",
+      "website": "",
+      "linkedin": "",
+      "digitalWeakness": "",
+      "originalName": "PGA TOUR",
+      "tier": "tier_1",
+      "sport": "",
+      "type": "Organization",
+      "country": "",
+      "mobileApp": false,
+      "level": "",
+      "source": "json_seed",
+      "description": "TOURCAST digital tracking with AI commentary, ShotLink data system, PGA TOUR LIVE on ESPN+, global fan engagement strategy [5, 6]",
+      "name": "PGA TOUR (json_seed)",
+      "priorityScore": 5,
+      "opportunityType": "",
+      "notes": "",
+      "relationship_count": 3
+    }
+  },
+  {
+    "entity_id": "node_1759786158165_0.44058834008547876",
+    "name": "ATP Tour (json_seed)",
+    "type": "Entity",
+    "sport": "",
+    "tier": "tier_1",
+    "properties": {
+      "estimatedValue": "£100K-£500K",
+      "originalName": "ATP Tour",
+      "tier": "tier_1",
+      "linkedin_company_url": "https://www.linkedin.com/company/atp-tour/",
+      "type": "Organization",
+      "linkedin_recent_posts": [
+        "Tennis TV streaming growth",
+        "Data analytics partnerships",
+        "Player content creation tools"
+      ],
+      "mobileApp": false,
+      "level": "",
+      "description": "Tennis TV direct-to-consumer streaming service, global fibre network for b roadcast, real-time stats, player content hubs [7, 8]",
+      "linkedin_follower_count": {
+        "low": 300000,
+        "high": 0
+      },
+      "name": "ATP Tour (json_seed)",
+      "priorityScore": 5,
+      "linkedin_key_competitors": [
+        "WTA",
+        "ITF",
+        "Davis Cup"
+      ],
+      "opportunityType": "",
+      "linkedin_market_position": "Global tennis authority with premium content strategy",
+      "linkedin_industry": "Professional Sports",
+      "linkedin_headquarters": "London, United Kingdom",
+      "linkedin_digital_maturity_score": {
+        "low": 78,
+        "high": 0
+      },
+      "website": "",
+      "linkedin": "",
+      "digitalWeakness": "",
+      "linkedin_employee_count": {
+        "low": 200,
+        "high": 0
+      },
+      "sport": "",
+      "linkedin_founded_year": {
+        "low": 1972,
+        "high": 0
+      },
+      "country": "",
+      "source": "json_seed",
+      "linkedin_engagement_rate": 3.8,
+      "notes": "",
+      "linkedin_tech_stack": [
+        "Microsoft Azure",
+        "SAP",
+        "Brightcove",
+        "Google Analytics"
+      ],
+      "relationship_count": 4
+    }
+  }
+]

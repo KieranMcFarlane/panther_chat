@@ -249,3 +249,4 @@ if (require.main === module) {
 }
 
 module.exports = { main, validateEnvironment, startWebhookHandler, startMonitoringWorker };
+

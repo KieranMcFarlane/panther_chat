@@ -72,33 +72,22 @@ export async function POST(request: NextRequest) {
 
       case 'rfp_alert':
         // Process RFP alert with Claude Agent analysis
-        result = await rfpIntelligenceAgent.processWebhook('rfp_alert', {
-          rfp: payload.data.rfp,
-          entity: payload.data.entity
-        });
+        result = await rfpIntelligenceAgent.processWebhook('rfp_alert', payload);
         break;
 
       case 'entity_alert':
         // Process entity alert with Claude Agent reasoning
-        result = await rfpIntelligenceAgent.processWebhook('entity_alert', {
-          alert: payload.data.alert,
-          entity: payload.data.entity
-        });
+        result = await rfpIntelligenceAgent.processWebhook('entity_alert', payload);
         break;
 
       case 'entity_enrichment':
         // Process entity enrichment with Claude Agent
-        result = await rfpIntelligenceAgent.processWebhook('entity_enrichment', {
-          entity: payload.data.entity
-        });
+        result = await rfpIntelligenceAgent.processWebhook('entity_enrichment', payload);
         break;
 
       case 'market_intelligence':
         // Process market intelligence request
-        result = await rfpIntelligenceAgent.processWebhook('market_intelligence', {
-          industry: payload.data.industry,
-          region: payload.data.region
-        });
+        result = await rfpIntelligenceAgent.processWebhook('market_intelligence', payload);
         break;
 
       default:

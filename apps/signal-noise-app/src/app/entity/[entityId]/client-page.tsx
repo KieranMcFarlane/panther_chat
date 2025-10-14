@@ -6,15 +6,15 @@ import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { EntityBadge } from "@/components/badge/EntityBadge"
 import Header from "@/components/header/Header"
 import { useEntity } from "@/lib/swr-config"
+import EmailComposeModal from "@/components/email/EmailComposeModal"
+import EntityDossierRouter from "@/components/entity-dossier"
 // import { useClubNavigation } from "@/contexts/ClubNavigationContext"
 // import { EntityProfileSkeleton, BadgeSkeleton } from "@/components/ui/skeleton"
 import { 
   ArrowLeft,
   Globe,
-  Linkedin,
   MapPin,
   Calendar,
   Building,
@@ -71,12 +71,58 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   // const [isTransitioning, setIsTransitioning] = useState(false)
   // const [displayEntityId, setDisplayEntityId] = useState(actualEntityId)
   
+  // Add loading timeout state
+  const [isLoadingTimeout, setIsLoadingTimeout] = useState(false)
+  
+  // Email modal state
+  const [showEmailModal, setShowEmailModal] = useState(false)
+  
   // Use the actual entity ID for data fetching
   const { data: entityData, error, isLoading } = useEntity(actualEntityId)
   
   const entity = entityData?.entity || null
   const connections = entityData?.connections || []
   const dataSource = entityData?.source || null
+  const dossier = entityData?.dossier || null
+  
+  // Set loading timeout if loading for too long
+  useEffect(() => {
+    if (isLoading) {
+      const timeout = setTimeout(() => {
+        setIsLoadingTimeout(true)
+      }, 10000) // 10 seconds
+      
+      return () => clearTimeout(timeout)
+    } else {
+      setIsLoadingTimeout(false)
+    }
+  }, [isLoading])
+  
+  // Show error state if timeout occurs
+  if (isLoadingTimeout && isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-8 bg-[#1c1e2d]">
+          <div className="rounded-lg bg-card text-card-foreground mb-8 border-2 shadow-lg p-6">
+            <div className="text-center py-8">
+              <AlertTriangle className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+              <h2 className="text-xl font-semibold mb-2">Loading Entity Information</h2>
+              <p className="text-gray-400 mb-4">The entity data is taking longer than expected to load. This might be due to network issues or the entity may not exist in the database.</p>
+              <div className="flex gap-4 justify-center">
+                <Button onClick={() => window.location.reload()} variant="default">
+                  Refresh Page
+                </Button>
+                <Button onClick={() => router.push('/entity-browser')} variant="outline">
+                  Back to Entity Browser
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   // Club navigation features temporarily disabled
   // useEffect(() => {
@@ -108,7 +154,7 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
                   <div className="w-20 h-20 bg-gray-600 rounded-lg animate-pulse"></div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="tracking-tight text-3xl font-bold mb-2 flex items-center gap-3">
+                  <div className="tracking-tight text-3xl font-bold mb-2 flex items-center gap-3 header-title">
                     <div className="h-8 w-8 bg-gray-600 rounded animate-pulse"></div>
                     <div className="h-8 w-48 bg-gray-600 rounded animate-pulse"></div>
                   </div>
@@ -328,474 +374,59 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   const EntityIcon = getEntityIcon(entity.labels)
   const properties = entity.properties
 
+  // Email handler
+  const handleEmailEntity = () => {
+    setShowEmailModal(true)
+  }
+
+  // Convert entity to contact format for EmailComposeModal
+  const getContactFromEntity = () => {
+    if (!entity) return null
+    
+    return {
+      id: entity.id,
+      name: properties.name || `Entity ${entity.id}`,
+      email: properties.email || 'contact@' + (properties.name?.toLowerCase().replace(/\s+/g, '-') || 'unknown') + '.com',
+      role: properties.type || 'Professional',
+      affiliation: properties.sport ? `${properties.sport} Organization` : 'Sports Organization',
+      tags: [
+        properties.type || 'Organization',
+        properties.sport || 'Sports',
+        properties.league || 'Professional',
+        ...(Array.isArray(properties.digitalOpportunities) ? properties.digitalOpportunities.slice(0, 2) : [])
+      ].filter(Boolean)
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col">
+      {/* Fixed Header at Top */}
       <Header />
 
-      <div className="container mx-auto px-4 py-8 bg-[#1c1e2d]">
-        {/* Main Entity Header */}
-        <Card className="mb-8 border-2 shadow-lg">
-          <CardHeader className="pb-6">
-            <div className="flex items-start gap-6">
-              <div className="flex-shrink-0">
-                <EntityBadge entity={entity} size="xl" />
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <CardTitle className="text-3xl font-bold mb-2 flex items-center gap-3">
-                  <EntityIcon className="h-8 w-8 text-primary" />
-                  {properties.name || `Entity ${entity.id}`}
-                </CardTitle>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-                  {properties.type && (
-                    <div className="flex items-center gap-2">
-                      <Building className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">Type:</span>
-                      <span>{formatValue(properties.type)}</span>
-                    </div>
-                  )}
-                  
-                  {properties.sport && (
-                    <div className="flex items-center gap-2">
-                      <Trophy className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">Sport:</span>
-                      <span>{formatValue(properties.sport)}</span>
-                    </div>
-                  )}
-                  
-                  {properties.league && (
-                    <div className="flex items-center gap-2">
-                      <Flag className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">League:</span>
-                      <span>{formatValue(properties.league)}</span>
-                    </div>
-                  )}
-                  
-                  {properties.founded && (
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">Founded:</span>
-                      <span>{formatValue(properties.founded)}</span>
-                    </div>
-                  )}
-                  
-                  {properties.headquarters && (
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">Location:</span>
-                      <span>{formatValue(properties.headquarters)}</span>
-                    </div>
-                  )}
-                  
-                  {properties.companySize && (
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-medium">Size:</span>
-                      <span>{formatValue(properties.companySize)}</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="flex gap-4 mt-4">
-                  {properties.website && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.open(properties.website, '_blank')}
-                      className="flex items-center gap-2"
-                    >
-                      <Globe className="h-4 w-4" />
-                      Website
-                    </Button>
-                  )}
-                  
-                  {properties.linkedin && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.open(properties.linkedin, '_blank')}
-                      className="flex items-center gap-2"
-                    >
-                      <Linkedin className="h-4 w-4" />
-                      LinkedIn
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
+      {/* Main Content Area */}
+      <div className="flex-1 bg-[#1c1e2d]">
+        <div className="container mx-auto px-4 py-8">
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Overview and Digital */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Overview Section */}
-            {properties.description && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Info className="h-5 w-5" />
-                    Overview
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {formatValue(properties.description)}
-                  </p>
-                  
-                  {/* Key Achievements */}
-                  {(properties.achievements || properties.emiratesStadium || properties.womensSeasonTickets) && (
-                    <div className="mt-6">
-                      <h4 className="font-semibold mb-3 flex items-center gap-2">
-                        <Award className="h-4 w-4" />
-                        Key Achievements
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {properties.emiratesStadium && (
-                          <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-                            <CheckCircle className="h-4 w-4 text-green-600" />
-                            <span className="text-sm">Emirates Stadium</span>
-                          </div>
-                        )}
-                        {properties.womensSeasonTickets && (
-                          <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-                            <Users2 className="h-4 w-4 text-blue-600" />
-                            <span className="text-sm">{formatValue(properties.womensSeasonTickets)} Women's Season Tickets</span>
-                          </div>
-                        )}
-                        {properties.communityYears && (
-                          <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-                            <Heart className="h-4 w-4 text-red-600" />
-                            <span className="text-sm">{formatValue(properties.communityYears)} Years Community Work</span>
-                          </div>
-                        )}
-                        {properties.mobileApp && (
-                          <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-                            <Smartphone className="h-4 w-4 text-purple-600" />
-                            <span className="text-sm">Official Mobile App</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Digital & Transformation Section */}
-            {(properties.digitalMaturity || properties.digitalScore || properties.websiteModernness) && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Zap className="h-5 w-5" />
-                    Digital & Transformation
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                    {properties.digitalMaturity && (
-                      <div className="text-center p-4 border rounded-lg">
-                        <div className={`text-2xl font-bold ${getScoreColor(properties.digitalMaturity)}`}>
-                          {formatValue(properties.digitalMaturity)}
-                        </div>
-                        <div className="text-sm text-muted-foreground">Digital Maturity</div>
-                      </div>
-                    )}
-                    
-                    {properties.digitalScore && (
-                      <div className="text-center p-4 border rounded-lg">
-                        <div className={`text-2xl font-bold ${getScoreColor(properties.digitalScore)}`}>
-                          {formatValue(properties.digitalScore)}
-                        </div>
-                        <div className="text-sm text-muted-foreground">Transformation Score</div>
-                      </div>
-                    )}
-                    
-                    {properties.websiteModernness && (
-                      <div className="text-center p-4 border rounded-lg">
-                        <div className={`text-2xl font-bold ${getScoreColor(properties.websiteModernness)}`}>
-                          {formatValue(properties.websiteModernness)}
-                        </div>
-                        <div className="text-sm text-muted-foreground">Website Modernness</div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {properties.digitalWeakness && (
-                    <div className="mb-4">
-                      <h4 className="font-medium mb-2 text-red-700">Digital Weakness</h4>
-                      <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
-                        {formatValue(properties.digitalWeakness)}
-                      </p>
-                    </div>
-                  )}
-                  
-                  {properties.digitalOpportunities && (
-                    <div>
-                      <h4 className="font-medium mb-2 flex items-center gap-2">
-                        <Lightbulb className="h-4 w-4" />
-                        Digital Opportunities
-                      </h4>
-                      <div className="space-y-2">
-                        {Array.isArray(properties.digitalOpportunities) 
-                          ? properties.digitalOpportunities.map((opportunity: string, index: number) => (
-                              <div key={index} className="flex items-start gap-2 text-sm">
-                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
-                                <span>{opportunity}</span>
-                              </div>
-                            ))
-                          : <div className="flex items-start gap-2 text-sm">
-                              <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
-                              <span>{formatValue(properties.digitalOpportunities)}</span>
-                            </div>
-                        }
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Key Personnel Section */}
-            {properties.keyPersonnel && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="h-5 w-5" />
-                    Key Personnel
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {Array.isArray(properties.keyPersonnel) 
-                      ? properties.keyPersonnel.map((person: string, index: number) => (
-                          <div key={index} className="flex items-center gap-3 p-3 border rounded-lg">
-                            <User className="h-5 w-5 text-muted-foreground" />
-                            <span className="font-medium">{person}</span>
-                          </div>
-                        ))
-                      : <div className="flex items-center gap-3 p-3 border rounded-lg">
-                          <User className="h-5 w-5 text-muted-foreground" />
-                          <span className="font-medium">{formatValue(properties.keyPersonnel)}</span>
-                        </div>
-                    }
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-
-          {/* Right Column - Finance and Strategy */}
+          {/* Entity Dossier Content */}
           <div className="space-y-6">
-            {/* Finance & Strategy Section */}
-            {(properties.estimatedValue || properties.budgetRange || properties.yellowPantherFit) && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5" />
-                    Finance & Strategy
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {properties.estimatedValue && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <DollarSign className="h-4 w-4 text-green-600" />
-                        <span className="font-medium">Estimated Value</span>
-                      </div>
-                      <div className="text-lg font-semibold text-green-700">
-                        {formatCurrency(properties.estimatedValue)}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {properties.budgetRange && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <TrendingUp className="h-4 w-4 text-blue-600" />
-                        <span className="font-medium">Budget Range</span>
-                      </div>
-                      <div className="text-lg font-semibold text-blue-700">
-                        {formatCurrency(properties.budgetRange)}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {properties.yellowPantherFit && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <Target className="h-4 w-4 text-purple-600" />
-                        <span className="font-medium">Yellow Panther Fit</span>
-                      </div>
-                      <Badge className={`${getPriorityColor(0)} text-sm font-medium`}>
-                        {formatValue(properties.yellowPantherFit)}
-                      </Badge>
-                    </div>
-                  )}
-                  
-                  {properties.yellowPantherStrategy && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <Crown className="h-4 w-4 text-yellow-600" />
-                        <span className="font-medium">Strategy</span>
-                      </div>
-                      <Badge variant="outline" className="text-sm">
-                        {formatValue(properties.yellowPantherStrategy)}
-                      </Badge>
-                    </div>
-                  )}
-                  
-                  {properties.yellowPantherPriority && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <Star className="h-4 w-4 text-red-600" />
-                        <span className="font-medium">Priority Score</span>
-                      </div>
-                      <div className={`text-lg font-bold ${getScoreColor(properties.yellowPantherPriority)}`}>
-                        {formatValue(properties.yellowPantherPriority)}/100
-                      </div>
-                    </div>
-                  )}
-                  
-                  {properties.opportunityScore && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <Target className="h-4 w-4 text-green-600" />
-                        <span className="font-medium">Opportunity Score</span>
-                      </div>
-                      <div className={`text-lg font-bold ${getScoreColor(properties.opportunityScore)}`}>
-                        {formatValue(properties.opportunityScore)}/100
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-
-            {/* RFP Information */}
-            {(properties.rfpType || properties.rfpValue || properties.rfpDeadline) && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Clock className="h-5 w-5" />
-                    RFP Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {properties.rfpType && (
-                    <div>
-                      <span className="text-sm font-medium text-muted-foreground">Type:</span>
-                      <div className="text-sm">{formatValue(properties.rfpType)}</div>
-                    </div>
-                  )}
-                  
-                  {properties.rfpValue && (
-                    <div>
-                      <span className="text-sm font-medium text-muted-foreground">Value:</span>
-                      <div className="text-sm">{formatValue(properties.rfpValue)}</div>
-                    </div>
-                  )}
-                  
-                  {properties.rfpDeadline && (
-                    <div>
-                      <span className="text-sm font-medium text-muted-foreground">Deadline:</span>
-                      <div className="text-sm">{formatValue(properties.rfpDeadline)}</div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Partnerships */}
-            {properties.partnerships && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <LinkIcon className="h-5 w-5" />
-                    Partnerships
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    {Array.isArray(properties.partnerships) 
-                      ? properties.partnerships.map((partner: string, index: number) => (
-                          <div key={index} className="flex items-center gap-2 text-sm">
-                            <div className="w-2 h-2 bg-blue-600 rounded-full" />
-                            <span>{partner}</span>
-                          </div>
-                        ))
-                      : <div className="flex items-center gap-2 text-sm">
-                          <div className="w-2 h-2 bg-blue-600 rounded-full" />
-                          <span>{formatValue(properties.partnerships)}</span>
-                        </div>
-                    }
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Connections */}
-            {connections.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <ExternalLink className="h-5 w-5" />
-                    Connections ({connections.length})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 max-h-64 overflow-y-auto">
-                    {connections.map((connection, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 border rounded">
-                        <div>
-                          <div className="font-medium text-sm">{connection.target}</div>
-                          <div className="text-xs text-muted-foreground">{connection.target_type}</div>
-                        </div>
-                        <Badge variant="outline" className="text-xs">
-                          {connection.relationship}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Contact Information */}
-            {(properties.email || properties.phone) && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Phone className="h-5 w-5" />
-                    Contact Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {properties.email && (
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      <a href={`mailto:${properties.email}`} className="text-sm hover:underline">
-                        {formatValue(properties.email)}
-                      </a>
-                    </div>
-                  )}
-                  
-                  {properties.phone && (
-                    <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <a href={`tel:${properties.phone}`} className="text-sm hover:underline">
-                        {formatValue(properties.phone)}
-                      </a>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+            <EntityDossierRouter 
+              entity={entity} 
+              onEmailEntity={handleEmailEntity}
+              dossier={dossier}
+            />
           </div>
         </div>
       </div>
+
+      {/* Email Modal */}
+      {showEmailModal && (
+        <EmailComposeModal
+          contact={getContactFromEntity()}
+          entity={entity}
+          isOpen={showEmailModal}
+          onClose={() => setShowEmailModal(false)}
+        />
+      )}
     </div>
   )
 }

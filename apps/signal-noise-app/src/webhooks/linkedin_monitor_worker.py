@@ -417,3 +417,4 @@ if __name__ == "__main__":
             logger.info("🛑 Shutting down LinkedIn monitor...")
     
     asyncio.run(main())
+

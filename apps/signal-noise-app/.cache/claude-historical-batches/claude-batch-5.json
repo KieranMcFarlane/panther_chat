@@ -1,0 +1,195 @@
+{
+  "batchId": 5,
+  "batchStart": "2025-10-06T23:01:14.702Z",
+  "batchEnd": "2025-10-06T23:01:47.690Z",
+  "totalEntities": 20,
+  "claudeApiCalls": 20,
+  "totalOpportunities": 20,
+  "totalRisks": 0,
+  "totalRecommendations": 0,
+  "estimatedValue": 20,
+  "averageConfidence": 70,
+  "claudeSuccessRate": 100,
+  "entities": [
+    {
+      "name": "PGA Tour",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "PGA of America",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Paris 2024 Olympic Games",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Peterborough United",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Ping Golf",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Pirelli F1",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Port Vale",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Portsmouth",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Reading",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Red Bull Racing Honda RBPT",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Rolex Formula 1",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Rotherham United",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Royal Birkdale Golf Club",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Royal St George's Golf Club",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Royal Troon Golf Club",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Salford City",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Shrewsbury Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Silverstone Circuit",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "St Andrews Links Trust",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Stade de France (Paris 2024)",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    }
+  ]
+}

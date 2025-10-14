@@ -1,0 +1,363 @@
+'use client';
+
+import { useState, useRef, useCallback, useEffect } from 'react';
+import SimpleGraph from './SimpleGraph';
+// import BloomGraph2D, { BloomGraph2DRef } from './BloomGraph2D';
+import GraphControls from './GraphControls';
+import GraphPerformanceControls from './GraphPerformanceControls';
+import NodeContextPanel from './NodeContextPanel';
+import { GraphNode, GraphEdge } from './graph-types';
+
+interface GraphVisualizationClientProps {
+  initialNodes: GraphNode[];
+  initialEdges: GraphEdge[];
+  totalAvailableNodes?: number;
+  onLoadMoreNodes?: (count: number) => Promise<void>;
+}
+
+export default function GraphVisualizationClient({ 
+  initialNodes, 
+  initialEdges,
+  totalAvailableNodes = initialNodes.length,
+  onLoadMoreNodes
+}: GraphVisualizationClientProps) {
+  const [nodes, setNodes] = useState<GraphNode[]>(initialNodes);
+  const [edges, setEdges] = useState<GraphEdge[]>(initialEdges);
+  const [selectedNodeType, setSelectedNodeType] = useState<string>('all');
+  const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+  // const fgRef = useRef<BloomGraph2DRef>(null);
+  
+  // Context panel state
+  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
+  const [isContextPanelOpen, setIsContextPanelOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Bloom effect settings
+  const [bloomEnabled, setBloomEnabled] = useState(true);
+  const [bloomIntensity, setBloomIntensity] = useState(1.5);
+  const [bloomThreshold, setBloomThreshold] = useState(0.8);
+  const [bloomRadius, setBloomRadius] = useState(0.8);
+  
+  // Link visibility settings
+  const [linkOpacity, setLinkOpacity] = useState(0.8);
+  const [showLinkLabels, setShowLinkLabels] = useState(true);
+  
+  // Interaction mode state
+  const [interactionMode, setInteractionMode] = useState<'pan' | 'select'>('pan');
+  
+  // Performance state
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [clusteringEnabled, setClusteringEnabled] = useState(false);
+  const [detailLevel, setDetailLevel] = useState(1);
+  const [clusteredNodes, setClusteredNodes] = useState<GraphNode[]>([]);
+  const [showClustered, setShowClustered] = useState(false);
+
+  console.log('🎯 CLIENT COMPONENT DEBUG: GraphVisualizationClient mounted with data:', {
+    initialNodes: initialNodes.length,
+    initialEdges: initialEdges.length,
+    sampleNodes: initialNodes.slice(0, 3).map(n => ({ id: n.id, label: n.label, type: n.type }))
+  });
+
+  // Debug state changes
+  useEffect(() => {
+    console.log('🔄 CLIENT STATE UPDATE: Nodes and Edges updated:', {
+      nodesCount: nodes.length,
+      edgesCount: edges.length,
+      selectedNodeType
+    });
+  }, [nodes, edges, selectedNodeType]);
+
+  // Update dimensions on window resize and detect mobile
+  const updateDimensions = useCallback(() => {
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      const container = document.getElementById('graph-container');
+      if (container) {
+        setDimensions({
+          width: container.clientWidth,
+          height: container.clientHeight
+        });
+      }
+    }
+  }, []);
+
+  // Handle window resize and mobile detection - only run on client side
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const handleResize = () => {
+        updateDimensions();
+        setIsMobile(window.innerWidth < 768);
+      };
+
+      handleResize();
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, [updateDimensions]);
+
+  const filteredNodes = selectedNodeType === 'all' 
+    ? nodes 
+    : nodes.filter(node => node.type === selectedNodeType);
+
+  // Apply clustering if enabled
+  const displayNodes = clusteringEnabled && showClustered 
+    ? clusteredNodes.length > 0 ? clusteredNodes : filteredNodes
+    : filteredNodes;
+
+  const filteredEdges = edges.filter(edge => 
+    displayNodes.some(n => n.id === edge.source) && 
+    displayNodes.some(n => n.id === edge.target)
+  );
+
+  // Graph control handlers
+  const handleNodeClick = useCallback((node: GraphNode) => {
+    console.log('🖱️ Node clicked:', node);
+    setSelectedNode(node);
+    setIsContextPanelOpen(true);
+  }, []);
+
+  const handleResetView = useCallback(() => {
+    // Simple reset - re-render with default dimensions
+    setDimensions({ width: 800, height: 600 });
+  }, []);
+
+  const handleZoomIn = useCallback(() => {
+    // Simple zoom - not implemented for simple graph
+    console.log('Zoom not implemented in simple graph');
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    // Simple zoom - not implemented for simple graph
+    console.log('Zoom not implemented in simple graph');
+  }, []);
+
+  const handleToggleInteraction = useCallback((mode: 'pan' | 'select') => {
+    setInteractionMode(mode);
+  }, []);
+
+  const handleToggleBloom = useCallback(() => {
+    setBloomEnabled(!bloomEnabled);
+  }, [bloomEnabled]);
+
+  const handleBloomIntensityChange = useCallback((value: number) => {
+    setBloomIntensity(value);
+  }, []);
+
+  const handleLinkOpacityChange = useCallback((value: number) => {
+    setLinkOpacity(value);
+  }, []);
+
+  const handleToggleLinkLabels = useCallback(() => {
+    setShowLinkLabels(!showLinkLabels);
+  }, [showLinkLabels]);
+
+  // Performance control handlers
+  const handleLoadMore = useCallback(async (count: number) => {
+    if (!onLoadMoreNodes || isLoadingMore) return;
+    
+    setIsLoadingMore(true);
+    try {
+      console.log(`📈 Loading ${count} more nodes...`);
+      await onLoadMoreNodes(count);
+      console.log(`✅ Successfully loaded ${count} more nodes`);
+    } catch (error) {
+      console.error('❌ Failed to load more nodes:', error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [onLoadMoreNodes, isLoadingMore]);
+
+  const handleToggleClustering = useCallback((enabled: boolean) => {
+    setClusteringEnabled(enabled);
+    setShowClustered(enabled);
+    console.log(`🔀 Clustering ${enabled ? 'enabled' : 'disabled'}`);
+    
+    if (enabled) {
+      // Create clustered nodes
+      const clusters = createClusters(filteredNodes);
+      setClusteredNodes(clusters);
+    } else {
+      setClusteredNodes([]);
+    }
+  }, [filteredNodes]);
+
+  // Simple clustering function
+  const createClusters = useCallback((nodesToCluster: GraphNode[]): GraphNode[] => {
+    console.log(`🔀 Creating clusters from ${nodesToCluster.length} nodes`);
+    
+    // Group nodes by type
+    const nodesByType = new Map<string, GraphNode[]>();
+    nodesToCluster.forEach(node => {
+      if (!nodesByType.has(node.type)) {
+        nodesByType.set(node.type, []);
+      }
+      nodesByType.get(node.type)!.push(node);
+    });
+    
+    const clusterNodes: GraphNode[] = [];
+    
+    // Create cluster nodes for each type with many nodes
+    nodesByType.forEach((nodes, type) => {
+      if (nodes.length > 5) { // Only cluster types with more than 5 nodes
+        // Calculate average position
+        const avgColor = nodes[0]?.color || '#6b7280';
+        
+        const clusterNode: GraphNode = {
+          id: `cluster-${type}`,
+          label: `${type} (${nodes.length})`,
+          type: type as any,
+          color: avgColor,
+          size: Math.min(25, 12 + Math.log(nodes.length) * 3), // Size based on count
+          description: `Cluster of ${nodes.length} ${type} entities. Click to expand.`,
+          data: {
+            isCluster: true,
+            clusteredNodes: nodes,
+            originalType: type
+          }
+        };
+        
+        clusterNodes.push(clusterNode);
+        console.log(`🔀 Created ${type} cluster with ${nodes.length} nodes`);
+      } else {
+        // Keep small groups as individual nodes
+        clusterNodes.push(...nodes);
+      }
+    });
+    
+    console.log(`🔀 Created ${clusterNodes.length} cluster nodes from ${nodesToCluster.length} original nodes`);
+    return clusterNodes;
+  }, []);
+
+  const handleAdjustDetail = useCallback((level: number) => {
+    setDetailLevel(level);
+    console.log(`🎯 Detail level set to ${level}/3`);
+    // TODO: Implement level-of-detail rendering
+  }, []);
+
+  // Incremental node expansion handler
+  const handleNodeExpansion = useCallback(async (clickedNode: GraphNode) => {
+    console.log(`🔍 Expanding node: ${clickedNode.label} (${clickedNode.id})`);
+    
+    // Check if this is a cluster node
+    if (clickedNode.data?.isCluster) {
+      console.log(`🔀 Expanding cluster: ${clickedNode.label}`);
+      const clusteredNodes = clickedNode.data.clusteredNodes;
+      
+      // Replace cluster with individual nodes
+      const newNodes = [...filteredNodes.filter(n => n.id !== clickedNode.id), ...clusteredNodes];
+      
+      // Update the nodes state (this would need to be lifted up to handle properly)
+      console.log(`🔀 Expanded cluster to show ${clusteredNodes.length} individual nodes`);
+      
+      // For now, just show context panel with cluster info
+      handleNodeClick(clickedNode);
+      return;
+    }
+    
+    // First, trigger the regular node click for context panel
+    handleNodeClick(clickedNode);
+    
+    // Then load related nodes based on the clicked node's properties
+    if (onLoadMoreNodes && !isLoadingMore) {
+      try {
+        setIsLoadingMore(true);
+        
+        // For now, load a small batch of additional nodes
+        // In a full implementation, this would load nodes specifically related to the clicked node
+        const expansionCount = 50;
+        console.log(`🔄 Loading ${expansionCount} related nodes for ${clickedNode.label}...`);
+        
+        await onLoadMoreNodes(expansionCount);
+        
+        console.log(`✅ Successfully expanded ${clickedNode.label} with ${expansionCount} related nodes`);
+      } catch (error) {
+        console.error('❌ Failed to expand node:', error);
+      } finally {
+        setIsLoadingMore(false);
+      }
+    }
+  }, [filteredNodes, onLoadMoreNodes, isLoadingMore, handleNodeClick]);
+
+  return (
+    <div className="flex flex-col lg:flex-row gap-6">
+        {/* Graph Visualization */}
+        <div className="flex-1">
+          <div className="bg-custom-box border-custom-border rounded-lg p-4">
+            <h2 className="text-xl text-white mb-4">Interactive Network Graph</h2>
+            <div id="graph-container" className="relative bg-custom-bg" style={{ height: '500px' }}>
+              <SimpleGraph
+                data={{
+                  nodes: displayNodes,
+                  links: filteredEdges
+                }}
+                width={dimensions.width}
+                height={dimensions.height}
+                onNodeClick={handleNodeExpansion}
+                detailLevel={detailLevel}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Controls Panel - Enhanced */}
+        <div className="lg:w-80">
+          <div className="bg-custom-box border-custom-border rounded-lg p-4">
+            <h3 className="text-lg text-white mb-4">Graph Controls</h3>
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-fm-light-grey block mb-2">Node Type Filter</label>
+                <select 
+                  value={selectedNodeType} 
+                  onChange={(e) => setSelectedNodeType(e.target.value)}
+                  className="w-full bg-custom-bg border border-custom-border rounded px-3 py-2 text-white"
+                >
+                  <option value="all">All Types</option>
+                  <option value="club">Clubs</option>
+                  <option value="sportsperson">Sportspeople</option>
+                  <option value="poi">POIs</option>
+                  <option value="tender">Tenders</option>
+                  <option value="league">Leagues</option>
+                  <option value="venue">Venues</option>
+                </select>
+              </div>
+              
+              {/* Performance Controls */}
+              <GraphPerformanceControls
+                totalNodes={totalAvailableNodes}
+                currentNodes={displayNodes.length}
+                onLoadMore={handleLoadMore}
+                onToggleClustering={handleToggleClustering}
+                onAdjustDetail={handleAdjustDetail}
+              />
+              
+              <div className="text-sm text-fm-medium-grey">
+                <div>📊 Showing {displayNodes.length} nodes</div>
+                <div>🔗 Showing {filteredEdges.length} relationships</div>
+                <div>🎯 Click nodes to expand graph</div>
+                {onLoadMoreNodes && <div>📈 Click nodes for related entities</div>}
+                {clusteringEnabled && <div>🔀 Clustering: Enabled ({displayNodes.length} clusters)</div>}
+                <div>🎯 Detail Level: {detailLevel}/3</div>
+              </div>
+              
+              <button
+                onClick={handleResetView}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm"
+              >
+                Reset View
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Context Panel */}
+      {isContextPanelOpen && selectedNode && (
+        <NodeContextPanel
+          node={selectedNode}
+          isOpen={isContextPanelOpen}
+          onClose={() => setIsContextPanelOpen(false)}
+          isMobile={isMobile}
+        />
+      )}
+    </div>
+  );
+}

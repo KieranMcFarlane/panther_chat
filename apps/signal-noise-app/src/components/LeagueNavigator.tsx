@@ -195,12 +195,7 @@ export function LeagueNavigator() {
             <span>{Math.round(((currentLeagueIndex + 1) / leaguesData.length) * 100)}%</span>
           </div>
           <div className="w-full bg-muted rounded-full h-1">
-            <div 
-              className="bg-primary h-1 rounded-full transition-all duration-300"
-              style={{ 
-                width: `${((currentLeagueIndex + 1) / leaguesData.length) * 100}%` 
-              }}
-            />
+            <div className="bg-primary h-1 rounded-full transition-all duration-300" style={{ width: `${((currentLeagueIndex + 1) / leaguesData.length) * 100}%` }} />
           </div>
         </div>
         
@@ -211,12 +206,7 @@ export function LeagueNavigator() {
             <span>{Math.round(((currentClubIndex + 1) / currentLeague.clubs.length) * 100)}%</span>
           </div>
           <div className="w-full bg-muted rounded-full h-1">
-            <div 
-              className="bg-secondary h-1 rounded-full transition-all duration-300"
-              style={{ 
-                width: `${((currentClubIndex + 1) / currentLeague.clubs.length) * 100}%` 
-              }}
-            />
+            <div className="bg-secondary h-1 rounded-full transition-all duration-300" style={{ width: `${((currentClubIndex + 1) / currentLeague.clubs.length) * 100}%` }} />
           </div>
         </div>
       </CardContent>

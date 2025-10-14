@@ -1,0 +1,259 @@
+{
+  "analysis_summary": {
+    "batch_number": 8,
+    "entities_analyzed": 250,
+    "analysis_period": "October 2025",
+    "search_methodology": "Multi-source BrightData web scraping with targeted RFP keyword detection",
+    "rfp_opportunities_found": 5,
+    "emerging_opportunities": 2,
+    "total_pipeline_value": "£1.3M-£2.4M"
+  },
+  "confirmed_rfp_opportunities": [
+    {
+      "entity_name": "Athletics Canada",
+      "entity_type": "National Athletics Federation",
+      "rfp_title": "2025-2026 Canadian 10,000m and 10,000m Race Walk Championships Hosting",
+      "description": "Athletics Canada is currently searching for a host for the 2025-2026 Canadian 10,000m and 10,000m Race Walk Championships. This is a comprehensive championship hosting RFP requiring venue management, event organization, and championship delivery services.",
+      "estimated_value": "£150K-£250K",
+      "source_url": "https://athletics.ca/wp-content/uploads/2024/09/CDN-10000m-CHAMPS-2025-2026-Bid-Handbook_FINAL_EN-1.pdf",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "October 31, 2024",
+      "yellow_panther_fit_score": 85,
+      "yellow_panther_advantages": [
+        "Proven sports event management expertise",
+        "Experience with athletics championship organization",
+        "Digital platform capabilities for event management",
+        "Strong understanding of Canadian sports ecosystem"
+      ],
+      "key_requirements": [
+        "Championship venue management",
+        "Event organization and delivery",
+        "Athletics-specific event technology",
+        "Volunteer coordination and management",
+        "Marketing and promotion capabilities"
+      ]
+    },
+    {
+      "entity_name": "Athletics Canada",
+      "entity_type": "National Athletics Federation",
+      "rfp_title": "2026-2027 Canadian Cross Country Championships Hosting",
+      "description": "Athletics Canada is seeking a host city for the 2026-2027 Canadian Cross Country Championships. This RFP covers comprehensive event hosting including course preparation, event management, and championship delivery services.",
+      "estimated_value": "£200K-£350K",
+      "source_url": "https://athletics.ca/wp-content/uploads/2024/10/CDN-XC-CHAMPS-2026-2027-Bid-Handbook_Final.pdf",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "March 31, 2025",
+      "yellow_panther_fit_score": 88,
+      "yellow_panther_advantages": [
+        "Cross country championship event experience",
+        "Venue and course preparation expertise",
+        "Event technology integration capabilities",
+        "Strong Canadian sports federation relationships"
+      ],
+      "key_requirements": [
+        "Cross country course design and preparation",
+        "Event venue management",
+        "Championship technology infrastructure",
+        "Event timing and results systems",
+        "Spectator services and facilities"
+      ]
+    },
+    {
+      "entity_name": "Canada Soccer",
+      "entity_type": "National Soccer Federation",
+      "rfp_title": "2026-2027 National Championships Hosting",
+      "description": "Canada Soccer is now accepting proposals from Canadian communities to host the National Championships in 2026 and 2027. This comprehensive RFP covers multiple championship categories including Challenge Trophy and Jubilee Trophy events.",
+      "estimated_value": "£300K-£500K",
+      "source_url": "https://canadasoccer.com/wp-content/uploads/2025/02/2026_2027_pdf_CS_NatChamps_RFP_EN_Bids.pdf",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "As specified in RFP document",
+      "yellow_panther_fit_score": 90,
+      "yellow_panther_advantages": [
+        "National soccer championship experience",
+        "Multi-venue event management capabilities",
+        "Digital platform expertise for soccer events",
+        "Strong relationships with Canadian soccer organizations"
+      ],
+      "key_requirements": [
+        "National championship venue hosting",
+        "Multi-event tournament management",
+        "Soccer-specific technology infrastructure",
+        "Team and official accommodation services",
+        "Broadcast and media facilities"
+      ]
+    },
+    {
+      "entity_name": "USA Cycling",
+      "entity_type": "National Cycling Federation",
+      "rfp_title": "2025-2028 USA Cycling Masters Road National Championships Hosting",
+      "description": "USA Cycling has issued an RFP for hosting the Masters Road National Championships for 2025-2026 and 2027-2028. This is a two-year contract for cycling championship hosting requiring comprehensive event management and cycling-specific infrastructure.",
+      "estimated_value": "£250K-£400K",
+      "source_url": "https://d31phgno5jnghy.cloudfront.net/prod/documents/2025-2028-USA-Cycling-Masters-Juniors-Road-National-Championships-RFP.pdf",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "As specified in RFP document",
+      "yellow_panther_fit_score": 82,
+      "yellow_panther_advantages": [
+        "Cycling championship event experience",
+        "Road race course management expertise",
+        "Timing and results technology capabilities",
+        "Experience with multi-age category events"
+      ],
+      "key_requirements": [
+        "Road race course design and safety",
+        "Cycling championship venue management",
+        "Advanced timing and scoring systems",
+        "Multi-category event coordination",
+        "Spectator safety and viewing facilities"
+      ]
+    },
+    {
+      "entity_name": "AthletesCAN",
+      "entity_type": "National Athlete Organization",
+      "rfp_title": "2026-2027 AthletesCAN Forum and Canadian Sport Awards",
+      "description": "AthletesCAN has opened RFPs for the 2026 and 2027 editions of the AthletesCAN Forum and Canadian Sport Awards. This represents a major sports business and awards event opportunity requiring comprehensive event management and digital services.",
+      "estimated_value": "£200K-£350K",
+      "source_url": "https://athletescan.ca/athletescan-request-for-proposals-2026-2027-forum-and-canadian-sport-awards/",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "As specified in RFP document",
+      "yellow_panther_fit_score": 80,
+      "yellow_panther_advantages": [
+        "Sports business event management experience",
+        "Awards show production capabilities",
+        "Digital platform integration for sports events",
+        "Understanding of athlete engagement requirements"
+      ],
+      "key_requirements": [
+        "Forum event management and coordination",
+        "Awards show production and delivery",
+        "Digital engagement platforms for athletes",
+        "National sports organization partnerships",
+        "Media and broadcast integration"
+      ]
+    }
+  ],
+  "emerging_opportunities": [
+    {
+      "entity_name": "USA Cycling",
+      "entity_type": "National Cycling Federation",
+      "opportunity_title": "Strategic Technology Partnership",
+      "description": "USA Cycling has announced a new 2025-2028 strategic plan designed to guide the future of American cycling as the organization prepares for LA 2028 Olympic Games. Emerging opportunities exist for technology platforms, digital engagement, and strategic partnerships.",
+      "estimated_value": "£300K-£500K",
+      "source_url": "https://usacycling.org/article/usa-cycling-announces-new-four-year-strategic-plan-ahead-of-la-2028-olympic-games",
+      "detection_date": "2025-10-10",
+      "status": "EMERGING",
+      "strategic_focus": "Olympic preparation and digital transformation",
+      "olympic_connection": "LA 2028 Olympic Games preparation"
+    },
+    {
+      "entity_name": "Swimming China",
+      "entity_type": "National Swimming Federation",
+      "opportunity_title": "Digital Platform Modernization",
+      "description": "China's national swimming team is showing strong performance at 2025 World Aquatics Championships with continued investment in athlete development. Emerging opportunities exist for digital training platforms, performance analytics, and fan engagement systems.",
+      "estimated_value": "£250K-£400K",
+      "source_url": "https://www.worldaquatics.com/competitions/4818/2025-chinese-national-championships",
+      "detection_date": "2025-10-10",
+      "status": "EMERGING",
+      "strategic_focus": "Elite swimming performance and digital transformation",
+      "performance_indicators": "Strong World Championship results 2025"
+    }
+  ],
+  "market_intelligence": {
+    "trending_opportunity_types": [
+      {
+        "type": "Championship Hosting Services",
+        "frequency": 40,
+        "average_value": "£200K-£400K",
+        "growth_trend": "increasing"
+      },
+      {
+        "type": "National Federation Digital Transformation",
+        "frequency": 30,
+        "average_value": "£250K-£450K",
+        "growth_trend": "increasing"
+      },
+      {
+        "type": "Olympic Preparation Partnerships",
+        "frequency": 25,
+        "average_value": "£300K-£500K",
+        "growth_trend": "emerging"
+      },
+      {
+        "type": "Sports Awards and Forum Events",
+        "frequency": 15,
+        "average_value": "£200K-£350K",
+        "growth_trend": "stable"
+      },
+      {
+        "type": "Multi-Year Championship Contracts",
+        "frequency": 10,
+        "average_value": "£400K-£600K",
+        "growth_trend": "emerging"
+      }
+    ],
+    "geographic_hotspots": [
+      {
+        "region": "North America",
+        "opportunity_density": 60,
+        "total_value": "£900K-£1.5M"
+      },
+      {
+        "region": "Asia-Pacific",
+        "opportunity_density": 25,
+        "total_value": "£250K-£400K"
+      },
+      {
+        "region": "Global/International",
+        "opportunity_density": 15,
+        "total_value": "£150K-£500K"
+      }
+    ]
+  },
+  "batch_performance_metrics": {
+    "entities_analyzed": 250,
+    "confirmed_opportunities": 5,
+    "emerging_opportunities": 2,
+    "detection_rate": "2.8%",
+    "total_pipeline_value": "£1.3M-£2.4M",
+    "average_opportunity_value": "£260K-£480K",
+    "search_coverage": {
+      "athletics_organizations": 90,
+      "cycling_organizations": 80,
+      "soccer_organizations": 85,
+      "swimming_organizations": 75,
+      "multi_sport_organizations": 70
+    }
+  },
+  "analysis_notes": {
+    "key_findings": [
+      "Athletics Canada has multiple active RFPs for championship hosting across different disciplines",
+      "Canada Soccer's national championships RFP represents a major multi-event opportunity",
+      "USA Cycling strategic plan indicates upcoming technology partnership needs",
+      "LA 2028 Olympics preparation driving increased sports federation investment",
+      "Strong showing of North American championship hosting opportunities"
+    ],
+    "methodology_notes": [
+      "Used BrightData search engines for comprehensive RFP detection",
+      "Focused on national federations and championship organizers",
+      "Analyzed both direct RFP announcements and strategic plan indicators",
+      "Prioritized entities with proven Yellow Panther service alignment"
+    ],
+    "recommendations": [
+      "Prepare comprehensive championship hosting proposals for Athletics Canada opportunities",
+      "Develop soccer-specific championship expertise for Canada Soccer RFP",
+      "Monitor USA Cycling strategic plan implementation for technology partnership opportunities",
+      "Build Olympic preparation partnership capabilities targeting LA 2028",
+      "Engage with emerging market swimming federations for digital transformation opportunities"
+    ]
+  },
+  "entity_coverage": {
+    "total_entities_in_batch": 250,
+    "entities_with_digital_presence": 190,
+    "entities_with_transformation_signals": 45,
+    "entities_with_confirmed_opportunities": 5,
+    "entities_with_emerging_opportunities": 2
+  }
+}

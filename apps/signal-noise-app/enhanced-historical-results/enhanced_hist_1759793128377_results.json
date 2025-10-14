@@ -1,0 +1,35 @@
+{
+  "batchId": "enhanced_hist_1759793128377",
+  "summary": {
+    "totalEntities": 50,
+    "processedEntities": 50,
+    "insights": 0,
+    "opportunities": 0,
+    "risks": 0,
+    "estimatedValue": "£0.0M",
+    "averageConfidence": 50,
+    "processingTime": 36,
+    "completedAt": "2025-10-06T23:26:04.940Z"
+  },
+  "configuration": {
+    "batchSize": 10,
+    "maxConcurrent": 3,
+    "batchDelay": 5000,
+    "itemDelay": 1000,
+    "useClaudeAgent": true,
+    "storeResults": true,
+    "outputDir": "./enhanced-historical-results",
+    "apiBaseUrl": "http://localhost:3005"
+  },
+  "enhanced": {
+    "claudeAgentUsed": true,
+    "mcpTools": [
+      "neo4j-mcp",
+      "brightdata-mcp",
+      "perplexity-mcp",
+      "better-auth"
+    ],
+    "aiAnalysis": true,
+    "knowledgeGraphIntegration": true
+  }
+}

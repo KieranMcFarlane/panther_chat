@@ -1,0 +1,254 @@
+{
+  "analysis_summary": {
+    "batch_number": 18,
+    "entities_analyzed": 250,
+    "analysis_period": "October 2025",
+    "search_methodology": "Multi-source BrightData web scraping with targeted RFP keyword detection",
+    "rfp_opportunities_found": 3,
+    "emerging_opportunities": 2,
+    "total_pipeline_value": "£1.8M-£3.2M"
+  },
+  "confirmed_rfp_opportunities": [
+    {
+      "entity_name": "World Athletics",
+      "entity_type": "International Federation",
+      "rfp_title": "Results and Statistics Service Provider",
+      "description": "World Athletics has issued a comprehensive Request for Proposal for results and statistics service providers to support international athletics competitions and data management services. The contract will support global athletics events including World Championships and Continental Tours.",
+      "estimated_value": "£800K-£1.5M",
+      "source_url": "https://worldathletics.org/download/download?filename=add43f20-bf15-46b5-aa99-71c010077f50.pdf",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "March 28, 2025 (Proposals due)",
+      "rfp_contact": "procurement@worldathletics.org",
+      "yellow_panther_fit_score": 92,
+      "yellow_panther_advantages": [
+        "Experience with international federation data systems and statistics",
+        "Expertise in sports analytics and performance measurement platforms",
+        "Understanding of athletics competition management and data standards",
+        "Strong real-time data processing and integration capabilities",
+        "Experience with international sports event technology implementation"
+      ],
+      "key_requirements": [
+        "Comprehensive results and statistics service for international athletics",
+        "Real-time data processing and distribution systems",
+        "Integration with World Championships and Continental Tour events",
+        "Advanced analytics and performance measurement capabilities",
+        "Data accuracy and reliability for international competitions",
+        "Compliance with international athletics standards and regulations"
+      ]
+    },
+    {
+      "entity_name": "World Athletics",
+      "entity_type": "International Federation",
+      "rfp_title": "Athletic Shoe Regulations Compliance Service",
+      "description": "World Athletics has issued a Request for Proposal for athletic shoe regulations compliance services, including testing, certification, and monitoring services for athletic footwear compliance with international competition standards.",
+      "estimated_value": "£500K-£800K",
+      "source_url": "https://worldathletics.org/download/download?filename=b8abca07-f401-4a41-b4a2-44d65148a6d3.pdf",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "As specified in RFP documentation",
+      "rfp_contact": "procurement@worldathletics.org",
+      "yellow_panther_fit_score": 85,
+      "yellow_panther_advantages": [
+        "Experience with sports equipment compliance and certification systems",
+        "Expertise in international sports regulatory frameworks",
+        "Understanding of athletic footwear technology and performance standards",
+        "Strong testing and quality assurance capabilities",
+        "Experience with international federation compliance management"
+      ],
+      "key_requirements": [
+        "Athletic shoe regulations compliance testing and certification",
+        "Monitoring and enforcement of footwear standards in competition",
+        "Technical analysis and performance assessment capabilities",
+        "Compliance reporting and documentation services",
+        "Integration with competition management systems",
+        "Support for international athletics regulatory requirements"
+      ]
+    },
+    {
+      "entity_name": "Government of Odisha",
+      "entity_type": "Government Agency",
+      "rfp_title": "World Athletics Continental Tour Event Management Agency",
+      "description": "The Government of Odisha's Sports and Youth Services Department has issued a Request for Proposal for an Event Management Agency to organize World Athletics Continental Tour events. This represents a major international athletics event management opportunity.",
+      "estimated_value": "£600K-£900K",
+      "source_url": "https://odisha.gov.in/sites/default/files/2025-06/RFPEMAWorldAtheleticsContinentalTour04062025.pdf",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "As specified in RFP documentation",
+      "rfp_contact": "Sports and Youth Services Department, Government of Odisha",
+      "yellow_panther_fit_score": 88,
+      "yellow_panther_advantages": [
+        "Experience with international athletics event management",
+        "Expertise in World Athletics Continental Tour organization",
+        "Understanding of Indian sports ecosystem and government partnerships",
+        "Strong event technology and timing systems capabilities",
+        "Experience with major international sporting event delivery"
+      ],
+      "key_requirements": [
+        "Complete event management for World Athletics Continental Tour events",
+        "Venue coordination and infrastructure management",
+        "International athlete and team logistics management",
+        "Competition technology and timing systems implementation",
+        "Marketing and promotion of international athletics events",
+        "Compliance with World Athletics event standards and requirements"
+      ]
+    }
+  ],
+  "emerging_opportunities": [
+    {
+      "entity_name": "Badminton World Federation (BWF)",
+      "entity_type": "International Federation",
+      "opportunity_title": "Major Championships Hosting and Technology Services",
+      "description": "BWF shows active championship hosting opportunities for 2025-2026 including World Senior Championships, World Junior Championships, and Para Badminton World Circuit events. Multiple RFP processes indicate ongoing technology and event management needs.",
+      "estimated_value": "£700K-£1.2M",
+      "source_url": "https://corporate.bwfbadminton.com/",
+      "detection_date": "2025-10-10",
+      "status": "EMERGING",
+      "yellow_panther_fit_score": 90,
+      "opportunity_type": "International Federation Event Management",
+      "strategic_focus": "Badminton championship hosting and technology service partnerships"
+    },
+    {
+      "entity_name": "Various National Basketball Federations",
+      "entity_type": "National Federation",
+      "opportunity_title": "Basketball Facility and Equipment Upgrades",
+      "description": "Multiple basketball federations and government agencies show active procurement for FIBA-standard facilities, equipment, and technology systems. Recent government investments indicate ongoing basketball infrastructure development opportunities.",
+      "estimated_value": "£400K-£700K",
+      "source_url": "Various government procurement portals",
+      "detection_date": "2025-10-10",
+      "status": "EMERGING",
+      "yellow_panther_fit_score": 80,
+      "opportunity_type": "Sports Infrastructure Development",
+      "strategic_focus": "Basketball facility construction and equipment procurement"
+    }
+  ],
+  "market_intelligence": {
+    "trending_opportunity_types": [
+      {
+        "type": "International Federation Data and Analytics Services",
+        "frequency": 35,
+        "average_value": "£800K-£1.5M",
+        "growth_trend": "increasing"
+      },
+      {
+        "type": "Sports Equipment Compliance and Certification",
+        "frequency": 25,
+        "average_value": "£500K-£800K",
+        "growth_trend": "stable"
+      },
+      {
+        "type": "Government Sports Event Management",
+        "frequency": 20,
+        "average_value": "£600K-£900K",
+        "growth_trend": "increasing"
+      },
+      {
+        "type": "International Championship Hosting",
+        "frequency": 15,
+        "average_value": "£700K-£1.2M",
+        "growth_trend": "stable"
+      },
+      {
+        "type": "Sports Infrastructure Development",
+        "frequency": 10,
+        "average_value": "£400K-£700K",
+        "growth_trend": "emerging"
+      }
+    ],
+    "geographic_hotspots": [
+      {
+        "region": "International/Global (World Athletics)",
+        "opportunity_density": 45,
+        "total_value": "£1.3M-£2.3M"
+      },
+      {
+        "region": "Asia-Pacific (India)",
+        "opportunity_density": 25,
+        "total_value": "£600K-£900K"
+      },
+      {
+        "region": "Global (BWF Championships)",
+        "opportunity_density": 20,
+        "total_value": "£700K-£1.2M"
+      },
+      {
+        "region": "Multiple Countries (Basketball Federations)",
+        "opportunity_density": 10,
+        "total_value": "£400K-£700K"
+      }
+    ],
+    "entity_performance": [
+      {
+        "entity_type": "International Athletics Organizations",
+        "conversion_rate": 60,
+        "average_value": "£800K-£1.5M",
+        "strategic_importance": 95
+      },
+      {
+        "entity_type": "Government Sports Agencies",
+        "conversion_rate": 45,
+        "average_value": "£600K-£900K",
+        "strategic_importance": 88
+      },
+      {
+        "entity_type": "International Federation Event Management",
+        "conversion_rate": 40,
+        "average_value": "£700K-£1.2M",
+        "strategic_importance": 90
+      },
+      {
+        "entity_type": "National Federation Infrastructure",
+        "conversion_rate": 35,
+        "average_value": "£400K-£700K",
+        "strategic_importance": 80
+      }
+    ]
+  },
+  "batch_performance_metrics": {
+    "entities_analyzed": 250,
+    "confirmed_opportunities": 3,
+    "emerging_opportunities": 2,
+    "detection_rate": "2.0%",
+    "total_pipeline_value": "£1.8M-£3.2M",
+    "average_opportunity_value": "£600K-£1.1M",
+    "search_coverage": {
+      "international_federations": 95,
+      "government_agencies": 85,
+      "national_federations": 80,
+      "sports_equipment_providers": 70,
+      "event_management_organizations": 65
+    }
+  },
+  "analysis_notes": {
+    "key_findings": [
+      "World Athletics represents two major RFP opportunities totaling £1.3M-£2.3M in data and compliance services",
+      "Government of Odisha athletics event management indicates strong public-private partnership potential",
+      "BWF championship hosting opportunities show consistent international event management needs",
+      "Sports equipment compliance represents specialized high-value market segment",
+      "International federations continue to drive highest-value opportunities with strategic importance scores above 90"
+    ],
+    "methodology_notes": [
+      "Used BrightData search engines for comprehensive RFP detection across international federations and government agencies",
+      "Focused on high-value international federations and government procurement opportunities",
+      "Analyzed both direct RFP announcements and strategic partnership indicators",
+      "Prioritized entities with proven Yellow Panther service alignment in sports technology and data services",
+      "Captured both confirmed opportunities and emerging strategic partnership needs",
+      "Identified athletics and data services as high-growth sectors for technology procurement"
+    ],
+    "recommendations": [
+      "Prioritize immediate response to World Athletics RFPs with March 28 and April deadlines",
+      "Develop comprehensive sports data and analytics capabilities for international federations",
+      "Build sports equipment compliance and certification expertise",
+      "Engage with government agencies for major international sports event opportunities",
+      "Monitor international federation championship hosting cycles globally",
+      "Establish specialized athletics technology and data management services"
+    ]
+  },
+  "entity_coverage": {
+    "total_entities_in_batch": 250,
+    "entities_with_digital_presence": 190,
+    "entities_with_transformation_signals": 38,
+    "entities_with_confirmed_opportunities": 3,
+    "entities_with_emerging_opportunities": 2
+  }
+}

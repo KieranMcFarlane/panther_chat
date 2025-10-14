@@ -1,0 +1,30 @@
+{
+  "totalBatches": 2,
+  "totalEntities": 10,
+  "claudeApiCalls": 10,
+  "totalOpportunities": 10,
+  "totalRisks": 0,
+  "totalRecommendations": 0,
+  "estimatedValue": 10,
+  "averageConfidence": 70,
+  "claudeSuccessRate": 100,
+  "batches": [
+    {
+      "batchId": 1,
+      "entities": 5,
+      "opportunities": 5,
+      "value": 5,
+      "claudeSuccessRate": 100,
+      "averageConfidence": 70
+    },
+    {
+      "batchId": 2,
+      "entities": 5,
+      "opportunities": 5,
+      "value": 5,
+      "claudeSuccessRate": 100,
+      "averageConfidence": 70
+    }
+  ],
+  "mcpToolsUsage": {}
+}

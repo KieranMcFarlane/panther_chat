@@ -8,6 +8,9 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { EntityCard } from "@/components/EntityCard"
+// import { SimpleEntityCard } from "@/components/SimpleEntityCard"
+import { EmailComposeModal } from "@/components/email/EmailComposeModal"
+import { formatValue } from "@/lib/formatValue"
 import { 
   Database, 
   Search, 
@@ -23,7 +26,9 @@ import {
   ChevronDown,
   ChevronRight,
   Settings,
-  Image
+  Image,
+  Mail,
+  ExternalLink
 } from "lucide-react"
 
 interface Entity {
@@ -61,6 +66,8 @@ export default function EntityBrowserPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
   const [showBadgeInfo, setShowBadgeInfo] = useState(false)
+  const [showEmailModal, setShowEmailModal] = useState(false)
+  const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
 
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -145,17 +152,21 @@ export default function EntityBrowserPage() {
     }
   }, [currentPage, filters.entityType, filters.sortBy, filters.sortOrder, filters.limit, debouncedSearchTerm])
 
+  // Email handling functions
+  const handleEmailEntity = (entity: Entity) => {
+    setSelectedEntity(entity)
+    setShowEmailModal(true)
+  }
+
   const exportToJSON = () => {
     if (!data) return
     
     const exportData = {
-      entities: entities,
-      metadata: {
-        total: data.pagination.total,
-        page: data.pagination.page,
-        filters: data.filters,
-        exportedAt: new Date().toISOString()
-      }
+      entities: data.entities,
+      pagination: data.pagination,
+      filters: data.filters,
+      exportDate: new Date().toISOString(),
+      totalEntities: data.pagination.total
     }
     
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
@@ -398,8 +409,9 @@ export default function EntityBrowserPage() {
           ) : (
             entities.map((entity) => (
               <EntityCard
-                key={`${entity.id}-${entity.neo4j_id}`}
+                key={`${entity.id}-${formatValue(entity.neo4j_id)}`}
                 entity={entity}
+                onEmailEntity={handleEmailEntity}
               />
             ))
           )}
@@ -436,6 +448,45 @@ export default function EntityBrowserPage() {
           </div>
         )}
       </div>
+
+      {/* Email Compose Modal */}
+      {showEmailModal && selectedEntity && (
+        <EmailComposeModal
+          isOpen={showEmailModal}
+          onClose={() => {
+            setShowEmailModal(false)
+            setSelectedEntity(null)
+          }}
+          contact={{
+            id: selectedEntity.id.toString(),
+            name: selectedEntity.properties.name || 'Unknown',
+            email: formatEmail(selectedEntity.properties.email) || 'no-email@example.com',
+            role: selectedEntity.properties.title || 'Contact',
+            affiliation: selectedEntity.properties.company || selectedEntity.labels.join(', ') || 'Organization',
+            tags: selectedEntity.labels
+          }}
+        />
+      )}
     </div>
   )
+}
+
+// Helper function to format email
+function formatEmail(email: any): string {
+  if (!email) return ""
+  if (typeof email === 'string') return email
+  if (typeof email === 'object' && email !== null) {
+    // Handle Neo4j string type or similar objects
+    if ('value' in email && email.value !== undefined) {
+      return String(email.value)
+    }
+    if ('low' in email && 'high' in email && email.low !== undefined) {
+      return String(email.low)
+    }
+    // If it's an object with email property
+    if ('email' in email && email.email !== undefined) {
+      return String(email.email)
+    }
+  }
+  return String(email)
 }

@@ -1,0 +1,195 @@
+{
+  "batchId": 4,
+  "batchStart": "2025-10-06T23:00:23.185Z",
+  "batchEnd": "2025-10-06T23:01:10.400Z",
+  "totalEntities": 20,
+  "claudeApiCalls": 20,
+  "totalOpportunities": 20,
+  "totalRisks": 0,
+  "totalRecommendations": 0,
+  "estimatedValue": 20,
+  "averageConfidence": 70,
+  "claudeSuccessRate": 100,
+  "entities": [
+    {
+      "name": "Japan Golf Tour Organization",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "LA 2028 Olympic Games",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "LA Coliseum (LA 2028)",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "LIV Golf",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Ladies Professional Golf Association",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Leyton Orient",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Lincoln City",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "MK Dons",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Mansfield Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Masters Tournament",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "McLaren F1 Team",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Mercedes-AMG Petronas F1 Team",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Mizuno Golf",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Morecambe",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Newport County",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Northampton Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Notts County",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Olympic Broadcasting Services (OBS)",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Olympic Channel",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "PGA European Tour",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    }
+  ]
+}

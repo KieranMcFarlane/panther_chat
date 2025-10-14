@@ -5,7 +5,7 @@
  * for sophisticated RFP analysis and business intelligence reasoning
  */
 
-import { Agent, Task, query } from '@anthropic-ai/claude-agent-sdk';
+import { query, tool } from '@anthropic-ai/claude-agent-sdk';
 import { copilotKitAgent } from './copilotkit-claude-agent';
 
 interface Entity {
@@ -48,70 +48,73 @@ interface AlertData {
 
 interface BatchJob {
   id: string;
-  type: 'enrichment' | 'analysis' | 'reasoning' | 'classification';
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  type: string;
   data: any[];
   priority: 'high' | 'medium' | 'low';
+  status: 'queued' | 'processing' | 'completed' | 'failed';
   createdAt: string;
   processedAt?: string;
   results?: any;
+  metadata?: {
+    source: string;
+    requiresUpdate: boolean;
+    lastUpdate?: string;
+    tokenOptimized?: boolean;
+    cachedFields?: string[];
+  };
+}
+
+interface BatchCache {
+  entityId: string;
+  fieldType: string;
+  data: any;
+  lastProcessed: string;
+  checksum: string;
+  tokenCost: number;
+}
+
+interface TokenOptimizedBatch {
+  entities: Map<string, BatchCache>;
+  processingThreshold: number;
+  lastBatchTime: string;
+  totalTokensSaved: number;
 }
 
 class RFPIntelligenceAgent {
-  private agent: Agent;
   private processingQueue: BatchJob[] = [];
   private webhookHandlers: Map<string, Function> = new Map();
+  private mcpConfig: any = {};
+  private batchCache: TokenOptimizedBatch = {
+    entities: new Map(),
+    processingThreshold: 10, // Process when 10 entities need updates
+    lastBatchTime: new Date().toISOString(),
+    totalTokensSaved: 0
+  };
 
   constructor() {
-    this.agent = new Agent({
-      name: 'RFP Intelligence Analyst',
-      instructions: `You are an elite RFP intelligence analyst with expertise in:
-- Sports technology market analysis
-- Government procurement and RFP analysis
-- Competitive intelligence and business development
-- Company strategy and organizational analysis
-
-Your core responsibilities:
-1. Analyze RFPs for strategic fit and opportunity assessment
-2. Evaluate company changes and market signals for business opportunities
-3. Provide actionable intelligence with confidence scoring
-4. Assess significance, urgency, and business impact of alerts
-5. Recommend specific actions and strategies
-
-Always provide:
-- Significance assessment (critical/high/medium/low)
-- Urgency evaluation (immediate/high/medium/low)
-- Business impact analysis
-- Strategic recommendations
-- Confidence scores (0-100)
-- Opportunity ratings (0-100)`,
-      model: 'claude-3-5-sonnet-20241022',
-      tools: {
-        analyzeRFP: this.analyzeRFP.bind(this),
-        reasonAboutAlert: this.reasonAboutAlert.bind(this),
-        enrichEntity: this.enrichEntity.bind(this),
-        assessMarketContext: this.assessMarketContext.bind(this)
-      }
-    });
-
     this.initializeWebhookHandlers();
+    this.loadMCPConfig();
   }
 
   /**
-   * 🔄 Get MCP configuration from existing CopilotKit setup
+   * 🔄 Load MCP configuration for enhanced batching capabilities
    */
-  private async getMCPConfig(): Promise<any> {
+  private async loadMCPConfig(): Promise<void> {
     try {
-      // Use the same MCP config as CopilotKit for consistency
-      const response = await fetch('/api/mcp-config');
-      if (!response.ok) {
-        throw new Error('Failed to fetch MCP config');
+      // Use absolute URL to fix server-side rendering issue
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://your-domain.com' 
+        : 'http://localhost:3005';
+      
+      const response = await fetch(`${baseUrl}/api/mcp-config`);
+      if (response.ok) {
+        const data = await response.json();
+        this.mcpConfig = data.mcpServers || {};
+        console.log('✅ MCP Config loaded for RFP Intelligence:', Object.keys(this.mcpConfig));
       }
-      const data = await response.json();
-      return data.mcpServers || {};
     } catch (error) {
-      console.warn('Failed to load MCP config:', error);
-      return {};
+      console.warn('⚠️ Failed to load MCP config:', error);
+      this.mcpConfig = {};
     }
   }
 
@@ -142,587 +145,778 @@ Then provide comprehensive analysis including:
 1. Yellow Panther fit score (0-100) and reasoning
 2. Competitive landscape assessment 
 3. Technical requirements evaluation
-4. Risk assessment and mitigation strategies
-5. Recommended approach and timeline
-6. Confidence level in analysis (0-100)
+4. Market opportunity analysis
+5. Recommended actions and timeline
 
-Return your response as structured JSON with all these fields.`;
+Format your response as structured JSON with the following schema:
+{
+  "fitScore": number,
+  "significance": "critical"|"high"|"medium"|"low",
+  "urgency": "immediate"|"high"|"medium"|"low", 
+  "businessImpact": "string",
+  "competitiveAdvantage": "string",
+  "technicalRequirements": ["string"],
+  "riskAssessment": "string",
+  "recommendedActions": ["string"],
+  "opportunityScore": number,
+  "confidenceLevel": number,
+  "marketAnalysis": {
+    "marketSize": "string",
+    "growthPotential": "string",
+    "competitorCount": number
+  },
+  "nextSteps": ["string"]
+}`;
 
     try {
-      const mcpConfig = await this.getMCPConfig();
-      
-      const result = await query({
+      // First, get advanced validation from our RFP Intelligence backend
+      let backendAnalysis = null;
+      try {
+        const backendResponse = await fetch('http://13.60.60.50:8002/analyze/rfp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            rfp_data: {
+              id: rfp.id,
+              title: rfp.title,
+              organization: rfp.organization,
+              description: rfp.description,
+              value: rfp.value,
+              deadline: rfp.deadline,
+              category: rfp.category,
+              source: rfp.source,
+              published: rfp.published
+            },
+            entity_context: entityContext ? {
+              id: entityContext.id,
+              name: entityContext.name,
+              type: entityContext.type,
+              industry: entityContext.industry,
+              description: entityContext.description,
+              location: entityContext.location
+            } : undefined
+          })
+        });
+        
+        if (backendResponse.ok) {
+          const backendResult = await backendResponse.json();
+          if (backendResult.success) {
+            backendAnalysis = backendResult.analysis;
+            console.log('✅ RFP backend analysis completed:', backendAnalysis);
+          }
+        }
+      } catch (backendError) {
+        console.warn('RFP backend analysis failed, proceeding with Claude Agent:', backendError);
+      }
+
+      // Then get comprehensive analysis from Claude Agent with MCP tools
+      const claudeResult = await query({
         prompt,
         options: {
-          mcpServers: mcpConfig,
+          mcpServers: this.mcpConfig,
+          allowedTools: ['mcp__neo4j-mcp__execute_query', 'mcp__brightdata-mcp__search_engine', 'mcp__byterover-mcp__byterover-retrieve-knowledge'],
           maxTurns: 5,
           systemPrompt: {
             type: "preset",
-            preset: "claude_code",
-            append: "You are an elite RFP intelligence analyst. Always provide structured JSON responses with confidence scores and strategic recommendations."
-          },
-          allowedTools: [
-            'mcp__neo4j-mcp__execute_query',
-            'mcp__brightdata-mcp__search_engine',
-            'mcp__byterover-mcp__byterover-retrieve-knowledge',
-            'Read', 'Grep', 'Glob'
-          ],
-          settingSources: ['project']
+            name: "claude-3-5-sonnet-20241022",
+            prompt: "You are an elite RFP intelligence analyst with expertise in sports technology, government procurement, and competitive intelligence. Always provide structured, actionable insights with confidence scoring."
+          }
         }
       });
 
-      // Extract the analysis from the Claude response
-      const analysis = await this.extractAnalysisFromStream(result);
-      return this.parseAnalysisResult(analysis, 'rfp_analysis');
-
-    } catch (error) {
-      console.error('RFP analysis failed:', error);
-      return this.generateFallbackAnalysis(rfp, entityContext);
-    }
-  }
-
-  /**
-   * 📤 Extract analysis from Claude Agent response stream
-   */
-  private async extractAnalysisFromStream(stream: AsyncIterable<any>): Promise<any> {
-    let analysisText = '';
-    let toolResults: any[] = [];
-
-    for await (const response of stream) {
-      if (response.type === 'assistant') {
-        const textContent = response.message.content
-          .filter((c: any) => c.type === 'text')
-          .map((c: any) => c.text)
-          .join('');
-        analysisText += textContent;
-      }
+      // Parse and structure the Claude Agent response
+      const claudeAnalysis = this.parseAnalysisResult(claudeResult, 'rfp_analysis');
       
-      if (response.type === 'tool_result') {
-        toolResults.push({
-          tool: response.tool,
-          result: response.result
-        });
-      }
-    }
-
-    // Try to parse JSON from the response
-    try {
-      const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0]);
+      // Merge backend analysis with Claude Agent analysis
+      if (backendAnalysis) {
         return {
-          ...parsed,
-          toolResults,
-          rawAnalysis: analysisText
+          ...claudeAnalysis,
+          backendValidation: {
+            fitScore: backendAnalysis.fitScore,
+            confidenceLevel: backendAnalysis.confidenceLevel,
+            opportunityScore: backendAnalysis.opportunityScore,
+            winProbability: backendAnalysis.winProbability,
+            significance: backendAnalysis.significance,
+            urgency: backendAnalysis.urgency,
+            businessImpact: backendAnalysis.businessImpact,
+            recommendedActions: backendAnalysis.recommendedActions
+          },
+          combinedInsights: {
+            averageFitScore: Math.round((claudeAnalysis.fitScore + backendAnalysis.fitScore) / 2),
+            confidenceAlignment: Math.abs(claudeAnalysis.confidenceLevel - backendAnalysis.confidenceLevel) < 20,
+            hasHighConfidence: claudeAnalysis.confidenceLevel > 80 && backendAnalysis.confidenceLevel > 80
+          }
         };
       }
+      
+      return claudeAnalysis;
+      
     } catch (error) {
-      console.warn('Failed to parse JSON from Claude response:', error);
+      console.warn('Claude Agent RFP analysis failed, using fallback:', error);
+      return this.getFallbackRFPAnalysis(rfp, entityContext);
     }
-
-    // Fallback: return the raw text with tool results
-    return {
-      analysis: analysisText,
-      toolResults,
-      structured: false
-    };
   }
 
   /**
-   * 🧠 Advanced reasoning about alerts and business signals using Claude Agent with MCP tools
+   * 🧠 Reason about alerts using Claude Agent with MCP tools for context
    */
-  async reasonAboutAlert(alert: AlertData, entityContext?: Entity): Promise<any> {
-    const prompt = `Provide sophisticated business intelligence analysis for this alert:
+  async reasonAboutAlert(alert: AlertData, entityContext: Entity): Promise<any> {
+    const prompt = `Analyze this business alert for strategic significance and opportunity:
 
 Alert Details:
-Type: ${alert.type}
-Entity: ${alert.entity}
-Description: ${alert.description}
-Impact: ${alert.impact}%
-Source: ${alert.source}
-Timestamp: ${alert.timestamp}
+- Type: ${alert.type}
+- Entity: ${alert.entity}
+- Description: ${alert.description}
+- Impact: ${alert.impact}%
+- Source: ${alert.source}
+- Timestamp: ${alert.timestamp}
 
-${entityContext ? `Entity Context:
-Industry: ${entityContext.industry}
-Size: ${entityContext.size}
-Location: ${entityContext.location}
-Recent Activity: ${entityContext.recentActivity?.length || 0} recent changes` : ''}
+Entity Context:
+- Name: ${entityContext.name}
+- Industry: ${entityContext.industry}
+- Size: ${entityContext.size}
+- Location: ${entityContext.location}
+- Description: ${entityContext.description || 'N/A'}
 
-First, search our knowledge base and Neo4j database for information about ${alert.entity}.
+Using our Neo4j knowledge base and web search capabilities:
 
-Then analyze and provide:
-1. Significance assessment (critical/high/medium/low) with detailed reasoning
-2. Urgency evaluation (immediate/high/medium/low) with timeline recommendations  
-3. Business impact analysis with specific implications
-4. Strategic implications for Yellow Panther
-5. Recommended actions (prioritized)
-6. Opportunity score (0-100) with explanation
-7. Confidence level (0-100)
-8. Risk assessment and mitigation strategies
-9. Related opportunities or follow-up actions
+1. Search for ${alert.entity} in our database to understand their business context
+2. Research recent market trends in ${entityContext.industry}
+3. Analyze competitive landscape
+4. Assess strategic implications of this ${alert.type}
 
-Return your response as structured JSON with all these fields.`;
+Provide structured analysis in JSON format:
+{
+  "significance": "critical"|"high"|"medium"|"low",
+  "urgency": "immediate"|"high"|"medium"|"low",
+  "businessImpact": "string",
+  "recommendedActions": ["string"],
+  "riskAssessment": "string",
+  "opportunityScore": number (0-100),
+  "confidenceLevel": number (0-100),
+  "strategicImplications": ["string"],
+  "tacticalRecommendations": ["string"],
+  "timingConsiderations": "string",
+  "relatedOpportunities": [
+    {
+      "type": "RFP"|"Partnership"|"Acquisition"|"Investment",
+      "title": "string",
+      "confidence": number,
+      "timeline": "string"
+    }
+  ]
+}`;
 
     try {
-      const mcpConfig = await this.getMCPConfig();
-      
       const result = await query({
         prompt,
         options: {
-          mcpServers: mcpConfig,
-          maxTurns: 5,
+          mcpServers: this.mcpConfig,
+          allowedTools: ['mcp__neo4j-mcp__execute_query', 'mcp__brightdata-mcp__search_engine', 'mcp__byterover-mcp__byterover-retrieve-knowledge', 'mcp__byterover-mcp__byterover-store-knowledge'],
+          maxTurns: 4,
           systemPrompt: {
             type: "preset",
-            preset: "claude_code",
-            append: "You are an elite business intelligence analyst. Always provide structured JSON responses with significance assessments, urgency evaluations, and strategic recommendations."
-          },
-          allowedTools: [
-            'mcp__neo4j-mcp__execute_query',
-            'mcp__brightdata-mcp__search_engine',
-            'mcp__byterover-mcp__byterover-retrieve-knowledge',
-            'Read', 'Grep', 'Glob'
-          ],
-          settingSources: ['project']
+            name: "claude-3-5-sonnet-20241022",
+            prompt: "You are a business intelligence analyst specializing in strategic opportunity assessment and market analysis. Provide structured insights with confidence scoring."
+          }
         }
       });
 
-      // Extract the reasoning from the Claude response
-      const reasoning = await this.extractAnalysisFromStream(result);
-      return this.parseAnalysisResult(reasoning, 'alert_reasoning');
-
-    } catch (error) {
-      console.error('Alert reasoning failed:', error);
-      return this.generateFallbackReasoning(alert);
-    }
-  }
-
-  /**
-   * 🔍 Enrich entity data with comprehensive intelligence
-   */
-  async enrichEntity(entity: Entity): Promise<any> {
-    const task = new Task({
-      description: `Enrich this entity with comprehensive business intelligence:
-
-Entity Information:
-Name: ${entity.name}
-Type: ${entity.type}
-Industry: ${entity.industry}
-Size: ${entity.size}
-Location: ${entity.location}
-Description: ${entity.description || 'Not provided'}
-
-Provide comprehensive enrichment including:
-1. Company background and history
-2. Key executives and decision makers
-3. Recent strategic initiatives and changes
-4. Market position and competitive landscape
-5. Technology stack and infrastructure
-6. Business model and revenue streams
-7. Recent news and market signals
-8. Yellow Panther opportunity assessment
-9. Recommended engagement strategies
-10. Risk factors and considerations`,
-      expectedOutput: 'structured JSON with enriched entity intelligence',
-      context: {
-        entityData: entity,
-        analysisType: 'entity_enrichment'
-      }
-    });
-
-    try {
-      const result = await this.agent.execute(task);
-      return this.parseAnalysisResult(result, 'entity_enrichment');
-    } catch (error) {
-      console.error('Entity enrichment failed:', error);
-      return this.generateFallbackEnrichment(entity);
-    }
-  }
-
-  /**
-   * 🌐 Assess market context and competitive landscape
-   */
-  async assessMarketContext(industry: string, region?: string): Promise<any> {
-    const task = new Task({
-      description: `Provide comprehensive market intelligence analysis:
-
-Industry: ${industry}
-Region: ${region || 'Global'}
-
-Analyze and provide:
-1. Market size and growth projections
-2. Key trends and drivers
-3. Competitive landscape analysis
-4. Regulatory environment considerations
-5. Technology adoption trends
-6. Opportunity hotspots and timing
-7. Threats and challenges
-8. Yellow Panther positioning strategy
-9. Recommended market entry or expansion approaches
-10. Risk assessment and mitigation strategies`,
-      expectedOutput: 'structured JSON with comprehensive market intelligence',
-      context: {
-        industry,
-        region,
-        analysisType: 'market_intelligence'
-      }
-    });
-
-    try {
-      const result = await this.agent.execute(task);
-      return this.parseAnalysisResult(result, 'market_intelligence');
-    } catch (error) {
-      console.error('Market analysis failed:', error);
-      return this.generateFallbackMarketAnalysis(industry, region);
-    }
-  }
-
-  /**
-   * 🔄 Process batch jobs for bulk data analysis
-   */
-  async processBatchJob(job: BatchJob): Promise<any> {
-    job.status = 'running';
-    
-    try {
-      let results: any[] = [];
-
-      switch (job.type) {
-        case 'enrichment':
-          for (const entity of job.data) {
-            const enriched = await this.enrichEntity(entity);
-            results.push(enriched);
-          }
-          break;
-
-        case 'analysis':
-          for (const rfp of job.data) {
-            const analyzed = await this.analyzeRFP(rfp);
-            results.push(analyzed);
-          }
-          break;
-
-        case 'reasoning':
-          for (const alert of job.data) {
-            const reasoned = await this.reasonAboutAlert(alert);
-            results.push(reasoned);
-          }
-          break;
-
-        case 'classification':
-          for (const item of job.data) {
-            const classified = await this.classifyItem(item);
-            results.push(classified);
-          }
-          break;
-      }
-
-      job.status = 'completed';
-      job.processedAt = new Date().toISOString();
-      job.results = results;
-
-      return {
-        success: true,
-        jobId: job.id,
-        processed: job.data.length,
-        results
-      };
-
-    } catch (error) {
-      job.status = 'failed';
-      console.error(`Batch job ${job.id} failed:`, error);
+      return this.parseAnalysisResult(result, 'alert_reasoning');
       
-      return {
-        success: false,
-        jobId: job.id,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      };
+    } catch (error) {
+      console.warn('Claude Agent alert reasoning failed, using fallback:', error);
+      return this.getFallbackAlertReasoning(alert, entityContext);
     }
   }
 
   /**
-   * 📦 Add batch job to processing queue
+   * 🔄 Process webhooks with Claude Agent intelligence
    */
-  addBatchJob(data: any[], type: BatchJob['type'], priority: BatchJob['priority'] = 'medium'): string {
-    const job: BatchJob = {
-      id: `batch-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      type,
-      status: 'pending',
-      data,
-      priority,
-      createdAt: new Date().toISOString()
-    };
-
-    this.processingQueue.push(job);
+  async processWebhook(webhookType: string, payload: any): Promise<any> {
+    console.log(`🔄 Processing webhook: ${webhookType}`, payload);
     
-    // Process queue asynchronously
-    this.processQueue();
-    
-    return job.id;
-  }
-
-  /**
-   * 🔄 Process batch queue with priority handling
-   */
-  private async processQueue(): Promise<void> {
-    if (this.processingQueue.length === 0) return;
-
-    // Sort by priority
-    const sortedJobs = this.processingQueue.sort((a, b) => {
-      const priorityOrder = { high: 3, medium: 2, low: 1 };
-      return priorityOrder[b.priority] - priorityOrder[a.priority];
-    });
-
-    // Process next job
-    const nextJob = sortedJobs[0];
-    if (nextJob.status === 'pending') {
-      // Remove from queue and process
-      this.processingQueue = this.processingQueue.filter(job => job.id !== nextJob.id);
-      await this.processBatchJob(nextJob);
-    }
-  }
-
-  /**
-   * 🎣 Initialize webhook handlers for real-time processing
-   */
-  private initializeWebhookHandlers(): void {
-    // Webhook for new RFP alerts
-    this.webhookHandlers.set('rfp_alert', async (data: any) => {
-      const analysis = await this.analyzeRFP(data.rfp, data.entity);
-      return {
-        type: 'rfp_analysis',
-        data: analysis,
-        processedAt: new Date().toISOString()
-      };
-    });
-
-    // Webhook for entity alerts
-    this.webhookHandlers.set('entity_alert', async (data: any) => {
-      const reasoning = await this.reasonAboutAlert(data.alert, data.entity);
-      return {
-        type: 'alert_reasoning',
-        data: reasoning,
-        processedAt: new Date().toISOString()
-      };
-    });
-
-    // Webhook for entity enrichment
-    this.webhookHandlers.set('entity_enrichment', async (data: any) => {
-      const enriched = await this.enrichEntity(data.entity);
-      return {
-        type: 'entity_enrichment',
-        data: enriched,
-        processedAt: new Date().toISOString()
-      };
-    });
-
-    // Webhook for market intelligence
-    this.webhookHandlers.set('market_intelligence', async (data: any) => {
-      const analysis = await this.assessMarketContext(data.industry, data.region);
-      return {
-        type: 'market_intelligence',
-        data: analysis,
-        processedAt: new Date().toISOString()
-      };
-    });
-  }
-
-  /**
-   * 🌐 Process webhook with Claude Agent analysis
-   */
-  async processWebhook(webhookType: string, data: any): Promise<any> {
     const handler = this.webhookHandlers.get(webhookType);
-    
     if (!handler) {
-      throw new Error(`Unknown webhook type: ${webhookType}`);
+      throw new Error(`No handler found for webhook type: ${webhookType}`);
     }
 
     try {
-      const result = await handler(data);
+      const result = await handler(payload);
       
-      // Log processing for audit trail
-      console.log(`Webhook processed: ${webhookType}`, {
-        timestamp: new Date().toISOString(),
-        webhookType,
-        dataType: data.type || 'unknown',
-        success: true
-      });
-
+      // Store learning insights using Byterover MCP
+      if (this.mcpConfig['byterover-mcp']) {
+        this.storeInsight(webhookType, payload, result).catch(console.warn);
+      }
+      
       return result;
     } catch (error) {
-      console.error(`Webhook processing failed: ${webhookType}`, error);
+      console.error(`❌ Webhook processing failed for ${webhookType}:`, error);
       throw error;
     }
   }
 
   /**
-   * 📊 Get batch processing status
+   * 📦 Add token-optimized batch processing job
    */
-  getBatchStatus(): any {
-    return {
-      queue: this.processingQueue.map(job => ({
-        id: job.id,
-        type: job.type,
-        status: job.status,
-        priority: job.priority,
-        itemCount: job.data.length,
-        createdAt: job.createdAt,
-        processedAt: job.processedAt
-      })),
-      totalInQueue: this.processingQueue.length,
-      availableHandlers: Array.from(this.webhookHandlers.keys())
+  addBatchJob(data: any[], type: string, priority: 'high' | 'medium' | 'low' = 'medium'): string {
+    const jobId = `batch_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    // Check if data requires updates based on cache
+    const optimizedData = this.optimizeBatchData(data, type);
+    
+    const job: BatchJob = {
+      id: jobId,
+      type,
+      data: optimizedData.items,
+      priority,
+      status: 'queued',
+      createdAt: new Date().toISOString(),
+      metadata: {
+        source: 'webhook_or_manual',
+        requiresUpdate: optimizedData.requiresUpdate,
+        tokenOptimized: true,
+        cachedFields: optimizedData.cachedFields
+      }
     };
+
+    // Only add to queue if updates are needed
+    if (optimizedData.requiresUpdate) {
+      const insertIndex = this.getInsertIndexByPriority(job);
+      this.processingQueue.splice(insertIndex, 0, job);
+      console.log(`📦 Batch job added: ${jobId} (${type}) - ${optimizedData.items.length} items needing updates`);
+    } else {
+      console.log(`💰 Tokens saved: ${optimizedData.items.length} items cached, no processing needed`);
+      this.batchCache.totalTokensSaved += this.calculateTokenSavings(optimizedData.items.length);
+    }
+    
+    // Check if we should trigger batch processing
+    this.checkBatchThreshold();
+    
+    return jobId;
+  }
+
+  /**
+   * 📊 Get token-optimized batch processing status
+   */
+  getBatchStatus() {
+    const cacheHitRate = this.batchCache.entities.size > 0 
+      ? (this.batchCache.totalTokensSaved / (this.batchCache.entities.size * 1000)) * 100 
+      : 0;
+
+    return {
+      queue: this.processingQueue,
+      totalInQueue: this.processingQueue.filter(job => job.status === 'queued').length,
+      processing: this.processingQueue.filter(job => job.status === 'processing').length,
+      completed: this.processingQueue.filter(job => job.status === 'completed').length,
+      failed: this.processingQueue.filter(job => job.status === 'failed').length,
+      availableHandlers: 3,
+      tokenOptimization: {
+        cachedEntities: this.batchCache.entities.size,
+        tokensSaved: Math.round(this.batchCache.totalTokensSaved),
+        cacheHitRate: Math.round(cacheHitRate),
+        processingThreshold: this.batchCache.processingThreshold,
+        lastBatchTime: this.batchCache.lastBatchTime
+      }
+    };
+  }
+
+  /**
+   * 🎯 Enhanced batch processing using MCP tools
+   */
+  private async processBatchQueue(): Promise<void> {
+    const processingJobs = this.processingQueue.filter(job => job.status === 'processing');
+    
+    if (processingJobs.length >= 3) return; // Max concurrent jobs
+
+    const nextJob = this.processingQueue.find(job => job.status === 'queued');
+    if (!nextJob) return;
+
+    nextJob.status = 'processing';
+    console.log(`🔄 Processing batch job: ${nextJob.id}`);
+
+    try {
+      const results = await this.processBatchJob(nextJob);
+      nextJob.status = 'completed';
+      nextJob.processedAt = new Date().toISOString();
+      nextJob.results = results;
+      
+      console.log(`✅ Batch job completed: ${nextJob.id}`);
+    } catch (error) {
+      console.error(`❌ Batch job failed: ${nextJob.id}`, error);
+      nextJob.status = 'failed';
+      nextJob.processedAt = new Date().toISOString();
+      nextJob.results = { error: error.message };
+    }
+
+    // Continue processing queue
+    setTimeout(() => this.processBatchQueue(), 1000);
+  }
+
+  /**
+   * 🔧 Process individual batch job with type-specific MCP tool usage
+   */
+  private async processBatchJob(job: BatchJob): Promise<any> {
+    const { type, data } = job;
+    
+    switch (type) {
+      case 'enrichment':
+        return await this.batchEnrichEntities(data);
+      case 'analysis':
+        return await this.batchAnalyzeRFPs(data);
+      case 'reasoning':
+        return await this.batchReasonAlerts(data);
+      case 'market_intelligence':
+        return await this.batchMarketIntelligence(data);
+      default:
+        throw new Error(`Unknown batch job type: ${type}`);
+    }
+  }
+
+  /**
+   * 🏢 Batch entity enrichment using Neo4j and web research MCPs
+   */
+  private async batchEnrichEntities(entities: Entity[]): Promise<any[]> {
+    const results = [];
+    
+    for (const entity of entities) {
+      try {
+        const prompt = `Enrich this entity with comprehensive business intelligence:
+        
+Entity: ${entity.name}
+Industry: ${entity.industry}
+Size: ${entity.size}
+Location: ${entity.location}
+
+Using Neo4j database and web search:
+1. Find entity in our knowledge base
+2. Research recent company developments 
+3. Identify key decision makers
+4. Analyze market position
+5. Assess partnership/sales opportunities
+
+Return structured enrichment data in JSON format with:
+- Company overview
+- Key personnel
+- Recent developments
+- Market opportunities
+- Recommended engagement strategies`;
+
+        const result = await query({
+          prompt,
+          options: {
+            mcpServers: this.mcpConfig,
+            allowedTools: ['mcp__neo4j-mcp__execute_query', 'mcp__brightdata-mcp__search_engine', 'mcp__byterover-mcp__byterover-retrieve-knowledge'],
+            maxTurns: 3
+          }
+        });
+
+        results.push({
+          entityId: entity.id,
+          enrichment: this.parseAnalysisResult(result, 'entity_enrichment'),
+          timestamp: new Date().toISOString()
+        });
+
+      } catch (error) {
+        results.push({
+          entityId: entity.id,
+          error: error.message,
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * 📋 Batch RFP analysis using MCP tools for market intelligence
+   */
+  private async batchAnalyzeRFPs(rfps: RFPData[]): Promise<any[]> {
+    const results = [];
+    
+    for (const rfp of rfps) {
+      try {
+        const analysis = await this.analyzeRFP(rfp);
+        results.push({
+          rfpId: rfp.id,
+          analysis,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        results.push({
+          rfpId: rfp.id,
+          error: error.message,
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * 🧠 Batch alert reasoning using MCP tools for context
+   */
+  private async batchReasonAlerts(alerts: AlertData[]): Promise<any[]> {
+    const results = [];
+    
+    for (const alert of alerts) {
+      try {
+        // Mock entity context - in production this would be fetched
+        const entityContext = {
+          id: alert.entity,
+          name: alert.entity,
+          type: 'company' as const,
+          industry: 'Technology',
+          size: 'medium',
+          location: 'Unknown'
+        };
+
+        const reasoning = await this.reasonAboutAlert(alert, entityContext);
+        results.push({
+          alertId: alert.id,
+          reasoning,
+          timestamp: new Date().toISOString()
+        });
+      } catch (error) {
+        results.push({
+          alertId: alert.id,
+          error: error.message,
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * 🌐 Batch market intelligence using web search and knowledge retrieval
+   */
+  private async batchMarketIntelligence(targets: any[]): Promise<any[]> {
+    const results = [];
+    
+    for (const target of targets) {
+      try {
+        const prompt = `Gather comprehensive market intelligence for:
+        
+Target: ${target.name || target.entity}
+Industry: ${target.industry || 'Technology'}
+Focus: ${target.focus || 'Strategic opportunities'}
+
+Using web search and knowledge base:
+1. Research market conditions and trends
+2. Identify competitive landscape
+3. Analyze growth opportunities
+4. Assess risk factors
+5. Provide strategic recommendations
+
+Return structured intelligence in JSON format.`;
+
+        const result = await query({
+          prompt,
+          options: {
+            mcpServers: this.mcpConfig,
+            allowedTools: ['mcp__brightdata-mcp__search_engine', 'mcp__byterover-mcp__byterover-retrieve-knowledge'],
+            maxTurns: 3
+          }
+        });
+
+        results.push({
+          targetId: target.id || target.entity,
+          intelligence: this.parseAnalysisResult(result, 'market_intelligence'),
+          timestamp: new Date().toISOString()
+        });
+
+      } catch (error) {
+        results.push({
+          targetId: target.id || target.entity,
+          error: error.message,
+          timestamp: new Date().toISOString()
+        });
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * 💾 Store insights using Byterover MCP for learning
+   */
+  private async storeInsight(webhookType: string, payload: any, result: any): Promise<void> {
+    try {
+      const insight = {
+        type: webhookType,
+        payload,
+        result,
+        timestamp: new Date().toISOString(),
+        learned: true
+      };
+
+      await query({
+        prompt: `Store this business intelligence insight in the knowledge base:
+        
+${JSON.stringify(insight, null, 2)}
+
+Extract key learnings and patterns for future reference.`,
+        options: {
+          mcpServers: this.mcpConfig,
+          allowedTools: ['mcp__byterover-mcp__byterover-store-knowledge'],
+          maxTurns: 1
+        }
+      });
+
+    } catch (error) {
+      console.warn('Failed to store insight:', error);
+    }
   }
 
   /**
    * 🔧 Parse analysis result from Claude Agent
    */
-  private parseAnalysisResult(result: any, analysisType: string): any {
+  private parseAnalysisResult(result: any, type: string): any {
     try {
-      // Handle different response formats from Claude Agent
-      if (typeof result === 'string') {
-        // Try to parse JSON from string response
-        const jsonMatch = result.match(/\{[\s\S]*\}/);
+      // Extract the content from Claude Agent response
+      if (result.type === 'result' && result.subtype === 'success') {
+        const content = result.result?.content || result.message?.content || '';
+        
+        // Try to parse as JSON
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           return JSON.parse(jsonMatch[0]);
         }
       }
       
-      if (typeof result === 'object') {
-        return result;
-      }
-
-      // Fallback: structure the raw result
+      // Fallback: return structured version of text content
       return {
-        analysisType,
-        rawResult: result,
+        type,
+        content: result.result?.content || result.message?.content || 'Analysis completed',
         timestamp: new Date().toISOString(),
-        confidence: 75, // Default confidence for parsed results
-        success: true
+        confidence: 75
       };
+      
     } catch (error) {
-      console.error('Failed to parse analysis result:', error);
       return {
-        analysisType,
-        error: 'Failed to parse result',
+        type,
+        error: 'Failed to parse analysis result',
         rawResult: result,
         timestamp: new Date().toISOString(),
-        confidence: 0,
-        success: false
+        confidence: 0
       };
     }
   }
 
-  /**
-   * 🔄 Fallback methods when Claude Agent is unavailable
-   */
-  private generateFallbackAnalysis(rfp: RFPData, entityContext?: Entity): any {
+  // Helper methods for token optimization
+  private optimizeBatchData(data: any[], type: string): { items: any[]; requiresUpdate: boolean; cachedFields: string[] } {
+    const itemsNeedingUpdate: any[] = [];
+    const cachedFields: string[] = [];
+    let requiresUpdate = false;
+
+    for (const item of data) {
+      const entityId = item.id || item.entity || item.name;
+      const checksum = this.generateChecksum(item);
+      
+      // Check cache for this entity and field type
+      const cacheKey = `${entityId}_${type}`;
+      const cached = this.batchCache.entities.get(cacheKey);
+      
+      if (cached && cached.checksum === checksum) {
+        // Use cached data
+        cachedFields.push(entityId);
+        console.log(`💾 Cache hit for ${entityId} (${type})`);
+      } else {
+        // Item needs processing
+        itemsNeedingUpdate.push(item);
+        requiresUpdate = true;
+        
+        // Update cache
+        this.batchCache.entities.set(cacheKey, {
+          entityId,
+          fieldType: type,
+          data: item,
+          lastProcessed: new Date().toISOString(),
+          checksum,
+          tokenCost: this.estimateTokenCost(item)
+        });
+      }
+    }
+
     return {
-      analysisType: 'rfp_analysis',
-      yellowPantherFit: {
-        score: 75,
-        reasoning: 'Standard RFP with potential Yellow Panther fit',
-        strengths: ['Technology alignment', 'Sports industry relevance'],
-        challenges: ['Competitive landscape', 'Timeline constraints']
-      },
-      strategicAssessment: {
-        value: 'Medium',
-        complexity: 'Moderate',
-        timeline: '3-6 months',
-        riskLevel: 'Medium'
-      },
-      recommendations: [
-        'Review technical requirements in detail',
-        'Assess competitive positioning',
-        'Prepare Yellow Panther value proposition'
-      ],
-      confidence: 60,
-      opportunityScore: 70,
-      timestamp: new Date().toISOString(),
-      fallback: true
+      items: itemsNeedingUpdate,
+      requiresUpdate,
+      cachedFields
     };
   }
 
-  private generateFallbackReasoning(alert: AlertData): any {
-    const significanceScores = {
-      'promotion': 'high',
-      'departure': 'critical',
-      'hiring': 'medium',
-      'funding': 'high',
-      'expansion': 'high',
-      'traffic': 'low',
-      'post': 'low'
-    };
+  private checkBatchThreshold(): void {
+    const pendingUpdates = Array.from(this.batchCache.entities.values())
+      .filter(cache => Date.now() - new Date(cache.lastProcessed).getTime() > 60000) // 1 minute old
+      .length;
 
-    const urgencyScores = {
-      'departure': 'immediate',
-      'funding': 'high',
-      'expansion': 'high',
-      'promotion': 'medium',
-      'hiring': 'medium',
-      'traffic': 'low',
-      'post': 'low'
-    };
-
-    return {
-      analysisType: 'alert_reasoning',
-      reasoning: {
-        significance: significanceScores[alert.type] || 'medium',
-        urgency: urgencyScores[alert.type] || 'medium',
-        businessImpact: `${alert.entity} ${alert.description} may present opportunities for Yellow Panther engagement`,
-        recommendedActions: ['Monitor for further developments', 'Research entity background'],
-        riskAssessment: 'Standard business risk levels apply',
-        opportunityScore: 65,
-        confidenceLevel: 70
-      },
-      insights: {
-        strategicImplications: [`Alert from ${alert.entity} may indicate strategic direction`],
-        tacticalRecommendations: ['Monitor for engagement opportunities']
-      },
-      timestamp: new Date().toISOString(),
-      fallback: true
-    };
+    if (pendingUpdates >= this.batchCache.processingThreshold) {
+      console.log(`🚀 Batch threshold reached: ${pendingUpdates} entities ready for processing`);
+      this.processBatchQueue();
+    }
   }
 
-  private generateFallbackEnrichment(entity: Entity): any {
-    return {
-      analysisType: 'entity_enrichment',
-      enrichedData: {
-        background: `${entity.name} is a ${entity.size} ${entity.industry} organization based in ${entity.location}.`,
-        marketPosition: 'Established player in respective market',
-        recentActivity: entity.recentActivity || [],
-        opportunityAssessment: {
-          score: 70,
-          reasoning: 'Standard opportunity assessment based on available data'
-        }
-      },
-      timestamp: new Date().toISOString(),
-      fallback: true
-    };
+  private generateChecksum(item: any): string {
+    // Simple checksum based on key fields
+    const keyFields = JSON.stringify({
+      id: item.id,
+      name: item.name || item.entity,
+      timestamp: item.timestamp || Date.now(),
+      type: item.type,
+      description: item.description?.substring(0, 100) || ''
+    });
+    return Buffer.from(keyFields).toString('base64').substring(0, 16);
   }
 
-  private generateFallbackMarketAnalysis(industry: string, region?: string): any {
-    return {
-      analysisType: 'market_intelligence',
-      marketContext: {
-        industry,
-        region: region || 'Global',
-        conditions: 'stable',
-        growthRate: 0.05,
-        trends: ['Digital transformation', 'Increased competition'],
-        opportunities: ['Technology adoption', 'Market expansion']
-      },
-      timestamp: new Date().toISOString(),
-      fallback: true
-    };
+  private estimateTokenCost(item: any): number {
+    // Rough token estimation (1 token ≈ 4 characters)
+    const text = JSON.stringify(item);
+    return Math.ceil(text.length / 4);
   }
 
-  private async classifyItem(item: any): Promise<any> {
-    // Basic classification logic
+  private calculateTokenSavings(itemCount: number): number {
+    // Average processing is ~2000 tokens per item
+    return itemCount * 2000;
+  }
+
+  private getInsertIndexByPriority(job: BatchJob): number {
+    const priorities = { high: 0, medium: 1, low: 2 };
+    const jobPriority = priorities[job.priority];
+    
+    const index = this.processingQueue.findIndex(queuedJob => 
+      priorities[queuedJob.priority] > jobPriority
+    );
+    
+    return index === -1 ? this.processingQueue.length : index;
+  }
+
+  private initializeWebhookHandlers(): void {
+    this.webhookHandlers.set('entity_alert', async (payload: any) => {
+      // Validate payload structure
+      if (!payload.data || !payload.data.alert) {
+        throw new Error('Invalid entity alert payload: missing alert data');
+      }
+      
+      return await this.reasonAboutAlert(payload.data.alert, payload.data.entity);
+    });
+
+    this.webhookHandlers.set('rfp_detected', async (payload: any) => {
+      // Validate payload structure
+      if (!payload.data || !payload.data.rfp) {
+        throw new Error('Invalid RFP detected payload: missing rfp data');
+      }
+      
+      const rfpData = payload.data.rfp;
+      if (!rfpData.title || !rfpData.organization) {
+        throw new Error('Invalid RFP data: missing required fields (title, organization)');
+      }
+      
+      return await this.analyzeRFP(rfpData, payload.data.entity);
+    });
+
+    this.webhookHandlers.set('rfp_alert', async (payload: any) => {
+      // Validate payload structure
+      if (!payload.data || !payload.data.rfp) {
+        throw new Error('Invalid RFP alert payload: missing rfp data');
+      }
+      
+      const rfpData = payload.data.rfp;
+      if (!rfpData.title || !rfpData.organization) {
+        throw new Error('Invalid RFP data: missing required fields (title, organization)');
+      }
+      
+      return await this.analyzeRFP(rfpData, payload.data.entity);
+    });
+
+    this.webhookHandlers.set('entity_enrichment', async (payload: any) => {
+      // Validate payload structure
+      if (!payload.data || !payload.data.entity) {
+        throw new Error('Invalid entity enrichment payload: missing entity data');
+      }
+      
+      return await this.processEntityEnrichment(payload.data.entity, payload.data.enrichment_data);
+    });
+
+    this.webhookHandlers.set('market_intelligence', async (payload: any) => {
+      // Validate payload structure
+      if (!payload.data) {
+        throw new Error('Invalid market intelligence payload: missing data');
+      }
+      
+      return await this.processMarketIntelligence(payload.data);
+    });
+
+    this.webhookHandlers.set('market_update', async (payload: any) => {
+      // Validate payload structure
+      if (!payload.data) {
+        throw new Error('Invalid market update payload: missing data');
+      }
+      
+      return await this.processMarketUpdate(payload.data);
+    });
+  }
+
+  private async processEntityEnrichment(entity: any, enrichmentData?: any): Promise<any> {
     return {
-      type: 'classification',
-      item,
-      category: 'business_intelligence',
-      confidence: 80,
+      entity_id: entity.id,
+      entity_name: entity.name,
+      enrichment_type: 'automatic',
+      enrichment_applied: enrichmentData || {},
+      confidence_score: 85,
+      processing_time: Date.now(),
       timestamp: new Date().toISOString()
+    };
+  }
+
+  private async processMarketIntelligence(data: any): Promise<any> {
+    return {
+      intelligence_type: 'market_analysis',
+      insights: data.insights || [],
+      market_trends: data.trends || [],
+      recommendations: data.recommendations || [],
+      confidence_level: 75,
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  private async processMarketUpdate(data: any): Promise<any> {
+    return {
+      significance: 'medium',
+      impact: data.change || 'Market conditions updated',
+      recommendedActions: ['Review positioning', 'Monitor competitor response'],
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  // Fallback methods when Claude Agent is unavailable
+  private getFallbackRFPAnalysis(rfp: RFPData, entityContext?: Entity): any {
+    return {
+      fitScore: 75,
+      significance: 'medium',
+      urgency: 'medium',
+      businessImpact: `Potential opportunity with ${rfp.organization}`,
+      recommendedActions: ['Research organization', 'Assess requirements'],
+      opportunityScore: 70,
+      confidenceLevel: 60,
+      fallback: true
+    };
+  }
+
+  private getFallbackAlertReasoning(alert: AlertData, entityContext: Entity): any {
+    return {
+      significance: 'medium',
+      urgency: 'medium',
+      businessImpact: `${alert.type} at ${alert.entity} may present opportunities`,
+      recommendedActions: ['Monitor for further developments'],
+      opportunityScore: 65,
+      confidenceLevel: 55,
+      fallback: true
     };
   }
 }

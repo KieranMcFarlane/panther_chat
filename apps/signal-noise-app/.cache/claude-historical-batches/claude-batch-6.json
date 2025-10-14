@@ -1,0 +1,195 @@
+{
+  "batchId": 6,
+  "batchStart": "2025-10-06T23:01:50.326Z",
+  "batchEnd": "2025-10-06T23:03:18.955Z",
+  "totalEntities": 20,
+  "claudeApiCalls": 20,
+  "totalOpportunities": 20,
+  "totalRisks": 0,
+  "totalRecommendations": 0,
+  "estimatedValue": 20,
+  "averageConfidence": 70,
+  "claudeSuccessRate": 100,
+  "entities": [
+    {
+      "name": "Stake F1 Team Kick Sauber",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Stevenage",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Stockport County",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Sutton United",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Suzuka Circuit",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Swindon Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "TaylorMade Golf",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "The Open Championship",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "The R&A",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Titleist",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Tranmere Rovers",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "United States Golf Association",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "United States Olympic Committee (USOPC)",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Visa RB F1 Team",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Wigan Athletic",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Williams Racing",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "World Anti-Doping Agency (WADA)",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "World Aquatics (FINA)",
+      "type": "Entity",
+      "sport": "Swimming",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "World Athletics",
+      "type": "Entity",
+      "sport": "Athletics",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Wrexham",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    }
+  ]
+}

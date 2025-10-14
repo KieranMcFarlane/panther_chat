@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface StreamChunk {
-  type: 'start' | 'mcp_start' | 'mcp_progress' | 'mcp_data' | 'mcp_complete' | 'claude_start' | 'claude_chunk' | 'claude_complete' | 'error' | 'complete' | 'stream-complete';
+  type: 'start' | 'mcp_start' | 'mcp_progress' | 'mcp_data' | 'mcp_complete' | 'claude_start' | 'claude_chunk' | 'claude_complete' | 'error' | 'complete' | 'stream-complete' | 'log';
   data: any;
   timestamp: string;
   tool?: string;
@@ -44,9 +44,15 @@ function StreamingAgentDashboard() {
     results: [],
     errors: []
   });
+  const [isClient, setIsClient] = useState(false);
 
   const logsRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Prevent hydration mismatch
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Auto-scroll logs to bottom
   useEffect(() => {
@@ -118,28 +124,32 @@ function StreamingAgentDashboard() {
 
   // Process individual stream chunks
   const processStreamChunk = (chunk: StreamChunk) => {
-    const timestamp = new Date(chunk.timestamp).toLocaleTimeString();
+    const timestamp = chunk.timestamp ? new Date(chunk.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString();
     let logMessage = '';
     let stepUpdate = '';
 
+    // Handle different data types - ensure we're working with strings
+    const dataStr = typeof chunk.data === 'string' ? chunk.data : 
+                   chunk.data?.message || chunk.data?.toString() || 'Unknown data';
+
     switch (chunk.type) {
       case 'start':
-        logMessage = `[${timestamp}] 🚀 ${chunk.data}`;
+        logMessage = `[${timestamp}] 🚀 ${dataStr}`;
         stepUpdate = 'Initializing agent workflow';
         break;
         
       case 'mcp_start':
-        logMessage = `[${timestamp}] 🔧 ${chunk.data}`;
+        logMessage = `[${timestamp}] 🔧 ${dataStr}`;
         stepUpdate = `MCP Tool: ${chunk.tool || 'Unknown'}`;
         break;
         
       case 'mcp_progress':
-        logMessage = `[${timestamp}] ⏳ ${chunk.data}`;
+        logMessage = `[${timestamp}] ⏳ ${dataStr}`;
         stepUpdate = `MCP Progress: ${chunk.tool || 'Unknown'}`;
         break;
         
       case 'mcp_data':
-        logMessage = `[${timestamp}] ✅ ${chunk.message || 'MCP data received'}`;
+        logMessage = `[${timestamp}] ✅ ${chunk.message || dataStr}`;
         stepUpdate = `MCP Result: ${chunk.tool || 'Unknown'}`;
         setStreamState(prev => ({
           ...prev,
@@ -148,27 +158,27 @@ function StreamingAgentDashboard() {
         break;
         
       case 'mcp_complete':
-        logMessage = `[${timestamp}] ✅ ${chunk.data}`;
+        logMessage = `[${timestamp}] ✅ ${dataStr}`;
         stepUpdate = 'MCP operations completed';
         break;
         
       case 'claude_start':
-        logMessage = `[${timestamp}] 🤖 ${chunk.data}`;
+        logMessage = `[${timestamp}] 🤖 ${dataStr}`;
         stepUpdate = 'Claude agent reasoning...';
         break;
         
       case 'claude_chunk':
-        logMessage = `[${timestamp}] 💭 ${chunk.data}`;
+        logMessage = `[${timestamp}] 💭 ${dataStr}`;
         stepUpdate = 'Claude analysis in progress';
         break;
         
       case 'claude_complete':
-        logMessage = `[${timestamp}] ✅ ${chunk.data}`;
+        logMessage = `[${timestamp}] ✅ ${dataStr}`;
         stepUpdate = 'Claude analysis complete';
         break;
         
       case 'complete':
-        logMessage = `[${timestamp}] 🎉 ${chunk.data}`;
+        logMessage = `[${timestamp}] 🎉 ${dataStr}`;
         stepUpdate = 'Agent workflow completed';
         setStreamState(prev => ({
           ...prev,
@@ -179,21 +189,28 @@ function StreamingAgentDashboard() {
         break;
         
       case 'stream-complete':
-        logMessage = `[${timestamp}] ✅ ${chunk.message}`;
+        logMessage = `[${timestamp}] ✅ ${chunk.message || dataStr}`;
         stepUpdate = 'Streaming completed';
         break;
         
       case 'error':
-        logMessage = `[${timestamp}] ❌ ${chunk.data}`;
+        logMessage = `[${timestamp}] ❌ ${dataStr}`;
         stepUpdate = 'Error occurred';
         setStreamState(prev => ({
           ...prev,
-          errors: [...prev.errors, chunk.data]
+          errors: [...prev.errors, dataStr]
         }));
         break;
         
+      case 'log':
+        // Handle log objects with message property
+        const logData = chunk.data?.message || chunk.data?.toString() || 'Unknown log message';
+        logMessage = `[${timestamp}] 📋 ${logData}`;
+        stepUpdate = 'Processing log entry...';
+        break;
+        
       default:
-        logMessage = `[${timestamp}] ${JSON.stringify(chunk)}`;
+        logMessage = `[${timestamp}] 📄 ${dataStr}`;
         stepUpdate = 'Processing...';
     }
 
@@ -388,7 +405,7 @@ function StreamingAgentDashboard() {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold">📡 Live Agent Logs</h3>
           <Badge variant={streamState.isRunning ? "default" : "secondary"}>
-            {streamState.isRunning ? "🔴 LIVE" : "⚫ IDLE"}
+            {isClient && streamState.isRunning ? "🔴 LIVE" : "⚫ IDLE"}
           </Badge>
         </div>
         

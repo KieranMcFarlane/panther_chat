@@ -95,7 +95,7 @@ export default function SportsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Sports Intelligence</h1>
+          <h1 className="text-3xl font-bold text-white mb-2 page-title">Sports Intelligence</h1>
           <p className="text-fm-light-grey">Explore divisions, clubs, and sportspeople</p>
         </div>
         <Button className="bg-yellow-500 text-black hover:bg-yellow-400">

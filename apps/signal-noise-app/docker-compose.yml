@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mcp-app:
+    build: .
+    ports:
+      - "3005:3005"
+    environment:
+      - NODE_ENV=production
+      - PORT=3005
+      - HOSTNAME=0.0.0.0
+    env_file:
+      - .env.local
+      - .env.production
+    volumes:
+      - ./logs:/app/logs
+      - ./mcp-servers:/app/mcp-servers
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    container_name: mcp-production-system
+    
+  # Optional: Add nginx for reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - mcp-app
+    networks:
+      - mcp-network
+    container_name: mcp-nginx
+    restart: unless-stopped
+
+networks:
+  mcp-network:
+    driver: bridge
+
+volumes:
+  logs:
+  mcp-servers:
