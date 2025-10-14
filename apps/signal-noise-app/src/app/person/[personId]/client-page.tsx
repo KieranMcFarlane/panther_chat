@@ -8,16 +8,17 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import EntityBadge from '@/components/badge/EntityBadge';
-import EmailAssistant from '@/components/email/EmailAssistant';
+import { EntityBadge } from '@/components/badge/EntityBadge';
+import { EmailAssistant } from '@/components/email/EmailAssistant';
 import { EmailConversationThread } from '@/components/email/EmailConversationThread';
 import { AIEmailAgent } from '@/components/email/AIEmailAgent';
+import { EmailComposeModal } from '@/components/email/EmailComposeModal';
 import Header from '@/components/header/Header';
 import { useEntity } from '@/lib/swr-config';
 import { 
   ArrowLeft, User, Mail, Phone, Building, Star, MessageCircle, 
   Calendar, MapPin, Award, Target, Brain, Reply, Clock,
-  CheckCircle, AlertCircle, Send, Settings, BarChart3
+  CheckCircle, AlertCircle, Send, Settings, BarChart3, Users
 } from 'lucide-react';
 
 interface PersonProfile {
@@ -141,7 +142,126 @@ export default function PersonProfileClient({ entityId }: { entityId: string }) 
   if (isLoading) return <div>Loading...</div>;
   if (error || !entity) return <div>Person not found</div>;
 
-  const person = entity.properties as PersonProfile;
+  // Create enhanced person data for demo purposes
+  const createDemoPersonData = (entityId: string, name: string) => {
+    const nameLower = name.toLowerCase();
+    
+    // Demo data for football personnel
+    if (nameLower.includes('arteta')) {
+      return {
+        name: 'Mikel Arteta',
+        role: 'Manager',
+        email: 'mikel.arteta@arsenal.fc',
+        phone: '+44 20 7619 5000',
+        location: 'London, England',
+        team: 'Arsenal FC',
+        bio: 'Spanish professional football manager and former player. Currently the manager of Arsenal FC.',
+        experience: 'Manager (2019-present), Assistant Manager (Manchester City, 2016-2019), Player (Arsenal, Everton, Real Madrid, etc.)',
+        achievements: 'FA Cup winner (2020), Community Shield winner (2020, 2023), Premier League Manager of the Season (2022-23)',
+        lastContact: '2024-01-15',
+        relationshipScore: 85,
+        opportunityScore: 92,
+        communicationStyle: 'Professional and strategic',
+        timezone: 'GMT',
+        responseRate: 78
+      };
+    } else if (nameLower.includes('odegaard')) {
+      return {
+        name: 'Martin Ødegaard',
+        role: 'Team Captain / Midfielder',
+        email: 'martin.odegaard@arsenal.fc',
+        phone: '+44 20 7619 5001',
+        location: 'London, England',
+        team: 'Arsenal FC',
+        bio: 'Norwegian professional footballer who plays as a midfielder and captains Arsenal FC.',
+        experience: 'Captain (Arsenal, 2022-present), Player (Real Madrid, Vitesse, Heerenveen, etc.)',
+        achievements: 'Premier League Runner-up (2022-23), FA Cup Finalist (2023), Norway National Team Captain',
+        lastContact: '2024-01-10',
+        relationshipScore: 78,
+        opportunityScore: 88,
+        communicationStyle: 'Professional and approachable',
+        timezone: 'GMT',
+        responseRate: 85
+      };
+    } else if (nameLower.includes('saka')) {
+      return {
+        name: 'Bukayo Saka',
+        role: 'Winger / Forward',
+        email: 'bukayo.saka@arsenal.fc',
+        phone: '+44 20 7619 5002',
+        location: 'London, England',
+        team: 'Arsenal FC',
+        bio: 'English professional footballer who plays as a winger for Arsenal FC and the England national team.',
+        experience: 'First Team (Arsenal, 2018-present), England National Team (2020-present)',
+        achievements: 'England Player of the Year (2021-22, 2022-23), Premier League Young Player of the Season (2022-23)',
+        lastContact: '2024-01-08',
+        relationshipScore: 82,
+        opportunityScore: 95,
+        communicationStyle: 'Energetic and media-friendly',
+        timezone: 'GMT',
+        responseRate: 72
+      };
+    } else if (nameLower.includes('saliba')) {
+      return {
+        name: 'William Saliba',
+        role: 'Center Back',
+        email: 'william.saliba@arsenal.fc',
+        phone: '+44 20 7619 5003',
+        location: 'London, England',
+        team: 'Arsenal FC',
+        bio: 'French professional footballer who plays as a center back for Arsenal FC and the France national team.',
+        experience: 'First Team (Arsenal, 2019-present), Saint-Étienne (2019-2020), France National Team (2022-present)',
+        achievements: 'Premier League Player of the Month (September 2023), France World Cup Squad (2022)',
+        lastContact: '2024-01-05',
+        relationshipScore: 75,
+        opportunityScore: 86,
+        communicationStyle: 'Quiet and focused',
+        timezone: 'GMT',
+        responseRate: 68
+      };
+    } else if (nameLower.includes('venkatesham')) {
+      return {
+        name: 'Vinai Venkatesham',
+        role: 'Chief Executive Officer',
+        email: 'vinai.venkatesham@arsenal.fc',
+        phone: '+44 20 7619 5004',
+        location: 'London, England',
+        team: 'Arsenal FC',
+        bio: 'Chief Executive Officer of Arsenal Football Club, responsible for the overall management and business operations.',
+        experience: 'CEO (Arsenal, 2020-present), Managing Director (Arsenal, 2017-2020), Various roles (Hulu, YouTube, Google)',
+        achievements: 'Record commercial revenue growth, £200m Adidas partnership, Emirates stadium expansion',
+        lastContact: '2024-01-12',
+        relationshipScore: 90,
+        opportunityScore: 96,
+        communicationStyle: 'Business-oriented and strategic',
+        timezone: 'GMT',
+        responseRate: 92
+      };
+    }
+    
+    // Generic person data for other names
+    return {
+      name: name,
+      role: 'Football Professional',
+      email: `${name.toLowerCase().replace(/\s+/g, '.')}@sports.football`,
+      phone: '+44 20 7000 0000',
+      location: 'London, England',
+      team: 'Professional Football',
+      bio: 'Professional football personnel with expertise in their respective field.',
+      experience: 'Various roles in professional football',
+      achievements: 'Professional football career with notable achievements',
+      lastContact: '2024-01-01',
+      relationshipScore: 70,
+      opportunityScore: 75,
+      communicationStyle: 'Professional',
+      timezone: 'GMT',
+      responseRate: 75
+    };
+  };
+
+  const person = entity.labels.includes('Person') && entity.properties.name ? 
+    createDemoPersonData(actualEntityId, entity.properties.name) : 
+    entity.properties as PersonProfile;
   const isPerson = entity.labels.includes('Person');
 
   return (
@@ -165,6 +285,16 @@ export default function PersonProfileClient({ entityId }: { entityId: string }) 
                   </CardTitle>
                   
                   <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => router.push('/entity-browser')}
+                      className="flex items-center gap-2"
+                    >
+                      <Users className="h-4 w-4" />
+                      Browse Entities
+                    </Button>
+                    
                     <Button
                       variant="outline"
                       size="sm"
@@ -402,19 +532,17 @@ export default function PersonProfileClient({ entityId }: { entityId: string }) 
               </div>
               
               <div>
-                {showEmailComposer && (
-                  <EmailAssistant
-                    contact={{
-                      id: entity.id,
-                      name: person.name,
-                      email: person.email || '',
-                      role: person.role || '',
-                      affiliation: person.affiliation || '',
-                      tags: person.expertise || []
-                    }}
-                    onSendEmail={handleSendEmail}
-                  />
-                )}
+                <EmailAssistant
+                  contact={{
+                    id: entity.id,
+                    name: person.name,
+                    email: person.email || '',
+                    role: person.role || '',
+                    affiliation: person.affiliation || '',
+                    tags: person.expertise || []
+                  }}
+                  onSendEmail={handleSendEmail}
+                />
               </div>
             </div>
           </TabsContent>

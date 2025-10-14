@@ -347,12 +347,7 @@ export default function LoggingAnalytics() {
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-slate-400">{count}</span>
                         <div className="w-20 bg-slate-700 rounded-full h-2">
-                          <div
-                            className={`h-2 rounded-full ${getLevelColor(level as LogLevel).split(' ')[0]}`}
-                            style={{ 
-                              width: `${(count / analytics.totalLogs) * 100}%` 
-                            }}
-                          />
+                          <div className={`h-2 rounded-full ${getLevelColor(level as LogLevel).split(' ')[0]}`} style={{ width: `${(count / analytics.totalLogs) * 100}%` }} />
                         </div>
                       </div>
                     </div>
@@ -395,12 +390,7 @@ export default function LoggingAnalytics() {
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-slate-400">{count}</span>
                         <div className="w-20 bg-slate-700 rounded-full h-2">
-                          <div
-                            className="h-2 rounded-full bg-blue-500"
-                            style={{ 
-                              width: `${(count / analytics.totalLogs) * 100}%` 
-                            }}
-                          />
+                          <div className="h-2 rounded-full bg-blue-500" style={{ width: `${(count / analytics.totalLogs) * 100}%` }} />
                         </div>
                       </div>
                     </div>

@@ -29,13 +29,15 @@ import {
   Target,
   Brain,
   Trophy,
+  Calendar,
   ChevronDown,
   ChevronRight,
   Network,
   Monitor,
   Eye,
   Bot,
-  Clock
+  Clock,
+  Radar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -48,24 +50,30 @@ import { authClient } from '@/lib/auth-client';
 const navItems = [
   { icon: Home, label: 'Home', href: '/' },
   { icon: Search, label: 'Entities', href: '/entity-browser' },
-  { icon: FileText, label: 'Tenders', href: '/tenders' },
-  { 
-    icon: Brain, 
-    label: 'Entity Enrichment', 
-    href: '/entity-enrichment',
-    badge: { text: 'NEW', variant: 'secondary' as const }
-  },
+  { icon: FileText, label: "RFP's/Tenders", href: '/tenders' },
   { 
     icon: Bot, 
-    label: 'Claude Agent', 
-    href: '/claude-agent',
-    badge: { text: 'AI', variant: 'default' as const }
+    label: 'Claude Agent Demo', 
+    href: '/claude-agent-demo',
+    badge: { text: 'LIVE', variant: 'default' as const }
   },
   { 
     icon: Monitor, 
-    label: 'Live Agent Logs', 
+    label: 'Agent Logs', 
     href: '/agent-logs',
     badge: { text: 'LIVE', variant: 'destructive' as const }
+  },
+  { 
+    icon: Radar, 
+    label: 'A2A RFP Discovery', 
+    href: '/a2a-rfp-discovery',
+    badge: { text: 'AI', variant: 'default' as const }
+  },
+  { 
+    icon: Network, 
+    label: 'MCP-Enabled A2A', 
+    href: '/mcp-a2a-discovery',
+    badge: { text: 'MCP', variant: 'destructive' as const }
   },
   { 
     icon: BarChart3, 
@@ -77,6 +85,12 @@ const navItems = [
       { icon: Monitor, label: 'VR Visualization', href: '/graph/vr' },
       { icon: Eye, label: 'AR Visualization', href: '/graph/ar' },
     ]
+  },
+  { 
+    icon: Calendar, 
+    label: 'Conventions', 
+    href: '/conventions',
+    badge: { text: 'NEW', variant: 'default' as const }
   },
 ];
 

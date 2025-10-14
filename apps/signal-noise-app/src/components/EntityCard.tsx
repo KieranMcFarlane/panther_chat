@@ -13,9 +13,10 @@ interface EntityCardProps {
   similarity?: number
   connections?: Connection[]
   rank?: number
+  onEmailEntity?: (entity: Entity) => void
 }
 
-export function EntityCard({ entity, similarity, connections, rank }: EntityCardProps) {
+export function EntityCard({ entity, similarity, connections, rank, onEmailEntity }: EntityCardProps) {
   const router = useRouter()
   
   const getSimilarityColor = (score: number) => {
@@ -93,13 +94,6 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
     router.push(`/entity/${entity.neo4j_id}?from=${currentPage}`)
   }
 
-  const handleGenerateDossier = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    // Get current page from URL and pass it to the dossier page
-    const urlParams = new URLSearchParams(window.location.search)
-    const currentPage = urlParams.get('page') || '1'
-    router.push(`/entity-browser/${entity.neo4j_id}/dossier?from=${currentPage}`)
-  }
 
   return (
     <Card 
@@ -158,11 +152,26 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
         {(entity.properties.email || entity.properties.linkedinUrl) && (
           <div className="space-y-2">
             {entity.properties.email && (
-              <div className="flex items-center gap-2 text-sm">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <span className="truncate">
-                  {formatEmail(entity.properties.email)}
-                </span>
+              <div className="flex items-center justify-between gap-2 text-sm">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                  <span className="truncate">
+                    {formatEmail(entity.properties.email)}
+                  </span>
+                </div>
+                {onEmailEntity && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-shrink-0"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onEmailEntity(entity)
+                    }}
+                  >
+                    <Mail className="h-3 w-3" />
+                  </Button>
+                )}
               </div>
             )}
             
@@ -235,24 +244,8 @@ export function EntityCard({ entity, similarity, connections, rank }: EntityCard
             View Full Profile
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
-          
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="w-full bg-blue-600 hover:bg-blue-700"
-            onClick={handleGenerateDossier}
-          >
-            <FileText className="h-4 w-4 mr-2" />
-            Generate Intelligence Dossier
-          </Button>
         </div>
 
-        {/* Source Information */}
-        {entity.properties.source && (
-          <div className="text-xs text-muted-foreground border-t pt-2">
-            Source: {entity.properties.source}
-          </div>
-        )}
       </CardContent>
     </Card>
   )

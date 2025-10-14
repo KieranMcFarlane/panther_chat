@@ -1,0 +1,82 @@
+{
+  "batchId": 4,
+  "batchStart": "2025-10-06T22:12:24.230Z",
+  "batchEnd": "2025-10-06T22:12:26.242Z",
+  "totalEntities": 10,
+  "totalOpportunities": 10,
+  "totalRisks": 10,
+  "totalRecommendations": 20,
+  "estimatedValue": 18.3,
+  "entities": [
+    {
+      "name": "Accrington Stanley",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£2.1M"
+    },
+    {
+      "name": "Barrow",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.8M"
+    },
+    {
+      "name": "Bradford City",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.9M"
+    },
+    {
+      "name": "Bromley",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.6M"
+    },
+    {
+      "name": "Carlisle United",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£2.0M"
+    },
+    {
+      "name": "Cheltenham Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.6M"
+    },
+    {
+      "name": "Chesterfield",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.9M"
+    },
+    {
+      "name": "Colchester United",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.7M"
+    },
+    {
+      "name": "Crewe Alexandra",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£2.0M"
+    },
+    {
+      "name": "Doncaster Rovers",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.7M"
+    }
+  ]
+}

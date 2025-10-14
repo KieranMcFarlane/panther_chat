@@ -1,0 +1,195 @@
+{
+  "batchId": 3,
+  "batchStart": "2025-10-06T22:59:40.706Z",
+  "batchEnd": "2025-10-06T23:00:19.855Z",
+  "totalEntities": 20,
+  "claudeApiCalls": 20,
+  "totalOpportunities": 20,
+  "totalRisks": 0,
+  "totalRecommendations": 0,
+  "estimatedValue": 20,
+  "averageConfidence": 70,
+  "claudeSuccessRate": 100,
+  "entities": [
+    {
+      "name": "European Tour (DP World Tour)",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Exeter City",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "FIA (Fédération Internationale de l'Automobile)",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "FIFA Olympic Football",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Ferrari Scuderia Ferrari",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Fleetwood Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Formula 1 Management",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Formula 1 World Championship",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "French Olympic Committee",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "German Olympic Committee",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Gillingham",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Golf Australia",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Grand Prix Drivers' Association",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Grimsby Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Haas F1 Team",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Harrogate Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Huddersfield Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "International Golf Federation",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "International Gymnastics Federation (FIG)",
+      "type": "Entity",
+      "sport": "Gymnastics",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "International Olympic Committee (IOC)",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    }
+  ]
+}

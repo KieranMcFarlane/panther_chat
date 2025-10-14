@@ -107,13 +107,13 @@ export class StreamingClaudeAgent {
       yield { type: 'mcp_start', data: '🌐 Conducting market research...', timestamp: new Date().toISOString(), message: 'Searching for sports technology trends' };
       
       for await (const chunk of StreamingDirectMCP.executeBrightDataSearchStream(
-        'sports technology partnerships 2024 digital transformation',
+        'sports technology partnerships 2025 digital transformation',
         'google'
       )) {
         const logData = chunk.type === 'data' ? {
           searchResults: chunk.data,
           queryType: 'market_research',
-          searchQuery: 'sports technology partnerships 2024 digital transformation',
+          searchQuery: 'sports technology partnerships 2025 digital transformation',
           engine: 'google'
         } : chunk.data;
         
@@ -384,7 +384,7 @@ export class StreamingClaudeAgent {
 
     // 2. Market research
     for await (const chunk of StreamingDirectMCP.executeBrightDataSearchStream(
-      'sports technology procurement RFP tender 2024',
+      'sports technology procurement RFP tender 2025',
       'google'
     )) {
       yield {

@@ -48,7 +48,7 @@ export default function ClubModal() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <div className="relative rounded-lg overflow-hidden cursor-pointer" title="1. FC Köln" style={{ width: '6.25rem', height: '6.25rem' }}>
+        <div className="relative rounded-lg overflow-hidden cursor-pointer w-25 h-25" title="1. FC Köln">
           <img 
             src="https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/1-fc-koln-badge.png" 
             alt="1. FC Köln badge" 
@@ -57,8 +57,7 @@ export default function ClubModal() {
         </div>
       </DialogTrigger>
       <DialogContent 
-        className="sm:max-w-[500px]" 
-        style={{ backgroundColor: '#1c1e2d' }}
+        className="sm:max-w-[500px] bg-header-bg" 
       >
         <DialogHeader>
           <DialogTitle>Filter by Clubs</DialogTitle>

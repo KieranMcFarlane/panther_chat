@@ -1,40 +1,40 @@
 {
   "mcpServers": {
     "neo4j-mcp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@alanse/mcp-neo4j-server"
-      ],
+      "command": "node",
+      "args": ["src/mcp-brightdata-server.js"],
       "env": {
-        "NEO4J_URI": "neo4j+s://cce1f84b.databases.neo4j.io",
+        "NEO4J_URI": "neo4j+s://e6bb5665.databases.neo4j.io",
         "NEO4J_USERNAME": "neo4j",
-        "NEO4J_PASSWORD": "YOUR_NEO4J_PASSWORD_HERE",
-        "NEO4J_DATABASE": "neo4j",
-        "AURA_INSTANCEID": "cce1f84b",
-        "AURA_INSTANCENAME": "Instance01"
+        "NEO4J_PASSWORD": "NeO4jPaSSworD!"
       }
     },
-    "brightData": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@brightdata/mcp"
-      ],
+    "brightdata-mcp": {
+      "command": "node",
+      "args": ["src/mcp-brightdata-server.js"],
       "env": {
-        "API_TOKEN": "YOUR_BRIGHTDATA_API_TOKEN_HERE",
-        "PRO_MODE": "true"
+        "BRIGHTDATA_TOKEN": "YOUR_BRIGHTDATA_TOKEN",
+        "BRIGHTDATA_ZONE": "YOUR_BRIGHTDATA_ZONE"
       }
     },
-    "perplexity-mcp": {
+    "byterover-mcp": {
       "command": "npx",
-      "args": [
-        "-y",
-        "mcp-perplexity-search"
-      ],
+      "args": ["-y", "@byterover/mcp"],
       "env": {
-        "PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE"
+        "BYTEROVER_API_KEY": "YOUR_BYTEROVER_API_KEY"
       }
+    },
+    "supabase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-supabase"],
+      "env": {
+        "SUPABASE_PROJECT_URL": "https://fjqnvompecezasmgntix.supabase.co",
+        "SUPABASE_SERVICE_KEY": "YOUR_SUPABASE_SERVICE_KEY"
+      }
+    },
+    "chrome-mcp-server": {
+      "type": "streamableHttp",
+      "url": "http://127.0.0.1:12306/mcp"
     }
   }
 }

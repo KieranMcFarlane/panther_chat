@@ -166,7 +166,7 @@ export default function ContactsPage() {
       <div className="flex-1 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">Contacts & POIs</h1>
+            <h1 className="text-3xl font-bold text-white mb-2 page-title">Contacts & POIs</h1>
             <p className="text-fm-light-grey">Manage relationships and track engagement</p>
           </div>
           <Button className="bg-yellow-500 text-black hover:bg-yellow-400">

@@ -1,0 +1,27 @@
+/*
+Font: 		YWFT Wetzlar Grotesk
+Style: 		Regular Demo
+URL: 		https://youworkforthem.com/font/T28798/ywft-wetzlar-grotesk
+Foundry: 	YouWorkForThem
+Foundry: 	https://youworkforthem.com/designer/1/youworkforthem
+Copyright:	
+Version: 	17
+Created:	May 20, 2025
+License: 	https://www.youworkforthem.com/font-license 
+License: 	The WebFont(s) listed in this document must follow the YouWorkForThem
+			WebFont license rules. All other parties are strictly restricted 
+			from using the WebFonts(s) listed without a purchased license. 
+			All details above must always remain unaltered and visible in your CSS.
+*/
+
+@font-face {
+	font-family: 'YWFTWetzlarGrotesk-RegularDemo';
+	src: url('ywft-wetzlar-grotesk-regular-demo.eot');
+	src: url('ywft-wetzlar-grotesk-regular-demo.eot?#iefix') format('embedded-opentype'),
+             url('ywft-wetzlar-grotesk-regular-demo.woff2') format('woff2'),
+	     url('ywft-wetzlar-grotesk-regular-demo.woff') format('woff'),
+	     url('ywft-wetzlar-grotesk-regular-demo.ttf') format('truetype'),
+	     url('ywft-wetzlar-grotesk-regular-demo.svg#youworkforthem') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}

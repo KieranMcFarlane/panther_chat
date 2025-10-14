@@ -1,0 +1,583 @@
+{
+  "schema_version": "1.0",
+  "created_for": "BrightData, Perplexity, and AuraDB enrichment tools",
+  "description": "Comprehensive entity schema for Signal Noise App sports intelligence platform",
+  
+  "entity_types": {
+    "Club": {
+      "primary_label": "Club",
+      "additional_labels": ["Entity"],
+      "required_fields": {
+        "name": "string",
+        "type": "club",
+        "sport": "string",
+        "country": "string"
+      },
+      "optional_fields": {
+        "stadium": "string",
+        "league": "string",
+        "level": "string",
+        "founded": "string|number",
+        "website": "string",
+        "linkedin_url": "string",
+        "twitter": "string",
+        "instagram": "string",
+        "facebook": "string",
+        "youtube": "string",
+        "phone": "string",
+        "email": "string",
+        "address": "string",
+        "digital_maturity": "LOW|MEDIUM|HIGH",
+        "estimated_value": "string",
+        "revenue": "string",
+        "staff_count": "number",
+        "member_count": "number",
+        "colors": "array",
+        "nickname": "string",
+        "sponsorships": "array",
+        "partners": "array",
+        "achievements": "array",
+        "description": "string",
+        "opportunity_score": "number",
+        "relationship_score": "number",
+        "yellow_panther_priority": "number",
+        "last_contact": "string",
+        "notes": "string"
+      },
+      "enrichment_config": {
+        "brightdata_targets": [
+          "financial_data",
+          "sponsorship_deals", 
+          "recent_news",
+          "market_analysis",
+          "ownership_structure",
+          "technology_infrastructure"
+        ],
+        "perplexity_targets": [
+          "strategic_priorities",
+          "technology_initiatives",
+          "market_position",
+          "competitive_analysis",
+          "fan_engagement_strategies",
+          "commercial_opportunities"
+        ],
+        "neo4j_queries": [
+          "leadership_team",
+          "ownership_structure",
+          "partnership_network",
+          "historical_performance",
+          "competitor_analysis"
+        ]
+      }
+    },
+
+    "Person": {
+      "primary_label": "Person",
+      "additional_labels": ["Entity"],
+      "required_fields": {
+        "name": "string",
+        "type": "person"
+      },
+      "optional_fields": {
+        "role": "string",
+        "position": "string",
+        "seniority": "C_LEVEL|DIRECTOR|MANAGER|SPECIALIST|COACH|PLAYER",
+        "department": "string",
+        "team": "string",
+        "organization": "string",
+        "email": "string",
+        "phone": "string",
+        "linkedin_url": "string",
+        "twitter": "string",
+        "city": "string",
+        "country": "string",
+        "timezone": "string",
+        "bio": "string",
+        "experience": "string",
+        "education": "array",
+        "achievements": "array",
+        "specializations": "array",
+        "languages": "array",
+        "expertise": "array",
+        "decision_maker": "boolean",
+        "influence_level": "HIGH|MEDIUM|LOW",
+        "communication_style": "string",
+        "preferred_contact_time": "string",
+        "response_rate": "number",
+        "relationship_score": "number",
+        "opportunity_score": "number",
+        "last_contact": "string",
+        "network_strength": "number"
+      },
+      "enrichment_config": {
+        "brightdata_targets": [
+          "professional_background",
+          "contact_information",
+          "social_media_presence",
+          "career_progression",
+          "board_positions"
+        ],
+        "perplexity_targets": [
+          "strategic_priorities",
+          "industry_influence",
+          "decision_making_patterns",
+          "technology_interests",
+          "investment_activities",
+          "partnership_philosophy"
+        ],
+        "neo4j_queries": [
+          "career_history",
+          "professional_network",
+          "board_positions",
+          "investment_activities",
+          "speaking_engagements"
+        ]
+      }
+    },
+
+    "League": {
+      "primary_label": "League",
+      "additional_labels": ["Entity"],
+      "required_fields": {
+        "name": "string",
+        "type": "league",
+        "sport": "string"
+      },
+      "optional_fields": {
+        "country": "string",
+        "level": "string",
+        "teams": "number",
+        "members": "number",
+        "founded": "string|number",
+        "website": "string",
+        "headquarters": "string",
+        "commissioner": "string",
+        "email": "string",
+        "phone": "string",
+        "address": "string",
+        "twitter": "string",
+        "instagram": "string",
+        "facebook": "string",
+        "youtube": "string",
+        "linkedin": "string",
+        "sponsorships": "array",
+        "broadcast_partners": "array",
+        "technology_partners": "array",
+        "revenue": "string",
+        "viewership": "string",
+        "digital_maturity": "LOW|MEDIUM|HIGH",
+        "description": "string",
+        "governing_body": "string",
+        "regulations": "string",
+        "competitions": "array",
+        "opportunity_score": "number",
+        "relationship_score": "number",
+        "yellow_panther_priority": "number",
+        "last_contact": "string",
+        "notes": "string"
+      },
+      "enrichment_config": {
+        "brightdata_targets": [
+          "financial_performance",
+          "media_deals",
+          "sponsorship_values",
+          "membership_data",
+          "broadcast_rights"
+        ],
+        "perplexity_targets": [
+          "strategic_initiatives",
+          "digital_transformation",
+          "market_analysis",
+          "competitive_positioning",
+          "governance_structure"
+        ],
+        "neo4j_queries": [
+          "member_clubs",
+          "governance_structure",
+          "commercial_partnerships",
+          "regulatory_framework",
+          "media_rights"
+        ]
+      }
+    },
+
+    "Organization": {
+      "primary_label": "Organization",
+      "additional_labels": ["Entity"],
+      "required_fields": {
+        "name": "string",
+        "type": "organization"
+      },
+      "optional_fields": {
+        "subtype": "AGENCY|GOVERNING_BODY|ASSOCIATION|PARTNER|SUPPLIER|COMPANY",
+        "industry": "string",
+        "sector": "string",
+        "size": "SMALL|MEDIUM|LARGE|ENTERPRISE",
+        "sport_focus": "array",
+        "country": "string",
+        "headquarters": "string",
+        "founded": "string|number",
+        "website": "string",
+        "linkedin_url": "string",
+        "email": "string",
+        "phone": "string",
+        "address": "string",
+        "twitter": "string",
+        "instagram": "string",
+        "facebook": "string",
+        "youtube": "string",
+        "services": "array",
+        "products": "array",
+        "clients": "array",
+        "partners": "array",
+        "competitors": "array",
+        "digital_maturity": "LOW|MEDIUM|HIGH",
+        "current_tech_stack": "array",
+        "recent_initiatives": "array",
+        "estimated_value": "string",
+        "revenue": "string",
+        "staff_count": "number",
+        "description": "string",
+        "opportunity_score": "number",
+        "relationship_score": "number",
+        "yellow_panther_priority": "number",
+        "last_contact": "string",
+        "notes": "string"
+      },
+      "enrichment_config": {
+        "brightdata_targets": [
+          "company_financials",
+          "client_portfolio",
+          "market_position",
+          "industry_ranking",
+          "organizational_structure"
+        ],
+        "perplexity_targets": [
+          "strategic_direction",
+          "technology_adoption",
+          "market_opportunities",
+          "competitive_advantages",
+          "innovation_capabilities"
+        ],
+        "neo4j_queries": [
+          "client_relationships",
+          "partnership_network",
+          "industry_connections",
+          "service_ecosystem",
+          "competitive_landscape"
+        ]
+      }
+    },
+
+    "Partner": {
+      "primary_label": "Partner",
+      "additional_labels": ["Entity"],
+      "required_fields": {
+        "name": "string",
+        "type": "partner"
+      },
+      "optional_fields": {
+        "subtype": "TECHNOLOGY|SPONSOR|MEDIA|CONSULTANT|SUPPLIER|AGENCY",
+        "industry": "string",
+        "sector": "string",
+        "size": "SMALL|MEDIUM|LARGE|ENTERPRISE",
+        "sport_focus": "array",
+        "country": "string",
+        "headquarters": "string",
+        "founded": "string|number",
+        "website": "string",
+        "linkedin_url": "string",
+        "email": "string",
+        "phone": "string",
+        "address": "string",
+        "services": "array",
+        "products": "array",
+        "clients": "array",
+        "partners": "array",
+        "competitors": "array",
+        "digital_maturity": "LOW|MEDIUM|HIGH",
+        "current_tech_stack": "array",
+        "recent_initiatives": "array",
+        "estimated_value": "string",
+        "revenue": "string",
+        "staff_count": "number",
+        "description": "string",
+        "opportunity_score": "number",
+        "relationship_score": "number",
+        "yellow_panther_priority": "number",
+        "last_contact": "string",
+        "notes": "string"
+      },
+      "enrichment_config": {
+        "brightdata_targets": [
+          "partnership_portfolio",
+          "market_reach",
+          "service_capabilities",
+          "financial_stability",
+          "delivery_track_record"
+        ],
+        "perplexity_targets": [
+          "partnership_strategy",
+          "innovation_focus",
+          "market_trends",
+          "collaboration_opportunities",
+          "service_differentiation"
+        ],
+        "neo4j_queries": [
+          "partnership_network",
+          "client_base",
+          "service_delivery",
+          "market_presence",
+          "collaboration_history"
+        ]
+      }
+    },
+
+    "Opportunity": {
+      "primary_label": "Opportunity",
+      "additional_labels": ["Entity"],
+      "required_fields": {
+        "title": "string",
+        "type": "opportunity"
+      },
+      "optional_fields": {
+        "category": "RFP|TENDER|PARTNERSHIP|SPONSORSHIP|TECHNOLOGY|CONSULTING",
+        "source": "LINKEDIN|WEBSITE|REFERRAL|DIRECT|PUBLIC",
+        "organization": "string",
+        "contact_person": "string",
+        "estimated_value": "string",
+        "currency": "string",
+        "urgency_level": "LOW|MEDIUM|HIGH|CRITICAL",
+        "deadline": "string",
+        "deadline_estimate": "string",
+        "requirements": "array",
+        "business_objectives": "array",
+        "technical_specifications": "array",
+        "evaluation_criteria": "array",
+        "fit_score": "number",
+        "feasibility_score": "number",
+        "competition": "array",
+        "source_url": "string",
+        "description": "string",
+        "status": "ACTIVE|WON|LOST|ON_HOLD|CLOSED",
+        "created_at": "string",
+        "updated_at": "string",
+        "assigned_to": "string",
+        "notes": "string"
+      },
+      "enrichment_config": {
+        "brightdata_targets": [
+          "market_analysis",
+          "competitive_landscape",
+          "organization_research",
+          "decision_maker_identification",
+          "historical_win_patterns"
+        ],
+        "perplexity_targets": [
+          "strategic_alignment",
+          "solution_feasibility",
+          "market_trends",
+          "competitive_positioning",
+          "success_probability"
+        ],
+        "neo4j_queries": [
+          "related_opportunities",
+          "past_engagements",
+          "competitive_wins",
+          "team_capabilities",
+          "success_patterns"
+        ]
+      }
+    }
+  },
+
+  "relationships": {
+    "WORKS_AT": {
+      "from_types": ["Person"],
+      "to_types": ["Club", "Organization", "League", "Partner"],
+      "properties": {
+        "role": "string",
+        "start_date": "string",
+        "end_date": "string",
+        "seniority": "string",
+        "department": "string",
+        "responsibilities": "array",
+        "verified": "boolean",
+        "source": "string"
+      }
+    },
+    "MANAGES": {
+      "from_types": ["Person"],
+      "to_types": ["Club", "Organization", "League"],
+      "properties": {
+        "management_type": "EXECUTIVE|OPERATIONAL|STRATEGIC",
+        "scope": "string",
+        "start_date": "string",
+        "end_date": "string",
+        "verified": "boolean"
+      }
+    },
+    "PARTNER_OF": {
+      "from_types": ["Club", "Organization", "Partner"],
+      "to_types": ["Club", "Organization", "Partner"],
+      "properties": {
+        "partnership_type": "SPONSORSHIP|TECHNOLOGY|MEDIA|STRATEGIC|SUPPLY",
+        "start_date": "string",
+        "end_date": "string",
+        "value": "string",
+        "currency": "string",
+        "scope": "string",
+        "status": "ACTIVE|EXPIRED|PENDING"
+      }
+    },
+    "MEMBER_OF": {
+      "from_types": ["Club", "Organization"],
+      "to_types": ["League"],
+      "properties": {
+        "membership_type": "FULL|ASSOCIATE|AFFILIATE",
+        "join_date": "string",
+        "status": "ACTIVE|SUSPENDED|EXPIRED",
+        "division": "string",
+        "league_level": "string"
+      }
+    },
+    "COMPETES_WITH": {
+      "from_types": ["Club", "Organization"],
+      "to_types": ["Club", "Organization"],
+      "properties": {
+        "competition_type": "SPORTING|COMMERCIAL|MARKET",
+        "intensity": "HIGH|MEDIUM|LOW",
+        "market": "array",
+        "historical_data": "array"
+      }
+    },
+    "KNOWS": {
+      "from_types": ["Person"],
+      "to_types": ["Person"],
+      "properties": {
+        "relationship_type": "PROFESSIONAL|PERSONAL|SOCIAL",
+        "strength": "STRONG|MODERATE|WEAK",
+        "context": "string",
+        "verified": "boolean",
+        "source": "string"
+      }
+    },
+    "REPORTS_TO": {
+      "from_types": ["Person"],
+      "to_types": ["Person"],
+      "properties": {
+        "reporting_type": "DIRECT|INDIRECT|FUNCTIONAL",
+        "start_date": "string",
+        "end_date": "string",
+        "verified": "boolean"
+      }
+    },
+    "HAS_OPPORTUNITY": {
+      "from_types": ["Club", "Organization", "Person"],
+      "to_types": ["Opportunity"],
+      "properties": {
+        "opportunity_type": "RFP|TENDER|PARTNERSHIP",
+        "stage": "IDENTIFIED|QUALIFIED|PROPOSAL|NEGOTIATION|CLOSED",
+        "assigned_to": "string",
+        "priority": "HIGH|MEDIUM|LOW",
+        "value": "string"
+      }
+    }
+  },
+
+  "enrichment_rules": {
+    "priority_scoring": {
+      "high_priority": {
+        "criteria": ["opportunity_score >= 80", "relationship_score >= 70"],
+        "refresh_frequency": "daily",
+        "data_sources": ["brightdata", "perplexity"]
+      },
+      "medium_priority": {
+        "criteria": ["opportunity_score >= 50", "relationship_score >= 50"],
+        "refresh_frequency": "weekly",
+        "data_sources": ["brightdata", "perplexity"]
+      },
+      "low_priority": {
+        "criteria": ["opportunity_score < 50", "relationship_score < 50"],
+        "refresh_frequency": "monthly",
+        "data_sources": ["perplexity"]
+      }
+    },
+    "data_quality_rules": {
+      "required_fields": ["name", "type"],
+      "email_validation": "regex_pattern",
+      "url_validation": "url_format",
+      "phone_validation": "phone_format",
+      "date_validation": "iso_date_format"
+    },
+    "data_sources": {
+      "brightdata": {
+        "company_research": "https://api.brightdata.com/v1/companies/domain",
+        "person_search": "https://api.brightdata.com/v1/people/search",
+        "news_monitoring": "https://api.brightdata.com/v1/news/search",
+        "market_intelligence": "https://api.brightdata.com/v1/markets/analysis"
+      },
+      "perplexity": {
+        "market_analysis": "Industry trends and competitive positioning",
+        "strategic_insights": "Business strategy and innovation focus",
+        "financial_intelligence": "Performance metrics and investment patterns",
+        "relationship_mapping": "Partnership networks and competitive relationships"
+      }
+    }
+  },
+
+  "neo4j_schema": {
+    "indexes": [
+      "CREATE INDEX entity_name_index IF NOT EXISTS FOR (e:Entity) ON (e.name)",
+      "CREATE INDEX entity_type_index IF NOT EXISTS FOR (e:Entity) ON (e.type)",
+      "CREATE INDEX person_email_index IF NOT EXISTS FOR (p:Person) ON (p.email)",
+      "CREATE INDEX club_website_index IF NOT EXISTS FOR (c:Club) ON (c.website)",
+      "CREATE INDEX organization_industry_index IF NOT EXISTS FOR (o:Organization) ON (o.industry)"
+    ],
+    "vector_index": [
+      "CREATE VECTOR INDEX entity_embeddings IF NOT EXISTS FOR (n:Entity) ON n.embedding OPTIONS { indexConfig: { `vector.dimensions`: 1536, `vector.similarity_function`: 'cosine' } }"
+    ],
+    "fulltext_index": [
+      "CREATE FULLTEXT INDEX entity_search_index IF NOT EXISTS FOR (e:Entity) ON EACH [e.name, e.description, e.type, e.sport, e.country]"
+    ],
+    "constraints": [
+      "CREATE CONSTRAINT entity_unique IF NOT EXISTS FOR (e:Entity) REQUIRE e.name IS UNIQUE",
+      "CREATE CONSTRAINT person_email_unique IF NOT EXISTS FOR (p:Person) REQUIRE p.email IS UNIQUE"
+    ]
+  },
+
+  "example_entities": {
+    "club_example": {
+      "name": "Arsenal FC",
+      "type": "club",
+      "sport": "Football",
+      "country": "England",
+      "stadium": "Emirates Stadium",
+      "league": "Premier League",
+      "founded": 1886,
+      "website": "https://www.arsenal.com",
+      "linkedin_url": "https://www.linkedin.com/company/arsenal",
+      "digital_maturity": "HIGH",
+      "estimated_value": "£2.3B",
+      "revenue": "£368M",
+      "staff_count": 650,
+      "opportunity_score": 92,
+      "relationship_score": 78,
+      "yellow_panther_priority": 90
+    },
+    "person_example": {
+      "name": "Vinai Venkatesham",
+      "type": "person",
+      "role": "Chief Executive Officer",
+      "seniority": "C_LEVEL",
+      "department": "Executive",
+      "organization": "Arsenal FC",
+      "email": "vinai.venkatesham@arsenal.com",
+      "linkedin_url": "https://www.linkedin.com/in/vinaivenkatesham",
+      "decision_maker": true,
+      "influence_level": "HIGH",
+      "opportunity_score": 96,
+      "relationship_score": 90
+    }
+  }
+}

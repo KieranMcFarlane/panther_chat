@@ -1,0 +1,82 @@
+{
+  "batchId": 1,
+  "batchStart": "2025-10-06T22:12:16.688Z",
+  "batchEnd": "2025-10-06T22:12:18.702Z",
+  "totalEntities": 10,
+  "totalOpportunities": 16,
+  "totalRisks": 16,
+  "totalRecommendations": 20,
+  "estimatedValue": 73.10000000000001,
+  "entities": [
+    {
+      "name": "1. FC Köln",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 2,
+      "estimated_value": "£4.8M"
+    },
+    {
+      "name": "1. FC Nürnberg",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 2,
+      "estimated_value": "£4.4M"
+    },
+    {
+      "name": "2. Bundesliga",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 2,
+      "estimated_value": "£3.9M"
+    },
+    {
+      "name": "Bayer 04 Leverkusen",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 2,
+      "estimated_value": "£3.8M"
+    },
+    {
+      "name": "Bayern München",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 2,
+      "estimated_value": "£5.1M"
+    },
+    {
+      "name": "Borussia Dortmund",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 2,
+      "estimated_value": "£4.7M"
+    },
+    {
+      "name": "Barnsley",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.9M"
+    },
+    {
+      "name": "Blackpool",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.5M"
+    },
+    {
+      "name": "Bristol Rovers",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.5M"
+    },
+    {
+      "name": "Burton Albion",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.7M"
+    }
+  ]
+}

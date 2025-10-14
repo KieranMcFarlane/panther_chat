@@ -16,6 +16,28 @@ export interface CachedEntity {
   cache_version: number
 }
 
+export interface CachedRelationship {
+  id: string
+  source_neo4j_id: string
+  target_neo4j_id: string
+  relationship_type: string
+  source_element_id: string
+  target_element_id: string
+  source_labels: string[]
+  target_labels: string[]
+  source_name: string
+  target_name: string
+  relationship_properties: Record<string, any>
+  direction: 'outgoing' | 'incoming' | 'undirected'
+  confidence_score: number
+  weight: number
+  created_at: string
+  updated_at: string
+  last_synced_at: string
+  sync_version: number
+  is_active: boolean
+}
+
 export class EntityCacheService {
   private neo4jService: Neo4jService
   private readonly CACHE_TTL = 30 * 60 * 1000 // 30 minutes
@@ -439,6 +461,252 @@ export class EntityCacheService {
     } catch (error) {
       console.error('❌ Failed to get cache stats:', error)
       throw error
+    }
+  }
+
+  // ========== RELATIONSHIP METHODS ==========
+
+  async getCachedRelationships(options: {
+    page?: number
+    limit?: number
+    relationshipType?: string
+    sourceName?: string
+    targetName?: string
+    sourceNeo4jId?: string
+    targetNeo4jId?: string
+    sortBy?: string
+    sortOrder?: 'asc' | 'desc'
+  } = {}) {
+    const {
+      page = 1,
+      limit = 100,
+      relationshipType = '',
+      sourceName = '',
+      targetName = '',
+      sourceNeo4jId = '',
+      targetNeo4jId = '',
+      sortBy = 'relationship_type',
+      sortOrder = 'asc'
+    } = options
+    
+    const start = (page - 1) * limit
+    
+    try {
+      console.log(`📖 Fetching cached relationships from Supabase...`)
+      
+      let query = supabase
+        .from('entity_relationships')
+        .select('*', { count: 'exact' })
+      
+      // Apply filters
+      if (relationshipType) {
+        query = query.eq('relationship_type', relationshipType)
+      }
+      
+      if (sourceName) {
+        query = query.ilike('source_name', `%${sourceName}%`)
+      }
+      
+      if (targetName) {
+        query = query.ilike('target_name', `%${targetName}%`)
+      }
+      
+      if (sourceNeo4jId) {
+        query = query.eq('source_neo4j_id', sourceNeo4jId)
+      }
+      
+      if (targetNeo4jId) {
+        query = query.eq('target_neo4j_id', targetNeo4jId)
+      }
+      
+      // Apply sorting and pagination
+      query = query
+        .order(sortBy, { ascending: sortOrder === 'asc' })
+        .range(start, start + limit - 1)
+        .eq('is_active', true)
+      
+      const { data, error, count } = await query
+      
+      if (error) throw error
+      
+      const relationships = data || []
+      
+      console.log(`✅ Cache relationships successful, found ${relationships.length} relationships`)
+      
+      return {
+        relationships,
+        pagination: {
+          page,
+          limit,
+          total: count || 0,
+          totalPages: Math.ceil((count || 0) / limit),
+          hasNext: start + limit < (count || 0),
+          hasPrev: page > 1
+        },
+        filters: { relationshipType, sourceName, targetName, sourceNeo4jId, targetNeo4jId, sortBy, sortOrder }
+      }
+    } catch (error) {
+      console.error('❌ Failed to fetch cached relationships:', error)
+      throw error
+    }
+  }
+
+  async getRelationshipsForEntity(neo4jId: string, options: {
+    direction?: 'outgoing' | 'incoming' | 'both'
+    limit?: number
+  } = {}) {
+    const { direction = 'both', limit = 50 } = options
+    
+    try {
+      console.log(`🔗 Getting relationships for entity ${neo4jId}...`)
+      
+      let query = supabase
+        .from('entity_relationships')
+        .select('*')
+        .eq('is_active', true)
+      
+      if (direction === 'outgoing') {
+        query = query.eq('source_neo4j_id', neo4jId)
+      } else if (direction === 'incoming') {
+        query = query.eq('target_neo4j_id', neo4jId)
+      } else {
+        // Both directions
+        query = query.or(`source_neo4j_id.eq.${neo4jId},target_neo4j_id.eq.${neo4jId}`)
+      }
+      
+      query = query.order('created_at', { ascending: false }).limit(limit)
+      
+      const { data, error } = await query
+      
+      if (error) throw error
+      
+      const relationships = data || []
+      
+      console.log(`✅ Found ${relationships.length} relationships for entity ${neo4jId}`)
+      
+      return relationships
+    } catch (error) {
+      console.error(`❌ Failed to get relationships for entity ${neo4jId}:`, error)
+      throw error
+    }
+  }
+
+  async syncRelationshipsFromNeo4j(options: {
+    batchSize?: number
+    forceRefresh?: boolean
+  } = {}) {
+    const { batchSize = 100, forceRefresh = false } = options
+    const integerBatchSize = parseInt(Math.floor(batchSize).toString(), 10)
+    
+    console.log('🔄 Starting relationship sync from Neo4j to Supabase...')
+    
+    if (forceRefresh) {
+      console.log('🗑️ Clearing existing relationships cache...')
+      await supabase
+        .from('entity_relationships')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000') // Delete all
+    }
+    
+    const session = this.neo4jService.getDriver().session()
+    
+    try {
+      // Get relationships from Neo4j
+      const relationshipsQuery = `
+        MATCH (n1)-[r]->(n2)
+        RETURN 
+          elementId(n1) as source_element_id,
+          n1.neo4j_id as source_neo4j_id,
+          labels(n1) as source_labels,
+          n1.name as source_name,
+          type(r) as relationship_type,
+          properties(r) as relationship_properties,
+          elementId(n2) as target_element_id,
+          n2.neo4j_id as target_neo4j_id,
+          labels(n2) as target_labels,
+          n2.name as target_name
+        LIMIT ${integerBatchSize}
+      `
+      
+      const result = await session.run(relationshipsQuery)
+      
+      if (result.records.length === 0) {
+        console.log('✅ No relationships found in Neo4j')
+        return { synced: 0, updated: 0, errors: 0 }
+      }
+      
+      console.log(`📊 Found ${result.records.length} relationships in Neo4j`)
+      
+      let synced = 0
+      let updated = 0
+      let errors = 0
+      
+      // Process relationships in batches
+      for (const record of result.records) {
+        try {
+          const relationship = {
+            source_neo4j_id: record.get('source_neo4j_id'),
+            target_neo4j_id: record.get('target_neo4j_id'),
+            relationship_type: record.get('relationship_type'),
+            source_element_id: record.get('source_element_id'),
+            target_element_id: record.get('target_element_id'),
+            source_labels: record.get('source_labels'),
+            target_labels: record.get('target_labels'),
+            source_name: record.get('source_name'),
+            target_name: record.get('target_name'),
+            relationship_properties: record.get('relationship_properties') || {},
+            direction: 'outgoing' as const,
+            confidence_score: 100,
+            weight: 1.0
+          }
+          
+          // Check if both entities exist in cache
+          const { data: sourceCheck } = await supabase
+            .from('cached_entities')
+            .select('neo4j_id')
+            .eq('neo4j_id', relationship.source_neo4j_id)
+            .single()
+          
+          const { data: targetCheck } = await supabase
+            .from('cached_entities')
+            .select('neo4j_id')
+            .eq('neo4j_id', relationship.target_neo4j_id)
+            .single()
+          
+          if (!sourceCheck || !targetCheck) {
+            console.log(`⚠️ Skipping relationship - missing entities: ${relationship.source_name} -> ${relationship.target_name}`)
+            continue
+          }
+          
+          // Insert or update relationship
+          const { error: insertError } = await supabase
+            .from('entity_relationships')
+            .upsert(relationship, {
+              onConflict: 'source_element_id,target_element_id,relationship_type'
+            })
+          
+          if (insertError) {
+            console.error(`❌ Failed to sync relationship: ${relationship.source_name} -> ${relationship.target_name}`, insertError)
+            errors++
+          } else {
+            synced++
+          }
+          
+        } catch (error) {
+          console.error('❌ Error processing relationship record:', error)
+          errors++
+        }
+      }
+      
+      console.log(`✅ Relationship sync complete: ${synced} synced, ${updated} updated, ${errors} errors`)
+      
+      return { synced, updated, errors }
+      
+    } catch (error) {
+      console.error('❌ Failed to sync relationships from Neo4j:', error)
+      throw error
+    } finally {
+      await session.close()
     }
   }
 }

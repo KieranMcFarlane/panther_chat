@@ -62,3 +62,4 @@ PREFERRED_VALUE_RANGES=["100K-500K", "500K-1M", "1M-2M"]
 # LinkedIn API Limits (if using direct API)
 LINKEDIN_API_RATE_LIMIT=100   # requests per hour
 LINKEDIN_API_BURST_LIMIT=10   # burst requests
+

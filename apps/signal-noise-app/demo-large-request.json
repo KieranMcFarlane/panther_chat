@@ -1,0 +1,75 @@
+{
+  "entities": [
+    {
+      "id": "demo_001",
+      "name": "Real Madrid CF",
+      "type": "club",
+      "industry": "football",
+      "data": {"description": "Spanish football giant", "value": 5200000000, "established": 1902},
+      "lastUpdated": "2025-10-07T04:20:00.000Z"
+    },
+    {
+      "id": "demo_002",
+      "name": "FC Barcelona",
+      "type": "club", 
+      "industry": "football",
+      "data": {"description": "Catalan football powerhouse", "value": 4800000000, "established": 1899},
+      "lastUpdated": "2025-10-07T04:20:00.000Z"
+    },
+    {
+      "id": "demo_003",
+      "name": "Bayern Munich",
+      "type": "club",
+      "industry": "football", 
+      "data": {"description": "German football dominators", "value": 4100000000, "established": 1900},
+      "lastUpdated": "2025-10-07T04:20:00.000Z"
+    },
+    {
+      "id": "demo_004",
+      "name": "PSG",
+      "type": "club",
+      "industry": "football",
+      "data": {"description": "Parisian football club", "value": 3900000000, "established": 1970},
+      "lastUpdated": "2025-10-07T04:20:00.000Z"
+    },
+    {
+      "id": "demo_005",
+      "name": "Juventus FC",
+      "type": "club",
+      "industry": "football",
+      "data": {"description": "Italian football club", "value": 3200000000, "established": 1897},
+      "lastUpdated": "2025-10-07T04:20:00.000Z"
+    },
+    {
+      "id": "demo_006",
+      "name": "Ajax Amsterdam",
+      "type": "club",
+      "industry": "football",
+      "data": {"description": "Dutch football academy", "value": 2800000000, "established": 1900},
+      "lastUpdated": "2025-10-07T04:20:00.000Z"
+    },
+    {
+      "id": "demo_007",
+      "name": "Porto FC",
+      "type": "club",
+      "industry": "football",
+      "data": {"description": "Portuguese football club", "value": 2400000000, "established": 1893},
+      "lastUpdated": "2025-10-07T04:20:00.000Z"
+    },
+    {
+      "id": "demo_008",
+      "name": "SL Benfica",
+      "type": "club",
+      "industry": "football",
+      "data": {"description": "Portuguese football giants", "value": 2600000000, "established": 1904},
+      "lastUpdated": "2025-10-07T04:20:00.000Z"
+    }
+  ],
+  "options": {
+    "memoryOptimized": true,
+    "batchSize": 3,
+    "memoryThresholdMB": 512,
+    "maxConcurrent": 2,
+    "storeResults": true
+  }
+}

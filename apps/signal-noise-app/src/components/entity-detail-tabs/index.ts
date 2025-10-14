@@ -1,0 +1,1 @@
+export { EntityDetailTabs } from './EntityDetailTabs'

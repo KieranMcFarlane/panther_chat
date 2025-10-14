@@ -165,6 +165,22 @@ async function generateEntityDossier(entityId: string, options: DossierRequest) 
   console.log(`📋 Entity data fetched:`, entityData?.name || 'Unknown');
   
   if (!entityData) {
+    console.log(`❌ Entity ${entityId} not found in Neo4j, trying fallback methods`);
+    
+    // Try the working entity API as a fallback
+    try {
+      const entityResponse = await fetch(`http://localhost:3005/api/entities/${entityId}`);
+      if (entityResponse.ok) {
+        const entityResult = await entityResponse.json();
+        console.log(`✅ Found entity via fallback API:`, entityResult.entity?.properties?.name);
+        if (entityResult.entity) {
+          return await generateDossierFromEntityData(entityResult.entity, options);
+        }
+      }
+    } catch (fallbackError) {
+      console.log(`❌ Fallback API also failed:`, fallbackError);
+    }
+    
     throw new Error(`Entity ${entityId} not found`);
   }
 
@@ -212,34 +228,97 @@ async function generateEntityDossier(entityId: string, options: DossierRequest) 
   return dossier;
 }
 
+async function generateDossierFromEntityData(entity: any, options: DossierRequest) {
+  console.log(`📋 Generating dossier from fallback entity data for: ${entity.properties?.name || 'Unknown'}`);
+  
+  const entityData = entity.properties;
+  const entityId = entity.id.toString();
+  
+  // Fetch recent signals/events
+  const signals = options.includeSignals ? await fetchEntitySignals(entityId) : [];
+  console.log(`📋 Signals fetched:`, signals.length);
+  
+  // Fetch persons of interest
+  const pois = options.includePOIs ? await fetchPersonsOfInterest(entityId) : [];
+  console.log(`📋 POIs fetched:`, pois.length);
+  
+  // Fetch connection paths
+  const connections = options.includeConnections ? await fetchConnectionPaths(entityId) : [];
+  console.log(`📋 Connections fetched:`, connections.length);
+  
+  // Calculate scores
+  const scores = calculateScores(entityData, signals, pois, connections);
+  console.log(`📋 Scores calculated:`, scores);
+  
+  // Generate recommended actions
+  const recommendedActions = generateRecommendedActions(scores, signals, pois);
+  
+  // Create outreach template
+  const outreachTemplate = generateOutreachTemplate(entityData, pois[0]);
+  
+  // Compile final dossier
+  const dossier = {
+    entityName: entityData.name || 'Unknown Entity',
+    entityIndustry: entityData.industry || entityData.sector,
+    entityUrl: entityData.website || entityData.url,
+    entityCountry: entityData.country,
+    summary: generateSummary(entityData, signals, scores),
+    signals,
+    topPOIs: pois.slice(0, 5), // Top 5 POIs
+    connectionPaths: connections.slice(0, 3), // Top 3 connections
+    scores,
+    recommendedActions,
+    rawEvidence: extractRawEvidence(signals, entityData),
+    outreachTemplate,
+    lastUpdated: new Date().toISOString(),
+    status: scores.finalScore >= 70 ? 'hot' : scores.finalScore >= 40 ? 'warm' : 'cold'
+  };
+
+  console.log(`📋 Fallback dossier compilation complete for: ${dossier.entityName}`);
+  return dossier;
+}
+
 async function fetchEntityData(entityId: string) {
   const neo4jService = new Neo4jService();
   await neo4jService.initialize();
   const session = neo4jService.getDriver().session();
   try {
+    console.log(`🔍 Fetching entity data for ID: ${entityId}`);
+    
     const result = await session.run(
       `
       MATCH (e) 
       WHERE id(e) = $entityId
       OPTIONAL MATCH (e)-[:ASSOCIATED_WITH]->(c:Club)
-      RETURN e, c as club
+      RETURN e, c as club, id(e) as internalId
       `,
       { entityId: parseInt(entityId) || 0 }
     );
 
+    console.log(`📊 Found ${result.records.length} records for entity ${entityId}`);
+
     if (result.records.length === 0) {
+      console.log(`❌ No records found for entity ${entityId}`);
       return null;
     }
 
     const record = result.records[0];
-    const entity = record.get('e').properties;
+    const entityNode = record.get('e');
     const club = record.get('club')?.properties || {};
+    const internalId = record.get('internalId');
 
-    return {
-      ...entity,
+    const entityData = {
+      ...entityNode.properties,
       club: club.name || null,
-      id: record.get('e').identity.toString()
+      id: internalId.toString(),
+      labels: entityNode.labels
     };
+
+    console.log(`✅ Successfully fetched entity: ${entityData.name || 'Unknown'}`);
+    return entityData;
+  } catch (error) {
+    console.error(`❌ Error fetching entity ${entityId}:`, error);
+    return null;
   } finally {
     await session.close();
   }
@@ -276,25 +355,29 @@ async function fetchPersonsOfInterest(entityId: string) {
   await neo4jService.initialize();
   const session = neo4jService.getDriver().session();
   try {
+    console.log(`👥 Fetching persons of interest for entity: ${entityId}`);
+    
     const result = await session.run(
       `
       MATCH (e)-[:ASSOCIATED_WITH]->(:Club)<-[:WORKED_AT]-(p:Person)
       WHERE id(e) = $entityId
       OPTIONAL MATCH (p)-[:CONNECTED_TO]-(other:Person)
       WITH p, count(other) as connectionCount
-      RETURN p, connectionCount
+      RETURN p, connectionCount, id(p) as personId
       ORDER BY connectionCount DESC, p.role DESC
       LIMIT 10
       `,
       { entityId: parseInt(entityId) || 0 }
     );
 
-    return result.records.map(record => {
-      const person = record.get('p').properties;
+    const persons = result.records.map(record => {
+      const personNode = record.get('p');
+      const person = personNode.properties;
       const connectionCount = record.get('connectionCount');
+      const personId = record.get('personId');
       
       return {
-        id: person.person_id || person.neo4j_id || record.get('p').identity.toString(),
+        id: personId,
         name: person.name || 'Unknown',
         role: person.role || 'Unknown',
         source: 'Neo4j Graph',
@@ -305,6 +388,9 @@ async function fetchPersonsOfInterest(entityId: string) {
         notes: person.notes || ''
       };
     });
+    
+    console.log(`✅ Found ${persons.length} persons of interest for entity ${entityId}`);
+    return persons;
   } finally {
     await session.close();
   }

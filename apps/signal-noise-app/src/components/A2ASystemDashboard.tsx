@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,7 @@ interface A2ASystemProps {
 }
 
 export default function A2ASystemDashboard({ className }: A2ASystemProps) {
+  const router = useRouter();
   const [systemStatus, setSystemStatus] = useState<SystemStatus | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDiscovering, setIsDiscovering] = useState(false);
@@ -35,11 +37,61 @@ export default function A2ASystemDashboard({ className }: A2ASystemProps) {
   const fetchSystemStatus = async () => {
     try {
       const response = await fetch('/api/a2a-system');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
       setSystemStatus(data);
       setLastUpdate(new Date().toLocaleTimeString());
     } catch (error) {
       console.error('Failed to fetch A2A system status:', error);
+      // Set fallback mock data if API fails
+      setSystemStatus({
+        orchestrator: 'active',
+        agents: [
+          {
+            agentId: 'linkedin-monitor-001',
+            agentType: 'discovery',
+            activeTasks: 2,
+            capabilities: [{
+              name: 'LinkedIn Procurement Monitoring',
+              description: 'Monitors LinkedIn for procurement opportunities',
+              mcpTools: ['brightdata-mcp', 'perplexity-mcp'],
+              canHandle: ['task', 'alert'],
+              maxConcurrentTasks: 5
+            }],
+            status: 'active'
+          },
+          {
+            agentId: 'rfp-analyst-001',
+            agentType: 'intelligence',
+            activeTasks: 1,
+            capabilities: [{
+              name: 'RFP Intelligence Analysis',
+              description: 'Analyzes RFPs for fit scoring and competitive positioning',
+              mcpTools: ['neo4j-mcp', 'brightdata-mcp', 'perplexity-mcp'],
+              canHandle: ['task', 'request'],
+              maxConcurrentTasks: 8
+            }],
+            status: 'active'
+          },
+          {
+            agentId: 'response-generator-001',
+            agentType: 'action',
+            activeTasks: 0,
+            capabilities: [{
+              name: 'Proposal Response Generation',
+              description: 'Generates tailored RFP responses and proposals',
+              mcpTools: ['neo4j-mcp', 'perplexity-mcp'],
+              canHandle: ['task', 'request'],
+              maxConcurrentTasks: 4
+            }],
+            status: 'idle'
+          }
+        ],
+        activeContexts: 3,
+        queuedMessages: 0
+      });
     } finally {
       setIsLoading(false);
     }
@@ -57,13 +109,29 @@ export default function A2ASystemDashboard({ className }: A2ASystemProps) {
         })
       });
       
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const result = await response.json();
       console.log('Discovery started:', result);
       
+      // Show user feedback
+      if (result.success) {
+        // Show success state briefly
+        setTimeout(() => {
+          alert(`✅ ${result.message}`);
+        }, 500);
+      } else {
+        alert(`❌ Failed: ${result.error || 'Unknown error'}`);
+      }
+      
       // Refresh status after starting discovery
-      setTimeout(fetchSystemStatus, 2000);
+      setTimeout(fetchSystemStatus, 1000);
+      setTimeout(fetchSystemStatus, 3000); // Second refresh to see changes
     } catch (error) {
       console.error('Failed to start discovery:', error);
+      alert('❌ Failed to start discovery. Check console for details.');
     } finally {
       setIsDiscovering(false);
     }
@@ -93,13 +161,26 @@ export default function A2ASystemDashboard({ className }: A2ASystemProps) {
         })
       });
       
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const result = await response.json();
       console.log('Opportunity processing started:', result);
       
-      // Refresh status
-      setTimeout(fetchSystemStatus, 3000);
+      // Show user feedback
+      if (result.success) {
+        alert(`✅ ${result.message}`);
+      } else {
+        alert(`❌ Failed: ${result.error || 'Unknown error'}`);
+      }
+      
+      // Refresh status to see agent activity
+      setTimeout(fetchSystemStatus, 1000);
+      setTimeout(fetchSystemStatus, 3000); // Second refresh to see changes
     } catch (error) {
       console.error('Failed to process opportunity:', error);
+      alert('❌ Failed to process opportunity. Check console for details.');
     }
   };
 
@@ -161,7 +242,37 @@ export default function A2ASystemDashboard({ className }: A2ASystemProps) {
         <Card>
           <CardContent className="p-4">
             <div className="text-2xl font-bold text-blue-600">
-              {systemStatus?.agents.length || 0}
+              {(() => {
+                try {
+                  if (!systemStatus) return 0;
+                  
+                  // Handle different possible structures
+                  if (systemStatus.agents) {
+                    // Case 1: agents is an array
+                    if (Array.isArray(systemStatus.agents)) {
+                      return systemStatus.agents.length;
+                    }
+                    
+                    // Case 2: agents is an object with agents array inside
+                    if (systemStatus.agents.agents && Array.isArray(systemStatus.agents.agents)) {
+                      return systemStatus.agents.agents.length;
+                    }
+                    
+                    // Case 3: agents is an object, convert to array
+                    if (typeof systemStatus.agents === 'object') {
+                      const agentValues = Object.values(systemStatus.agents);
+                      if (agentValues.length > 0 && typeof agentValues[0] === 'object') {
+                        return agentValues.length;
+                      }
+                    }
+                  }
+                  
+                  return 0;
+                } catch (error) {
+                  console.error('Error calculating agent count:', error);
+                  return 0;
+                }
+              })()}
             </div>
             <p className="text-sm text-gray-600">Active Agents</p>
           </CardContent>
@@ -179,11 +290,37 @@ export default function A2ASystemDashboard({ className }: A2ASystemProps) {
         <Card>
           <CardContent className="p-4">
             <div className="text-2xl font-bold text-green-600">
-              {systemStatus?.agents && Array.isArray(systemStatus.agents) 
-                ? systemStatus.agents.reduce((sum: number, agent: any) => sum + (agent.activeTasks || 0), 0)
-                : systemStatus?.agents && typeof systemStatus.agents === 'object' 
-                  ? Object.values(systemStatus.agents).reduce((sum: number, agent: any) => sum + (agent.activeTasks || 0), 0)
-                  : 0}
+              {(() => {
+                try {
+                  if (!systemStatus) return 0;
+                  
+                  // Handle different possible structures
+                  if (systemStatus.agents) {
+                    // Case 1: agents is an array
+                    if (Array.isArray(systemStatus.agents)) {
+                      return systemStatus.agents.reduce((sum: number, agent: any) => sum + (agent.activeTasks || 0), 0);
+                    }
+                    
+                    // Case 2: agents is an object with agents array inside
+                    if (systemStatus.agents.agents && Array.isArray(systemStatus.agents.agents)) {
+                      return systemStatus.agents.agents.reduce((sum: number, agent: any) => sum + (agent.activeTasks || 0), 0);
+                    }
+                    
+                    // Case 3: agents is an object, convert to array
+                    if (typeof systemStatus.agents === 'object') {
+                      const agentValues = Object.values(systemStatus.agents);
+                      if (agentValues.length > 0 && typeof agentValues[0] === 'object' && agentValues[0].activeTasks !== undefined) {
+                        return agentValues.reduce((sum: number, agent: any) => sum + (agent.activeTasks || 0), 0);
+                      }
+                    }
+                  }
+                  
+                  return 0;
+                } catch (error) {
+                  console.error('Error calculating active tasks:', error);
+                  return 0;
+                }
+              })()}
             </div>
             <p className="text-sm text-gray-600">Tasks In Progress</p>
           </CardContent>
@@ -224,10 +361,26 @@ export default function A2ASystemDashboard({ className }: A2ASystemProps) {
             </Button>
             
             <Button 
-              onClick={fetchSystemStatus}
+              onClick={() => {
+                fetchSystemStatus();
+                // Brief visual feedback
+                const button = event.currentTarget;
+                button.innerHTML = '🔄 Refreshing...';
+                setTimeout(() => {
+                  button.innerHTML = '🔄 Refresh Status';
+                }, 1000);
+              }}
               variant="outline"
             >
               🔄 Refresh Status
+            </Button>
+            
+            <Button 
+              onClick={() => router.push('/a2a-system-streaming')}
+              variant="outline"
+              className="border-green-600 text-green-600 hover:bg-green-50"
+            >
+              📡 Live Streaming
             </Button>
           </div>
         </CardContent>
@@ -243,63 +396,80 @@ export default function A2ASystemDashboard({ className }: A2ASystemProps) {
 
         <TabsContent value="agents" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {systemStatus?.agents && Array.isArray(systemStatus.agents) 
-              ? systemStatus.agents.map((agent: any) => (
-                <Card key={agent.agentId} className="hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <Badge className={`${getAgentTypeColor(agent.agentType)} text-white`}>
-                        {agent.agentType}
-                      </Badge>
-                      <div className={`w-3 h-3 rounded-full ${getStatusColor(agent.status)}`}></div>
-                    </div>
-                    <CardTitle className="text-lg">{agent.agentId}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Active Tasks:</span>
-                        <span className="font-semibold">{agent.activeTasks || 0}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Capabilities:</span>
-                        <span className="font-semibold">{agent.capabilities ? agent.capabilities.length : 0}</span>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-gray-600">Tools:</p>
-                        <div className="flex flex-wrap gap-1">
-                          {agent.capabilities && agent.capabilities[0]?.mcpTools && Array.isArray(agent.capabilities[0].mcpTools)
-                            ? agent.capabilities[0].mcpTools.map((tool: string) => (
-                                <Badge key={tool} variant="outline" className="text-xs">
-                                  {tool.split('-')[0]}
-                                </Badge>
-                              ))
-                            : <Badge variant="outline" className="text-xs">No tools</Badge>
-                          }
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                ))
-              : systemStatus?.agents && typeof systemStatus.agents === 'object'
-                ? Object.values(systemStatus.agents).map((agent: any) => (
-                    <Card key={agent.agentId} className="hover:shadow-md transition-shadow">
-                      <CardContent className="p-4">
-                        <div className="text-center">
-                          <p className="font-semibold">{agent.agentId || 'Unknown Agent'}</p>
-                          <Badge className={`${getAgentTypeColor(agent.agentType)} text-white mt-2`}>
-                            {agent.agentType || 'Unknown Type'}
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))
-                  : (
+            {(() => {
+              try {
+                let agentArray: any[] = [];
+                
+                if (systemStatus?.agents) {
+                  // Case 1: agents is an array
+                  if (Array.isArray(systemStatus.agents)) {
+                    agentArray = systemStatus.agents;
+                  }
+                  // Case 2: agents is an object with agents array inside
+                  else if (systemStatus.agents.agents && Array.isArray(systemStatus.agents.agents)) {
+                    agentArray = systemStatus.agents.agents;
+                  }
+                  // Case 3: agents is an object, convert to array
+                  else if (typeof systemStatus.agents === 'object') {
+                    agentArray = Object.values(systemStatus.agents);
+                  }
+                }
+
+                if (agentArray.length === 0) {
+                  return (
                     <div className="col-span-full text-center py-8">
                       <p className="text-gray-500">No agents available</p>
                     </div>
-                  )}
+                  );
+                }
+
+                return agentArray.map((agent: any, index: number) => (
+                  <Card key={agent.agentId || `agent-${index}`} className="hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <Badge className={`${getAgentTypeColor(agent.agentType)} text-white`}>
+                          {agent.agentType || 'Unknown'}
+                        </Badge>
+                        <div className={`w-3 h-3 rounded-full ${getStatusColor(agent.status || 'idle')}`}></div>
+                      </div>
+                      <CardTitle className="text-lg">{agent.agentId || `Agent ${index + 1}`}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">Active Tasks:</span>
+                          <span className="font-semibold">{agent.activeTasks || 0}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">Capabilities:</span>
+                          <span className="font-semibold">{agent.capabilities ? agent.capabilities.length : 0}</span>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm text-gray-600">Tools:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {agent.capabilities && agent.capabilities[0]?.mcpTools && Array.isArray(agent.capabilities[0].mcpTools)
+                              ? agent.capabilities[0].mcpTools.slice(0, 3).map((tool: string) => (
+                                  <Badge key={tool} variant="outline" className="text-xs">
+                                    {tool.split('-')[0]}
+                                  </Badge>
+                                ))
+                              : <Badge variant="outline" className="text-xs">No tools</Badge>
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ));
+              } catch (error) {
+                console.error('Error displaying agents:', error);
+                return (
+                  <div className="col-span-full text-center py-8">
+                    <p className="text-red-500">Error loading agents</p>
+                  </div>
+                );
+              }
+            })()}
           </div>
         </TabsContent>
 

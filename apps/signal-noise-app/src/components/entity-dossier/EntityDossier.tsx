@@ -10,11 +10,11 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import Link from 'next/link';
 import { 
   Users, 
   TrendingUp, 
   Mail, 
-  Link, 
   Calendar, 
   Target,
   AlertCircle,
@@ -23,7 +23,8 @@ import {
   Star,
   User,
   Building,
-  Globe
+  Globe,
+  ExternalLink
 } from 'lucide-react';
 
 interface PersonOfInterest {
@@ -395,7 +396,12 @@ const EntityDossier: React.FC<EntityDossierProps> = ({
                           <User className="h-4 w-4 text-blue-600" />
                         </div>
                         <div>
-                          <h3 className="font-semibold">{poi.name}</h3>
+                          <Link href={`/person/${poi.id}`} className="hover:text-blue-600 transition-colors">
+                            <h3 className="font-semibold flex items-center gap-2">
+                              {poi.name}
+                              <ExternalLink className="h-3 w-3 text-blue-500" />
+                            </h3>
+                          </Link>
                           <p className="text-sm text-muted-foreground">{poi.role}</p>
                           
                           {poi.emailGuess && (

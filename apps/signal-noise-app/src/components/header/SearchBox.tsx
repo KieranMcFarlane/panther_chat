@@ -45,8 +45,7 @@ function SearchBox() {
           onFocus={() => setShowSuggestions(true)}
           onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           onKeyPress={handleKeyPress}
-          className="pl-9 border-white/20 text-white placeholder:text-white/60 focus:border-white/40"
-          style={{ backgroundColor: '#1c1e2d' }}
+          className="pl-9 border-white/20 text-white placeholder:text-white/60 focus:border-white/40 bg-header-bg"
         />
         
         <div className="absolute left-3 top-1/2 transform -translate-y-1/2">

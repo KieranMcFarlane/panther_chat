@@ -135,6 +135,7 @@ export async function GET(request: NextRequest) {
         const node = record.get('n')
         return {
           id: node.identity.toString(),
+          neo4j_id: node.identity.toString(),
           labels: node.labels,
           properties: node.properties
         }

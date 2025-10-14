@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Mail, Send, X, Loader2, Sparkles } from 'lucide-react';
+import { Mail, Send, X, Loader2, Sparkles, CheckCircle, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { useCopilotAction, useCopilotReadable } from '@copilotkit/react-core';
+// import { BrowserEmailCampaignService, EmailCampaign, EmailStage, GeneratedEmail } from '@/services/browser-email-campaign-service';
 
 interface EmailComposeModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ interface EmailComposeModalProps {
     affiliation: string;
     tags: string[];
   } | null;
+  entity?: any; // Add entity prop for campaign creation
 }
 
 interface EmailData {
@@ -35,7 +37,7 @@ interface EmailData {
   from: string;
 }
 
-export function EmailComposeModal({ isOpen, onClose, contact }: EmailComposeModalProps) {
+export function EmailComposeModal({ isOpen, onClose, contact, entity }: EmailComposeModalProps) {
   const [emailData, setEmailData] = useState<EmailData>({
     to: '',
     subject: '',
@@ -46,6 +48,13 @@ export function EmailComposeModal({ isOpen, onClose, contact }: EmailComposeModa
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedSubject, setGeneratedSubject] = useState('');
   const [generatedBody, setGeneratedBody] = useState('');
+  
+  // Campaign management state - commented out to fix import issues
+  // const [emailCampaignService] = useState(() => BrowserEmailCampaignService.getInstance());
+  // const [currentCampaign, setCurrentCampaign] = useState<EmailCampaign | null>(null);
+  // const [showCampaignView, setShowCampaignView] = useState(false);
+  // const [selectedStage, setSelectedStage] = useState<EmailStage | null>(null);
+  // const [isCreatingCampaign, setIsCreatingCampaign] = useState(false);
 
   // Update email data when contact changes
   useEffect(() => {
@@ -60,6 +69,132 @@ export function EmailComposeModal({ isOpen, onClose, contact }: EmailComposeModa
       setGeneratedBody('');
     }
   }, [contact]);
+
+  // Create new campaign - commented out to fix import issues
+  // const createCampaign = async () => {
+  //   if (!entity || !contact) return;
+  //   
+  //   setIsCreatingCampaign(true);
+  //   try {
+  //     const campaign = await emailCampaignService.createCampaign(
+  //       entity.id,
+  //       contact.name,
+  //       entity
+  //     );
+  //     setCurrentCampaign(campaign);
+  //     setShowCampaignView(true);
+  //     setSelectedStage(campaign.stages[0]);
+  //   } catch (error) {
+  //     console.error('Error creating campaign:', error);
+  //   } finally {
+  //     setIsCreatingCampaign(false);
+  //   }
+  // };
+
+  // Generate email for selected stage - commented out to fix import issues
+  // const generateEmailForStage = async (stage: EmailStage, customInstructions?: string) => {
+  //   if (!currentCampaign || !entity) return;
+  //   
+  //   setIsGenerating(true);
+  //   try {
+  //     const generatedEmail = await emailCampaignService.generateEmailForStage(
+  //       currentCampaign.id,
+  //       stage.id,
+  //       entity,
+  //       customInstructions
+  //     );
+      
+  //     // Update form with generated content
+  //     setEmailData(prev => ({
+  //       ...prev,
+  //       subject: generatedEmail.subject,
+  //       body: generatedEmail.body
+  //     }));
+      
+  //     setGeneratedSubject(generatedEmail.subject);
+  //     setGeneratedBody(generatedEmail.body);
+      
+  //   } catch (error) {
+  //     console.error('Error generating email:', error);
+  //   } finally {
+  //     setIsGenerating(false);
+  //   }
+  // };
+
+  // Send email and advance campaign - simplified to avoid import issues
+  // const sendEmailAndAdvanceCampaign = async () => {
+  //   if (!emailData.to || !emailData.subject || !emailData.body) {
+  //     return;
+  //   }
+
+  //   setIsSending(true);
+
+  //   try {
+  //     // Send email using Inbound API
+  //     const response = await fetch('/api/email/send', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(emailData)
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to send email');
+  //     }
+
+  //     const result = await response.json();
+  //     console.log('Email sent successfully:', result.id);
+      
+  //     // If this is part of a campaign, update email status and advance
+  //     if (currentCampaign && selectedStage) {
+  //       const currentEmail = currentCampaign.generatedEmails.find(
+  //         e => e.stageId === selectedStage.id && e.status === 'draft'
+  //       );
+        
+  //       if (currentEmail) {
+  //         emailCampaignService.updateEmailStatus(currentCampaign.id, currentEmail.id, 'sent');
+  //       }
+        
+  //       // Auto-advance to next stage
+  //       const canAdvance = emailCampaignService.advanceToNextStage(currentCampaign.id);
+  //       if (canAdvance) {
+  //         setCurrentCampaign(prev => {
+  //           if (prev) {
+  //             return { ...prev, currentStage: prev.currentStage + 1 };
+  //           }
+  //           return prev;
+  //         });
+  //         setSelectedStage(currentCampaign.stages[currentCampaign.currentStage + 1]);
+  //       }
+  //     }
+      
+  //     // Show success message and close modal
+  //     setTimeout(() => {
+  //       onClose();
+  //       resetForm();
+  //     }, 1000);
+  //   } catch (error) {
+  //     console.error('Error sending email:', error);
+  //   } finally {
+  //     setIsSending(false);
+  //   }
+  // };
+
+  // Reset form and campaign state - simplified to avoid import issues
+  const resetForm = () => {
+    setEmailData({
+      to: contact?.email || '',
+      subject: '',
+      body: '',
+      from: 'team@yellowpanther.ai'
+    });
+    setGeneratedSubject('');
+    setGeneratedBody('');
+    // setCurrentCampaign(null);
+    // setShowCampaignView(false);
+    // setSelectedStage(null);
+  };
 
   // Make contact info available to CopilotKit
   useCopilotReadable({
@@ -215,6 +350,7 @@ Format your response as JSON:
     }
   });
 
+  // Handle send email - simplified to avoid campaign logic
   const handleSendEmail = async () => {
     if (!emailData.to || !emailData.subject || !emailData.body) {
       return;
@@ -223,7 +359,6 @@ Format your response as JSON:
     setIsSending(true);
 
     try {
-      // Send email using Inbound API
       const response = await fetch('/api/email/send', {
         method: 'POST',
         headers: {
@@ -239,18 +374,9 @@ Format your response as JSON:
       const result = await response.json();
       console.log('Email sent successfully:', result.id);
       
-      // Show success message and close modal
       setTimeout(() => {
         onClose();
-        // Reset form
-        setEmailData({
-          to: contact?.email || '',
-          subject: '',
-          body: '',
-          from: 'team@yellowpanther.ai'
-        });
-        setGeneratedSubject('');
-        setGeneratedBody('');
+        resetForm();
       }, 1000);
     } catch (error) {
       console.error('Error sending email:', error);
@@ -289,6 +415,143 @@ Format your response as JSON:
               </div>
             </div>
           </div>
+
+          {/* Campaign Management Section - Temporarily Disabled */}
+          {/* <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-blue-600" />
+                <h4 className="font-semibold text-blue-900">Email Campaign Progression</h4>
+              </div>
+              {!currentCampaign && (
+                <Button
+                  onClick={createCampaign}
+                  disabled={isCreatingCampaign}
+                  variant="outline"
+                  size="sm"
+                  className="border-blue-300 text-blue-700 hover:bg-blue-100"
+                >
+                  {isCreatingCampaign ? (
+                    <>
+                      <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3 h-3 mr-1" />
+                      Start Campaign
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
+
+            {currentCampaign ? (
+              <div className="space-y-3">
+                <div className="bg-white p-3 rounded border border-blue-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-blue-900">
+                      {currentCampaign.entityName} Campaign
+                    </span>
+                    <Badge variant="outline" className="text-xs">
+                      Stage {currentCampaign.currentStage + 1}/{currentCampaign.stages.length}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-gray-600 mb-3">
+                    Goal: {currentCampaign.campaignGoal}
+                  </p>
+                  
+                  <div className="space-y-2">
+                    {currentCampaign.stages.map((stage, index) => (
+                      <div
+                        key={stage.id}
+                        className={`p-2 rounded border cursor-pointer transition-colors ${
+                          index === currentCampaign.currentStage
+                            ? 'bg-blue-100 border-blue-400'
+                            : index < currentCampaign.currentStage
+                            ? 'bg-green-50 border-green-200'
+                            : 'bg-gray-50 border-gray-200'
+                        }`}
+                        onClick={() => setSelectedStage(stage)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium text-sm">{stage.name}</div>
+                            <div className="text-xs text-gray-600">{stage.estimatedDuration}</div>
+                          </div>
+                          {index < currentCampaign.currentStage && (
+                            <div className="text-green-600">
+                              <CheckCircle className="w-4 h-4" />
+                            </div>
+                          )}
+                          {index === currentCampaign.currentStage && (
+                            <div className="text-blue-600">
+                              <Target className="w-4 h-4" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {selectedStage && (
+                  <div className="bg-white p-3 rounded border border-blue-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <h5 className="font-medium text-sm">{selectedStage.name}</h5>
+                      <Button
+                        onClick={() => generateEmailForStage(selectedStage)}
+                        disabled={isGenerating}
+                        size="sm"
+                        className="bg-blue-600 hover:bg-blue-700"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                            Generating...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-3 h-3 mr-1" />
+                            Generate Email
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-gray-600 mb-2">{selectedStage.description}</p>
+                    <p className="text-xs text-gray-700"><strong>Purpose:</strong> {selectedStage.purpose}</p>
+                    <p className="text-xs text-gray-700"><strong>Tone:</strong> {selectedStage.tone}</p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="text-sm text-blue-800">
+                <p className="mb-2">Start a multi-stage email campaign with AI-powered content generation for each stage:</p>
+                <div className="grid grid-cols-1 gap-2 text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                    <span>Initial Introduction - Professional first contact</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                    <span>Warm Approach - Build relationship and demonstrate value</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                    <span>Detailed Proposal - Comprehensive solution presentation</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                    <span>Follow-up - Address questions and reinforce value</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                    <span>Final Closing - Secure commitment</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div> */}
 
           {/* AI Generation Prompt */}
           <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">

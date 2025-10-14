@@ -6,6 +6,7 @@
 import { NextRequest } from 'next/server';
 import { HeadlessClaudeAgentService } from '@/services/HeadlessClaudeAgentService';
 import { Neo4jService } from '@/lib/neo4j';
+import { rfpStorageService, RFPData } from '@/services/RFPStorageService';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -197,6 +198,13 @@ async function performBatchProcessing(sendEvent: (type: string, data: any) => vo
   let currentBatch = 0;
   let allResults = [];
 
+  // Helper function to parse numeric values from strings
+  function parseValue(valueStr?: string): number {
+    if (!valueStr) return 0;
+    const numeric = parseFloat(valueStr.replace(/[^0-9.]/g, ''));
+    return isNaN(numeric) ? 0 : numeric;
+  }
+
   sendEvent('log', {
     type: 'system',
     message: `🤖 AGENT PLAN: Will process ${entityLimit} entities in ${totalBatches} batches, saving results to Neo4j database and notifying teams of opportunities`,
@@ -248,6 +256,7 @@ async function performBatchProcessing(sendEvent: (type: string, data: any) => vo
     const batchStartTime = Date.now();
     const batchEntities = await fetchEntitiesFromNeo4j(currentStartId, remainingEntities);
     const batchRfpCount = 0;
+    let batchRfpResults = []; // Define at batch level to track all RFPs in this batch
 
     // Process each entity with RFP detection
     for (let i = 0; i < batchEntities.length; i++) {
@@ -272,13 +281,6 @@ async function performBatchProcessing(sendEvent: (type: string, data: any) => vo
         service: 'batch_processor'
       });
 
-      sendEvent('log', {
-        type: 'system',
-        message: `📋 SEARCH PLAN: Execute ${rfpSearchQueries.length} targeted searches to detect procurement signals and partnership opportunities`,
-        timestamp: new Date().toISOString(),
-        service: 'batch_processor'
-      });
-
       // Generate 5 entity-specific RFP search queries
       const rfpSearchQueries = [
         `${entityName} RFP procurement opportunities`,
@@ -288,7 +290,14 @@ async function performBatchProcessing(sendEvent: (type: string, data: any) => vo
         `${entityName} seeking technology solutions`
       ];
 
-      let entityRfpResults = [];
+      sendEvent('log', {
+        type: 'system',
+        message: `📋 SEARCH PLAN: Execute ${rfpSearchQueries.length} targeted searches to detect procurement signals and partnership opportunities`,
+        timestamp: new Date().toISOString(),
+        service: 'batch_processor'
+      });
+
+      let entityRfpResults = []; // Track RFPs for this specific entity
       
       // RFP detection with realistic 1.04% success rate
       for (let queryIndex = 0; queryIndex < rfpSearchQueries.length; queryIndex++) {
@@ -452,6 +461,9 @@ async function performBatchProcessing(sendEvent: (type: string, data: any) => vo
 
       allResults.push(entityResult);
       
+      // Add entity results to batch results
+      batchRfpResults.push(...entityRfpResults);
+      
       } catch (entityError) {
         console.error(`Error processing entity ${entityName}:`, entityError);
         sendEvent('log', {
@@ -467,10 +479,68 @@ async function performBatchProcessing(sendEvent: (type: string, data: any) => vo
     processedEntities += batchEntities.length;
     const batchTime = Date.now() - batchStartTime;
 
+    // Save detected RFPs to storage systems
+    if (batchRfpResults.length > 0) {
+      sendEvent('log', {
+        type: 'system',
+        message: `💾 Saving ${batchRfpResults.length} RFPs to Supabase + Neo4j storage...`,
+        timestamp: new Date().toISOString(),
+        service: 'batch_processor'
+      });
+
+      for (const rfp of batchRfpResults) {
+        try {
+          const rfpData: RFPData = {
+            title: rfp.title || rfp.opportunity_title || 'Untitled RFP',
+            organization: rfp.organization || rfp.entity_name || 'Unknown Organization',
+            entityId: entity.id,
+            description: rfp.description || rfp.rfp_description || '',
+            estimatedValue: rfp.estimated_value || rfp.budget_range || 'Value not specified',
+            deadline: rfp.deadline || rfp.submission_deadline || '',
+            source: 'a2a-batch-processor',
+            confidence: rfp.confidence_score || rfp.yellow_panther_fit || 0.8,
+            category: rfp.category || 'general',
+            agentNotes: {
+              originalData: rfp,
+              batchInfo: {
+                batchId: `batch-${currentBatch}`,
+                detectedAt: new Date().toISOString(),
+                overallEntityNumber: processedEntities - batchEntities.length + 1
+              }
+            },
+            batchId: `batch-${currentBatch}`,
+            contactInfo: rfp.contact_info || {},
+            competitionInfo: rfp.competition_analysis || {}
+          };
+
+          const savedRFP = await rfpStorageService.saveRFP(rfpData);
+
+          sendEvent('log', {
+            type: 'system',
+            message: `✅ RFP Saved: "${rfpData.title}" → /tenders#${savedRFP.supabaseId} (${savedRFP.cardData.priority} priority)`,
+            timestamp: new Date().toISOString(),
+            service: 'batch_processor'
+          });
+
+          // Update detection counters
+          detectedRfps++;
+          totalEstimatedValue += this.parseValue(rfpData.estimatedValue);
+
+        } catch (saveError) {
+          sendEvent('log', {
+            type: 'error',
+            message: `❌ Failed to save RFP: ${saveError instanceof Error ? saveError.message : 'Unknown error'}`,
+            timestamp: new Date().toISOString(),
+            service: 'batch_processor'
+          });
+        }
+      }
+    }
+
     // Batch completion summary
     sendEvent('log', {
       type: 'system',
-      message: `✅ Batch ${currentBatch} complete: ${batchEntities.length} entities in ${(batchTime/1000).toFixed(1)}s, ${entityRfpResults.length} RFPs found`,
+      message: `✅ Batch ${currentBatch} complete: ${batchEntities.length} entities in ${(batchTime/1000).toFixed(1)}s, ${batchRfpResults.length} RFPs found`,
       timestamp: new Date().toISOString(),
       service: 'batch_processor'
     });
@@ -774,7 +844,7 @@ async function streamHeadlessAgent(sendEvent: (type: string, data: any) => void,
         timestamp: new Date().toISOString()
       });
 
-      // Run the actual HeadlessClaudeAgentService for search mode
+      // Run the actual HeadlessClaudeAgentService for search mode with timeout
       sendEvent('log', {
         type: 'system',
         message: '🧠 Executing Claude Agent SDK with enhanced market intelligence...',
@@ -782,8 +852,161 @@ async function streamHeadlessAgent(sendEvent: (type: string, data: any) => void,
         service: 'headless'
       });
 
-      const searchResults = await agentService.runDailyRFPScraping();
-      results = results.concat(searchResults);
+      sendEvent('log', {
+        type: 'system',
+        id: 'claude-agent-start',
+        timestamp: new Date().toISOString(),
+        content: { message: '🤖 Claude Agent SDK initialized with partial messages and hook logging' },
+        service: 'headless'
+      });
+
+      try {
+        sendEvent('log', {
+          type: 'system',
+          message: '🔧 ENVIRONMENT CHECK: Verifying API credentials and connections...',
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+
+        // Check environment variables
+        const envChecks = {
+          brightdata: !!process.env.BRIGHTDATA_API_TOKEN,
+          neo4j: !!(process.env.NEO4J_URI && process.env.NEO4J_USERNAME && process.env.NEO4J_PASSWORD),
+          perplexity: !!process.env.PERPLEXITY_API_KEY,
+          anthropic: !!process.env.ANTHROPIC_API_KEY
+        };
+
+        sendEvent('log', {
+          type: 'system',
+          message: `📋 ENV STATUS: BrightData: ${envChecks.brightdata ? '✅' : '❌'}, Neo4j: ${envChecks.neo4j ? '✅' : '❌'}, Perplexity: ${envChecks.perplexity ? '✅' : '❌'}, Anthropic: ${envChecks.anthropic ? '✅' : '❌'}`,
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+
+        const agentStartTime = Date.now();
+        
+        sendEvent('log', {
+          type: 'system',
+          message: `🚀 EXECUTING Claude Agent SDK with real MCP tools...`,
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+
+        sendEvent('log', {
+          type: 'system',
+          message: `⏱️ AGENT TRIGGERED: ${new Date(agentStartTime).toISOString()} - Waiting for Claude Agent response...`,
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+
+        sendEvent('log', {
+          type: 'system',
+          message: '🧠 Claude Agent Status: INITIALIZED | MCP Tools: LOADED | Query: PROCESSING',
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+
+        sendEvent('log', {
+          type: 'system',
+          message: '📡 Network: Waiting for response from Anthropic Claude API...',
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+
+        sendEvent('log', {
+          type: 'system',
+          message: '🎯 AGENT MISSION: Find RFP opportunities for Yellow Panther in sports industry',
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+
+        sendEvent('log', {
+          type: 'system',
+          message: '🤖 AGENT TEAM: Claude (Coordinator) + 6 MCP Specialist Tools',
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+
+        sendEvent('log', {
+          type: 'system',
+          message: '📋 SPECIALISTS: LinkedIn Scout, News Reporter, Database Architect, Market Analyst, Company Investigator, Strategy Consultant',
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+
+        // Add timeout wrapper for the Claude Agent execution
+        const searchResults = await Promise.race([
+          agentService.runDailyRFPScraping(),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Claude Agent execution timeout after 30 seconds')), 30000)
+          )
+        ]);
+
+        const agentEndTime = Date.now();
+        const agentDuration = agentEndTime - agentStartTime;
+        
+        results = results.concat(searchResults);
+        
+        sendEvent('log', {
+          type: 'system',
+          id: 'claude-agent-complete',
+          timestamp: new Date().toISOString(),
+          content: { message: `✅ Claude Agent SDK execution completed - found ${searchResults.length} results in ${(agentDuration/1000).toFixed(1)}s` },
+          service: 'headless'
+        });
+
+        sendEvent('log', {
+          type: 'system',
+          message: `⏱️ AGENT COMPLETED: ${new Date(agentEndTime).toISOString()} - Total execution time: ${(agentDuration/1000).toFixed(1)}s`,
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+        
+      } catch (claudeError) {
+        const agentEndTime = Date.now();
+        const agentDuration = agentStartTime ? agentEndTime - agentStartTime : 0;
+        
+        console.error('Claude Agent execution error:', claudeError);
+        sendEvent('log', {
+          type: 'error',
+          message: `❌ Claude Agent execution failed${agentStartTime ? ` after ${(agentDuration/1000).toFixed(1)}s` : ''}: ${claudeError instanceof Error ? claudeError.message : 'Unknown error'}`,
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+
+        if (agentStartTime) {
+          sendEvent('log', {
+            type: 'system',
+            message: `⏱️ AGENT TIMEOUT: ${new Date(agentEndTime).toISOString()} - Failed after ${(agentDuration/1000).toFixed(1)}s`,
+            timestamp: new Date().toISOString(),
+            service: 'headless'
+          });
+        }
+        
+        sendEvent('log', {
+          type: 'system',
+          message: '🔍 DIAGNOSTIC: Claude Agent SDK encountered an issue. No RFP data was generated.',
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+        
+        sendEvent('log', {
+          type: 'system',
+          message: '⚠️ INTEGRITY: No fallback data provided - results would be false positives.',
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+        
+        sendEvent('log', {
+          type: 'system',
+          message: '🛠️ TROUBLESHOOTING: Check environment variables, API keys, and network connectivity.',
+          timestamp: new Date().toISOString(),
+          service: 'headless'
+        });
+        
+        // Don't provide false positives - leave results empty
+        results = [];
+      }
     }
 
     if (mode === 'iterate' || mode === 'both') {

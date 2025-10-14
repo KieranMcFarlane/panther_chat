@@ -1,576 +1,648 @@
-'use client'
+/**
+ * 🏆 Tenders Page
+ * 
+ * Live tender opportunities from our comprehensive RFP analysis system (40 real opportunities)
+ */
 
-import { useState, useEffect } from 'react'
-import { Search, Filter, Calendar, MapPin, PoundSterling, Building, Clock, ExternalLink, TrendingUp, Trophy, Target, Zap, Star, Database, Network, Settings, Eye, Globe, Linkedin, Users } from 'lucide-react'
+'use client';
 
-interface Tender {
-  title: string
-  type: string
-  value: string
-  deadline: string
-  description: string
-  status: string
-  url: string
-  source: string
-  publishedDate: string
-  organization: string
-  location: string
-  category: string
-  estimatedValue: number
-  contractType: string
-  opportunityType: string
-  suitableForSME: boolean
-  cpvCode: string
-}
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { 
+  Search, 
+  Building2, 
+  MapPin, 
+  PoundSterling, 
+  Calendar, 
+  ExternalLink, 
+  RefreshCw, 
+  Filter, 
+  Download,
+  Eye,
+  Target,
+  Clock,
+  Plus,
+  TrendingUp
+} from 'lucide-react';
 
-interface TenderData {
-  status: string
-  tenders: Tender[]
-  statistics: {
-    total_tenders: number
-    open_tenders: number
-    linkedin_tenders: number
-    isportconnect_tenders: number
-  }
-  data_source: string
-  last_updated: string
-}
+// Import comprehensive RFP opportunities from shared database
+import { comprehensiveRfpOpportunities } from '@/lib/comprehensive-rfp-opportunities';
+import { rfpStorageService } from '@/services/RFPStorageService';
+import { supabase } from '@/lib/supabase-client';
+
+const realOpportunities = comprehensiveRfpOpportunities;
 
 export default function TendersPage() {
-  const [data, setData] = useState<TenderData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [filterSource, setFilterSource] = useState<string>('all')
-  const [filterStatus, setFilterStatus] = useState<string>('all')
-
-  useEffect(() => {
-    // Load mock data instead of fetching from external API
-    loadMockTenders()
-  }, [])
-
-  const loadMockTenders = () => {
-    setLoading(true)
-    
-    // Mock tender data
-    const mockData: TenderData = {
-      status: "success",
-      data_source: "Mock Data",
-      last_updated: new Date().toISOString(),
-      statistics: {
-        total_tenders: 12,
-        open_tenders: 8,
-        linkedin_tenders: 7,
-        isportconnect_tenders: 5
-      },
-      tenders: [
-        {
-          title: "Digital Transformation Partnership - Premier League Club",
-          type: "RFP",
-          value: "£2.5M",
-          deadline: "2024-03-15",
-          description: "Seeking innovative technology partner for comprehensive digital transformation including CRM implementation, fan engagement platform, and data analytics solutions.",
-          status: "Open",
-          url: "https://example.com/tender/1",
-          source: "LinkedIn",
-          publishedDate: "2024-01-15",
-          organization: "Arsenal FC",
-          location: "London, UK",
-          category: "Technology",
-          estimatedValue: 2500000,
-          contractType: "Partnership",
-          opportunityType: "Digital Transformation",
-          suitableForSME: true,
-          cpvCode: "72000000"
-        },
-        {
-          title: "Stadium Wi-Fi Upgrade Project",
-          type: "Tender",
-          value: "£850K",
-          deadline: "2024-02-28",
-          description: "Complete overhaul of stadium wireless infrastructure to support 60,000+ concurrent users with premium fan experience features.",
-          status: "Open",
-          url: "https://example.com/tender/2",
-          source: "iSportConnect",
-          publishedDate: "2024-01-20",
-          organization: "Manchester United",
-          location: "Manchester, UK",
-          category: "Infrastructure",
-          estimatedValue: 850000,
-          contractType: "Fixed Price",
-          opportunityType: "Network Infrastructure",
-          suitableForSME: false,
-          cpvCode: "32400000"
-        },
-        {
-          title: "Sports Analytics Platform Development",
-          type: "RFP",
-          value: "£1.2M",
-          deadline: "2024-03-30",
-          description: "Development of advanced sports performance analytics platform with AI-powered insights and real-time data visualization capabilities.",
-          status: "Open",
-          url: "https://example.com/tender/3",
-          source: "LinkedIn",
-          publishedDate: "2024-01-18",
-          organization: "Chelsea FC",
-          location: "London, UK",
-          category: "Analytics",
-          estimatedValue: 1200000,
-          contractType: "Development Contract",
-          opportunityType: "Software Development",
-          suitableForSME: true,
-          cpvCode: "48000000"
-        },
-        {
-          title: "Fan Engagement Mobile App",
-          type: "Contract",
-          value: "£750K",
-          deadline: "2024-04-15",
-          description: "Design and development of cutting-edge mobile application for fan engagement including AR features, loyalty programs, and ticketing integration.",
-          status: "Open",
-          url: "https://example.com/tender/4",
-          source: "iSportConnect",
-          publishedDate: "2024-01-22",
-          organization: "Liverpool FC",
-          location: "Liverpool, UK",
-          category: "Mobile Development",
-          estimatedValue: 750000,
-          contractType: "Software License",
-          opportunityType: "Mobile Application",
-          suitableForSME: true,
-          cpvCode: "48000000"
-        },
-        {
-          title: "Cybersecurity Assessment & Implementation",
-          type: "RFT",
-          value: "£500K",
-          deadline: "2024-02-15",
-          description: "Comprehensive cybersecurity assessment and implementation of advanced threat protection systems for club infrastructure and fan data.",
-          status: "Open",
-          url: "https://example.com/tender/5",
-          source: "LinkedIn",
-          publishedDate: "2024-01-25",
-          organization: "Tottenham Hotspur",
-          location: "London, UK",
-          category: "Security",
-          estimatedValue: 500000,
-          contractType: "Service Contract",
-          opportunityType: "Cybersecurity",
-          suitableForSME: false,
-          cpvCode: "72200000"
-        },
-        {
-          title: "E-commerce Platform Integration",
-          type: "Tender",
-          value: "£950K",
-          deadline: "2024-03-20",
-          description: "Integration of comprehensive e-commerce solution with existing ticketing and merchandise systems, including personalized shopping experiences.",
-          status: "Open",
-          url: "https://example.com/tender/6",
-          source: "iSportConnect",
-          publishedDate: "2024-01-28",
-          organization: "Manchester City",
-          location: "Manchester, UK",
-          category: "E-commerce",
-          estimatedValue: 950000,
-          contractType: "Integration Contract",
-          opportunityType: "E-commerce",
-          suitableForSME: true,
-          cpvCode: "48000000"
-        },
-        {
-          title: "Broadcast Technology Upgrade",
-          type: "RFP",
-          value: "£3.2M",
-          deadline: "2024-05-01",
-          description: "Complete upgrade of broadcast technology including 4K/8K capabilities, virtual production studio, and streaming infrastructure for global content distribution.",
-          status: "Open",
-          url: "https://example.com/tender/7",
-          source: "LinkedIn",
-          publishedDate: "2024-01-30",
-          organization: "Sky Sports",
-          location: "London, UK",
-          category: "Broadcast",
-          estimatedValue: 3200000,
-          contractType: "Supply Contract",
-          opportunityType: "Broadcast Technology",
-          suitableForSME: false,
-          cpvCode: "32200000"
-        },
-        {
-          title: "Sustainability Consulting Services",
-          type: "Contract",
-          value: "£400K",
-          deadline: "2024-04-30",
-          description: "Consulting services for developing comprehensive sustainability strategy including carbon footprint reduction and green stadium initiatives.",
-          status: "Open",
-          url: "https://example.com/tender/8",
-          source: "iSportConnect",
-          publishedDate: "2024-02-01",
-          organization: "Premier League",
-          location: "London, UK",
-          category: "Consulting",
-          estimatedValue: 400000,
-          contractType: "Service Agreement",
-          opportunityType: "Sustainability",
-          suitableForSME: true,
-          cpvCode: "79400000"
-        },
-        {
-          title: "AI-Powered Player Performance Analysis",
-          type: "RFT",
-          value: "£1.8M",
-          deadline: "2024-03-10",
-          description: "Implementation of AI and machine learning systems for advanced player performance analysis, injury prediction, and tactical optimization.",
-          status: "Closed",
-          url: "https://example.com/tender/9",
-          source: "LinkedIn",
-          publishedDate: "2024-01-10",
-          organization: "Bayern Munich",
-          location: "Munich, Germany",
-          category: "AI/ML",
-          estimatedValue: 1800000,
-          contractType: "Research Contract",
-          opportunityType: "Artificial Intelligence",
-          suitableForSME: false,
-          cpvCode: "73000000"
-        },
-        {
-          title: "Virtual Reality Training Facility",
-          type: "RFP",
-          value: "£2.1M",
-          deadline: "2024-06-15",
-          description: "Design and implementation of state-of-the-art VR training facility for player development, tactical training, and fan entertainment experiences.",
-          status: "Open",
-          url: "https://example.com/tender/10",
-          source: "LinkedIn",
-          publishedDate: "2024-02-05",
-          organization: "Real Madrid",
-          location: "Madrid, Spain",
-          category: "VR/AR",
-          estimatedValue: 2100000,
-          contractType: "Project Contract",
-          opportunityType: "Virtual Reality",
-          suitableForSME: false,
-          cpvCode: "32200000"
-        },
-        {
-          title: "Data Center Modernization",
-          type: "Tender",
-          value: "£1.5M",
-          deadline: "2024-04-10",
-          description: "Complete modernization of data center infrastructure including cloud migration, high-performance computing, and disaster recovery systems.",
-          status: "Open",
-          url: "https://example.com/tender/11",
-          source: "iSportConnect",
-          publishedDate: "2024-02-08",
-          organization: "UEFA",
-          location: "Nyon, Switzerland",
-          category: "Infrastructure",
-          estimatedValue: 1500000,
-          contractType: "Turnkey Project",
-          opportunityType: "Data Center",
-          suitableForSME: false,
-          cpvCode: "45300000"
-        },
-        {
-          title: "Smart Stadium IoT Integration",
-          type: "Contract",
-          value: "£680K",
-          deadline: "2024-05-20",
-          description: "Integration of IoT sensors and systems for smart stadium management including crowd monitoring, energy optimization, and enhanced fan experiences.",
-          status: "Open",
-          url: "https://example.com/tender/12",
-          source: "LinkedIn",
-          publishedDate: "2024-02-12",
-          organization: "Juventus FC",
-          location: "Turin, Italy",
-          category: "IoT",
-          estimatedValue: 680000,
-          contractType: "Integration Services",
-          opportunityType: "Internet of Things",
-          suitableForSME: true,
-          cpvCode: "32000000"
-        }
-      ]
-    }
-    
-    setTimeout(() => {
-      setData(mockData)
-      setLoading(false)
-      setError(null)
-    }, 1000) // Simulate loading time
-  }
-
-  const fetchTenders = async () => {
-    // Keep original fetch function for future use
-    try {
-      setLoading(true)
-      const response = await fetch('http://localhost:8000/api/tenders/enhanced?t=' + Date.now())
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+  const [opportunities, setOpportunities] = useState([]);
+  const [detectedRFPs, setDetectedRFPs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [showDetectedOnly, setShowDetectedOnly] = useState(false);
+  const [rfpStats, setRfpStats] = useState({ total: 0, recent: 0 });
+  // Calculate initial stats from real opportunities
+  const [stats, setStats] = useState(() => {
+    const totalValueEstimate = realOpportunities.reduce((sum, opp) => {
+      const match = opp.value.match(/£?([\d.]+)([KM])/);
+      if (match) {
+        const value = parseFloat(match[1]);
+        const multiplier = match[2] === 'M' ? 1000 : (match[2] === 'K' ? 1 : 1);
+        return sum + (value * multiplier);
       }
-      const result = await response.json()
-      setData(result)
-      setError(null)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch tenders')
-    } finally {
-      setLoading(false)
+      return sum;
+    }, 0);
+
+    const urgentDeadlines = realOpportunities.filter(opp => {
+      if (!opp.deadline) return false;
+      const days = Math.ceil((new Date(opp.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+      return days !== null && days <= 30 && days > 0;
+    }).length;
+
+    const avgFitScore = realOpportunities.length > 0 ? Math.round(realOpportunities.reduce((sum, opp) => sum + opp.yellow_panther_fit, 0) / realOpportunities.length) : 0;
+
+    return {
+      total_opportunities: realOpportunities.length,
+      total_value_millions: totalValueEstimate > 1000 ? `${Math.round(totalValueEstimate/1000)}+` : `${Math.round(totalValueEstimate)}`,
+      urgent_deadlines: urgentDeadlines,
+      average_fit_score: avgFitScore
+    };
+  });
+
+  // Function to calculate stats from opportunities array
+  const calculateStatsFromOpportunities = (opps) => {
+    const totalValueEstimate = opps.reduce((sum, opp) => {
+      const match = opp.value.match(/£?([\d.]+)([KM])/);
+      if (match) {
+        const value = parseFloat(match[1]);
+        const multiplier = match[2] === 'M' ? 1000 : (match[2] === 'K' ? 1 : 1);
+        return sum + (value * multiplier);
+      }
+      return sum;
+    }, 0);
+
+    const urgentDeadlines = opps.filter(opp => {
+      if (!opp.deadline) return false;
+      const days = Math.ceil((new Date(opp.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+      return days !== null && days <= 30 && days > 0;
+    }).length;
+
+    const avgFitScore = opps.length > 0 ? Math.round(opps.reduce((sum, opp) => sum + opp.yellow_panther_fit, 0) / opps.length) : 0;
+
+    return {
+      total_opportunities: opps.length,
+      total_value_millions: totalValueEstimate > 1000 ? `${Math.round(totalValueEstimate/1000)}+` : `${Math.round(totalValueEstimate)}`,
+      urgent_deadlines: urgentDeadlines,
+      average_fit_score: avgFitScore
+    };
+  };
+
+  // Load detected RFPs from Supabase
+  useEffect(() => {
+    const loadDetectedRFPs = async () => {
+      try {
+        const rfps = await rfpStorageService.getRFPs({ 
+          limit: 50,
+          orderBy: 'detected_at',
+          orderDirection: 'desc'
+        });
+        
+        console.log(`🎯 Loaded ${rfps.length} detected RFPs from Supabase`);
+        
+        setDetectedRFPs(rfps);
+        
+        // Calculate RFP stats
+        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        const recentRFPs = rfps.filter(rfp => new Date(rfp.detected_at) > weekAgo);
+        
+        setRfpStats({
+          total: rfps.length,
+          recent: recentRFPs.length
+        });
+        
+      } catch (error) {
+        console.error('❌ Error loading detected RFPs:', error);
+        setDetectedRFPs([]);
+        setRfpStats({ total: 0, recent: 0 });
+      }
+    };
+
+    loadDetectedRFPs();
+    
+    // Set up real-time subscription for new RFPs
+    const subscription = supabase
+      .channel('rfp-changes')
+      .on('postgres_changes', 
+        { 
+          event: 'INSERT', 
+          schema: 'public', 
+          table: 'rfps' 
+        }, 
+        (payload) => {
+          console.log('🆕 New RFP detected:', payload.new);
+          setDetectedRFPs(prev => [payload.new, ...prev].slice(0, 50));
+          setRfpStats(prev => ({
+            ...prev,
+            total: prev.total + 1,
+            recent: prev.recent + 1
+          }));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Load real RFP data
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      
+      // Try to load from API first, fallback to our comprehensive data
+      try {
+        const response = await fetch('/api/tenders?action=opportunities&limit=100&t=' + Date.now());
+        const data = await response.json();
+        
+        let loadedOpportunities;
+        if (data.opportunities && data.opportunities.length > 0) {
+          loadedOpportunities = data.opportunities;
+        } else {
+          loadedOpportunities = realOpportunities;
+        }
+        
+        console.log(`📊 Loaded ${loadedOpportunities.length} opportunities from API`);
+        console.log('📊 Sample opportunity:', loadedOpportunities[0]);
+        setOpportunities(loadedOpportunities);
+        setStats(calculateStatsFromOpportunities(loadedOpportunities));
+      } catch (error) {
+        console.log('❌ Error loading from API, using local data:', error.message);
+        console.log(`📊 Using local data: ${realOpportunities.length} opportunities`);
+        setOpportunities(realOpportunities);
+        setStats(calculateStatsFromOpportunities(realOpportunities));
+      }
+      
+      setLoading(false);
+    };
+    
+    loadData();
+  }, []);
+
+  const filteredOpportunities = opportunities.filter(opp => {
+    const matchesSearch = opp.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         opp.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         opp.category.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Enhanced status filtering
+    let matchesStatus = filterStatus === 'all';
+    if (!matchesStatus) {
+      const status = opp.status ? opp.status.toLowerCase() : '';
+      if (filterStatus === 'qualified') {
+        matchesStatus = status.includes('qualified') || status.includes('active');
+      } else if (filterStatus === 'expired') {
+        matchesStatus = status.includes('expired') || (opp.deadline && new Date(opp.deadline) < new Date());
+      } else if (filterStatus === 'active') {
+        matchesStatus = status.includes('active') && (!opp.deadline || new Date(opp.deadline) >= new Date());
+      } else if (filterStatus === 'emerging') {
+        matchesStatus = status.includes('emerging') || status.includes('potential');
+      } else {
+        matchesStatus = status === filterStatus;
+      }
     }
-  }
-
-  const filteredTenders = data?.tenders?.filter(tender => {
-    const matchesSearch = tender.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         tender.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         tender.organization.toLowerCase().includes(searchQuery.toLowerCase())
     
-    const matchesSource = filterSource === 'all' || tender.source === filterSource
-    const matchesStatus = filterStatus === 'all' || tender.status === filterStatus
+    return matchesSearch && matchesStatus;
+  });
+
+  console.log(`🔍 Filter results: ${filteredOpportunities.length} of ${opportunities.length} opportunities (filter: ${filterStatus}, search: "${searchTerm}")`);
+
+  // Filter detected RFPs
+  const filteredDetectedRFPs = detectedRFPs.filter(rfp => {
+    const matchesSearch = searchTerm === '' || 
+      rfp.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      rfp.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (rfp.description && rfp.description.toLowerCase().includes(searchTerm.toLowerCase()));
     
-    return matchesSearch && matchesSource && matchesStatus
-  }) || []
+    let matchesStatus = true;
+    if (filterStatus !== 'all') {
+      matchesStatus = rfp.status === filterStatus || rfp.priority === filterStatus;
+    }
+    
+    return matchesSearch && matchesStatus;
+  });
 
-  if (loading) {
+  // Combine results based on toggle
+  const displayOpportunities = showDetectedOnly ? [] : filteredOpportunities;
+  const displayRFPs = showDetectedOnly ? filteredDetectedRFPs : [];
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate refresh
+    setLoading(false);
+  };
+
+  const handleExport = () => {
+    const csv = [
+      ['Title', 'Organization', 'Location', 'Value', 'Deadline', 'Status', 'Category', 'Fit Score', 'Contact'],
+      ...filteredOpportunities.map(opp => [
+        opp.title,
+        opp.organization,
+        opp.location,
+        opp.value,
+        opp.deadline ? new Date(opp.deadline).toLocaleDateString() : '',
+        opp.status,
+        opp.category,
+        opp.yellow_panther_fit,
+        opp.contact || ''
+      ])
+    ].map(row => row.join(',')).join('\n');
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `yellow-panther-rfp-opportunities-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const getFitColor = (fit: number) => {
+    if (fit >= 90) return 'bg-green-500';
+    if (fit >= 80) return 'bg-yellow-500';
+    return 'bg-red-500';
+  };
+
+  const getDaysUntilDeadline = (deadline: string | null | undefined) => {
+    if (!deadline) return null;
+    const days = Math.ceil((new Date(deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+    return days;
+  };
+
+  const getStatusVariant = (status: string) => {
+    if (status.toUpperCase().includes('ACTIVE')) return 'default';
+    if (status.toUpperCase().includes('EMERGING')) return 'secondary';
+    return 'outline';
+  };
+
+  // Helper function to generate tender cards
+  const generateTenderCard = (opportunity, index) => {
+    const daysUntil = getDaysUntilDeadline(opportunity.deadline);
+    const fitColor = getFitColor(opportunity.yellow_panther_fit);
+    const isExpired = daysUntil !== null && daysUntil < 0;
+    const isUrgent = daysUntil !== null && daysUntil <= 30 && daysUntil > 0;
+
     return (
-      <div className="min-h-screen bg-custom-bg flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-fm-yellow mx-auto mb-4"></div>
-          <p className="font-body-primary text-fm-medium-grey">Loading tenders...</p>
+      <div key={opportunity.id || index} className="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-lg transition-shadow">
+        <div className="flex flex-col space-y-1.5 p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <h3 className="font-semibold tracking-tight text-lg mb-2">{opportunity.title}</h3>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                <Building2 className="w-4 h-4" />
+                <span>{opportunity.organization}</span>
+                <MapPin className="w-4 h-4 ml-2" />
+                <span>{opportunity.location}</span>
+              </div>
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              <Badge variant={getStatusVariant(opportunity.status)}>
+                {isExpired ? 'Expired' : opportunity.status || 'Active'}
+              </Badge>
+              <div className={`px-2 py-1 rounded text-white text-xs ${fitColor}`}>
+                {opportunity.yellow_panther_fit}% Fit
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-custom-bg flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-fm-red text-xl mb-4 font-subheader">⚠️ Error loading tenders</div>
-          <p className="font-body-primary text-fm-medium-grey mb-4">{error instanceof Error ? error.message : String(error)}</p>
-          <button 
-            onClick={loadMockTenders}
-            className="px-4 py-2 bg-fm-yellow text-custom-bg font-body-medium rounded hover:bg-yellow-400 transition-colors"
-          >
-            Load Demo Data
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-custom-bg">
-      {/* Header */}
-      <div className="bg-custom-box shadow-sm border-b border-custom-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="p-6 pt-0">
+          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+            {opportunity.description}
+          </p>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-1">
+                <PoundSterling className="w-4 h-4" />
+                <span className="font-medium">{opportunity.value}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                <span className={isUrgent ? 'text-red-600 font-medium' : ''}>
+                  {daysUntil !== null ? (
+                    daysUntil > 0 ? `${daysUntil} days` : 'Expired'
+                  ) : (
+                    'No deadline'
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Target className="w-3 h-3" />
+              <span>Priority: {opportunity.priority_score}/10</span>
+            </div>
+          </div>
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="font-header-large text-fm-white mb-2">🏆 Live Tender Opportunities</h1>
-              <p className="font-body-primary text-fm-medium-grey">Real-time RFP and tender data from LinkedIn and iSportConnect</p>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-xs">
+                {opportunity.category}
+              </Badge>
+              <Badge variant="outline" className="text-xs">
+                {opportunity.type || 'RFP'}
+              </Badge>
             </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={loadMockTenders}
-                className="px-4 py-2 bg-fm-yellow text-custom-bg font-body-medium rounded-lg hover:bg-yellow-400 transition-colors flex items-center space-x-2"
-              >
-                <Database className="w-4 h-4" />
-                <span>Refresh Data</span>
-              </button>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline">
+                <Eye className="w-4 h-4 mr-1" />
+                View
+              </Button>
+              {opportunity.url && (
+                <Button size="sm" variant="outline" asChild>
+                  <a 
+                    href={opportunity.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1"
+                  >
+                    <ExternalLink className="w-4 h-4 mr-1" />
+                    Source
+                  </a>
+                </Button>
+              )}
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Statistics */}
-      {data?.statistics && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-custom-box border border-custom-border rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Trophy className="w-6 h-6 text-blue-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="font-body-secondary text-fm-meta">Total Tenders</p>
-                  <p className="font-highlight text-fm-white">{data.statistics.total_tenders}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-custom-box border border-custom-border rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <Eye className="w-6 h-6 text-green-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="font-body-secondary text-fm-meta">Open Tenders</p>
-                  <p className="font-highlight text-fm-green">{data.statistics.open_tenders}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-custom-box border border-custom-border rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Linkedin className="w-6 h-6 text-purple-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="font-body-secondary text-fm-meta">LinkedIn</p>
-                  <p className="font-highlight text-fm-white">{data.statistics.linkedin_tenders}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-custom-box border border-custom-border rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="p-2 bg-orange-100 rounded-lg">
-                  <Globe className="w-6 h-6 text-orange-600" />
-                </div>
-                <div className="ml-4">
-                  <p className="font-body-secondary text-fm-meta">iSportConnect</p>
-                  <p className="font-highlight text-fm-white">{data.statistics.isportconnect_tenders}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Filters and Search */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-custom-box border border-custom-border rounded-lg shadow p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block font-body-medium text-fm-light-grey mb-2">Search Tenders</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-fm-meta w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search by title, description, or organization..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-custom-border rounded-lg focus:ring-2 focus:ring-fm-yellow focus:border-transparent bg-custom-bg text-fm-white placeholder-fm-meta font-body-primary"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="block font-body-medium text-fm-light-grey mb-2">Source</label>
-              <select
-                value={filterSource}
-                onChange={(e) => setFilterSource(e.target.value)}
-                className="w-full px-3 py-2 border border-custom-border rounded-lg focus:ring-2 focus:ring-fm-yellow focus:border-transparent bg-custom-bg text-fm-white font-body-primary"
-              >
-                <option value="all">All Sources</option>
-                <option value="LinkedIn">LinkedIn</option>
-                <option value="iSportConnect">iSportConnect</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block font-body-medium text-fm-light-grey mb-2">Status</label>
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="w-full px-3 py-2 border border-custom-border rounded-lg focus:ring-2 focus:ring-fm-yellow focus:border-transparent bg-custom-bg text-fm-white font-body-primary"
-              >
-                <option value="all">All Statuses</option>
-                <option value="Open">Open</option>
-                <option value="Closed">Closed</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Tenders List */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-custom-box border border-custom-border rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-custom-border">
-            <h2 className="font-subheader text-fm-white">
-              {filteredTenders.length} Tenders Found
-            </h2>
-            <p className="font-meta text-fm-meta mt-1">
-              Last updated: {data?.last_updated || 'Unknown'}
-            </p>
           </div>
           
-          <div className="divide-y divide-custom-border">
-            {filteredTenders.map((tender, index) => (
-              <div key={index} className="p-6 hover:bg-custom-bg transition-colors">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <h3 className="font-subheader text-fm-white">{tender.title}</h3>
-                      <span className={`px-2 py-1 text-xs font-body-medium rounded-full ${
-                        tender.status === 'Open' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {tender.status}
-                      </span>
-                      <span className="px-2 py-1 text-xs font-body-medium bg-blue-100 text-blue-800 rounded-full">
-                        {tender.type}
-                      </span>
-                    </div>
-                    
-                    <p className="font-body-primary text-fm-medium-grey mb-3">{tender.description}</p>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div className="flex items-center space-x-2">
-                        <Building className="w-4 h-4 text-fm-meta" />
-                        <span className="font-body-secondary text-fm-medium-grey">{tender.organization || 'N/A'}</span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <MapPin className="w-4 h-4 text-fm-meta" />
-                        <span className="font-body-secondary text-fm-medium-grey">{tender.location || 'N/A'}</span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <PoundSterling className="w-4 h-4 text-fm-meta" />
-                        <span className="font-body-secondary text-fm-medium-grey">{tender.value || 'TBD'}</span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Calendar className="w-4 h-4 text-fm-meta" />
-                        <span className="font-body-secondary text-fm-medium-grey">{tender.deadline || 'N/A'}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-3 flex items-center space-x-4 text-sm text-fm-meta font-meta">
-                      <span>Source: {tender.source}</span>
-                      <span>Published: {tender.publishedDate}</span>
-                      {tender.category && <span>Category: {tender.category}</span>}
-                    </div>
-                  </div>
-                  
-                  <div className="ml-4 flex flex-col space-y-2">
-                    <a
-                      href={tender.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-3 py-2 border border-custom-border shadow-sm text-sm leading-4 font-body-medium rounded-md text-fm-light-grey bg-custom-box hover:bg-custom-bg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fm-yellow"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View
-                    </a>
-                  </div>
-                </div>
+          {opportunity.contact && (
+            <div className="mt-3 pt-3 border-t border-border">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span className="font-medium">Contact:</span>
+                <span>{opportunity.contact}</span>
               </div>
-            ))}
-          </div>
-          
-          {filteredTenders.length === 0 && (
-            <div className="p-12 text-center">
-              <div className="text-fm-meta mb-4">
-                <Search className="w-12 h-12 mx-auto" />
-              </div>
-              <h3 className="font-subheader text-fm-white mb-2">No tenders found</h3>
-              <p className="font-body-primary text-fm-medium-grey">Try adjusting your search criteria or filters.</p>
             </div>
           )}
         </div>
       </div>
+    );
+  };
+
+  // Function to render detected RFP cards
+  const generateRFPCard = (rfp, index) => {
+    const getPriorityColor = (priority) => {
+      switch (priority) {
+        case 'critical': return 'bg-red-500';
+        case 'high': return 'bg-orange-500';
+        case 'medium': return 'bg-yellow-500';
+        case 'low': return 'bg-green-500';
+        default: return 'bg-gray-500';
+      }
+    };
+
+    const getStatusColor = (status) => {
+      switch (status) {
+        case 'detected': return 'bg-blue-500';
+        case 'analyzing': return 'bg-purple-500';
+        case 'pursued': return 'bg-green-500';
+        case 'won': return 'bg-emerald-500';
+        case 'lost': return 'bg-red-500';
+        default: return 'bg-gray-500';
+      }
+    };
+
+    return (
+      <div key={rfp.id || index} className="rounded-lg border bg-card text-card-foreground shadow-sm hover:shadow-lg transition-shadow border-green-200">
+        <div className="flex flex-col space-y-1.5 p-6">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <Badge className="bg-green-100 text-green-800 border-green-200 text-xs">
+                  <Target className="w-3 h-3 mr-1" />
+                  AI Detected
+                </Badge>
+                <Badge className={`${getPriorityColor(rfp.priority)} text-white text-xs`}>
+                  {rfp.priority}
+                </Badge>
+              </div>
+              <h3 className="font-semibold tracking-tight text-lg mb-2">{rfp.title}</h3>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                <Building2 className="w-4 h-4" />
+                <span>{rfp.organization}</span>
+              </div>
+              {rfp.description && (
+                <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                  {rfp.description}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              <Badge className={`${getStatusColor(rfp.status)} text-white text-xs`}>
+                {rfp.status}
+              </Badge>
+              <div className="text-right">
+                <div className="font-semibold text-green-600">{rfp.estimated_value}</div>
+                <div className="text-xs text-gray-500">
+                  {rfp.confidence}% match
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between pt-2 border-t">
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              {rfp.deadline && (
+                <div className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  <span>{new Date(rfp.deadline).toLocaleDateString()}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                <span>{new Date(rfp.detected_at).toLocaleDateString()}</span>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Badge variant="outline" className="text-xs">
+                {rfp.category}
+              </Badge>
+              <Button size="sm" variant="outline" className="text-xs">
+                <Eye className="w-3 h-3 mr-1" />
+                View
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-background p-6">
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">🏆 Live Tender Opportunities</h1>
+            <p className="text-muted-foreground">
+              Comprehensive RFP intelligence from Yellow Panther analysis • {realOpportunities.length} opportunities (50 total available) from 19+ analysis batches covering 4,750+ entities
+            </p>
+            {rfpStats.total > 0 && (
+              <div className="flex items-center gap-4 mt-2">
+                <Badge className="bg-green-100 text-green-800 border-green-200">
+                  <Plus className="w-3 h-3 mr-1" />
+                  {rfpStats.total} AI-Detected RFPs
+                </Badge>
+                {rfpStats.recent > 0 && (
+                  <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                    <TrendingUp className="w-3 h-3 mr-1" />
+                    {rfpStats.recent} new this week
+                  </Badge>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => setShowDetectedOnly(!showDetectedOnly)} 
+              variant={showDetectedOnly ? "default" : "outline"}
+              className={showDetectedOnly ? "bg-green-600 hover:bg-green-700" : ""}
+            >
+              <Target className="w-4 h-4 mr-2" />
+              {showDetectedOnly ? "AI-Detected RFPs" : "All Opportunities"}
+            </Button>
+            <Button onClick={handleRefresh} disabled={loading} variant="outline">
+              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+            <Button onClick={handleExport} variant="outline">
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Opportunities</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.total_opportunities}</div>
+            <div className="text-xs text-green-500 mt-1">From Comprehensive Analysis</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Pipeline Value</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">£{stats.total_value_millions}M</div>
+            <div className="text-xs text-blue-500 mt-1">Confirmed Opportunities</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Urgent Deadlines</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{stats.urgent_deadlines}</div>
+            <div className="text-xs text-muted-foreground mt-1">Next 30 days</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Average Fit Score</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.average_fit_score}%</div>
+            <div className="text-xs text-green-500 mt-1">Yellow Panther Alignment</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters */}
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search opportunities by title, organization, or category..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="px-3 py-2 border border-input bg-background rounded-md"
+            >
+              <option value="all">All Status</option>
+              <option value="qualified">Qualified</option>
+              <option value="expired">Expired</option>
+              <option value="emerging">Emerging</option>
+              <option value="active">Active</option>
+            </select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Opportunities Grid */}
+      {showDetectedOnly && displayRFPs.length > 0 && (
+        <>
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-green-700 mb-2">🎯 AI-Detected RFP Opportunities</h2>
+            <p className="text-sm text-muted-foreground">
+              {displayRFPs.length} opportunities detected by our autonomous A2A system
+            </p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+            {displayRFPs.map((rfp, index) => generateRFPCard(rfp, index))}
+          </div>
+        </>
+      )}
+
+      {!showDetectedOnly && displayRFPs.length > 0 && (
+        <>
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-green-700 mb-2">🎯 Latest AI-Detected RFPs</h2>
+            <p className="text-sm text-muted-foreground">
+              {displayRFPs.length} opportunities detected by our autonomous A2A system
+            </p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+            {displayRFPs.map((rfp, index) => generateRFPCard(rfp, index))}
+          </div>
+        </>
+      )}
+
+      {!showDetectedOnly && (
+        <>
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-blue-700 mb-2">📊 Comprehensive Market Opportunities</h2>
+            <p className="text-sm text-muted-foreground">
+              {displayOpportunities.length} manually curated opportunities from our extensive analysis
+            </p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {displayOpportunities.map((opportunity, index) => generateTenderCard(opportunity, index))}
+          </div>
+        </>
+      )}
+
+      {displayOpportunities.length === 0 && displayRFPs.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">
+            {showDetectedOnly 
+              ? "No AI-detected RFPs found. Start the A2A system to begin autonomous detection." 
+              : "No opportunities found matching your criteria."
+            }
+          </p>
+        </div>
+      )}
     </div>
-  )
+  );
 }

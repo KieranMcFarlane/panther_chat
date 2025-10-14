@@ -258,3 +258,7 @@ export class Neo4jService {
     }
   }
 }
+
+// Export singleton instance for backward compatibility
+export const neo4jService = new Neo4jService()
+export const neo4jClient = neo4jService.getDriver()
