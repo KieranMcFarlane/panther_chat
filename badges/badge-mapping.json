@@ -1,0 +1,119 @@
+[
+  {
+    "entityId": "australian-football-league-afl-jsonseed",
+    "entityName": "Australian Football League",
+    "badgePath": "/badges/australian-football-league-badge.png",
+    "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/australian-football-league-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/australian-football-league-badge.png",
+    "lastUpdated": "2025-09-29T06:11:55.307Z",
+    "source": "s3"
+  },
+  {
+    "entityId": "indian-premier-league-ipl-jsonseed",
+    "entityName": "Indian Premier League",
+    "badgePath": "/badges/indian-premier-league-badge.png",
+    "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/indian-premier-league-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/indian-premier-league-badge.png",
+    "lastUpdated": "2025-09-29T06:11:55.307Z",
+    "source": "s3"
+  },
+  {
+    "entityId": "133602",
+    "entityName": "Manchester United",
+    "badgePath": "badges/manchester-united-badge.png",
+    "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/manchester-united-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/manchester-united-badge.png",
+    "lastUpdated": "2025-09-29T06:11:55.307Z",
+    "source": "s3"
+  },
+  {
+    "entityId": "premier-league",
+    "entityName": "Premier League",
+    "badgePath": "/badges/premier-league-badge.png",
+    "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/premier-league-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/premier-league-badge.png",
+    "lastUpdated": "2025-09-29T06:11:55.307Z",
+    "source": "s3"
+  },
+  {
+    "entityId": "6603",
+    "entityName": "São Paulo FC",
+    "badgePath": "badges/sao-paulo-badge.png",
+    "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/sao-paulo-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/sao-paulo-badge.png",
+    "lastUpdated": "2025-09-29T06:11:55.307Z",
+    "source": "s3"
+  },
+  {
+    "entityId": "chelsea",
+    "entityName": "Chelsea",
+    "badgePath": "badges/chelsea-badge.png",
+    "badgeUrl": "https://www.thesportsdb.com/images/media/team/badge/chelsea-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/chelsea-badge.png",
+    "lastUpdated": "2025-09-29T06:20:00.000Z",
+    "source": "thesportsdb"
+  },
+  {
+    "entityId": "arsenal",
+    "entityName": "Arsenal",
+    "badgePath": "badges/arsenal-badge.png",
+    "badgeUrl": "https://www.thesportsdb.com/images/media/team/badge/arsenal-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/arsenal-badge.png",
+    "lastUpdated": "2025-09-29T06:20:00.000Z",
+    "source": "thesportsdb"
+  },
+  {
+    "entityId": "liverpool",
+    "entityName": "Liverpool",
+    "badgePath": "badges/liverpool-badge.png",
+    "badgeUrl": "https://www.thesportsdb.com/images/media/team/badge/liverpool-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/liverpool-badge.png",
+    "lastUpdated": "2025-09-29T06:20:00.000Z",
+    "source": "thesportsdb"
+  },
+  {
+    "entityId": "real-madrid",
+    "entityName": "Real Madrid",
+    "badgePath": "badges/real-madrid-badge.png",
+    "badgeUrl": "https://www.thesportsdb.com/images/media/team/badge/real-madrid-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/real-madrid-badge.png",
+    "lastUpdated": "2025-09-29T06:20:00.000Z",
+    "source": "thesportsdb"
+  },
+  {
+    "entityId": "bayern-munich",
+    "entityName": "Bayern Munich",
+    "badgePath": "badges/bayern-munich-badge.png",
+    "badgeUrl": "https://www.thesportsdb.com/images/media/team/badge/bayern-munich-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/bayern-munich-badge.png",
+    "lastUpdated": "2025-09-29T06:20:00.000Z",
+    "source": "thesportsdb"
+  },
+  {
+    "entityId": "juventus",
+    "entityName": "Juventus",
+    "badgePath": "badges/juventus-badge.png",
+    "badgeUrl": "https://www.thesportsdb.com/images/media/team/badge/juventus-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/juventus-badge.png",
+    "lastUpdated": "2025-09-29T06:20:00.000Z",
+    "source": "thesportsdb"
+  },
+  {
+    "entityId": "ac-milan",
+    "entityName": "AC Milan",
+    "badgePath": "badges/ac-milan-badge.png",
+    "badgeUrl": "https://www.thesportsdb.com/images/media/team/badge/ac-milan-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/ac-milan-badge.png",
+    "lastUpdated": "2025-09-29T06:20:00.000Z",
+    "source": "thesportsdb"
+  },
+  {
+    "entityId": "manchester-city",
+    "entityName": "Manchester City",
+    "badgePath": "badges/manchester-city-badge.png",
+    "badgeUrl": "https://www.thesportsdb.com/images/media/team/badge/manchester-city-badge.png",
+    "s3Url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/manchester-city-badge.png",
+    "lastUpdated": "2025-09-29T06:20:00.000Z",
+    "source": "thesportsdb"
+  }
+]
