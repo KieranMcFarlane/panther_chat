@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 
-// Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Mark route as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
+// Helper function to get Supabase client (lazy-loaded)
+async function getSupabaseClient() {
+  const { createClient } = await import('@supabase/supabase-js');
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase configuration missing. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.');
+  }
+  
+  return createClient(supabaseUrl, supabaseKey);
+}
 
 // Verification endpoints for Claude Agent SDK and autonomous system
 export async function GET(req: NextRequest) {
@@ -205,6 +215,7 @@ async function verifyAutonomousWorkflow() {
 
   // Check recent autonomous operations
   try {
+    const supabase = await getSupabaseClient();
     const { data: autonomousOps, error } = await supabase
       .from('autonomous_operations')
       .select('*')
@@ -246,6 +257,7 @@ async function verifyDataFlow() {
 
   // Test Supabase connection
   try {
+    const supabase = await getSupabaseClient();
     const { data, error } = await supabase
       .from('opportunities')
       .select('count')
@@ -258,6 +270,7 @@ async function verifyDataFlow() {
 
   // Test data storage
   try {
+    const supabase = await getSupabaseClient();
     const { data: opportunities, error } = await supabase
       .from('opportunities')
       .select('*')
@@ -271,6 +284,7 @@ async function verifyDataFlow() {
 
   // Test agent activity logging
   try {
+    const supabase = await getSupabaseClient();
     const { data: activities, error } = await supabase
       .from('agent_activities')
       .select('*')
@@ -309,6 +323,7 @@ async function verifyLearningSystem() {
 
   try {
     // Check learning table
+    const supabase = await getSupabaseClient();
     const { data: learningRecords, error } = await supabase
       .from('learning')
       .select('*')
