@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Neo4jService } from '@/lib/neo4j';
 
+// Mark route as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
