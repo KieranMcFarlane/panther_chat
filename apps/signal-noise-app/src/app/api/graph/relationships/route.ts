@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { neo4jService } from '@/lib/neo4j';
 import neo4j from 'neo4j-driver';
 
+// Mark route as dynamic to prevent static generation (response is too large for ISR)
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 export async function GET(request: NextRequest) {
   try {
     console.log('🔗 Fetching relationships from Neo4j...');
