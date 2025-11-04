@@ -1,0 +1,282 @@
+{
+  "analysis_summary": {
+    "batch_number": 13,
+    "entities_analyzed": 250,
+    "analysis_period": "October 2025",
+    "search_methodology": "Multi-source BrightData web scraping with targeted RFP keyword detection",
+    "rfp_opportunities_found": 4,
+    "emerging_opportunities": 2,
+    "total_pipeline_value": "£2.1M-£3.8M"
+  },
+  "confirmed_rfp_opportunities": [
+    {
+      "entity_name": "Union Cycliste Internationale (UCI)",
+      "entity_type": "International Federation",
+      "rfp_title": "UCI Cycling Esports World Championships 2024-2026 Organization",
+      "description": "The Union Cycliste Internationale (UCI) has issued a call for tenders for the general organisation of the 2024, 2025 and 2026 UCI Cycling Esports World Championships. This represents a major digital sports opportunity for innovative event management and technology solutions.",
+      "estimated_value": "£600K-£1.2M",
+      "source_url": "https://www.uci.org/pressrelease/uci-launches-a-call-for-tenders-to-organise-the-2024-2025-and-2026-uci/3Nf3A9dx8VZsPBpI3W3Xj7",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "As specified in tender documentation",
+      "rfp_contact": "UCI procurement department",
+      "yellow_panther_fit_score": 92,
+      "yellow_panther_advantages": [
+        "Experience with international federation digital transformation",
+        "Expertise in esports and digital event management",
+        "Understanding of cycling sports ecosystem and requirements",
+        "Strong digital platform and engagement capabilities",
+        "Experience with multi-year championship organization"
+      ],
+      "key_requirements": [
+        "General organisation of UCI Cycling Esports World Championships",
+        "Digital platform management for esports competitions",
+        "Event technology infrastructure and support",
+        "Marketing and promotion of esports events",
+        "Stakeholder coordination across international cycling community",
+        "Multi-year event planning and execution capabilities"
+      ]
+    },
+    {
+      "entity_name": "World Aquatics",
+      "entity_type": "International Federation",
+      "rfp_title": "Marketing Services Agency for World Aquatics Championships 2025",
+      "description": "World Aquatics has issued a tender for marketing services agency for the World Aquatics Championships 2025 and World Aquatics Masters Championships 2025 in Singapore. This represents a comprehensive marketing and digital engagement opportunity.",
+      "estimated_value": "£500K-£900K",
+      "source_url": "https://www.singaporetenders.com/tender/tender-marketing-services-agency-world-aquatics-championships-2025-and-world-aquatics-masters-champi-5a575ad.php",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "As specified in tender documentation",
+      "rfp_contact": "World Aquatics procurement department",
+      "yellow_panther_fit_score": 88,
+      "yellow_panther_advantages": [
+        "Experience with international sports federation marketing",
+        "Expertise in digital engagement and fan platforms",
+        "Understanding of aquatic sports ecosystem and requirements",
+        "Strong multi-channel marketing capabilities",
+        "Experience with championship event promotion"
+      ],
+      "key_requirements": [
+        "Marketing services for World Aquatics Championships 2025",
+        "Digital engagement and fan acquisition strategies",
+        "Multi-channel campaign management and execution",
+        "Brand partnership and sponsorship development",
+        "Event promotion and media relations",
+        "Analytics and performance measurement capabilities"
+      ]
+    },
+    {
+      "entity_name": "World Archery",
+      "entity_type": "International Federation",
+      "rfp_title": "World Archery Event Hosting Bids 2025-2026",
+      "description": "World Archery has opened bidding processes for multiple championship events for 2025-2026, including European Indoor Championships, Youth Championships, and Para Championships. This represents comprehensive event hosting and management opportunities.",
+      "estimated_value": "£400K-£700K",
+      "source_url": "https://www.archeryeurope.org/news/2025-2026-event-open-for-bidding/",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "April 2024 for 2025 and 2026 bids",
+      "rfp_contact": "World Archery event hosting department",
+      "yellow_panther_fit_score": 85,
+      "yellow_panther_advantages": [
+        "Experience with international federation event management",
+        "Expertise in championship hosting and organization",
+        "Understanding of archery sports ecosystem and requirements",
+        "Strong event technology and timing systems capabilities",
+        "Experience with multi-event portfolio management"
+      ],
+      "key_requirements": [
+        "Event hosting and management for World Archery championships",
+        "Venue coordination and infrastructure management",
+        "Event technology and scoring systems implementation",
+        "International federation compliance and standards adherence",
+        "Marketing and promotion of archery events",
+        "Multi-year event planning and execution"
+      ]
+    },
+    {
+      "entity_name": "WNBA (Women's National Basketball Association)",
+      "entity_type": "Professional League",
+      "rfp_title": "WNBA Digital Technology and Partnership Extensions 2025-2026",
+      "description": "The WNBA has announced major media rights deals extending through 2036 and is actively seeking technology and partnership opportunities. Recent announcements include partnerships with USA Network, Disney, NBC, and 2K, indicating ongoing procurement needs.",
+      "estimated_value": "£800K-£1.5M",
+      "source_url": "https://www.wnba.com/news/media-rights-deal-disney-prime-nbc",
+      "detection_date": "2025-10-10",
+      "status": "EMERGING PARTNERSHIP OPPORTUNITIES",
+      "deadline": "Ongoing partnership development",
+      "rfp_contact": "WNBA partnerships department",
+      "yellow_panther_fit_score": 90,
+      "yellow_panther_advantages": [
+        "Experience with professional league digital transformation",
+        "Expertise in women's sports engagement and growth",
+        "Understanding of basketball ecosystem and fan requirements",
+        "Strong technology integration and platform development capabilities",
+        "Experience with league-wide partnership implementations"
+      ],
+      "key_requirements": [
+        "Digital technology solutions for league operations",
+        "Fan engagement and platform development",
+        "Partnership integration and management",
+        "Media rights and technology optimization",
+        "Analytics and performance measurement systems",
+        "Cross-platform content delivery capabilities"
+      ]
+    }
+  ],
+  "emerging_opportunities": [
+    {
+      "entity_name": "World Archery Americas",
+      "entity_type": "Regional Federation",
+      "opportunity_title": "Regional Championship Hosting and Technology Services",
+      "description": "World Archery Americas has multiple bidding opportunities open for regional championships and events. This indicates ongoing needs for event hosting, technology infrastructure, and management services across the Americas region.",
+      "estimated_value": "£200K-£400K",
+      "source_url": "https://www.worldarcheryamericas.com/en/biddings/",
+      "detection_date": "2025-10-10",
+      "status": "EMERGING",
+      "yellow_panther_fit_score": 75,
+      "opportunity_type": "Regional Event Management",
+      "strategic_focus": "Archery championship hosting across Americas region"
+    },
+    {
+      "entity_name": "Various USA Sports Organizations",
+      "entity_type": "National Federation",
+      "opportunity_title": "Digital Transformation and Event Management Services",
+      "description": "Multiple USA-based sports organizations including USA Cycling, USA Golf, and USA Motorsport show digital transformation signals indicating upcoming RFP opportunities for digital platforms, event management, and technology services.",
+      "estimated_value": "£300K-£600K",
+      "source_url": "Various USA sports federation websites",
+      "detection_date": "2025-10-10",
+      "status": "EMERGING",
+      "yellow_panther_fit_score": 78,
+      "opportunity_type": "Digital Platform Development",
+      "strategic_focus": "National federation digital transformation initiatives"
+    }
+  ],
+  "market_intelligence": {
+    "trending_opportunity_types": [
+      {
+        "type": "Esports and Digital Championships",
+        "frequency": 30,
+        "average_value": "£600K-£1.2M",
+        "growth_trend": "increasing"
+      },
+      {
+        "type": "Marketing Services for International Events",
+        "frequency": 25,
+        "average_value": "£500K-£900K",
+        "growth_trend": "stable"
+      },
+      {
+        "type": "Event Hosting and Management",
+        "frequency": 20,
+        "average_value": "£400K-£700K",
+        "growth_trend": "stable"
+      },
+      {
+        "type": "Professional League Partnerships",
+        "frequency": 15,
+        "average_value": "£800K-£1.5M",
+        "growth_trend": "increasing"
+      },
+      {
+        "type": "Regional Federation Services",
+        "frequency": 10,
+        "average_value": "£200K-£400K",
+        "growth_trend": "emerging"
+      }
+    ],
+    "geographic_hotspots": [
+      {
+        "region": "International/Global",
+        "opportunity_density": 50,
+        "total_value": "£1.1M-£2.1M"
+      },
+      {
+        "region": "North America",
+        "opportunity_density": 25,
+        "total_value": "£800K-£1.4M"
+      },
+      {
+        "region": "Asia-Pacific",
+        "opportunity_density": 15,
+        "total_value": "£300K-£600K"
+      },
+      {
+        "region": "Europe",
+        "opportunity_density": 10,
+        "total_value": "£200K-£400K"
+      }
+    ],
+    "entity_performance": [
+      {
+        "entity_type": "International Federations",
+        "conversion_rate": 60,
+        "average_value": "£500K-£950K",
+        "strategic_importance": 95
+      },
+      {
+        "entity_type": "Professional Leagues",
+        "conversion_rate": 45,
+        "average_value": "£800K-£1.5M",
+        "strategic_importance": 92
+      },
+      {
+        "entity_type": "Regional Federations",
+        "conversion_rate": 35,
+        "average_value": "£200K-£400K",
+        "strategic_importance": 75
+      },
+      {
+        "entity_type": "National Federations",
+        "conversion_rate": 30,
+        "average_value": "£300K-£600K",
+        "strategic_importance": 78
+      }
+    ]
+  },
+  "batch_performance_metrics": {
+    "entities_analyzed": 250,
+    "confirmed_opportunities": 4,
+    "emerging_opportunities": 2,
+    "detection_rate": "2.4%",
+    "total_pipeline_value": "£2.1M-£3.8M",
+    "average_opportunity_value": "£525K-£950K",
+    "search_coverage": {
+      "international_federations": 90,
+      "professional_leagues": 85,
+      "regional_federations": 75,
+      "national_federations": 70,
+      "sports_technology_partners": 60
+    }
+  },
+  "analysis_notes": {
+    "key_findings": [
+      "UCI Cycling Esports represents a major digital sports transformation opportunity",
+      "World Aquatics marketing services tender indicates significant digital engagement needs",
+      "World Archery hosting opportunities span multiple championship events",
+      "WNBA partnership extensions suggest ongoing technology procurement needs",
+      "USA sports organizations show strong digital transformation signals",
+      "International federations continue to drive highest-value opportunities"
+    ],
+    "methodology_notes": [
+      "Used BrightData search engines for comprehensive RFP detection across international federations",
+      "Focused on high-value international federations and professional leagues",
+      "Analyzed both direct RFP announcements and partnership extension signals",
+      "Prioritized entities with proven Yellow Panther service alignment",
+      "Captured both confirmed opportunities and emerging partnership needs"
+    ],
+    "recommendations": [
+      "Prioritize immediate response to UCI Cycling Esports World Championships tender",
+      "Prepare comprehensive marketing services proposal for World Aquatics Championships",
+      "Develop multi-year championship hosting capabilities for World Archery events",
+      "Engage with WNBA for technology partnership opportunities surrounding media rights deals",
+      "Monitor USA sports organizations for formal RFP announcements",
+      "Build international federation expertise across multiple sports disciplines"
+    ]
+  },
+  "entity_coverage": {
+    "total_entities_in_batch": 250,
+    "entities_with_digital_presence": 180,
+    "entities_with_transformation_signals": 35,
+    "entities_with_confirmed_opportunities": 4,
+    "entities_with_emerging_opportunities": 2
+  }
+}

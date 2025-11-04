@@ -1,0 +1,171 @@
+import { NextRequest } from "next/server";
+
+interface Message {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  id?: string;
+}
+
+interface ChatRequest {
+  messages: Message[];
+  context?: any;
+  userId?: string;
+  stream?: boolean;
+}
+
+interface ClaudeWebhookResponse {
+  type: string;
+  role?: string;
+  content?: string;
+  status?: string;
+  message?: string;
+  tool?: string;
+  args?: any;
+  result?: any;
+  error?: string;
+}
+
+// FastAPI webhook endpoint for Claude Agent SDK
+const CLAUDE_WEBHOOK_URL = "http://localhost:8001/webhook/chat";
+
+export async function POST(req: NextRequest) {
+  try {
+    // Parse the incoming CopilotKit request
+    const body = await req.json();
+    const { messages = [], context = {}, userId, stream = true } = body as ChatRequest;
+
+    // Forward the request to our FastAPI webhook server
+    const webhookResponse = await fetch(CLAUDE_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messages,
+        context,
+        userId,
+        stream
+      }),
+    });
+
+    if (!webhookResponse.ok) {
+      throw new Error(`Webhook server error: ${webhookResponse.statusText}`);
+    }
+
+    if (stream) {
+      // Handle streaming response from FastAPI
+      const reader = webhookResponse.body?.getReader();
+      const encoder = new TextEncoder();
+
+      return new Response(
+        new ReadableStream({
+          async start(controller) {
+            try {
+              if (reader) {
+                while (true) {
+                  const { done, value } = await reader.read();
+                  if (done) break;
+
+                  // Parse the JSON chunk from FastAPI
+                  const chunk = new TextDecoder().decode(value);
+                  const lines = chunk.split('\n').filter(line => line.trim());
+
+                  for (const line of lines) {
+                    try {
+                      const data: ClaudeWebhookResponse = JSON.parse(line);
+                      
+                      // Convert Claude Agent response to CopilotKit format
+                      if (data.type === 'message' && data.role === 'assistant') {
+                        // Format for CopilotKit streaming
+                        const copilotChunk = {
+                          type: 'text',
+                          text: data.content
+                        };
+                        controller.enqueue(encoder.encode(`data: ${JSON.stringify(copilotChunk)}\n\n`));
+                      } else if (data.type === 'tool_use') {
+                        // Handle tool usage - convert to CopilotKit function call
+                        const functionCall = {
+                          type: 'function_call',
+                          name: data.tool,
+                          arguments: JSON.stringify(data.args || {})
+                        };
+                        controller.enqueue(encoder.encode(`data: ${JSON.stringify(functionCall)}\n\n`));
+                      } else if (data.type === 'status') {
+                        // Include status messages as text
+                        if (data.message) {
+                          const statusChunk = {
+                            type: 'text',
+                            text: `[${data.status?.toUpperCase()}] ${data.message}`
+                          };
+                          controller.enqueue(encoder.encode(`data: ${JSON.stringify(statusChunk)}\n\n`));
+                        }
+                      } else if (data.type === 'error') {
+                        // Handle errors
+                        const errorChunk = {
+                          type: 'text',
+                          text: `❌ Error: ${data.error}`
+                        };
+                        controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorChunk)}\n\n`));
+                      }
+                    } catch (parseError) {
+                      console.warn('Failed to parse webhook response:', parseError);
+                    }
+                  }
+                }
+              }
+            } catch (error) {
+              console.error('Streaming error:', error);
+              const errorChunk = {
+                type: 'text',
+                text: '❌ Connection error: Please try again.'
+              };
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorChunk)}\n\n`));
+            } finally {
+              controller.close();
+            }
+          }
+        }),
+        {
+          headers: {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type',
+          },
+        }
+      );
+    } else {
+      // Handle non-streaming response
+      const result = await webhookResponse.json();
+      return new Response(JSON.stringify(result), {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+  } catch (error) {
+    console.error('CopilotKit route error:', error);
+    return new Response(
+      JSON.stringify({ 
+        error: 'Failed to process request',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
+}
+
+// Handle OPTIONS requests for CORS
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
+}

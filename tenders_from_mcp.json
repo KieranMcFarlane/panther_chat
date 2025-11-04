@@ -1,0 +1,38 @@
+[
+  {
+    "title": "LinkedIn Post",
+    "type": "RFP",
+    "value": "TBD",
+    "deadline": "",
+    "description": "Procurement notice containing digital/web/mobile scope",
+    "status": "Open",
+    "url": "https://www.linkedin.com/posts/example_org_rfp-mobile-app-website-redesign-activity-1234567890",
+    "source": "LinkedIn",
+    "publishedDate": "2025-08-20",
+    "organization": "Linkedin"
+  },
+  {
+    "title": "LinkedIn Post",
+    "type": "RFP",
+    "value": "TBD",
+    "deadline": "",
+    "description": "Procurement notice containing digital/web/mobile scope",
+    "status": "Open",
+    "url": "https://www.linkedin.com/feed/update/urn:li:activity:1234567891",
+    "source": "LinkedIn",
+    "publishedDate": "2025-08-20",
+    "organization": "Linkedin"
+  },
+  {
+    "title": "LinkedIn Post",
+    "type": "RFP",
+    "value": "TBD",
+    "deadline": "",
+    "description": "Procurement notice containing digital/web/mobile scope",
+    "status": "Open",
+    "url": "https://www.linkedin.com/posts/example_org_rfq-ios-android-cms-activity-1234567892",
+    "source": "LinkedIn",
+    "publishedDate": "2025-08-20",
+    "organization": "Linkedin"
+  }
+]

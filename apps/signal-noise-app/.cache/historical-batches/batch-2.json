@@ -1,0 +1,82 @@
+{
+  "batchId": 2,
+  "batchStart": "2025-10-06T22:12:19.204Z",
+  "batchEnd": "2025-10-06T22:12:21.216Z",
+  "totalEntities": 10,
+  "totalOpportunities": 10,
+  "totalRisks": 10,
+  "totalRecommendations": 20,
+  "estimatedValue": 17.900000000000002,
+  "entities": [
+    {
+      "name": "Cambridge United",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.6M"
+    },
+    {
+      "name": "Charlton Athletic",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.7M"
+    },
+    {
+      "name": "Crawley Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.6M"
+    },
+    {
+      "name": "Exeter City",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.8M"
+    },
+    {
+      "name": "Huddersfield Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.9M"
+    },
+    {
+      "name": "Leyton Orient",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.8M"
+    },
+    {
+      "name": "Lincoln City",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.8M"
+    },
+    {
+      "name": "Mansfield Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.9M"
+    },
+    {
+      "name": "Northampton Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£2.0M"
+    },
+    {
+      "name": "Peterborough United",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.8M"
+    }
+  ]
+}

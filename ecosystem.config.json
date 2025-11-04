@@ -1,0 +1,150 @@
+{
+  "apps": [
+    {
+      "name": "claudebox-router",
+      "script": "./services/router.js",
+      "instances": 1,
+      "exec_mode": "fork",
+      "env": {
+        "NODE_ENV": "production",
+        "PORT": 7681,
+        "BETTER_AUTH_MCP_URL": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+      },
+      "env_development": {
+        "NODE_ENV": "development",
+        "PORT": 7681,
+        "BETTER_AUTH_MCP_URL": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+      },
+      "log_file": "./logs/claudebox-router.log",
+      "out_file": "./logs/claudebox-router-out.log",
+      "error_file": "./logs/claudebox-router-error.log",
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "merge_logs": true,
+      "max_memory_restart": "500M",
+      "watch": false,
+      "restart_delay": 4000,
+      "max_restarts": 10,
+      "min_uptime": "10s"
+    },
+    {
+      "name": "slot-manager",
+      "script": "./services/slot-manager.js",
+      "instances": 1,
+      "exec_mode": "fork",
+      "env": {
+        "NODE_ENV": "production",
+        "MAX_SLOTS": "50",
+        "SLOT_TIMEOUT": "3600000",
+        "BETTER_AUTH_MCP_URL": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+      },
+      "env_development": {
+        "NODE_ENV": "development",
+        "MAX_SLOTS": "10",
+        "SLOT_TIMEOUT": "1800000",
+        "BETTER_AUTH_MCP_URL": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+      },
+      "log_file": "./logs/slot-manager.log",
+      "out_file": "./logs/slot-manager-out.log",
+      "error_file": "./logs/slot-manager-error.log",
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "merge_logs": true,
+      "max_memory_restart": "300M",
+      "watch": false,
+      "restart_delay": 3000,
+      "max_restarts": 15,
+      "min_uptime": "5s"
+    },
+    {
+      "name": "health-monitor",
+      "script": "./services/health-monitor.js",
+      "instances": 1,
+      "exec_mode": "fork",
+      "env": {
+        "NODE_ENV": "production",
+        "HEALTH_CHECK_INTERVAL": "30000",
+        "BETTER_AUTH_MCP_URL": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+      },
+      "env_development": {
+        "NODE_ENV": "development",
+        "HEALTH_CHECK_INTERVAL": "60000",
+        "BETTER_AUTH_MCP_URL": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+      },
+      "log_file": "./logs/health-monitor.log",
+      "out_file": "./logs/health-monitor-out.log",
+      "error_file": "./logs/health-monitor-error.log",
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "merge_logs": true,
+      "max_memory_restart": "200M",
+      "watch": false,
+      "restart_delay": 5000,
+      "max_restarts": 5,
+      "min_uptime": "15s",
+      "cron_restart": "0 */6 * * * *"
+    },
+    {
+      "name": "ssh-tunnel-manager",
+      "script": "./services/ssh-tunnel-manager.js",
+      "instances": 1,
+      "exec_mode": "fork",
+      "env": {
+        "NODE_ENV": "production",
+        "SSH_HOST": "13.60.60.50",
+        "SSH_KEY_PATH": "/home/ec2-user/yellowpanther.pem",
+        "BETTER_AUTH_MCP_URL": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+      },
+      "env_development": {
+        "NODE_ENV": "development",
+        "SSH_HOST": "13.60.60.50",
+        "SSH_KEY_PATH": "/home/ec2-user/yellowpanther.pem",
+        "BETTER_AUTH_MCP_URL": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+      },
+      "log_file": "./logs/ssh-tunnel-manager.log",
+      "out_file": "./logs/ssh-tunnel-manager-out.log",
+      "error_file": "./logs/ssh-tunnel-manager-error.log",
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "merge_logs": true,
+      "max_memory_restart": "150M",
+      "watch": false,
+      "restart_delay": 2000,
+      "max_restarts": 20,
+      "min_uptime": "3s",
+      "wait_ready": true,
+      "listen_timeout": 10000
+    },
+    {
+      "name": "better-auth-integration",
+      "script": "./services/better-auth-integration.js",
+      "instances": 1,
+      "exec_mode": "fork",
+      "env": {
+        "NODE_ENV": "production",
+        "BETTER_AUTH_MCP_URL": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+      },
+      "env_development": {
+        "NODE_ENV": "development",
+        "BETTER_AUTH_MCP_URL": "https://mcp.chonkie.ai/better-auth/better-auth-builder/mcp"
+      },
+      "log_file": "./logs/better-auth-integration.log",
+      "out_file": "./logs/better-auth-integration-out.log",
+      "error_file": "./logs/better-auth-integration-error.log",
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "merge_logs": true,
+      "max_memory_restart": "400M",
+      "watch": false,
+      "restart_delay": 3000,
+      "max_restarts": 10,
+      "min_uptime": "10s"
+    }
+  ],
+  "deploy": {
+    "production": {
+      "user": "ec2-user",
+      "host": "13.60.60.50",
+      "ref": "origin/main",
+      "repo": "https://github.com/your-repo/claudebox-multi-slot.git",
+      "path": "/home/ec2-user/claudebox-multi-slot",
+      "post-setup": "npm install",
+      "post-deploy": "npm run build && pm2 reload ecosystem.config.js --env production"
+    }
+  }
+}

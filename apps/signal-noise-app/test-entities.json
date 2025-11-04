@@ -1,0 +1,80 @@
+[
+  {
+    "id": "test_001",
+    "name": "Manchester United FC",
+    "type": "club",
+    "industry": "football",
+    "data": {
+      "description": "Premier League football club with global fan base",
+      "value": 4500000000,
+      "established": 1878,
+      "employees": 850
+    },
+    "lastUpdated": "2025-10-07T04:18:00.000Z"
+  },
+  {
+    "id": "test_002", 
+    "name": "Liverpool FC",
+    "type": "club",
+    "industry": "football",
+    "data": {
+      "description": "Historic Premier League club with recent success",
+      "value": 4200000000,
+      "established": 1892,
+      "employees": 720
+    },
+    "lastUpdated": "2025-10-07T04:18:00.000Z"
+  },
+  {
+    "id": "test_003",
+    "name": "Chelsea FC", 
+    "type": "club",
+    "industry": "football",
+    "data": {
+      "description": "London-based Premier League football club",
+      "value": 3800000000,
+      "established": 1905,
+      "employees": 780
+    },
+    "lastUpdated": "2025-10-07T04:18:00.000Z"
+  },
+  {
+    "id": "test_004",
+    "name": "Arsenal FC",
+    "type": "club", 
+    "industry": "football",
+    "data": {
+      "description": "North London Premier League football club",
+      "value": 3600000000,
+      "established": 1886,
+      "employees": 690
+    },
+    "lastUpdated": "2025-10-07T04:18:00.000Z"
+  },
+  {
+    "id": "test_005",
+    "name": "Manchester City FC",
+    "type": "club",
+    "industry": "football", 
+    "data": {
+      "description": "Premier League club with recent domestic dominance",
+      "value": 4900000000,
+      "established": 1880,
+      "employees": 820
+    },
+    "lastUpdated": "2025-10-07T04:18:00.000Z"
+  },
+  {
+    "id": "test_006",
+    "name": "Premier League",
+    "type": "league",
+    "industry": "football",
+    "data": {
+      "description": "Top tier of English football league system",
+      "value": 12000000000,
+      "established": 1992,
+      "clubs": 20
+    },
+    "lastUpdated": "2025-10-07T04:18:00.000Z"
+  }
+]

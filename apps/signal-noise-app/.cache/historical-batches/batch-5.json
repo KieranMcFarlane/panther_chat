@@ -1,0 +1,82 @@
+{
+  "batchId": 5,
+  "batchStart": "2025-10-06T22:12:26.744Z",
+  "batchEnd": "2025-10-06T22:12:28.755Z",
+  "totalEntities": 10,
+  "totalOpportunities": 10,
+  "totalRisks": 10,
+  "totalRecommendations": 20,
+  "estimatedValue": 19.099999999999998,
+  "entities": [
+    {
+      "name": "Fleetwood Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.9M"
+    },
+    {
+      "name": "Gillingham",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£2.0M"
+    },
+    {
+      "name": "Grimsby Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.7M"
+    },
+    {
+      "name": "Harrogate Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£2.1M"
+    },
+    {
+      "name": "MK Dons",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£2.0M"
+    },
+    {
+      "name": "Morecambe",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£2.1M"
+    },
+    {
+      "name": "Newport County",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.7M"
+    },
+    {
+      "name": "Notts County",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.9M"
+    },
+    {
+      "name": "Port Vale",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£2.2M"
+    },
+    {
+      "name": "Salford City",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.5M"
+    }
+  ]
+}

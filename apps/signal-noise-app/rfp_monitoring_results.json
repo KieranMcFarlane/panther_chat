@@ -1,0 +1,81 @@
+{
+  "total_rfps_detected": 7,
+  "entities_checked": 11,
+  "highlights": [
+    {
+      "organization": "2. Bundesliga",
+      "src_link": "https://www.dfl.de/en/news/dfl-publishes-details-of-media-rights-invitation-to-tender-for-bundesliga-and-bundesliga-2-for-the-2025-26-to-2028-29-seasons/",
+      "summary_json": {
+        "title": "DFL media rights tender for Bundesliga and Bundesliga 2 (2025-26 to 2028-29 seasons)",
+        "confidence": 0.95,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    },
+    {
+      "organization": "AFC",
+      "src_link": "https://www.the-afc.com/en/more/tenders.html",
+      "summary_json": {
+        "title": "AFC issues Request for Proposal for stadium branding agencies and event management companies",
+        "confidence": 0.95,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    },
+    {
+      "organization": "A-League",
+      "src_link": "https://footballaustralia.com.au/news/football-australia-closes-expressions-interest-national-second-tier-mens-competition",
+      "summary_json": {
+        "title": "Football Australia National Second Tier competition - Third RFP process announced",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    },
+    {
+      "organization": "AFL",
+      "src_link": "https://sportsvenuebusiness.com/2025/10/21/afl-opens-eoi-for-landmark-harbour-esplanade-redevelopment/",
+      "summary_json": {
+        "title": "AFL opens EOI for landmark Harbour Esplanade redevelopment and project management services",
+        "confidence": 0.90,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "24 Hours of Le Mans",
+      "src_link": "https://www.dailysportscar.com/2025/03/28/next-gen-lmp2-chassis-tender-process-underway.html",
+      "summary_json": {
+        "title": "FIA LMP2 Engine and Chassis tender processes for 2026-2028 seasons",
+        "confidence": 0.90,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "AC Milan",
+      "src_link": "https://onefootball.com/en/news/ac-milan-inter-launch-tender-for-new-san-siro-project-four-firms-in-the-running-41109546",
+      "summary_json": {
+        "title": "AC Milan & Inter launch tender for new San Siro stadium project",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 80
+      }
+    },
+    {
+      "organization": "ATP Tour",
+      "src_link": "https://www.atptour.com/en/news/bid-process-launches-for-next-gen-atp-finals-from-2023",
+      "summary_json": {
+        "title": "ATP Tour bid process for Next Gen ATP Finals venue and services",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 80
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.9,
+    "avg_fit_score": 87.1,
+    "top_opportunity": "2. Bundesliga"
+  }
+}

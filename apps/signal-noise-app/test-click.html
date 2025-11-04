@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vector Search Click Test</title>
+    <script>
+        function testClick() {
+            console.log('Test button clicked');
+            alert('Click handling works!');
+            
+            // Test navigation
+            const testUrl = '/entity/197';
+            console.log('Would navigate to:', testUrl);
+            
+            // Uncomment this to actually navigate
+            // window.location.href = testUrl;
+        }
+        
+        function testVectorSearchClick() {
+            // Simulate a search result click
+            const result = {
+                entity_id: '197',
+                name: '1. FC Köln',
+                type: 'club'
+            };
+            
+            console.log('Simulating vector search click for:', result);
+            
+            // Test the navigation logic
+            if (result.entity_id) {
+                const entityId = result.entity_id;
+                const demoEntityRoutes = {
+                    'arsenal_fc_001': '/entity/arsenal_fc_001',
+                    'chelsea_fc_002': '/entity/chelsea_fc_002', 
+                    'martin_odegaard_003': '/entity/martin_odegaard_003',
+                    'tender_premier_league_001': '/entity/tender_premier_league_001',
+                    'contact_sports_agent_001': '/entity/contact_sports_agent_001'
+                };
+                
+                let targetUrl;
+                if (demoEntityRoutes[entityId]) {
+                    targetUrl = demoEntityRoutes[entityId];
+                } else {
+                    targetUrl = `/entity/${entityId}`;
+                }
+                
+                console.log('Target URL:', targetUrl);
+                alert(`Would navigate to: ${targetUrl}`);
+                
+                // Uncomment to actually navigate
+                // window.location.href = targetUrl;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Vector Search Click Test</h1>
+    
+    <button onclick="testClick()">Test Basic Click</button>
+    <br><br>
+    
+    <button onclick="testVectorSearchClick()">Test Vector Search Navigation</button>
+    <br><br>
+    
+    <p>Check the browser console for logs to see if click events are working.</p>
+    
+    <h2>Manual Test</h2>
+    <p>Try these links manually:</p>
+    <ul>
+        <li><a href="/entity/197">1. FC Köln (Real Entity)</a></li>
+        <li><a href="/entity/450">AC Milan (Real Entity)</a></li>
+        <li><a href="/entity/arsenal_fc_001">Arsenal (Demo Entity)</a></li>
+        <li><a href="/navigation-test">Navigation Test Page</a></li>
+    </ul>
+</body>
+</html>

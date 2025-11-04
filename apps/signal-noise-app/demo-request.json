@@ -1,0 +1,54 @@
+{
+  "entities": [
+    {
+      "id": "test_001",
+      "name": "Manchester United FC",
+      "type": "club",
+      "industry": "football",
+      "data": {
+        "description": "Premier League football club with global fan base",
+        "value": 4500000000,
+        "established": 1878,
+        "employees": 850
+      },
+      "lastUpdated": "2025-10-07T04:18:00.000Z"
+    },
+    {
+      "id": "test_002", 
+      "name": "Liverpool FC",
+      "type": "club",
+      "industry": "football",
+      "data": {
+        "description": "Historic Premier League club with recent success",
+        "value": 4200000000,
+        "established": 1892,
+        "employees": 720
+      },
+      "lastUpdated": "2025-10-07T04:18:00.000Z"
+    },
+    {
+      "id": "test_003",
+      "name": "Chelsea FC", 
+      "type": "club",
+      "industry": "football",
+      "data": {
+        "description": "London-based Premier League football club",
+        "value": 3800000000,
+        "established": 1905,
+        "employees": 780
+      },
+      "lastUpdated": "2025-10-07T04:18:00.000Z"
+    }
+  ],
+  "options": {
+    "memoryOptimized": true,
+    "batchSize": 3,
+    "memoryThresholdMB": 512,
+    "maxConcurrent": 2,
+    "storeResults": true
+  },
+  "metadata": {
+    "source": "demo",
+    "priority": "high"
+  }
+}

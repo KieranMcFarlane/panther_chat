@@ -1,0 +1,293 @@
+{
+  "summary": {
+    "totalBatches": 1,
+    "totalProcessed": 29,
+    "totalCreated": 0,
+    "totalUpdated": 24,
+    "totalSkipped": 5,
+    "totalErrors": 0,
+    "successRate": 0.8275862068965517
+  },
+  "batches": [
+    {
+      "batchNumber": 1,
+      "totalProcessed": 29,
+      "created": 0,
+      "updated": 24,
+      "skipped": 5,
+      "errors": 0,
+      "processedEntities": [
+        {
+          "neo4j_id": "4501",
+          "name": "Sevilla FC",
+          "type": "Club",
+          "sport": "Football",
+          "country": "Spain",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4502",
+          "name": "Villarreal CF",
+          "type": "Club",
+          "sport": "Football",
+          "country": "Spain",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4503",
+          "name": "Real Betis",
+          "type": "Club",
+          "sport": "Football",
+          "country": "Spain",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4504",
+          "name": "Real Sociedad",
+          "type": "Club",
+          "sport": "Football",
+          "country": "Spain",
+          "status": "updated",
+          "labels": [
+            "Entity",
+            "Club",
+            "Organization"
+          ]
+        },
+        {
+          "neo4j_id": "4505",
+          "name": "Athletic Bilbao",
+          "type": "Club",
+          "sport": "Football",
+          "country": "Spain",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4506",
+          "name": "Anadolu Efes",
+          "type": "Club",
+          "sport": "Basketball",
+          "country": "Turkey",
+          "status": "updated",
+          "labels": [
+            "Entity",
+            "Club"
+          ]
+        },
+        {
+          "neo4j_id": "4507",
+          "name": "Fenerbahçe Beko",
+          "type": "Club",
+          "sport": "Basketball",
+          "country": "Turkey",
+          "status": "updated",
+          "labels": [
+            "Entity",
+            "Club"
+          ]
+        },
+        {
+          "neo4j_id": "4508",
+          "name": "Real Madrid Baloncesto",
+          "type": "Club",
+          "sport": "Basketball",
+          "country": "Spain",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4509",
+          "name": "FC Barcelona Bàsquet",
+          "type": "Club",
+          "sport": "Basketball",
+          "country": "Spain",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4510",
+          "name": "Olympiacos BC",
+          "type": "Club",
+          "sport": "Basketball",
+          "country": "Greece",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4511",
+          "name": "Mercedes-AMG Petronas F1",
+          "type": "Team",
+          "sport": "Motorsport",
+          "country": "Germany/UK",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4512",
+          "name": "Scuderia Ferrari",
+          "type": "Team",
+          "sport": "Motorsport",
+          "country": "Italy",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4513",
+          "name": "Red Bull Racing",
+          "type": "Team",
+          "sport": "Motorsport",
+          "country": "Austria/UK",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4514",
+          "name": "McLaren F1 Team",
+          "type": "Team",
+          "sport": "Motorsport",
+          "country": "United Kingdom",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4515",
+          "name": "Alpine F1 Team",
+          "type": "Team",
+          "sport": "Motorsport",
+          "country": "France/UK",
+          "status": "updated",
+          "labels": [
+            "Entity",
+            "Team"
+          ]
+        },
+        {
+          "neo4j_id": "4516",
+          "name": "Leicester Tigers",
+          "type": "Club",
+          "sport": "Rugby Union",
+          "country": "England",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4517",
+          "name": "Saracens",
+          "type": "Club",
+          "sport": "Rugby Union",
+          "country": "England",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4518",
+          "name": "Toulon",
+          "type": "Club",
+          "sport": "Rugby Union",
+          "country": "France",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4519",
+          "name": "Stade Français Paris",
+          "type": "Club",
+          "sport": "Rugby Union",
+          "country": "France",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4520",
+          "name": "Munster Rugby",
+          "type": "Club",
+          "sport": "Rugby Union",
+          "country": "Ireland",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4521",
+          "name": "Paris 2024 Olympic Games",
+          "type": "Tournament",
+          "sport": "Olympic Sports",
+          "country": "France",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4522",
+          "name": "Milan Cortina 2026 Winter Olympics",
+          "type": "Tournament",
+          "sport": "Olympic Sports",
+          "country": "Italy",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4523",
+          "name": "Los Angeles 2028 Olympic Games",
+          "type": "Tournament",
+          "sport": "Olympic Sports",
+          "country": "United States",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        },
+        {
+          "neo4j_id": "4524",
+          "name": "Brisbane 2032 Olympic Games",
+          "type": "Tournament",
+          "sport": "Olympic Sports",
+          "country": "Australia",
+          "status": "updated",
+          "labels": [
+            "Entity"
+          ]
+        }
+      ]
+    }
+  ],
+  "migratedEntities": []
+}

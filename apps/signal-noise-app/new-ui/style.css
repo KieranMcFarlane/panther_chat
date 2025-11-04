@@ -1,0 +1,65 @@
+/* Previous styles remain the same */
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    font-family: system-ui, sans-serif;
+    color: #1B1E2D;
+    overflow: hidden;
+}
+.background-container {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: -1;
+    background-color: #FDEE00;
+}
+#background-svg {
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+.content {
+    display: flex; /* Changed to flex for better alignment */
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100vh;
+}
+
+/* --- NEW BUTTON STYLES --- */
+#color-change-btn {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #f0f0f0;
+    background-color: #1B1E2D;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#color-change-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+
+
+/* body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    font-family: system-ui, sans-serif;
+    color: #1B1E2D;
+    overflow: hidden;
+}
+.background-container {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: -1;
+    background-color: #FDEE00;
+}
+#background-svg {
+    width: 100%; height: 100%;
+    object-fit: cover;
+}
+.content {
+    display: grid; place-content: center; text-align: center;
+    height: 100vh;
+} */

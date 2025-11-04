@@ -1,0 +1,24 @@
+{
+  "entities": [
+    {"name": "Antonians Sports Club", "sport": "Cricket", "country": "Sri Lanka"},
+    {"name": "Antwerp Giants", "sport": "Basketball", "country": "Belgium"},
+    {"name": "Anwil Włocławek", "sport": "Basketball", "country": "Poland"},
+    {"name": "Asseco Resovia Rzeszów", "sport": "Volleyball", "country": "Poland"},
+    {"name": "Bali United", "sport": "Football", "country": "Indonesia"},
+    {"name": "Avaí FC", "sport": "Football", "country": "Brazil"},
+    {"name": "Bandari FC", "sport": "Football", "country": "Iran"},
+    {"name": "Baltimore Ravens", "sport": "American Football", "country": "USA"},
+    {"name": "Bangkok United", "sport": "Football", "country": "Thailand"},
+    {"name": "Barnsley FC", "sport": "Football", "country": "England"},
+    {"name": "Bayer Leverkusen", "sport": "Football", "country": "Germany"},
+    {"name": "Bayern Munich (Women)", "sport": "Football", "country": "Germany"},
+    {"name": "Paris Saint-Germain Handball", "sport": "Handball", "country": "France"},
+    {"name": "Belenenses", "sport": "Football", "country": "Portugal"},
+    {"name": "Belgrade Partizan (Basketball)", "sport": "Basketball", "country": "Serbia"},
+    {"name": "Belgrade Partizan (Football)", "sport": "Football", "country": "Serbia"},
+    {"name": "Belfast Giants", "sport": "Ice Hockey", "country": "Northern Ireland"},
+    {"name": "Belgrade Water Polo", "sport": "Water Polo", "country": "Serbia"},
+    {"name": "Benfica", "sport": "Football", "country": "Portugal"},
+    {"name": "Benfica (Basketball)", "sport": "Basketball", "country": "Portugal"}
+  ]
+}

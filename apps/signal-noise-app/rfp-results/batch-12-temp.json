@@ -1,0 +1,60 @@
+event: connected
+data: {"service":"reliable","query":"Comprehensive RFP intelligence analysis","mode":"batch","startEntityId":"110","entityLimit":10,"timestamp":"2025-10-24T12:34:36.453Z"}
+
+event: log
+data: {"type":"system","message":"🚀 Starting reliable service in batch mode...","timestamp":"2025-10-24T12:34:36.468Z","service":"reliable"}
+
+event: log
+data: {"type":"system","message":"📊 Configuration: Entity Limit=10, Start ID=110","timestamp":"2025-10-24T12:34:36.479Z","service":"reliable"}
+
+event: log
+data: {"type":"system","message":"🚀 PRODUCTION A2A: Starting real multi-agent system with Claude Agent SDK","timestamp":"2025-10-24T12:34:36.479Z","service":"a2a_production"}
+
+event: log
+data: {"type":"system","message":"🔧 ENVIRONMENT CHECK: {\"hasAnthropic\":true,\"hasBrightData\":true,\"hasNeo4j\":true,\"hasPerplexity\":true,\"hasClaudeCode\":true}","timestamp":"2025-10-24T12:34:36.479Z","service":"a2a_production"}
+
+event: log
+data: {"type":"system","message":"🔗 SESSION: Created A2A session a2a_1761309276479_crxrs8n0e","timestamp":"2025-10-24T12:34:36.479Z","service":"a2a_production"}
+
+event: log
+data: {"type":"system","message":"🚀 A2A PRODUCTION SYSTEM: Starting real multi-agent workflow with full entity processing","timestamp":"2025-10-24T12:34:36.479Z","service":"a2a_production"}
+
+event: log
+data: {"type":"system","message":"🎯 A2A PRODUCTION: Processing 10 entities with reliable Claude Code integration","timestamp":"2025-10-24T12:34:36.479Z","service":"a2a_production"}
+
+event: progress
+data: {"type":"chunk_start","agent":"sse_optimizer","message":"🚀 Processing 3 entities in SSE-compatible chunks...","timestamp":"2025-10-24T12:34:36.479Z","sessionState":{"chunkSize":3,"totalChunks":4}}
+
+event: progress
+data: {"type":"session_start","agent":"reliable_claude_orchestrator","message":"🚀 Reliable Claude Code A2A workflow starting...","timestamp":"2025-10-24T12:34:36.480Z","sessionState":{"sessionId":"a2a_1761309276480_ptblw4i5c","entityLimit":3,"startEntity":110}}
+
+event: progress
+data: {"type":"analysis_start","agent":"reliable_claude_orchestrator","message":"🔍 Analyzing 3 sports entities for RFP opportunities: Cambodian Volleyball Federation, Cameroon Cricket Federation, Cameroon Handball Federation","timestamp":"2025-10-24T12:34:37.045Z","sessionState":{"sessionId":"a2a_1761309276480_ptblw4i5c","entityNames":["Cambodian Volleyball Federation","Cameroon Cricket Federation","Cameroon Handball Federation"],"startEntity":110}}
+
+event: progress
+data: {"type":"chunk_start","agent":"reliable_claude_orchestrator","message":"🔍 Processing chunk 1/1: Cambodian Volleyball Federation, Cameroon Cricket Federation, Cameroon Handball Federation","timestamp":"2025-10-24T12:34:37.046Z","sessionState":{"sessionId":"a2a_1761309276480_ptblw4i5c","currentChunk":1,"totalChunks":1,"chunkEntities":["Cambodian Volleyball Federation","Cameroon Cricket Federation","Cameroon Handball Federation"],"startEntity":110}}
+
+event: entity_search_start
+data: {"type":"entity_search_start","agent":"mcp_search_engine","message":"🔍 Starting BrightData search for: Cambodian Volleyball Federation","timestamp":"2025-10-24T12:34:37.046Z","sessionState":{"currentEntity":"Cambodian Volleyball Federation","startEntity":110}}
+
+event: heartbeat
+data: {"timestamp":"2025-10-24T12:34:41.454Z","message":"A2A system processing... connection maintained","progress":0.1}
+
+event: entity_search_complete
+data: {"type":"entity_search_complete","agent":"mcp_search_engine","message":"✅ BrightData search completed for: Cambodian Volleyball Federation","timestamp":"2025-10-24T12:34:45.090Z","sessionState":{"currentEntity":"Cambodian Volleyball Federation","status":"completed","startEntity":110}}
+
+event: entity_search_start
+data: {"type":"entity_search_start","agent":"mcp_search_engine","message":"🔍 Starting BrightData search for: Cameroon Cricket Federation","timestamp":"2025-10-24T12:34:46.094Z","sessionState":{"currentEntity":"Cameroon Cricket Federation","startEntity":110}}
+
+event: heartbeat
+data: {"timestamp":"2025-10-24T12:34:46.456Z","message":"A2A system processing... connection maintained","progress":0.2}
+
+event: entity_search_complete
+data: {"type":"entity_search_complete","agent":"mcp_search_engine","message":"✅ BrightData search completed for: Cameroon Cricket Federation","timestamp":"2025-10-24T12:34:50.898Z","sessionState":{"currentEntity":"Cameroon Cricket Federation","status":"completed","startEntity":110}}
+
+event: heartbeat
+data: {"timestamp":"2025-10-24T12:34:51.456Z","message":"A2A system processing... connection maintained","progress":0.3}
+
+event: entity_search_start
+data: {"type":"entity_search_start","agent":"mcp_search_engine","message":"🔍 Starting BrightData search for: Cameroon Handball Federation","timestamp":"2025-10-24T12:34:51.900Z","sessionState":{"currentEntity":"Cameroon Handball Federation","startEntity":110}}
+

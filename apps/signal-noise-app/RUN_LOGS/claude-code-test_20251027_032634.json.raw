@@ -1,0 +1,32 @@
+file:///Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/node_modules/@anthropic-ai/claude-code/cli.js:3744
+`);throw Error(`Invalid MCP configuration:
+         ^
+
+Error: Invalid MCP configuration:
+MCP config file not found: /Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/Test your MCP tool access by performing these simple tasks:
+
+1. Use neo4j-mcp to query for exactly 1 sports entity name from the knowledge graph
+2. Use brightData to perform a simple search for 'sports industry digital transformation'
+3. Use perplexity-mcp to search for 'sports technology trends 2025'
+
+Respond with a simple JSON test result:
+{
+  "test_timestamp": "2025-10-27T03:26:34+00:00",
+  "tools_tested": {
+    "neo4j_mcp": {"status": "success", "entity_found": "entity_name_here"},
+    "brightData": {"status": "success", "search_completed": true},
+    "perplexity_mcp": {"status": "success", "search_completed": true}
+  },
+  "overall_status": "all_tools_working"
+}
+    at It0.<anonymous> (file:///Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/node_modules/@anthropic-ai/claude-code/cli.js:3744:10)
+    at It0.B [as _actionHandler] (file:///Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/node_modules/@anthropic-ai/claude-code/cli.js:3662:528)
+    at file:///Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/node_modules/@anthropic-ai/claude-code/cli.js:3666:3119
+    at It0._chainOrCall (file:///Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/node_modules/@anthropic-ai/claude-code/cli.js:3666:1686)
+    at It0._parseCommand (file:///Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/node_modules/@anthropic-ai/claude-code/cli.js:3666:3095)
+    at It0.parseAsync (file:///Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/node_modules/@anthropic-ai/claude-code/cli.js:3663:4167)
+    at Vd8 (file:///Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/node_modules/@anthropic-ai/claude-code/cli.js:3790:1584)
+    at Xd8 (file:///Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/node_modules/@anthropic-ai/claude-code/cli.js:3735:1542)
+    at Dd8 (file:///Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/node_modules/@anthropic-ai/claude-code/cli.js:3790:2732)
+
+Node.js v24.6.0

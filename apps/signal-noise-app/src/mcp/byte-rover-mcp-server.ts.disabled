@@ -1,0 +1,514 @@
+import { tool, createSdkMcpServer } from '@anthropic-ai/claude-agent-sdk';
+import { z } from 'zod';
+
+// ByteRover MCP Server for global shared memory across all users
+interface GlobalInsight {
+  id: string;
+  content: string;
+  category: 'sports_intelligence' | 'rfp_analysis' | 'market_trends' | 'entity_relationships' | 'best_practices' | 'analysis' | 'synthesis';
+  confidence: number;
+  sourceUserId: string;
+  contributingUsers: string[];
+  applications: number;
+  successRate?: number;
+  tags: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  lastApplied?: Date;
+  context: {
+    industry?: string;
+    region?: string;
+    entityType?: string;
+    scenario?: string;
+    threadId?: string;
+    taskType?: string;
+    [key: string]: any;
+  };
+}
+
+// In-memory storage for ByteRover global insights (in production, this would be a distributed database)
+const byteRoverStorage = new Map<string, GlobalInsight>();
+
+// ByteRover MCP Tools
+const byteRoverStoreGlobalInsightTool = tool('byterover-store-global-insight', 'Store an insight globally for all users to benefit from', {
+  content: z.string().describe('The insight content to store globally'),
+  category: z.enum(['sports_intelligence', 'rfp_analysis', 'market_trends', 'entity_relationships', 'best_practices', 'analysis', 'synthesis']).describe('Category of the insight'),
+  confidence: z.number().min(0).max(1).describe('Confidence level of the insight (0-1)'),
+  sourceUserId: z.string().describe('User ID who contributed this insight'),
+  tags: z.array(z.string()).optional().describe('Tags for the insight'),
+  context: z.record(z.any()).optional().describe('Contextual information about the insight')
+})
+async function byteRoverStoreGlobalInsight(args: any) {
+  try {
+    const { content, category, confidence, sourceUserId, tags = [], context = {} } = args;
+    
+    console.log(`ByteRover MCP: Storing global insight from user ${sourceUserId}: ${content.substring(0, 50)}...`);
+    
+    const insightId = `global_insight_${Date.now()}_${Math.random()}`;
+    const insight: GlobalInsight = {
+      id: insightId,
+      content,
+      category,
+      confidence,
+      sourceUserId,
+      contributingUsers: [sourceUserId],
+      applications: 0,
+      tags,
+      context: {
+        industry: context.industry,
+        region: context.region,
+        entityType: context.entityType,
+        scenario: context.scenario,
+        threadId: context.threadId,
+        taskType: context.taskType,
+        ...context
+      },
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    
+    byteRoverStorage.set(insightId, insight);
+    
+    return {
+      content: [{
+        type: 'text',
+        text: `Successfully stored global insight ${insightId}:\\n` +
+              `- Content: ${content.substring(0, 100)}...\\n` +
+              `- Category: ${category}\\n` +
+              `- Confidence: ${confidence}\\n` +
+              `- Tags: ${tags.join(', ')}\\n` +
+              `- Context: ${JSON.stringify(context, null, 2)}\\n` +
+              `This insight is now available to all users of the system.`
+      }]
+    };
+  } catch (error) {
+    console.error('ByteRover MCP: Store global insight error:', error);
+    return {
+      content: [{
+        type: 'text',
+        text: `Error storing global insight: ${error}`
+      }],
+      isError: true
+    };
+  }
+}
+
+@tool('byterover-retrieve-global-insights', 'Retrieve relevant global insights for analysis', {
+  query: z.string().describe('Search query or topic to find relevant insights for'),
+  category: z.enum(['sports_intelligence', 'rfp_analysis', 'market_trends', 'entity_relationships', 'best_practices', 'analysis', 'synthesis']).optional().describe('Filter by specific category'),
+  context: z.record(z.any()).optional().describe('Context to match against insight context'),
+  limit: z.number().min(1).max(50).default(5).describe('Maximum number of insights to retrieve'),
+  minConfidence: z.number().min(0).max(1).optional().describe('Minimum confidence threshold'),
+  sortBy: z.enum(['confidence', 'applications', 'recent', 'relevance']).default('confidence').describe('Sort order for results')
+})
+async function byteRoverRetrieveGlobalInsights(args: any) {
+  try {
+    const { query, category, context = {}, limit = 5, minConfidence = 0.7, sortBy = 'confidence' } = args;
+    
+    console.log(`ByteRover MCP: Retrieving insights for query: ${query.substring(0, 50)}...`);
+    
+    const insights = Array.from(byteRoverStorage.values());
+    const queryLower = query.toLowerCase();
+    
+    // Filter and score insights based on relevance
+    const scoredInsights = insights
+      .filter(insight => {
+        // Apply basic filters
+        if (category && insight.category !== category) return false;
+        if (insight.confidence < minConfidence) return false;
+        
+        // Check content relevance
+        const contentRelevance = insight.content.toLowerCase().includes(queryLower);
+        
+        // Check tag relevance
+        const tagRelevance = insight.tags.some(tag => tag.toLowerCase().includes(queryLower));
+        
+        // Check context relevance
+        const contextRelevance = Object.keys(context).every(key => {
+          if (!insight.context[key] || !context[key]) return true;
+          if (Array.isArray(context[key])) {
+            return context[key].some(val => insight.context[key].includes(val));
+          }
+          return insight.context[key] === context[key];
+        });
+        
+        return contentRelevance || tagRelevance || contextRelevance;
+      })
+      .map(insight => {
+        // Calculate relevance score
+        let score = insight.confidence * 100; // Base confidence score
+        
+        // Content match bonus
+        if (insight.content.toLowerCase().includes(queryLower)) {
+          score += 50;
+        }
+        
+        // Tag match bonus
+        if (insight.tags.some(tag => tag.toLowerCase().includes(queryLower))) {
+          score += 30;
+        }
+        
+        // Context match bonus
+        if (Object.keys(context).length > 0) {
+          const contextMatches = Object.keys(context).filter(key => 
+            insight.context[key] && context[key] && insight.context[key] === context[key]
+          ).length;
+          score += contextMatches * 20;
+        }
+        
+        // Usage bonus
+        score += insight.applications * 5;
+        
+        // Recency bonus
+        const daysSinceCreation = (Date.now() - insight.createdAt.getTime()) / (1000 * 60 * 60 * 24);
+        if (daysSinceCreation < 30) score += 10; // Recent insights get bonus
+        
+        return { insight, score };
+      });
+    
+    // Sort by specified criteria
+    scoredInsights.sort((a, b) => {
+      switch (sortBy) {
+        case 'applications':
+          return b.insight.applications - a.insight.applications;
+        case 'recent':
+          return b.insight.createdAt.getTime() - a.insight.createdAt.getTime();
+        case 'relevance':
+          return b.score - a.score;
+        case 'confidence':
+        default:
+          return b.insight.confidence - a.insight.confidence;
+      }
+    });
+    
+    const topInsights = scoredInsights.slice(0, limit);
+    
+    let resultText = `Found ${scoredInsights.length} insights for query "${query}" (showing top ${topInsights.length}):\\n\\n`;
+    
+    topInsights.forEach(({ insight, score }, index) => {
+      resultText += `${index + 1}. [${insight.category.toUpperCase()}] Score: ${Math.round(score)}\\n`;
+      resultText += `   Content: ${insight.content.substring(0, 100)}...\\n`;
+      resultText += `   Confidence: ${insight.confidence}\\n`;
+      resultText += `   Applications: ${insight.applications}\\n`;
+      resultText += `   Success Rate: ${insight.successRate ? `${(insight.successRate * 100).toFixed(1)}%` : 'N/A'}\\n`;
+      resultText += `   Contributing Users: ${insight.contributingUsers.length}\\n`;
+      resultText += `   Tags: ${insight.tags.join(', ')}\\n`;
+      resultText += `   Context: ${JSON.stringify(insight.context, null, 2)}\\n`;
+      resultText += `   Created: ${insight.createdAt.toLocaleDateString()}\\n\\n`;
+    });
+    
+    return {
+      content: [{
+        type: 'text',
+        text: resultText
+      }]
+    };
+  } catch (error) {
+    console.error('ByteRover MCP: Retrieve global insights error:', error);
+    return {
+      content: [{
+        type: 'text',
+        text: `Error retrieving global insights: ${error}`
+      }],
+      isError: true
+    };
+  }
+}
+
+@tool('byterover-apply-insight-feedback', 'Apply usage feedback to a global insight to improve future relevance', {
+  insightId: z.string().describe('ID of the insight to provide feedback for'),
+  userId: z.string().describe('User ID applying this feedback'),
+  success: z.boolean().describe('Whether using this insight was successful'),
+  feedback: z.string().optional().describe('Additional feedback about the insight usage'),
+  context: z.record(z.any()).optional().describe('Context in which the insight was used')
+})
+async function byteRoverApplyInsightFeedback(args: any) {
+  try {
+    const { insightId, userId, success, feedback, context = {} } = args;
+    
+    console.log(`ByteRover MCP: Applying feedback for insight ${insightId} from user ${userId}: ${success ? 'success' : 'failure'}`);
+    
+    const insight = byteRoverStorage.get(insightId);
+    if (!insight) {
+      return {
+        content: [{
+          type: 'text',
+          text: `Error: Insight ${insightId} not found`
+        }],
+        isError: true
+      };
+    }
+    
+    // Update insight with feedback
+    insight.applications++;
+    if (!insight.contributingUsers.includes(userId)) {
+      insight.contributingUsers.push(userId);
+    }
+    
+    // Update success rate
+    if (success) {
+      insight.successRate = ((insight.successRate || 0) * (insight.applications - 1) + 1) / insight.applications;
+    } else {
+      insight.successRate = ((insight.successRate || 0) * (insight.applications - 1)) / insight.applications;
+    }
+    
+    // Adjust confidence based on feedback
+    if (success && insight.confidence < 0.95) {
+      insight.confidence += 0.01; // Gradually increase confidence for successful applications
+    } else if (!success && insight.confidence > 0.5) {
+      insight.confidence -= 0.01; // Gradually decrease confidence for failures
+    }
+    
+    insight.lastApplied = new Date();
+    insight.updatedAt = new Date();
+    
+    // Add feedback context
+    if (feedback || Object.keys(context).length > 0) {
+      insight.context.lastFeedback = {
+        feedback,
+        context,
+        userId,
+        success,
+        timestamp: new Date().toISOString()
+      };
+    }
+    
+    byteRoverStorage.set(insightId, insight);
+    
+    return {
+      content: [{
+        type: 'text',
+        text: `Successfully applied feedback to insight ${insightId}:\\n` +
+              `- Success: ${success ? '✓' : '✗'}\\n` +
+              `- Applications: ${insight.applications}\\n` +
+              `- Success Rate: ${(insight.successRate * 100).toFixed(1)}%\\n` +
+              `- Updated Confidence: ${insight.confidence.toFixed(2)}\\n` +
+              `- Contributing Users: ${insight.contributingUsers.length}\\n` +
+              `${feedback ? `\\nFeedback: ${feedback}` : ''}`
+      }]
+    };
+  } catch (error) {
+    console.error('ByteRover MCP: Apply insight feedback error:', error);
+    return {
+      content: [{
+        type: 'text',
+        text: `Error applying insight feedback: ${error}`
+      }],
+      isError: true
+    };
+  }
+}
+
+@tool('byterover-get-global-stats', 'Get statistics about the global knowledge base', {
+  includeCategories: z.array(z.string()).optional().describe('Specific categories to include in stats')
+})
+async function byteRoverGetGlobalStats(args: any) {
+  try {
+    const { includeCategories } = args;
+    
+    console.log('ByteRover MCP: Getting global knowledge base statistics');
+    
+    const insights = Array.from(byteRoverStorage.values());
+    
+    // Overall statistics
+    const totalInsights = insights.length;
+    const totalContributors = new Set(insights.map(i => i.sourceUserId)).size;
+    const totalApplications = insights.reduce((sum, i) => sum + i.applications, 0);
+    const averageConfidence = insights.reduce((sum, i) => sum + i.confidence, 0) / insights.length;
+    
+    // Category statistics
+    const categoryStats = insights.reduce((acc, insight) => {
+      if (!includeCategories || includeCategories.includes(insight.category)) {
+        if (!acc[insight.category]) {
+          acc[insight.category] = {
+            count: 0,
+            applications: 0,
+            averageConfidence: 0,
+            topContributors: new Set(),
+            insights: []
+          };
+        }
+        
+        acc[insight.category].count++;
+        acc[insight.category].applications += insight.applications;
+        acc[insight.category].insights.push(insight);
+        acc[insight.category].topContributors.add(insight.sourceUserId);
+      }
+      return acc;
+    }, {} as Record<string, any>);
+    
+    // Calculate averages for each category
+    Object.keys(categoryStats).forEach(category => {
+      const stats = categoryStats[category];
+      stats.averageConfidence = stats.insights.reduce((sum: number, i: GlobalInsight) => sum + i.confidence, 0) / stats.insights.length;
+      stats.topContributors = Array.from(stats.topContributors).slice(0, 5);
+    });
+    
+    // Top contributors
+    const contributorStats = insights.reduce((acc, insight) => {
+      if (!acc[insight.sourceUserId]) {
+        acc[insight.sourceUserId] = {
+          insightsCount: 0,
+          applications: 0,
+          categories: new Set()
+        };
+      }
+      
+      acc[insight.sourceUserId].insightsCount++;
+      acc[insight.sourceUserId].applications += insight.applications;
+      acc[insight.sourceUserId].categories.add(insight.category);
+      
+      return acc;
+    }, {} as Record<string, any>);
+    
+    const topContributors = Object.entries(contributorStats)
+      .map(([userId, stats]) => ({
+        userId,
+        insightsCount: stats.insightsCount,
+        applications: stats.applications,
+        categories: Array.from(stats.categories)
+      }))
+      .sort((a, b) => b.insightsCount - a.insightsCount)
+      .slice(0, 10);
+    
+    let resultText = `🌍 Global Knowledge Base Statistics\\n\\n` +
+                    `📊 Overall:\\n` +
+                    `- Total Insights: ${totalInsights}\\n` +
+                    `- Total Contributors: ${totalContributors}\\n` +
+                    `- Total Applications: ${totalApplications}\\n` +
+                    `- Average Confidence: ${averageConfidence.toFixed(2)}\\n\\n`;
+    
+    if (Object.keys(categoryStats).length > 0) {
+      resultText += `📂 Categories:\\n`;
+      Object.entries(categoryStats).forEach(([category, stats]) => {
+        resultText += `\\n${category.toUpperCase()}:\\n` +
+                     `  - Count: ${stats.count}\\n` +
+                     `  - Applications: ${stats.applications}\\n` +
+                     `  - Avg Confidence: ${stats.averageConfidence.toFixed(2)}\\n` +
+                     `  - Top Contributors: ${stats.topContributors.slice(0, 3).join(', ')}\\n`;
+      });
+    }
+    
+    if (topContributors.length > 0) {
+      resultText += `\\n👥 Top Contributors:\\n`;
+      topContributors.forEach((contributor, index) => {
+        resultText += `\\n${index + 1}. ${contributor.userId}\\n` +
+                     `   - Insights: ${contributor.insightsCount}\\n` +
+                     `   - Applications: ${contributor.applications}\\n` +
+                     `   - Categories: ${contributor.categories.join(', ')}\\n`;
+      });
+    }
+    
+    return {
+      content: [{
+        type: 'text',
+        text: resultText
+      }]
+    };
+  } catch (error) {
+    console.error('ByteRover MCP: Get global stats error:', error);
+    return {
+      content: [{
+        type: 'text',
+        text: `Error getting global stats: ${error}`
+      }],
+      isError: true
+    };
+  }
+}
+
+@tool('byterover-search-by-context', 'Search for insights based on contextual similarity', {
+  context: z.record(z.any()).describe('Context to match against'),
+  category: z.string().optional().describe('Filter by category'),
+  limit: z.number().default(5).describe('Maximum results')
+})
+async function byteRoverSearchByContext(args: any) {
+  try {
+    const { context, category, limit = 5 } = args;
+    
+    console.log(`ByteRover MCP: Searching by context: ${JSON.stringify(context)}`);
+    
+    const insights = Array.from(byteRoverStorage.values());
+    
+    // Score insights based on context similarity
+    const scoredInsights = insights
+      .filter(insight => !category || insight.category === category)
+      .map(insight => {
+        let similarityScore = 0;
+        let matchCount = 0;
+        
+        // Check for matching context keys and values
+        Object.keys(context).forEach(key => {
+          if (insight.context[key] && context[key]) {
+            if (Array.isArray(context[key])) {
+              // Array matching
+              const matches = context[key].filter((val: any) => 
+                Array.isArray(insight.context[key]) ? 
+                  insight.context[key].includes(val) : 
+                  insight.context[key] === val
+              );
+              similarityScore += matches.length * 10;
+              matchCount += matches.length;
+            } else {
+              // Direct value matching
+              if (insight.context[key] === context[key]) {
+                similarityScore += 20;
+                matchCount++;
+              }
+            }
+          }
+        });
+        
+        // Boost recent insights
+        const daysSinceCreation = (Date.now() - insight.createdAt.getTime()) / (1000 * 60 * 60 * 24);
+        if (daysSinceCreation < 30) {
+          similarityScore += 5;
+        }
+        
+        // Boost highly applied insights
+        if (insight.applications > 10) {
+          similarityScore += 5;
+        }
+        
+        return { insight, score: similarityScore, matchCount };
+      })
+      .filter(item => item.score > 0 || item.matchCount > 0)
+      .sort((a, b) => b.score - a.score);
+    
+    const topInsights = scoredInsights.slice(0, limit);
+    
+    let resultText = `Found ${scoredInsights.length} contextually similar insights (showing top ${topInsights.length}):\\n\\n`;
+    
+    topInsights.forEach(({ insight, score, matchCount }, index) => {
+      resultText += `${index + 1}. [Match Score: ${Math.round(score)}] ${insight.category.toUpperCase()}\\n`;
+      resultText += `   Content: ${insight.content.substring(0, 100)}...\\n`;
+      resultText += `   Confidence: ${insight.confidence}\\n`;
+      resultText += `   Applications: ${insight.applications}\\n`;
+      resultText += `   Context Matches: ${matchCount}\\n`;
+      resultText += `   Insight Context: ${JSON.stringify(insight.context, null, 2)}\\n\\n`;
+    });
+    
+    return {
+      content: [{
+        type: 'text',
+        text: resultText
+      }]
+    };
+  } catch (error) {
+    console.error('ByteRover MCP: Search by context error:', error);
+    return {
+      content: [{
+        type: 'text',
+        text: `Error searching by context: ${error}`
+      }],
+      isError: true
+    };
+  }
+}
+
+// Create the ByteRover MCP Server
+export const byteRoverMcpServer = createSdkMcpServer(
+  'byterover-global-knowledge-server',
+  '1.0.0',
+  [byteRoverStoreGlobalInsight, byteRoverRetrieveGlobalInsights, byteRoverApplyInsightFeedback, byteRoverGetGlobalStats, byteRoverSearchByContext]
+);

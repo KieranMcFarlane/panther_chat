@@ -1,0 +1,422 @@
+{
+  "slots": {
+    "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f": {
+      "id": "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f",
+      "userId": null,
+      "status": "available",
+      "type": "standard",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.355Z",
+      "updatedAt": "2025-09-27T16:09:56.357Z",
+      "allocatedAt": null,
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "least-connections",
+        "recycledAt": "2025-09-27T16:09:56.357Z"
+      },
+      "state": {
+        "phase": "ready",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": {
+      "id": "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9",
+      "userId": "user_8dbe7eb7-e806-49b4-a48b-bbd74c52a6f9",
+      "status": "assigned",
+      "type": "priority",
+      "priority": "high",
+      "createdAt": "2025-09-27T16:09:56.356Z",
+      "updatedAt": "2025-09-27T16:09:56.356Z",
+      "allocatedAt": "2025-09-27T16:09:56.356Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "least-connections"
+      },
+      "state": {
+        "phase": "initializing",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": {
+      "id": "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06",
+      "userId": "user_8dbe7eb7-e806-49b4-a48b-bbd74c52a6f9",
+      "status": "assigned",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:09:56.357Z",
+      "allocatedAt": "2025-09-27T16:09:56.357Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "least-connections"
+      },
+      "state": {
+        "phase": "initializing",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": {
+      "id": "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0",
+      "userId": null,
+      "status": "creating",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:09:56.357Z",
+      "allocatedAt": null,
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "least-connections"
+      },
+      "state": {
+        "phase": "initializing",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": {
+      "id": "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0",
+      "userId": null,
+      "status": "creating",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:09:56.357Z",
+      "allocatedAt": null,
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "least-connections"
+      },
+      "state": {
+        "phase": "initializing",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": {
+      "id": "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c",
+      "userId": null,
+      "status": "creating",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:09:56.357Z",
+      "allocatedAt": null,
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "round-robin"
+      },
+      "state": {
+        "phase": "initializing",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": {
+      "id": "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd",
+      "userId": null,
+      "status": "creating",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:09:56.357Z",
+      "allocatedAt": null,
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "round-robin"
+      },
+      "state": {
+        "phase": "initializing",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": {
+      "id": "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed",
+      "userId": null,
+      "status": "creating",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:09:56.357Z",
+      "allocatedAt": null,
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "round-robin"
+      },
+      "state": {
+        "phase": "initializing",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    }
+  },
+  "userSlots": {
+    "user_8dbe7eb7-e806-49b4-a48b-bbd74c52a6f9": [
+      "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9",
+      "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06"
+    ]
+  },
+  "availableSlots": [
+    "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0",
+    "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0",
+    "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c",
+    "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd",
+    "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed",
+    "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f"
+  ],
+  "assignedSlots": [
+    "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9",
+    "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06"
+  ],
+  "blacklistedSlots": [],
+  "resourceMetrics": {
+    "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f": {
+      "timestamp": "2025-09-27T16:09:56.357Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": {
+      "timestamp": "2025-09-27T16:09:56.356Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": {
+      "timestamp": "2025-09-27T16:09:56.357Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": {
+      "timestamp": "2025-09-27T16:09:56.357Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": {
+      "timestamp": "2025-09-27T16:09:56.357Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": {
+      "timestamp": "2025-09-27T16:09:56.357Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": {
+      "timestamp": "2025-09-27T16:09:56.357Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": {
+      "timestamp": "2025-09-27T16:09:56.357Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    }
+  },
+  "loadBalancer": {
+    "currentStrategy": "round-robin",
+    "connectionCounts": {
+      "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": 1,
+      "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": 1,
+      "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": 0,
+      "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": 0,
+      "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": 0,
+      "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": 0,
+      "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": 0
+    },
+    "lastUsed": {
+      "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": 1758989396356,
+      "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": 1758989396357,
+      "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": 1758989396357,
+      "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": 1758989396357,
+      "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": 1758989396357,
+      "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": 1758989396357,
+      "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": 1758989396357
+    },
+    "healthStatus": {
+      "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f": "healthy",
+      "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": "healthy",
+      "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": "healthy",
+      "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": "healthy",
+      "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": "healthy",
+      "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": "healthy",
+      "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": "healthy",
+      "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": "healthy"
+    },
+    "slotWeights": {
+      "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f": 0.647,
+      "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": 0.9969999999999999,
+      "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": 0.9969999999999999
+    }
+  },
+  "metrics": {
+    "totalAllocations": 3,
+    "totalDeallocations": 1,
+    "failedAllocations": 1,
+    "currentLoad": 0.2,
+    "averageResponseTime": 0
+  },
+  "savedAt": "2025-09-27T16:09:56.358Z"
+}

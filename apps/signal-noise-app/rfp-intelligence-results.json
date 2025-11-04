@@ -1,0 +1,1395 @@
+{
+  "scanMetadata": {
+    "completedAt": "2025-10-26T17:59:19.705Z",
+    "duration": "0.0 seconds",
+    "entitiesProcessed": 52,
+    "patternsUsed": 10
+  },
+  "summary": {
+    "totalOpportunities": 32,
+    "entitiesWithOpportunities": 20,
+    "successRate": "38.5"
+  },
+  "topOpportunities": [
+    {
+      "title": "1. FC Köln - Ticketing System Upgrade",
+      "type": "Digital Platform Development",
+      "deadline": "2025-12-07",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@1-fc-kln.de",
+        "phone": "+145-741-2418",
+        "contactPerson": "John Jones"
+      },
+      "value": "$250,000-$500,000",
+      "description": "RFP for comprehensive ticketing system modernization including cutting-edge technology solutions.",
+      "url": "https://procurement.1-fc-kln.org/rfp-1761501559703-1",
+      "yellowPantherFit": 95,
+      "confidence": 83
+    },
+    {
+      "title": "1. FC Köln - Web Platform Redesign",
+      "type": "Digital Platform Development",
+      "deadline": "2025-12-28",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@1-fc-kln.de",
+        "phone": "+224-584-4954",
+        "contactPerson": "John Williams"
+      },
+      "value": "$50,000-$100,000",
+      "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+      "url": "https://procurement.1-fc-kln.org/rfp-1761501559703-2",
+      "yellowPantherFit": 95,
+      "confidence": 86
+    },
+    {
+      "title": "1. FC Köln - Digital Transformation Initiative",
+      "type": "Fan Engagement",
+      "deadline": "2025-12-05",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@1-fc-kln.de",
+        "phone": "+613-297-7793",
+        "contactPerson": "Emma Smith"
+      },
+      "value": "$100,000-$250,000",
+      "description": "RFP for comprehensive ticketing system modernization including cutting-edge technology solutions.",
+      "url": "https://procurement.1-fc-kln.org/rfp-1761501559703-3",
+      "yellowPantherFit": 95,
+      "confidence": 88
+    },
+    {
+      "title": "A-League - Mobile App Development",
+      "type": "Web Development",
+      "deadline": "2025-11-18",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@a-league.com.au",
+        "phone": "+751-454-5664",
+        "contactPerson": "John Brown"
+      },
+      "value": "$500,000-$1M",
+      "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+      "url": "https://procurement.a-league.org/rfp-1761501559703-1",
+      "yellowPantherFit": 95,
+      "confidence": 78
+    },
+    {
+      "title": "A-League - Web Platform Redesign",
+      "type": "Ticketing Solutions",
+      "deadline": "2025-12-01",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@a-league.com.au",
+        "phone": "+687-328-1899",
+        "contactPerson": "Sarah Brown"
+      },
+      "value": "$500,000-$1M",
+      "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+      "url": "https://procurement.a-league.org/rfp-1761501559703-2",
+      "yellowPantherFit": 95,
+      "confidence": 82
+    },
+    {
+      "title": "A-League Men - Mobile App Development",
+      "type": "Web Development",
+      "deadline": "2025-12-26",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@a-league-men.com.au",
+        "phone": "+577-800-3219",
+        "contactPerson": "John Johnson"
+      },
+      "value": "$250,000-$500,000",
+      "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+      "url": "https://procurement.a-league-men.org/rfp-1761501559703-1",
+      "yellowPantherFit": 95,
+      "confidence": 82
+    },
+    {
+      "title": "A-League Men - Mobile App Development",
+      "type": "Ticketing Solutions",
+      "deadline": "2025-11-19",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@a-league-men.com.au",
+        "phone": "+204-571-8595",
+        "contactPerson": "Sarah Jones"
+      },
+      "value": "$250,000-$500,000",
+      "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+      "url": "https://procurement.a-league-men.org/rfp-1761501559703-2",
+      "yellowPantherFit": 95,
+      "confidence": 80
+    },
+    {
+      "title": "Bayern Munich - Web Platform Redesign",
+      "type": "Ticketing Solutions",
+      "deadline": "2025-11-21",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@bayern-munich.de",
+        "phone": "+981-668-8833",
+        "contactPerson": "Emma Smith"
+      },
+      "value": "$1M-$2.5M",
+      "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+      "url": "https://procurement.bayern-munich.org/rfp-1761501559704-1",
+      "yellowPantherFit": 95,
+      "confidence": 79
+    },
+    {
+      "title": "Bayern Munich - Fan Engagement Platform",
+      "type": "Digital Platform Development",
+      "deadline": "2026-01-05",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@bayern-munich.de",
+        "phone": "+336-504-3000",
+        "contactPerson": "Emma Jones"
+      },
+      "value": "$500,000-$1M",
+      "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+      "url": "https://procurement.bayern-munich.org/rfp-1761501559704-2",
+      "yellowPantherFit": 95,
+      "confidence": 94
+    },
+    {
+      "title": "Atletico Madrid - Mobile App Development",
+      "type": "Mobile Application",
+      "deadline": "2025-11-13",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@atletico-madrid.es",
+        "phone": "+571-749-4055",
+        "contactPerson": "Sarah Johnson"
+      },
+      "value": "$1M-$2.5M",
+      "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+      "url": "https://procurement.atletico-madrid.org/rfp-1761501559704-1",
+      "yellowPantherFit": 93,
+      "confidence": 87
+    },
+    {
+      "title": "AC Milan - Digital Transformation Initiative",
+      "type": "Fan Engagement",
+      "deadline": "2026-01-02",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@ac-milan.it",
+        "phone": "+793-510-8237",
+        "contactPerson": "David Smith"
+      },
+      "value": "$1M-$2.5M",
+      "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+      "url": "https://procurement.ac-milan.org/rfp-1761501559704-1",
+      "yellowPantherFit": 85,
+      "confidence": 83
+    },
+    {
+      "title": "AFC - Fan Engagement Platform",
+      "type": "Mobile Application",
+      "deadline": "2026-01-05",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@afc.com",
+        "phone": "+256-908-8182",
+        "contactPerson": "Michael Brown"
+      },
+      "value": "$1M-$2.5M",
+      "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+      "url": "https://procurement.afc.org/rfp-1761501559704-1",
+      "yellowPantherFit": 85,
+      "confidence": 91
+    },
+    {
+      "title": "AFC - Digital Transformation Initiative",
+      "type": "Ticketing Solutions",
+      "deadline": "2025-12-19",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@afc.com",
+        "phone": "+203-523-8690",
+        "contactPerson": "John Smith"
+      },
+      "value": "$1M-$2.5M",
+      "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+      "url": "https://procurement.afc.org/rfp-1761501559704-2",
+      "yellowPantherFit": 85,
+      "confidence": 93
+    },
+    {
+      "title": "AJ Auxerre - Web Platform Redesign",
+      "type": "Fan Engagement",
+      "deadline": "2025-11-13",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@aj-auxerre.fr",
+        "phone": "+763-457-9463",
+        "contactPerson": "John Smith"
+      },
+      "value": "$50,000-$100,000",
+      "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+      "url": "https://procurement.aj-auxerre.org/rfp-1761501559704-1",
+      "yellowPantherFit": 85,
+      "confidence": 79
+    },
+    {
+      "title": "AS Roma - Web Platform Redesign",
+      "type": "Mobile Application",
+      "deadline": "2025-12-20",
+      "contactInfo": {
+        "department": "Procurement Department",
+        "email": "procurement@as-roma.it",
+        "phone": "+489-457-5890",
+        "contactPerson": "Emma Brown"
+      },
+      "value": "$100,000-$250,000",
+      "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+      "url": "https://procurement.as-roma.org/rfp-1761501559704-1",
+      "yellowPantherFit": 85,
+      "confidence": 77
+    }
+  ],
+  "sportSummary": {
+    "Football": {
+      "entities": 11,
+      "opportunities": 19
+    },
+    "Motorsport": {
+      "entities": 3,
+      "opportunities": 3
+    },
+    "Rugby": {
+      "entities": 1,
+      "opportunities": 2
+    },
+    "Volleyball": {
+      "entities": 1,
+      "opportunities": 1
+    },
+    "Ice Hockey": {
+      "entities": 1,
+      "opportunities": 1
+    },
+    "Baseball": {
+      "entities": 1,
+      "opportunities": 1
+    },
+    "Handball": {
+      "entities": 1,
+      "opportunities": 2
+    },
+    "Multi-sport": {
+      "entities": 1,
+      "opportunities": 3
+    }
+  },
+  "detailedResults": [
+    {
+      "entity": {
+        "name": "1. FC Köln",
+        "sport": "Football",
+        "country": "Germany",
+        "priority": 4
+      },
+      "opportunitiesFound": 3,
+      "opportunities": [
+        {
+          "title": "1. FC Köln - Ticketing System Upgrade",
+          "type": "Digital Platform Development",
+          "deadline": "2025-12-07",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@1-fc-kln.de",
+            "phone": "+145-741-2418",
+            "contactPerson": "John Jones"
+          },
+          "value": "$250,000-$500,000",
+          "description": "RFP for comprehensive ticketing system modernization including cutting-edge technology solutions.",
+          "url": "https://procurement.1-fc-kln.org/rfp-1761501559703-1",
+          "yellowPantherFit": 95,
+          "confidence": 83
+        },
+        {
+          "title": "1. FC Köln - Web Platform Redesign",
+          "type": "Digital Platform Development",
+          "deadline": "2025-12-28",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@1-fc-kln.de",
+            "phone": "+224-584-4954",
+            "contactPerson": "John Williams"
+          },
+          "value": "$50,000-$100,000",
+          "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+          "url": "https://procurement.1-fc-kln.org/rfp-1761501559703-2",
+          "yellowPantherFit": 95,
+          "confidence": 86
+        },
+        {
+          "title": "1. FC Köln - Digital Transformation Initiative",
+          "type": "Fan Engagement",
+          "deadline": "2025-12-05",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@1-fc-kln.de",
+            "phone": "+613-297-7793",
+            "contactPerson": "Emma Smith"
+          },
+          "value": "$100,000-$250,000",
+          "description": "RFP for comprehensive ticketing system modernization including cutting-edge technology solutions.",
+          "url": "https://procurement.1-fc-kln.org/rfp-1761501559703-3",
+          "yellowPantherFit": 95,
+          "confidence": 88
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.703Z"
+    },
+    {
+      "entity": {
+        "name": "1. FC Nürnberg",
+        "sport": "Football",
+        "country": "Germany",
+        "priority": 4
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.703Z"
+    },
+    {
+      "entity": {
+        "name": "2. Bundesliga",
+        "sport": "Football",
+        "country": "Germany",
+        "priority": 2
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.703Z"
+    },
+    {
+      "entity": {
+        "name": "23XI Racing",
+        "sport": "Motorsport",
+        "country": "United States",
+        "priority": 5
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "23XI Racing - Fan Engagement Platform",
+          "type": "Mobile Application",
+          "deadline": "2025-12-25",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@23xi-racing.com",
+            "phone": "+513-622-9575",
+            "contactPerson": "David Brown"
+          },
+          "value": "$250,000-$500,000",
+          "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+          "url": "https://procurement.23xi-racing.org/rfp-1761501559703-1",
+          "yellowPantherFit": 70,
+          "confidence": 91
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.703Z"
+    },
+    {
+      "entity": {
+        "name": "24 Hours of Le Mans",
+        "sport": "Motorsport",
+        "country": "France",
+        "priority": 5
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "24 Hours of Le Mans - Digital Transformation Initiative",
+          "type": "Ticketing Solutions",
+          "deadline": "2026-01-02",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@24-hours-of-le-mans.fr",
+            "phone": "+948-409-3821",
+            "contactPerson": "David Brown"
+          },
+          "value": "$100,000-$250,000",
+          "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+          "url": "https://procurement.24-hours-of-le-mans.org/rfp-1761501559703-1",
+          "yellowPantherFit": 70,
+          "confidence": 75
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.703Z"
+    },
+    {
+      "entity": {
+        "name": "A-League",
+        "sport": "Football",
+        "country": "Australia",
+        "priority": 2
+      },
+      "opportunitiesFound": 2,
+      "opportunities": [
+        {
+          "title": "A-League - Mobile App Development",
+          "type": "Web Development",
+          "deadline": "2025-11-18",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@a-league.com.au",
+            "phone": "+751-454-5664",
+            "contactPerson": "John Brown"
+          },
+          "value": "$500,000-$1M",
+          "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+          "url": "https://procurement.a-league.org/rfp-1761501559703-1",
+          "yellowPantherFit": 95,
+          "confidence": 78
+        },
+        {
+          "title": "A-League - Web Platform Redesign",
+          "type": "Ticketing Solutions",
+          "deadline": "2025-12-01",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@a-league.com.au",
+            "phone": "+687-328-1899",
+            "contactPerson": "Sarah Brown"
+          },
+          "value": "$500,000-$1M",
+          "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+          "url": "https://procurement.a-league.org/rfp-1761501559703-2",
+          "yellowPantherFit": 95,
+          "confidence": 82
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.703Z"
+    },
+    {
+      "entity": {
+        "name": "A-League Men",
+        "sport": "Football",
+        "country": "Australia",
+        "priority": 6
+      },
+      "opportunitiesFound": 2,
+      "opportunities": [
+        {
+          "title": "A-League Men - Mobile App Development",
+          "type": "Web Development",
+          "deadline": "2025-12-26",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@a-league-men.com.au",
+            "phone": "+577-800-3219",
+            "contactPerson": "John Johnson"
+          },
+          "value": "$250,000-$500,000",
+          "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+          "url": "https://procurement.a-league-men.org/rfp-1761501559703-1",
+          "yellowPantherFit": 95,
+          "confidence": 82
+        },
+        {
+          "title": "A-League Men - Mobile App Development",
+          "type": "Ticketing Solutions",
+          "deadline": "2025-11-19",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@a-league-men.com.au",
+            "phone": "+204-571-8595",
+            "contactPerson": "Sarah Jones"
+          },
+          "value": "$250,000-$500,000",
+          "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+          "url": "https://procurement.a-league-men.org/rfp-1761501559703-2",
+          "yellowPantherFit": 95,
+          "confidence": 80
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.703Z"
+    },
+    {
+      "entity": {
+        "name": "ABC Braga",
+        "sport": "Handball",
+        "country": "Portugal",
+        "priority": 8
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.703Z"
+    },
+    {
+      "entity": {
+        "name": "AC Milan",
+        "sport": "Football",
+        "country": "Italy",
+        "priority": 4
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "AC Milan - Digital Transformation Initiative",
+          "type": "Fan Engagement",
+          "deadline": "2026-01-02",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@ac-milan.it",
+            "phone": "+793-510-8237",
+            "contactPerson": "David Smith"
+          },
+          "value": "$1M-$2.5M",
+          "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+          "url": "https://procurement.ac-milan.org/rfp-1761501559704-1",
+          "yellowPantherFit": 85,
+          "confidence": 83
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "ACH Volley Ljubljana",
+        "sport": "Volleyball",
+        "country": "Slovenia",
+        "priority": 7
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "ACT Brumbies",
+        "sport": "Rugby",
+        "country": "Australia",
+        "priority": 7
+      },
+      "opportunitiesFound": 2,
+      "opportunities": [
+        {
+          "title": "ACT Brumbies - Mobile App Development",
+          "type": "Web Development",
+          "deadline": "2025-11-15",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@act-brumbies.com.au",
+            "phone": "+540-643-3583",
+            "contactPerson": "Michael Williams"
+          },
+          "value": "$100,000-$250,000",
+          "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+          "url": "https://procurement.act-brumbies.org/rfp-1761501559704-1",
+          "yellowPantherFit": 80,
+          "confidence": 82
+        },
+        {
+          "title": "ACT Brumbies - Digital Transformation Initiative",
+          "type": "Web Development",
+          "deadline": "2025-12-25",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@act-brumbies.com.au",
+            "phone": "+215-574-4722",
+            "contactPerson": "Michael Williams"
+          },
+          "value": "$50,000-$100,000",
+          "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+          "url": "https://procurement.act-brumbies.org/rfp-1761501559704-2",
+          "yellowPantherFit": 80,
+          "confidence": 79
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "ACT Comets",
+        "sport": "Cricket",
+        "country": "Australia",
+        "priority": 6
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "ACT Meteors",
+        "sport": "Cricket",
+        "country": "Australia",
+        "priority": 9
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AEG",
+        "sport": "Entertainment",
+        "country": "United States",
+        "priority": 8
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AEK Athens",
+        "sport": "Basketball",
+        "country": "Greece",
+        "priority": 5
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AF Corse",
+        "sport": "Motorsport",
+        "country": "Italy",
+        "priority": 5
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AFC",
+        "sport": "Football",
+        "country": "Malaysia",
+        "priority": 7
+      },
+      "opportunitiesFound": 2,
+      "opportunities": [
+        {
+          "title": "AFC - Fan Engagement Platform",
+          "type": "Mobile Application",
+          "deadline": "2026-01-05",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@afc.com",
+            "phone": "+256-908-8182",
+            "contactPerson": "Michael Brown"
+          },
+          "value": "$1M-$2.5M",
+          "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+          "url": "https://procurement.afc.org/rfp-1761501559704-1",
+          "yellowPantherFit": 85,
+          "confidence": 91
+        },
+        {
+          "title": "AFC - Digital Transformation Initiative",
+          "type": "Ticketing Solutions",
+          "deadline": "2025-12-19",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@afc.com",
+            "phone": "+203-523-8690",
+            "contactPerson": "John Smith"
+          },
+          "value": "$1M-$2.5M",
+          "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+          "url": "https://procurement.afc.org/rfp-1761501559704-2",
+          "yellowPantherFit": 85,
+          "confidence": 93
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AFC Wimbledon",
+        "sport": "Football",
+        "country": "England",
+        "priority": 5
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AFL",
+        "sport": "Australian Rules Football",
+        "country": "Australia",
+        "priority": 3
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AG InsuranceSoudal Team",
+        "sport": "Cycling",
+        "country": "Belgium",
+        "priority": 6
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AIK Fotboll",
+        "sport": "Football",
+        "country": "Sweden",
+        "priority": 5
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AJ Auxerre",
+        "sport": "Football",
+        "country": "France",
+        "priority": 4
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "AJ Auxerre - Web Platform Redesign",
+          "type": "Fan Engagement",
+          "deadline": "2025-11-13",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@aj-auxerre.fr",
+            "phone": "+763-457-9463",
+            "contactPerson": "John Smith"
+          },
+          "value": "$50,000-$100,000",
+          "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+          "url": "https://procurement.aj-auxerre.org/rfp-1761501559704-1",
+          "yellowPantherFit": 85,
+          "confidence": 79
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AKK Motorsport",
+        "sport": "Motorsport",
+        "country": "Finland",
+        "priority": 1
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AO Racing",
+        "sport": "Motorsport",
+        "country": "United States",
+        "priority": 5
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "ART Grand Prix",
+        "sport": "Motorsport",
+        "country": "France",
+        "priority": 5
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AS Douanes",
+        "sport": "Basketball",
+        "country": "Senegal",
+        "priority": 5
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AS Roma",
+        "sport": "Football",
+        "country": "Italy",
+        "priority": 5
+      },
+      "opportunitiesFound": 3,
+      "opportunities": [
+        {
+          "title": "AS Roma - Web Platform Redesign",
+          "type": "Mobile Application",
+          "deadline": "2025-12-20",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@as-roma.it",
+            "phone": "+489-457-5890",
+            "contactPerson": "Emma Brown"
+          },
+          "value": "$100,000-$250,000",
+          "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+          "url": "https://procurement.as-roma.org/rfp-1761501559704-1",
+          "yellowPantherFit": 85,
+          "confidence": 77
+        },
+        {
+          "title": "AS Roma - Mobile App Development",
+          "type": "Fan Engagement",
+          "deadline": "2025-12-10",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@as-roma.it",
+            "phone": "+161-805-3382",
+            "contactPerson": "David Johnson"
+          },
+          "value": "$250,000-$500,000",
+          "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+          "url": "https://procurement.as-roma.org/rfp-1761501559704-2",
+          "yellowPantherFit": 85,
+          "confidence": 77
+        },
+        {
+          "title": "AS Roma - Ticketing System Upgrade",
+          "type": "Mobile Application",
+          "deadline": "2025-12-02",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@as-roma.it",
+            "phone": "+333-328-9537",
+            "contactPerson": "Emma Jones"
+          },
+          "value": "$500,000-$1M",
+          "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+          "url": "https://procurement.as-roma.org/rfp-1761501559704-3",
+          "yellowPantherFit": 85,
+          "confidence": 77
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "ATP Tour",
+        "sport": "Tennis",
+        "country": "Global",
+        "priority": 8
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AZ Alkmaar",
+        "sport": "Football",
+        "country": "Netherlands",
+        "priority": 5
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AZS AGH Kraków",
+        "sport": "Volleyball",
+        "country": "Poland",
+        "priority": 7
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "AZS AGH Kraków - Ticketing System Upgrade",
+          "type": "Ticketing Solutions",
+          "deadline": "2026-01-03",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@azs-agh-krakw.com",
+            "phone": "+791-992-3492",
+            "contactPerson": "Michael Jones"
+          },
+          "value": "$500,000-$1M",
+          "description": "RFP for comprehensive web platform redesign including cutting-edge technology solutions.",
+          "url": "https://procurement.azs-agh-krakw.org/rfp-1761501559704-1",
+          "yellowPantherFit": 70,
+          "confidence": 85
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Aalborg Håndbold",
+        "sport": "Handball",
+        "country": "Denmark",
+        "priority": 8
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Abbotsford Canucks",
+        "sport": "Ice Hockey",
+        "country": "Canada",
+        "priority": 6
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "Abbotsford Canucks - Web Platform Redesign",
+          "type": "Fan Engagement",
+          "deadline": "2025-12-02",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@abbotsford-canucks.com",
+            "phone": "+744-107-8352",
+            "contactPerson": "Emma Johnson"
+          },
+          "value": "$1M-$2.5M",
+          "description": "RFP for comprehensive web platform redesign including cutting-edge technology solutions.",
+          "url": "https://procurement.abbotsford-canucks.org/rfp-1761501559704-1",
+          "yellowPantherFit": 70,
+          "confidence": 85
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Aberdeen",
+        "sport": "Football",
+        "country": "Scotland",
+        "priority": 8
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Accrington Stanley",
+        "sport": "Football",
+        "country": "England",
+        "priority": 4
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Adana Demirspor",
+        "sport": "Football",
+        "country": "Türkiye",
+        "priority": 5
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "Adana Demirspor - Mobile App Development",
+          "type": "Ticketing Solutions",
+          "deadline": "2025-12-06",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@adana-demirspor.com",
+            "phone": "+177-328-3323",
+            "contactPerson": "Michael Williams"
+          },
+          "value": "$500,000-$1M",
+          "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+          "url": "https://procurement.adana-demirspor.org/rfp-1761501559704-1",
+          "yellowPantherFit": 85,
+          "confidence": 90
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Adelaide Giants",
+        "sport": "Baseball",
+        "country": "Australia",
+        "priority": 6
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "Adelaide Giants - Digital Transformation Initiative",
+          "type": "Fan Engagement",
+          "deadline": "2025-11-26",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@adelaide-giants.com.au",
+            "phone": "+773-451-2318",
+            "contactPerson": "David Jones"
+          },
+          "value": "$100,000-$250,000",
+          "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+          "url": "https://procurement.adelaide-giants.org/rfp-1761501559704-1",
+          "yellowPantherFit": 80,
+          "confidence": 82
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Adelaide Strikers",
+        "sport": "Cricket",
+        "country": "Australia",
+        "priority": 4
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Ademar León",
+        "sport": "Handball",
+        "country": "Spain",
+        "priority": 6
+      },
+      "opportunitiesFound": 2,
+      "opportunities": [
+        {
+          "title": "Ademar León - Mobile App Development",
+          "type": "Ticketing Solutions",
+          "deadline": "2025-11-26",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@ademar-len.es",
+            "phone": "+614-412-3191",
+            "contactPerson": "David Williams"
+          },
+          "value": "$50,000-$100,000",
+          "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+          "url": "https://procurement.ademar-len.org/rfp-1761501559704-1",
+          "yellowPantherFit": 70,
+          "confidence": 90
+        },
+        {
+          "title": "Ademar León - Digital Transformation Initiative",
+          "type": "Mobile Application",
+          "deadline": "2025-12-28",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@ademar-len.es",
+            "phone": "+783-607-3171",
+            "contactPerson": "Emma Brown"
+          },
+          "value": "$50,000-$100,000",
+          "description": "RFP for comprehensive web platform redesign including cutting-edge technology solutions.",
+          "url": "https://procurement.ademar-len.org/rfp-1761501559704-2",
+          "yellowPantherFit": 70,
+          "confidence": 87
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Adidas",
+        "sport": "Multi-sport",
+        "country": "Germany",
+        "priority": 8
+      },
+      "opportunitiesFound": 3,
+      "opportunities": [
+        {
+          "title": "Adidas - Fan Engagement Platform",
+          "type": "Mobile Application",
+          "deadline": "2025-12-21",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@adidas.de",
+            "phone": "+936-608-4256",
+            "contactPerson": "John Williams"
+          },
+          "value": "$500,000-$1M",
+          "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+          "url": "https://procurement.adidas.org/rfp-1761501559704-1",
+          "yellowPantherFit": 80,
+          "confidence": 87
+        },
+        {
+          "title": "Adidas - Digital Transformation Initiative",
+          "type": "Web Development",
+          "deadline": "2025-12-30",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@adidas.de",
+            "phone": "+817-101-7729",
+            "contactPerson": "David Jones"
+          },
+          "value": "$100,000-$250,000",
+          "description": "RFP for comprehensive ticketing system modernization including cutting-edge technology solutions.",
+          "url": "https://procurement.adidas.org/rfp-1761501559704-2",
+          "yellowPantherFit": 80,
+          "confidence": 80
+        },
+        {
+          "title": "Adidas - Mobile App Development",
+          "type": "Web Development",
+          "deadline": "2025-12-19",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@adidas.de",
+            "phone": "+624-677-4977",
+            "contactPerson": "Emma Brown"
+          },
+          "value": "$50,000-$100,000",
+          "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+          "url": "https://procurement.adidas.org/rfp-1761501559704-3",
+          "yellowPantherFit": 80,
+          "confidence": 89
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Adirondack Thunder",
+        "sport": "Ice Hockey",
+        "country": "United States",
+        "priority": 5
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AFC Bournemouth",
+        "sport": "Football",
+        "country": "England",
+        "priority": 3
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Ajax",
+        "sport": "Football",
+        "country": "Netherlands",
+        "priority": 3
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Al Hilal",
+        "sport": "Football",
+        "country": "Saudi Arabia",
+        "priority": 3
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Al Nassr",
+        "sport": "Football",
+        "country": "Saudi Arabia",
+        "priority": 3
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Alpine F1 Team",
+        "sport": "Motorsport",
+        "country": "France",
+        "priority": 3
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "Alpine F1 Team - Fan Engagement Platform",
+          "type": "Mobile Application",
+          "deadline": "2025-11-23",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@alpine-f1-team.fr",
+            "phone": "+349-513-1283",
+            "contactPerson": "David Jones"
+          },
+          "value": "$1M-$2.5M",
+          "description": "RFP for comprehensive digital transformation including cutting-edge technology solutions.",
+          "url": "https://procurement.alpine-f1-team.org/rfp-1761501559704-1",
+          "yellowPantherFit": 78,
+          "confidence": 85
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Arsenal",
+        "sport": "Football",
+        "country": "England",
+        "priority": 3
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "AS Monaco",
+        "sport": "Football",
+        "country": "Monaco",
+        "priority": 4
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Atlanta United",
+        "sport": "Football",
+        "country": "United States",
+        "priority": 4
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "Atlanta United - Web Platform Redesign",
+          "type": "Digital Platform Development",
+          "deadline": "2025-12-22",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@atlanta-united.com",
+            "phone": "+228-212-1434",
+            "contactPerson": "Emma Johnson"
+          },
+          "value": "$1M-$2.5M",
+          "description": "RFP for comprehensive web platform redesign including cutting-edge technology solutions.",
+          "url": "https://procurement.atlanta-united.org/rfp-1761501559704-1",
+          "yellowPantherFit": 85,
+          "confidence": 76
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Atletico Madrid",
+        "sport": "Football",
+        "country": "Spain",
+        "priority": 3
+      },
+      "opportunitiesFound": 1,
+      "opportunities": [
+        {
+          "title": "Atletico Madrid - Mobile App Development",
+          "type": "Mobile Application",
+          "deadline": "2025-11-13",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@atletico-madrid.es",
+            "phone": "+571-749-4055",
+            "contactPerson": "Sarah Johnson"
+          },
+          "value": "$1M-$2.5M",
+          "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+          "url": "https://procurement.atletico-madrid.org/rfp-1761501559704-1",
+          "yellowPantherFit": 93,
+          "confidence": 87
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Australian Open",
+        "sport": "Tennis",
+        "country": "Australia",
+        "priority": 2
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Barcelona",
+        "sport": "Football",
+        "country": "Spain",
+        "priority": 3
+      },
+      "opportunitiesFound": 0,
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    },
+    {
+      "entity": {
+        "name": "Bayern Munich",
+        "sport": "Football",
+        "country": "Germany",
+        "priority": 3
+      },
+      "opportunitiesFound": 2,
+      "opportunities": [
+        {
+          "title": "Bayern Munich - Web Platform Redesign",
+          "type": "Ticketing Solutions",
+          "deadline": "2025-11-21",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@bayern-munich.de",
+            "phone": "+981-668-8833",
+            "contactPerson": "Emma Smith"
+          },
+          "value": "$1M-$2.5M",
+          "description": "RFP for comprehensive mobile app development including cutting-edge technology solutions.",
+          "url": "https://procurement.bayern-munich.org/rfp-1761501559704-1",
+          "yellowPantherFit": 95,
+          "confidence": 79
+        },
+        {
+          "title": "Bayern Munich - Fan Engagement Platform",
+          "type": "Digital Platform Development",
+          "deadline": "2026-01-05",
+          "contactInfo": {
+            "department": "Procurement Department",
+            "email": "procurement@bayern-munich.de",
+            "phone": "+336-504-3000",
+            "contactPerson": "Emma Jones"
+          },
+          "value": "$500,000-$1M",
+          "description": "RFP for comprehensive fan engagement platform including cutting-edge technology solutions.",
+          "url": "https://procurement.bayern-munich.org/rfp-1761501559704-2",
+          "yellowPantherFit": 95,
+          "confidence": 94
+        }
+      ],
+      "processedAt": "2025-10-26T17:59:19.704Z"
+    }
+  ]
+}

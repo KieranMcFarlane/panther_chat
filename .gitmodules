@@ -1,0 +1,3 @@
+[submodule "external/canvas-with-mastra"]
+	path = external/canvas-with-mastra
+	url = https://github.com/CopilotKit/canvas-with-mastra.git

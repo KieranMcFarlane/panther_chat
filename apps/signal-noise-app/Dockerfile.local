@@ -1,0 +1,26 @@
+# Local Development Dockerfile
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies (including dev dependencies for local dev)
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Create .next directory and set permissions
+RUN mkdir -p .next && chown -R node:node /app
+
+# Switch to non-root user
+USER node
+
+# Expose port 3005
+EXPOSE 3005
+
+# Start development server with proper CORS binding
+CMD ["npm", "run", "dev"]

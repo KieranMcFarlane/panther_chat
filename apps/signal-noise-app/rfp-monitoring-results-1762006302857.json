@@ -1,0 +1,260 @@
+{
+  "total_rfps_detected": 20,
+  "entities_processed": 5,
+  "detection_timestamp": "2025-11-01T14:11:42.857Z",
+  "highlights": {
+    "high_confidence_rfps": 4,
+    "yellow_panther_perfect_fit": 0,
+    "digital_transformations": 20,
+    "sports_technology": 0
+  },
+  "opportunities": [
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "West Indies",
+      "title": "REQUEST FOR PROPOSAL: CWI DIGITAL TRANSFORMATION",
+      "confidence": 85,
+      "yellow_panther_fit": 90,
+      "src_link": "https://www.windiescricket.com/cricket-west-indies/request-for-proposal-digital-transformation/",
+      "detected_at": "2025-11-01T14:11:22.778Z"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "West Indies",
+      "title": "Cricket West Indies seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-cricket-west-indies",
+      "detected_at": "2025-11-01T14:11:22.778Z"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "West Indies",
+      "title": "REQUEST FOR PROPOSAL: CWI DIGITAL TRANSFORMATION",
+      "confidence": 85,
+      "yellow_panther_fit": 90,
+      "src_link": "https://www.windiescricket.com/cricket-west-indies/request-for-proposal-digital-transformation/",
+      "detected_at": "2025-11-01T14:11:23.781Z"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "West Indies",
+      "title": "Cricket West Indies seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-cricket-west-indies",
+      "detected_at": "2025-11-01T14:11:23.781Z"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "West Indies",
+      "title": "REQUEST FOR PROPOSAL: CWI DIGITAL TRANSFORMATION",
+      "confidence": 85,
+      "yellow_panther_fit": 90,
+      "src_link": "https://www.windiescricket.com/cricket-west-indies/request-for-proposal-digital-transformation/",
+      "detected_at": "2025-11-01T14:11:24.785Z"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "West Indies",
+      "title": "Cricket West Indies seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-cricket-west-indies",
+      "detected_at": "2025-11-01T14:11:24.785Z"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "West Indies",
+      "title": "REQUEST FOR PROPOSAL: CWI DIGITAL TRANSFORMATION",
+      "confidence": 85,
+      "yellow_panther_fit": 90,
+      "src_link": "https://www.windiescricket.com/cricket-west-indies/request-for-proposal-digital-transformation/",
+      "detected_at": "2025-11-01T14:11:25.788Z"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "West Indies",
+      "title": "Cricket West Indies seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-cricket-west-indies",
+      "detected_at": "2025-11-01T14:11:25.788Z"
+    },
+    {
+      "organization": "Manchester United",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England",
+      "title": "Manchester United seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-manchester-united",
+      "detected_at": "2025-11-01T14:11:26.792Z"
+    },
+    {
+      "organization": "Manchester United",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England",
+      "title": "Manchester United seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-manchester-united",
+      "detected_at": "2025-11-01T14:11:27.794Z"
+    },
+    {
+      "organization": "Manchester United",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England",
+      "title": "Manchester United seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-manchester-united",
+      "detected_at": "2025-11-01T14:11:28.797Z"
+    },
+    {
+      "organization": "Manchester United",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England",
+      "title": "Manchester United seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-manchester-united",
+      "detected_at": "2025-11-01T14:11:29.800Z"
+    },
+    {
+      "organization": "Sunderland",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England",
+      "title": "Sunderland seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-sunderland",
+      "detected_at": "2025-11-01T14:11:30.803Z"
+    },
+    {
+      "organization": "Sunderland",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England",
+      "title": "Sunderland seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-sunderland",
+      "detected_at": "2025-11-01T14:11:31.806Z"
+    },
+    {
+      "organization": "Sunderland",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England",
+      "title": "Sunderland seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-sunderland",
+      "detected_at": "2025-11-01T14:11:32.824Z"
+    },
+    {
+      "organization": "Sunderland",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England",
+      "title": "Sunderland seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-sunderland",
+      "detected_at": "2025-11-01T14:11:33.829Z"
+    },
+    {
+      "organization": "Brooklyn Nets",
+      "type": "Club",
+      "sport": "Basketball",
+      "country": "USA",
+      "title": "Brooklyn Nets seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-brooklyn-nets",
+      "detected_at": "2025-11-01T14:11:34.832Z"
+    },
+    {
+      "organization": "Brooklyn Nets",
+      "type": "Club",
+      "sport": "Basketball",
+      "country": "USA",
+      "title": "Brooklyn Nets seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-brooklyn-nets",
+      "detected_at": "2025-11-01T14:11:35.834Z"
+    },
+    {
+      "organization": "Brooklyn Nets",
+      "type": "Club",
+      "sport": "Basketball",
+      "country": "USA",
+      "title": "Brooklyn Nets seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-brooklyn-nets",
+      "detected_at": "2025-11-01T14:11:36.835Z"
+    },
+    {
+      "organization": "Brooklyn Nets",
+      "type": "Club",
+      "sport": "Basketball",
+      "country": "USA",
+      "title": "Brooklyn Nets seeking digital transformation partners",
+      "confidence": 55,
+      "yellow_panther_fit": 90,
+      "src_link": "https://example.com/rfp-brooklyn-nets",
+      "detected_at": "2025-11-01T14:11:37.837Z"
+    }
+  ],
+  "source_links": [
+    "https://www.windiescricket.com/cricket-west-indies/request-for-proposal-digital-transformation/",
+    "https://example.com/rfp-cricket-west-indies",
+    "https://www.windiescricket.com/cricket-west-indies/request-for-proposal-digital-transformation/",
+    "https://example.com/rfp-cricket-west-indies",
+    "https://www.windiescricket.com/cricket-west-indies/request-for-proposal-digital-transformation/",
+    "https://example.com/rfp-cricket-west-indies",
+    "https://www.windiescricket.com/cricket-west-indies/request-for-proposal-digital-transformation/",
+    "https://example.com/rfp-cricket-west-indies",
+    "https://example.com/rfp-manchester-united",
+    "https://example.com/rfp-manchester-united",
+    "https://example.com/rfp-manchester-united",
+    "https://example.com/rfp-manchester-united",
+    "https://example.com/rfp-sunderland",
+    "https://example.com/rfp-sunderland",
+    "https://example.com/rfp-sunderland",
+    "https://example.com/rfp-sunderland",
+    "https://example.com/rfp-brooklyn-nets",
+    "https://example.com/rfp-brooklyn-nets",
+    "https://example.com/rfp-brooklyn-nets",
+    "https://example.com/rfp-brooklyn-nets"
+  ],
+  "performance_metrics": {
+    "detection_rate": "400.0%",
+    "average_confidence": "61.0%",
+    "high_value_opportunities": 20
+  }
+}

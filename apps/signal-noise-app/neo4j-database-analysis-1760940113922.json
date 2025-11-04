@@ -1,0 +1,3892 @@
+{
+  "overview": {
+    "totalNodes": {
+      "low": 2418,
+      "high": 0
+    },
+    "totalRelationships": {
+      "low": 136299,
+      "high": 0
+    },
+    "labels": [
+      "Entity",
+      "TopTierSport",
+      "Person",
+      "Company",
+      "Country",
+      "Sport",
+      "Type",
+      "Tender",
+      "SportCategory",
+      "KnowledgeDomain",
+      "RFP",
+      "DecisionMaker",
+      "OpportunityRFP",
+      "Sports_Entity",
+      "Stakeholder",
+      "MonitoringTarget",
+      "League",
+      "Club",
+      "Organization",
+      "Technology",
+      "RFPOpportunity",
+      "Venue",
+      "Team",
+      "Tournament",
+      "Federation",
+      "International_Federation",
+      "PremierLeague",
+      "Enriched",
+      "YellowPanther",
+      "InfluentialContact",
+      "TechnologyPartner",
+      "Opportunity",
+      "RecommendedAction",
+      "Brand"
+    ],
+    "relationshipTypes": [
+      "PLAYS_IN",
+      "MEMBER_OF",
+      "GOVERNED_BY",
+      "WORKS_FOR",
+      "PLAYS_FOR",
+      "LOCATED_IN",
+      "AFFILIATED_WITH",
+      "COMPETES_WITH",
+      "PARTICIPATES_IN",
+      "HAS_CONNECTION_TO",
+      "CONNECTS_TO",
+      "HAS_PARTNERSHIP_WITH",
+      "HAS_OPPORTUNITY",
+      "MANAGES",
+      "ISSUED_RFP",
+      "REQUIRES_ACTION",
+      "SPONSORS",
+      "RIVAL",
+      "SAME_COUNTRY",
+      "SAME_SPORT"
+    ]
+  },
+  "entityCounts": {
+    "Entity": {
+      "count": {
+        "low": 1,
+        "high": 0
+      },
+      "labels": [
+        "Entity",
+        "Club",
+        "PremierLeague",
+        "Enriched"
+      ]
+    },
+    "Person": {
+      "count": {
+        "low": 289,
+        "high": 0
+      },
+      "labels": [
+        "Person"
+      ]
+    },
+    "Country": {
+      "count": {
+        "low": 229,
+        "high": 0
+      },
+      "labels": [
+        "Country"
+      ]
+    },
+    "Sport": {
+      "count": {
+        "low": 30,
+        "high": 0
+      },
+      "labels": [
+        "Sport"
+      ]
+    },
+    "Tournament": {
+      "count": {
+        "low": 22,
+        "high": 0
+      },
+      "labels": [
+        "Tournament"
+      ]
+    },
+    "Opportunity": {
+      "count": {
+        "low": 22,
+        "high": 0
+      },
+      "labels": [
+        "Opportunity"
+      ]
+    },
+    "RFP": {
+      "count": {
+        "low": 18,
+        "high": 0
+      },
+      "labels": [
+        "RFP"
+      ]
+    },
+    "DecisionMaker": {
+      "count": {
+        "low": 16,
+        "high": 0
+      },
+      "labels": [
+        "DecisionMaker"
+      ]
+    },
+    "League": {
+      "count": {
+        "low": 15,
+        "high": 0
+      },
+      "labels": [
+        "League"
+      ]
+    },
+    "Type": {
+      "count": {
+        "low": 13,
+        "high": 0
+      },
+      "labels": [
+        "Type"
+      ]
+    },
+    "SportCategory": {
+      "count": {
+        "low": 10,
+        "high": 0
+      },
+      "labels": [
+        "SportCategory"
+      ]
+    },
+    "TechnologyPartner": {
+      "count": {
+        "low": 5,
+        "high": 0
+      },
+      "labels": [
+        "TechnologyPartner"
+      ]
+    },
+    "RecommendedAction": {
+      "count": {
+        "low": 4,
+        "high": 0
+      },
+      "labels": [
+        "RecommendedAction"
+      ]
+    },
+    "Sports_Entity": {
+      "count": {
+        "low": 3,
+        "high": 0
+      },
+      "labels": [
+        "Sports_Entity"
+      ]
+    },
+    "YellowPanther": {
+      "count": {
+        "low": 2,
+        "high": 0
+      },
+      "labels": [
+        "YellowPanther"
+      ]
+    },
+    "InfluentialContact": {
+      "count": {
+        "low": 2,
+        "high": 0
+      },
+      "labels": [
+        "InfluentialContact"
+      ]
+    },
+    "Technology": {
+      "count": {
+        "low": 1,
+        "high": 0
+      },
+      "labels": [
+        "Technology"
+      ]
+    }
+  },
+  "labelDistribution": {},
+  "relationships": {
+    "SAME_SPORT": {
+      "low": 116755,
+      "high": 0
+    },
+    "SAME_COUNTRY": {
+      "low": 19127,
+      "high": 0
+    },
+    "COMPETES_WITH": {
+      "low": 151,
+      "high": 0
+    },
+    "MEMBER_OF": {
+      "low": 80,
+      "high": 0
+    },
+    "PLAYS_IN": {
+      "low": 43,
+      "high": 0
+    },
+    "LOCATED_IN": {
+      "low": 42,
+      "high": 0
+    },
+    "AFFILIATED_WITH": {
+      "low": 30,
+      "high": 0
+    },
+    "GOVERNED_BY": {
+      "low": 21,
+      "high": 0
+    },
+    "REQUIRES_ACTION": {
+      "low": 16,
+      "high": 0
+    },
+    "SPONSORS": {
+      "low": 6,
+      "high": 0
+    },
+    "HAS_PARTNERSHIP_WITH": {
+      "low": 5,
+      "high": 0
+    },
+    "ISSUED_RFP": {
+      "low": 4,
+      "high": 0
+    },
+    "PARTICIPATES_IN": {
+      "low": 4,
+      "high": 0
+    },
+    "HAS_OPPORTUNITY": {
+      "low": 4,
+      "high": 0
+    },
+    "WORKS_FOR": {
+      "low": 4,
+      "high": 0
+    },
+    "HAS_CONNECTION_TO": {
+      "low": 2,
+      "high": 0
+    },
+    "CONNECTS_TO": {
+      "low": 2,
+      "high": 0
+    },
+    "RIVAL": {
+      "low": 1,
+      "high": 0
+    },
+    "MANAGES": {
+      "low": 1,
+      "high": 0
+    },
+    "PLAYS_FOR": {
+      "low": 1,
+      "high": 0
+    }
+  },
+  "dataQuality": {
+    "missingNames": {
+      "low": 9,
+      "high": 0
+    },
+    "noType": {
+      "low": 2380,
+      "high": 0
+    },
+    "enriched": {
+      "low": 0,
+      "high": 0
+    },
+    "hasLinkedIn": {
+      "low": 131,
+      "high": 0
+    },
+    "hasWebsite": {
+      "low": 1153,
+      "high": 0
+    }
+  },
+  "samples": [
+    {
+      "labels": [
+        "Entity"
+      ],
+      "properties": {
+        "established": "2010",
+        "digital_presence": "https://www.proton-competition.de",
+        "country": "Germany",
+        "last_updated": "2025-10-16",
+        "neo4j_id": "3028",
+        "championships": [
+          "ADAC GT Masters",
+          "Nürburgring Endurance Series"
+        ],
+        "city": "Ostfildern",
+        "name": "Proton Competition",
+        "description": "German motorsport team competing in touring car racing",
+        "category": "Team",
+        "sport": "Motorsport"
+      },
+      "type": "Entity"
+    },
+    {
+      "labels": [
+        "Entity"
+      ],
+      "properties": {
+        "established": "1973",
+        "digital_presence": "https://www.fias.sport",
+        "country": "Russia",
+        "headquarters": "Moscow, Russia",
+        "last_updated": "2025-10-16",
+        "neo4j_id": "3400",
+        "name": "International Sambo Federation (FIAS)",
+        "description": "International governing body for sambo wrestling and combat sambo",
+        "membership": "GAISF",
+        "category": "Federation",
+        "sport": "Sambo"
+      },
+      "type": "Entity"
+    },
+    {
+      "labels": [
+        "Entity"
+      ],
+      "properties": {
+        "established": "2020",
+        "digital_presence": "https://www.astonmartinf1.com",
+        "country": "United Kingdom",
+        "last_updated": "2025-10-16",
+        "neo4j_id": "2997",
+        "city": "Silverstone, England",
+        "championship": "Formula 1 World Championship",
+        "name": "Aston Martin Aramco F1 Team",
+        "description": "Formula 1 racing team representing Aston Martin and Aramco",
+        "category": "Team",
+        "sport": "Motorsport",
+        "manufacturer": "Aston Martin"
+      },
+      "type": "Entity"
+    },
+    {
+      "labels": [
+        "Entity",
+        "Club"
+      ],
+      "properties": {
+        "country": "England",
+        "notes": "Optimized for accessible contacts: Jean-Claude Blanc (Deputy CEO), Andrew Banks (Senior Exec), Stephen Torpey (Academy)",
+        "achievements": [
+          "146-year heritage",
+          "68 trophies",
+          "1.1 billion global followers",
+          "£50M Carrington redevelopment",
+          "Omar Berrada as CEO",
+          "Stephen Torpey Academy Director"
+        ],
+        "websiteModernness": 7,
+        "badgePath": "badges/manchester-united-badge.png",
+        "linkedinUrl": "https://www.linkedin.com/company/manchester-united/",
+        "yellowPantherBudgetRange": "£80K-£500K",
+        "about": "Manchester United is one of the most popular and successful sports teams in the world, playing one of the most popular spectator sports on Earth.",
+        "digitalWeakness": "Legacy infrastructure from INEOS transition period",
+        "source": "csv_seed",
+        "migrationBatch": {
+          "low": 1,
+          "high": 0
+        },
+        "type": "Club",
+        "recentAchievements": [
+          "£50 million Carrington Training Complex redevelopment by Foster + Partners",
+          "World-class training facility completion",
+          "Global brand with 1.1 billion followers",
+          "68 trophies in 146-year heritage"
+        ],
+        "badge_s3_url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/manchester-united-badge.png",
+        "yellowPantherStrategy": "MONITOR",
+        "migration_version": "1.0",
+        "lastMigrationUpdate": {
+          "low": -284497164,
+          "high": 409
+        },
+        "digitalTransformationSignals": [
+          "Standard modernization opportunities"
+        ],
+        "id": "133602",
+        "rfpValue": "Multi-year Partnership",
+        "migrationPhase": "MCP_DIRECT",
+        "lastEnrichmentDate": "2025-09-22T00:00:00.000Z",
+        "badgeDownloadedAt": "2025-09-28T12:01:41.700Z",
+        "neo4j_id": "139",
+        "migrated_at": "2025-10-09T14:55:55.053Z",
+        "partnershipSignals": [
+          "SportsBreaks",
+          "Qualcomm",
+          "Sokin",
+          "Coca-Cola",
+          "INEOS",
+          "Foster + Partners"
+        ],
+        "level": "Premier League",
+        "entityType": "Club",
+        "mobileApp": "Manchester United Official App (Available)",
+        "yellowPantherContactAccessibility": "LOW",
+        "priority": "CRITICAL",
+        "companySize": "501-1,000 employees",
+        "last_enriched": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 10,
+            "high": 0
+          },
+          "hour": {
+            "low": 1,
+            "high": 0
+          },
+          "minute": {
+            "low": 37,
+            "high": 0
+          },
+          "second": {
+            "low": 2,
+            "high": 0
+          },
+          "nanosecond": {
+            "low": 105000000,
+            "high": 0
+          },
+          "timeZoneOffsetSeconds": {
+            "low": 0,
+            "high": 0
+          }
+        },
+        "linkedinEmployees": 5029,
+        "headquarters": "MANCHESTER, M16 0RA, GB",
+        "procurementStatus": "Active",
+        "recentAnnouncements": [
+          "£50M Carrington training complex redevelopment completed",
+          "Coca-Cola partnership announcement",
+          "Sokin Global Business Payment Solutions partnership",
+          "Stephen Torpey appointed Academy Director",
+          "New CEO Omar Berrada leadership"
+        ],
+        "linkedinFollowers": 399905,
+        "name": "Manchester United",
+        "priorityScore": "",
+        "yellowPantherDigitalGapAnalysis": "Standard digital transformation assessment needed",
+        "yellowPantherPriority": 99,
+        "enrichmentStatus": "YELLOW_PANTHER_OPTIMIZED",
+        "description": "",
+        "infrastructureInvestments": [
+          "£50M Carrington Training Complex",
+          "Foster + Partners architectural redesign",
+          "Leading-edge high-performance training environment"
+        ],
+        "linkedin": "https://www.linkedin.com/company/manchester-united",
+        "digitalTransformationPriority": "MEDIUM",
+        "opportunityScore": 95,
+        "intelligenceSource": "BrightData_LinkedIn_Manual_Enrichment",
+        "digitalTransformationScore": 50,
+        "digitalGaps": [
+          "Legacy digital infrastructure modernization",
+          "Fan engagement platform optimization",
+          "Partnership technology integration",
+          "Mobile app enhancement opportunities"
+        ],
+        "estimatedValue": "£2.8M-£4.5M",
+        "tier": "",
+        "partnerships": [
+          "SportsBreaks (ticket and hotel packages)",
+          "Sokin (Official Global Business Payment Solutions Partner)",
+          "Coca-Cola (global partnership)",
+          "Qualcomm (Snapdragon)"
+        ],
+        "digitalMaturityScore": 79,
+        "qualityScore": {
+          "low": 100,
+          "high": 0
+        },
+        "lastRFPDate": "2024-07-20",
+        "digitalTransformationOpportunity": "MODERATE_OPPORTUNITY",
+        "rfpDeadline": "Ongoing",
+        "website": "http://www.manutd.com",
+        "migratedFromSupabase": true,
+        "yellowPantherFit": "TOO_BIG",
+        "founded": 1878,
+        "websiteModernnessTier": "STANDARD_SITE",
+        "opportunityType": "",
+        "rfpType": "Digital Transformation Partner",
+        "dossier_data": "{\"entity\":{\"neo4j_id\":\"139\",\"name\":\"Manchester United\",\"type\":\"Club\",\"sport\":\"Football\",\"country\":\"England\",\"level\":\"Premier League\",\"website\":\"http://www.manutd.com\",\"founded\":1878,\"stadium\":\"\",\"last_updated\":\"2025-10-10T01:37:01.404Z\",\"confidence_score\":0.85},\"core_info\":{\"name\":\"Manchester United\",\"type\":\"Club\",\"league\":\"Premier League\",\"founded\":1878,\"hq\":\"MANCHESTER, M16 0RA, GB\",\"stadium\":\"Unknown\",\"website\":\"http://www.manutd.com\",\"employee_range\":\"Unknown\",\"ownership\":\"Private\"},\"digital_transformation\":{\"digital_maturity\":62,\"transformation_score\":74,\"website_moderness\":8,\"current_tech_partners\":[\"Standard sports tech providers\"],\"mobile_app\":true,\"social_media_followers\":398990,\"data_integration_level\":\"Advanced\",\"fan_analytics_quality\":\"Good\"},\"linkedin_connection_analysis\":{\"target_entity\":\"Manchester United\",\"analysis_date\":\"2025-10-10\",\"yellow_panther_uk_team\":{\"team_members\":[{\"name\":\"Stuart Cope\",\"linkedin_url\":\"https://uk.linkedin.com/in/stuart-cope-54392b16/\",\"role\":\"Co-Founder & COO\",\"connection_count\":2,\"is_primary\":true,\"strongest_connection\":\"Leadership team via industry consultant\"},{\"name\":\"Gunjan Parikh\",\"linkedin_url\":\"https://www.linkedin.com/in/gunjan-parikh-a26a1ba9/\",\"role\":\"Founder & CEO\",\"connection_count\":1,\"is_primary\":false},{\"name\":\"Elliott Hillman\",\"linkedin_url\":\"https://uk.linkedin.com/in/elliott-rj-hillman/\",\"role\":\"Senior Client Partner\",\"connection_count\":1,\"is_primary\":false}],\"total_connections_found\":4,\"network_diversity_score\":75},\"tier_1_analysis\":{\"introduction_paths\":[{\"yellow_panther_contact\":\"Stuart Cope\",\"target_decision_maker\":\"Commercial Leadership Team\",\"connection_strength\":\"MEDIUM\",\"connection_type\":\"INDUSTRY_NETWORK\",\"confidence_score\":70,\"is_primary_path\":true,\"mutual_connections\":[{\"name\":\"Sports Industry Consultant\",\"linkedin_url\":\"https://www.linkedin.com/in/sports-industry-consultant/\",\"relationship_context\":\"Sports technology consulting network\",\"recency_years\":2,\"strength_rating\":7,\"yellow_panther_proximity\":\"Stuart Cope\"}],\"connection_context\":\"Industry network connections through sports technology consulting\",\"introduction_strategy\":\"Professional introduction through sports industry network focusing on digital transformation opportunities\",\"alternative_paths\":[\"Direct outreach through LinkedIn professional network\"]}],\"total_paths\":1},\"tier_2_analysis\":{\"influential_bridge_contacts\":[{\"bridge_contact_name\":\"Sports Technology Executive\",\"linkedin_url\":\"https://www.linkedin.com/in/sports-tech-executive/\",\"relationship_to_yp\":\"Connection to Elliott Hillman\",\"industry_influence\":\"High - works with multiple sports organizations on technology solutions\",\"connection_strength_to_yp\":\"MEDIUM\",\"sports_industry_network_size\":\"400+ connections across sports technology sector\",\"target_connections\":[{\"target_entity\":\"Manchester United\",\"contact_name\":\"Commercial Leadership\",\"connection_strength\":\"MEDIUM\",\"connection_context\":\"Industry network connections through sports technology consulting\",\"introduction_feasibility\":\"MEDIUM\",\"bridge_willingness\":\"Open to facilitating relevant business introductions\"}]}],\"tier_2_introduction_paths\":[{\"path_description\":\"Stuart Cope → Sports Industry Consultant → Commercial Leadership at Manchester United\",\"yellow_panther_contact\":\"Stuart Cope\",\"bridge_contact\":\"Sports Industry Consultant\",\"target_decision_maker\":\"Commercial Leadership Team\",\"connection_strength\":\"MEDIUM\",\"confidence_score\":75,\"path_type\":\"TIER_2_BRIDGE\",\"introduction_strategy\":\"Professional introduction through sports industry network focusing on digital transformation partnerships\",\"estimated_timeline\":\"3-5 weeks\",\"success_probability\":\"MEDIUM-HIGH\"}]},\"recommendations\":{\"optimal_team_member\":\"Stuart Cope (Primary Contact)\",\"messaging_strategy\":\"Focus on sports technology partnerships and digital transformation opportunities for Manchester United\",\"timing_suggestions\":\"Q1 2025 - Post-holiday season planning\",\"success_probability\":\"70% (Medium-high likelihood through industry network)\",\"team_coordination\":\"Stuart Cope leads with secondary support from Elliott Hillman for technical expertise\"}},\"strategic_analysis\":{\"overall_assessment\":\"Manchester United presents significant partnership opportunities with strong digital transformation potential and market position.\",\"opportunity_scoring\":{\"immediate_launch\":[{\"opportunity\":\"AI-Powered Fan Engagement Platform\",\"score\":86,\"timeline\":\"3-4 months\",\"revenue_potential\":\"£3-5M annual\"},{\"opportunity\":\"Stadium Technology Modernization\",\"score\":73,\"timeline\":\"4-6 months\",\"revenue_potential\":\"£2-3M annual\"}],\"medium_term_partnerships\":[{\"opportunity\":\"Data Analytics Expansion\",\"score\":80,\"timeline\":\"6-12 months\",\"revenue_potential\":\"£1-2M annual\"}]}},\"implementation_roadmap\":{\"phase_1_engagement\":{\"timeline\":\"Weeks 1-4\",\"objectives\":[\"Discovery meetings with leadership\",\"Needs assessment and opportunity identification\",\"Pilot project proposal\"]},\"phase_2_pilot\":{\"timeline\":\"Weeks 5-16\",\"objectives\":[\"Fan Analytics Platform pilot\",\"Regular progress reviews\",\"Success metrics tracking\"]},\"phase_3_partnership\":{\"timeline\":\"Months 5-12\",\"objectives\":[\"Stadium Technology modernization\",\"Mobile App Enhancement\",\"Ongoing optimization\"]}},\"metadata\":{\"generated_date\":\"2025-10-10T01:37:01.405Z\",\"analyst\":\"Yellow Panther Intelligence System\",\"schema_version\":\"2.0\",\"data_sources\":[\"Neo4j Database\",\"Industry Analysis\",\"Dynamic Generation\"],\"confidence_score\":0.85,\"information_freshness\":\"Current as of 2025-10-10\",\"next_review_date\":\"2026-01-08T01:37:01.405Z\"}}",
+        "sport": "Football",
+        "yellowPantherTechStackOpportunity": "Backend modernization: APIs + Database + Cloud migration",
+        "keyPersonnel": [
+          "Omar Berrada (Chief Executive Officer) - Strategic leadership and global operations",
+          "Stephen Torpey (Academy Director) - Youth development and talent acquisition",
+          "Adam Duritza (Founder & Managing Partner at Fleet Digital) - Digital transformation consulting",
+          "Ashley De Vera Davey (Academy Scout) - Talent identification and recruitment",
+          "Andrew Banks (Senior Executive) - Operations and business development",
+          "Jean-Claude Blanc (Deputy CEO) - Commercial operations and partnerships"
+        ]
+      },
+      "type": "Entity"
+    },
+    {
+      "labels": [
+        "Entity",
+        "Club"
+      ],
+      "properties": {
+        "country": "England",
+        "notes": "Optimized for accessible contacts: Juliet Slot (Commercial), Mark Gonnella (Media), David Lewis (Digital)",
+        "achievements": [
+          "Emirates Stadium",
+          "17,000 women's season ticket holders",
+          "40 years Arsenal in the Community",
+          "10,000 open training attendees",
+          "Supporter bans for discrimination"
+        ],
+        "websiteModernness": {
+          "low": 7,
+          "high": 0
+        },
+        "badgePath": "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/public/badges/arsenal-badge.png",
+        "linkedinUrl": "https://www.linkedin.com/company/arsenal-f-c",
+        "yellowPantherBudgetRange": "£80K-£500K",
+        "about": "Arsenal Football Club exists to make our fans proud, wherever they are in the world and however they choose to follow us.",
+        "digitalWeakness": "NTT DATA partnership limits external opportunities",
+        "source": "csv_seed",
+        "type": "Club",
+        "yellowPantherStrategy": "MONITOR",
+        "migration_version": "1.0",
+        "rfpSource": "Official Arsenal/NTT DATA Announcement",
+        "digitalTransformationSignals": [
+          "Standard modernization opportunities"
+        ],
+        "rfpValue": "Multi-year Partnership",
+        "lastEnrichmentDate": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 9,
+            "high": 0
+          },
+          "day": {
+            "low": 22,
+            "high": 0
+          }
+        },
+        "badgeFilename": "arsenal-badge.png",
+        "neo4j_id": "126",
+        "migrated_at": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 13,
+            "high": 0
+          },
+          "hour": {
+            "low": 13,
+            "high": 0
+          },
+          "minute": {
+            "low": 29,
+            "high": 0
+          },
+          "second": {
+            "low": 53,
+            "high": 0
+          },
+          "nanosecond": {
+            "low": 591000000,
+            "high": 0
+          },
+          "timeZoneOffsetSeconds": {
+            "low": 0,
+            "high": 0
+          }
+        },
+        "level": "Premier League",
+        "mobileApp": "Arsenal Official App (Available)",
+        "yellowPantherContactAccessibility": "LOW",
+        "priority": "CRITICAL",
+        "companySize": "501-1,000 employees",
+        "linkedinEmployees": {
+          "low": 3038,
+          "high": 0
+        },
+        "headquarters": "London, England",
+        "procurementStatus": "Secured Partnership",
+        "linkedinFollowers": {
+          "low": 251050,
+          "high": 0
+        },
+        "name": "Arsenal",
+        "yellowPantherDigitalGapAnalysis": "Standard digital transformation assessment needed",
+        "yellowPantherPriority": {
+          "low": 99,
+          "high": 0
+        },
+        "source_restored": "supabase_cache",
+        "enrichmentStatus": "YELLOW_PANTHER_OPTIMIZED",
+        "linkedin": "https://www.linkedin.com/company/arsenal-f-c",
+        "digitalTransformationPriority": "CRITICAL",
+        "opportunityScore": {
+          "low": 95,
+          "high": 0
+        },
+        "intelligenceSource": "BrightData_LinkedIn_Manual_Enrichment",
+        "digitalTransformationScore": {
+          "low": 80,
+          "high": 0
+        },
+        "digitalGaps": [
+          "Community engagement platform enhancement",
+          "Women's football digital expansion",
+          "Mental health support systems",
+          "Fan experience modernization"
+        ],
+        "estimatedValue": "£2.0M-£3.5M",
+        "partnerships": [
+          "L'Oréal Paris",
+          "Coca-Cola",
+          "Bitpanda",
+          "Konami",
+          "Emirates",
+          "North London NHS"
+        ],
+        "digitalMaturityScore": {
+          "low": 26,
+          "high": 0
+        },
+        "lastRFPDate": "2024-09-10",
+        "digitalTransformationOpportunity": "SIGNIFICANT_OPPORTUNITY",
+        "rfpDeadline": "Active Through 2027+",
+        "website": "https://www.arsenal.com/",
+        "digitalTransformationPartner": "NTT DATA",
+        "yellowPantherFit": "TOO_BIG",
+        "founded": {
+          "low": 1886,
+          "high": 0
+        },
+        "hasBadge": true,
+        "websiteModernnessTier": "STANDARD_SITE",
+        "rfpType": "Official Digital Transformation Partner",
+        "sport": "Football",
+        "yellowPantherTechStackOpportunity": "Backend modernization: APIs + Database + Cloud migration",
+        "keyPersonnel": [
+          "Josh Kroenke (Executive Vice Chairman) - Strategic leadership and investment",
+          "Edu Gaspar (Sporting Director) - Football operations and technology systems",
+          "Richard Garlick (Managing Director) - Business operations and strategic planning",
+          "Juliet Slot (Commercial Director) - Partnership strategy and revenue optimization",
+          "Mark Gonnella (Media & Communications Director) - Digital engagement and brand strategy",
+          "Per Mertesacker (Academy Manager) - Youth development and coaching technology"
+        ]
+      },
+      "type": "Entity"
+    },
+    {
+      "labels": [
+        "Entity",
+        "Club"
+      ],
+      "properties": {
+        "country": "England",
+        "yellowPantherPriority": {
+          "low": 99,
+          "high": 0
+        },
+        "source_restored": "supabase_cache",
+        "achievements": [
+          "Multiple Premier League titles",
+          "Advanced digital training facilities",
+          "Global fan engagement platforms",
+          "Innovation in sports technology"
+        ],
+        "yellowPantherBudgetRange": "£80K-£500K",
+        "enrichmentStatus": "YELLOW_PANTHER_OPTIMIZED",
+        "about": "Manchester City Football Club - Premier League club with advanced digital infrastructure and global fan base.",
+        "source": "csv_seed",
+        "linkedin": "https://www.linkedin.com/company/manchester-city-f-c",
+        "migrationBatch": {
+          "low": 1,
+          "high": 0
+        },
+        "type": "Club",
+        "opportunityScore": {
+          "low": 95,
+          "high": 0
+        },
+        "yellowPantherStrategy": "MONITOR",
+        "migration_version": "1.0",
+        "intelligenceSource": "BrightData_LinkedIn_Manual_Enrichment",
+        "digitalTransformationScore": {
+          "low": 85,
+          "high": 0
+        },
+        "lastMigrationUpdate": {
+          "low": -284489785,
+          "high": 409
+        },
+        "digitalGaps": [
+          "Next-generation fan experience platforms",
+          "AI-powered analytics enhancement",
+          "Global digital expansion"
+        ],
+        "estimatedValue": "£2.5M-£4.0M",
+        "partnerships": [
+          "Etihad Airways",
+          "Nike",
+          "Ethereum",
+          "OKX",
+          "Cisco",
+          "SAP"
+        ],
+        "digitalMaturityScore": {
+          "low": 88,
+          "high": 0
+        },
+        "qualityScore": {
+          "low": 100,
+          "high": 0
+        },
+        "digitalTransformationOpportunity": "MODERATE_OPPORTUNITY",
+        "rfpValue": "Multi-year Partnership",
+        "migrationPhase": "MCP_DIRECT",
+        "lastEnrichmentDate": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 9,
+            "high": 0
+          },
+          "day": {
+            "low": 22,
+            "high": 0
+          }
+        },
+        "website": "https://www.mancity.com/",
+        "neo4j_id": "138",
+        "migratedFromSupabase": true,
+        "migrated_at": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 13,
+            "high": 0
+          },
+          "hour": {
+            "low": 13,
+            "high": 0
+          },
+          "minute": {
+            "low": 30,
+            "high": 0
+          },
+          "second": {
+            "low": 43,
+            "high": 0
+          },
+          "nanosecond": {
+            "low": 655000000,
+            "high": 0
+          },
+          "timeZoneOffsetSeconds": {
+            "low": 0,
+            "high": 0
+          }
+        },
+        "level": "Premier League",
+        "yellowPantherFit": "TOO_BIG",
+        "founded": {
+          "low": 1880,
+          "high": 0
+        },
+        "mobileApp": "Manchester City Official App (Available)",
+        "hasBadge": true,
+        "priority": "CRITICAL",
+        "companySize": "501-1,000 employees",
+        "websiteModernnessTier": "ADVANCED_SITE",
+        "rfpType": "Technology Innovation Partner",
+        "headquarters": "Manchester, England",
+        "procurementStatus": "Active",
+        "name": "Manchester City",
+        "sport": "Football",
+        "keyPersonnel": [
+          "Pep Guardiola (Manager) - Football operations and tactical innovation",
+          "Ferran Soriano (CEO) - Business strategy and global expansion",
+          "Txiki Begiristain (Director of Football) - Player recruitment and sporting strategy",
+          "Charlotte O'Neil (Chief Commercial Officer) - Partnership development and revenue",
+          "Gavin Johnson (Digital Director) - Technology transformation and fan engagement"
+        ]
+      },
+      "type": "Entity"
+    },
+    {
+      "labels": [
+        "Person"
+      ],
+      "properties": {
+        "country": "Japan",
+        "website": "https://example-5095.com",
+        "neo4j_id": "5095",
+        "migrated_at": "2025-10-09T14:57:58.537Z",
+        "yellowPantherFit": "PERFECT_FIT",
+        "enrichmentStatus": "MIGRATION_RESTORED",
+        "source": "migration_generated",
+        "type": "Person",
+        "priority": "STANDARD",
+        "opportunityScore": 85,
+        "migration_version": "1.0",
+        "estimatedValue": "£2358K-£1199K",
+        "name": "Japan Football Coach",
+        "sport": "Football"
+      },
+      "type": "Person"
+    },
+    {
+      "labels": [
+        "Person"
+      ],
+      "properties": {
+        "country": "Brazil",
+        "website": "https://example-5105.com",
+        "neo4j_id": "5105",
+        "migrated_at": "2025-10-09T14:57:58.878Z",
+        "yellowPantherFit": "TOO_BIG",
+        "enrichmentStatus": "MIGRATION_RESTORED",
+        "source": "migration_generated",
+        "type": "Person",
+        "priority": "CRITICAL",
+        "opportunityScore": 21,
+        "migration_version": "1.0",
+        "estimatedValue": "£1358K-£73K",
+        "name": "Brazil Football Coach",
+        "sport": "Football"
+      },
+      "type": "Person"
+    },
+    {
+      "labels": [
+        "Person"
+      ],
+      "properties": {
+        "country": "Argentina",
+        "website": "https://example-5115.com",
+        "neo4j_id": "5115",
+        "migrated_at": "2025-10-09T14:57:59.184Z",
+        "yellowPantherFit": "TOO_BIG",
+        "enrichmentStatus": "MIGRATION_RESTORED",
+        "source": "migration_generated",
+        "type": "Person",
+        "priority": "STANDARD",
+        "opportunityScore": 61,
+        "migration_version": "1.0",
+        "estimatedValue": "£919K-£8762K",
+        "name": "Argentina Football Coach",
+        "sport": "Football"
+      },
+      "type": "Person"
+    },
+    {
+      "labels": [
+        "League"
+      ],
+      "properties": {
+        "country": "England",
+        "website": "https://www.efl.com/",
+        "neo4j_id": "efl_championship_001",
+        "migrated_at": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 14,
+            "high": 0
+          },
+          "hour": {
+            "low": 2,
+            "high": 0
+          },
+          "minute": {
+            "low": 4,
+            "high": 0
+          },
+          "second": {
+            "low": 3,
+            "high": 0
+          },
+          "nanosecond": {
+            "low": 631000000,
+            "high": 0
+          },
+          "timeZoneOffsetSeconds": {
+            "low": 0,
+            "high": 0
+          }
+        },
+        "tier": "2",
+        "name": "EFL Championship",
+        "enrichmentStatus": "normalized",
+        "description": "English Football League Championship - Second tier of English football",
+        "source": "normalization_fix",
+        "type": "League",
+        "sport": "Football",
+        "migration_version": "1.0"
+      },
+      "type": "League"
+    },
+    {
+      "labels": [
+        "League"
+      ],
+      "properties": {
+        "country": "England",
+        "website": "https://www.efl.com/",
+        "neo4j_id": "efl_league_one_001",
+        "migrated_at": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 14,
+            "high": 0
+          },
+          "hour": {
+            "low": 2,
+            "high": 0
+          },
+          "minute": {
+            "low": 4,
+            "high": 0
+          },
+          "second": {
+            "low": 38,
+            "high": 0
+          },
+          "nanosecond": {
+            "low": 822000000,
+            "high": 0
+          },
+          "timeZoneOffsetSeconds": {
+            "low": 0,
+            "high": 0
+          }
+        },
+        "tier": "3",
+        "name": "EFL League One",
+        "enrichmentStatus": "normalized",
+        "description": "English Football League One - Third tier of English football",
+        "source": "normalization_fix",
+        "type": "League",
+        "sport": "Football",
+        "migration_version": "1.0"
+      },
+      "type": "League"
+    },
+    {
+      "labels": [
+        "League"
+      ],
+      "properties": {
+        "country": "Spain",
+        "website": "https://www.laliga.com/",
+        "neo4j_id": "laliga_001",
+        "migrated_at": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 14,
+            "high": 0
+          },
+          "hour": {
+            "low": 4,
+            "high": 0
+          },
+          "minute": {
+            "low": 56,
+            "high": 0
+          },
+          "second": {
+            "low": 13,
+            "high": 0
+          },
+          "nanosecond": {
+            "low": 876000000,
+            "high": 0
+          },
+          "timeZoneOffsetSeconds": {
+            "low": 0,
+            "high": 0
+          }
+        },
+        "tier": "1",
+        "name": "LaLiga",
+        "enrichmentStatus": "normalized",
+        "description": "Spanish Primera División - Top tier of Spanish football",
+        "source": "normalization_fix",
+        "type": "League",
+        "sport": "Football",
+        "migration_version": "1.0"
+      },
+      "type": "League"
+    },
+    {
+      "labels": [
+        "Entity",
+        "Organization",
+        "International_Federation"
+      ],
+      "properties": {
+        "operatingMargin": 0.17,
+        "growth_potential": "High - Emerging markets, digital transformation",
+        "diplomaticMissions": {
+          "low": 40,
+          "high": 0
+        },
+        "achievements": [
+          "Global motorsport governance",
+          "Safety innovations",
+          "Sustainability initiatives",
+          "Digital transformation"
+        ],
+        "technicalBulletins": {
+          "low": 120,
+          "high": 0
+        },
+        "licensingProcesses": {
+          "low": 25000,
+          "high": 0
+        },
+        "merchandiseRevenue": {
+          "low": 15000000,
+          "high": 0
+        },
+        "bookValuePerShare": {
+          "low": 0,
+          "high": 0
+        },
+        "value_proposition": "Global motorsport governance with massive commercial reach",
+        "innovationLabs": {
+          "low": 3,
+          "high": 0
+        },
+        "partnership_history": "Global technology and automotive partnerships",
+        "appealsProcessed": {
+          "low": 75,
+          "high": 0
+        },
+        "earningsPerShare": {
+          "low": 0,
+          "high": 0
+        },
+        "migrated_at": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 14,
+            "high": 0
+          },
+          "hour": {
+            "low": 6,
+            "high": 0
+          },
+          "minute": {
+            "low": 11,
+            "high": 0
+          },
+          "second": {
+            "low": 45,
+            "high": 0
+          },
+          "nanosecond": {
+            "low": 20000000,
+            "high": 0
+          },
+          "timeZoneOffsetSeconds": {
+            "low": 0,
+            "high": 0
+          }
+        },
+        "source_system": "Supabase Migration",
+        "operatingExpenses": {
+          "low": 120000000,
+          "high": 0
+        },
+        "competitive_advantages": [
+          "Global authority",
+          "Safety leadership",
+          "Commercial rights",
+          "Technical expertise"
+        ],
+        "workingCapital": {
+          "low": 100000000,
+          "high": 0
+        },
+        "reserves": {
+          "low": 450000000,
+          "high": 0
+        },
+        "growthStrategy": "New championships, digital expansion, sustainability",
+        "manufacturingPartners": {
+          "low": 50,
+          "high": 0
+        },
+        "geographic_focus": "Global",
+        "sponsorshipPerEmployee": {
+          "low": 77778,
+          "high": 0
+        },
+        "expenseGrowth": 0.06,
+        "televisionAudience": {
+          "low": 2000000000,
+          "high": 0
+        },
+        "sponsorshipRevenue": {
+          "low": 35000000,
+          "high": 0
+        },
+        "partnershipPotential": 0.95,
+        "secretary_general": "Michel Jourdain",
+        "investments": {
+          "low": 200000000,
+          "high": 0
+        },
+        "digitalEngagement": 0.85,
+        "freeCashFlow": {
+          "low": 20000000,
+          "high": 0
+        },
+        "confidenceScore": {
+          "low": 98,
+          "high": 0
+        },
+        "mediaPartners": {
+          "low": 45,
+          "high": 0
+        },
+        "socialMediaFollowers": {
+          "low": 3500000,
+          "high": 0
+        },
+        "diversityInitiatives": {
+          "low": 8,
+          "high": 0
+        },
+        "depreciation": {
+          "low": 10000000,
+          "high": 0
+        },
+        "digitalPlatforms": {
+          "low": 15,
+          "high": 0
+        },
+        "assetsPerEmployee": {
+          "low": 1888889,
+          "high": 0
+        },
+        "procurement_categories": [
+          "Technology Infrastructure",
+          "Safety Systems",
+          "Broadcast Services",
+          "Consulting",
+          "Marketing"
+        ],
+        "insurancePerEmployee": {
+          "low": 3333,
+          "high": 0
+        },
+        "debtToEquityRatio": 0.3,
+        "website": "https://www.fia.com",
+        "founded": {
+          "low": 1904,
+          "high": 0
+        },
+        "medicalCenters": {
+          "low": 85,
+          "high": 0
+        },
+        "longTermLiabilities": {
+          "low": 150000000,
+          "high": 0
+        },
+        "meetingsHosted": {
+          "low": 350,
+          "high": 0
+        },
+        "entity_type": "International Sports Federation",
+        "procurementProcess": "International tender process",
+        "currentPartners": [
+          " Rolex",
+          "Pirelli",
+          "AWS",
+          "DHL"
+        ],
+        "cashFlowGrowth": 0.15,
+        "netWorth": {
+          "low": 850000000,
+          "high": 0
+        },
+        "licensedCompetitors": {
+          "low": 250000,
+          "high": 0
+        },
+        "priceToSales": {
+          "low": 0,
+          "high": 0
+        },
+        "safetyInspections": {
+          "low": 8000,
+          "high": 0
+        },
+        "disciplinaryCases": {
+          "low": 150,
+          "high": 0
+        },
+        "budgetCycle": "Annual (January)",
+        "country": "France",
+        "memberCountries": {
+          "low": 145,
+          "high": 0
+        },
+        "decision_timeline": "6-12 months",
+        "totalAssets": {
+          "low": 850000000,
+          "high": 0
+        },
+        "netAssets": {
+          "low": 500000000,
+          "high": 0
+        },
+        "technicalRegulations": {
+          "low": 350,
+          "high": 0
+        },
+        "developmentExpenses": {
+          "low": 15000000,
+          "high": 0
+        },
+        "source": "YELLOW_PANTHER_OPTIMIZED",
+        "sponsorshipDeals": {
+          "low": 120,
+          "high": 0
+        },
+        "employeeCount": {
+          "low": 450,
+          "high": 0
+        },
+        "conferencesOrganized": {
+          "low": 25,
+          "high": 0
+        },
+        "sanctionedCompetitions": {
+          "low": 2500,
+          "high": 0
+        },
+        "investingCashFlow": {
+          "low": -25000000,
+          "high": -1
+        },
+        "annualEvents": {
+          "low": 800,
+          "high": 0
+        },
+        "trainingPrograms": {
+          "low": 120,
+          "high": 0
+        },
+        "safetyCirculars": {
+          "low": 80,
+          "high": 0
+        },
+        "thomasFranckValue": 0.92,
+        "customScore3": 0.93,
+        "customScore2": 0.9,
+        "fixedAssets": {
+          "low": 150000000,
+          "high": 0
+        },
+        "customScore1": 0.95,
+        "infrastructureValue": {
+          "low": 180000000,
+          "high": 0
+        },
+        "salesPerEmployee": {
+          "low": 0,
+          "high": 0
+        },
+        "revenueGrowth": 0.08,
+        "neo4j_id": "fia_001",
+        "marketCapitalization": {
+          "low": 0,
+          "high": 0
+        },
+        "equipmentPerEmployee": {
+          "low": 11111,
+          "high": 0
+        },
+        "totalLiabilities": {
+          "low": 350000000,
+          "high": 0
+        },
+        "business_intelligence_applied": true,
+        "marketCapPerEmployee": {
+          "low": 0,
+          "high": 0
+        },
+        "drugTests": {
+          "low": 5000,
+          "high": 0
+        },
+        "currentAssets": {
+          "low": 300000000,
+          "high": 0
+        },
+        "educationalPrograms": {
+          "low": 20,
+          "high": 0
+        },
+        "researchProjects": {
+          "low": 25,
+          "high": 0
+        },
+        "liabilityGrowth": 0.05,
+        "memberOrganizations": {
+          "low": 245,
+          "high": 0
+        },
+        "name": "Fédération Internationale de l'Automobile",
+        "partnershipHistory": "Major global technology and automotive partnerships",
+        "workshopsConducted": {
+          "low": 180,
+          "high": 0
+        },
+        "travelExpenses": {
+          "low": 7000000,
+          "high": 0
+        },
+        "cashFlowPerEmployee": {
+          "low": 44444,
+          "high": 0
+        },
+        "operatingProfit": {
+          "low": 25000000,
+          "high": 0
+        },
+        "accreditedCircuits": {
+          "low": 250,
+          "high": 0
+        },
+        "preferredSuppliers": [
+          "Technology",
+          "Safety",
+          "Sustainability",
+          "Telecommunications"
+        ],
+        "riskFactors": "Regulatory changes, technological disruption",
+        "equityGrowth": 0.09,
+        "cashRatio": 0.4,
+        "enrichmentStatus": "COMPLETED",
+        "netProfit": {
+          "low": 18000000,
+          "high": 0
+        },
+        "capexPerEmployee": {
+          "low": 22222,
+          "high": 0
+        },
+        "profitGrowth": 0.12,
+        "consultingPerEmployee": {
+          "low": 8889,
+          "high": 0
+        },
+        "commercialAgreements": {
+          "low": 85,
+          "high": 0
+        },
+        "contactPreferences": "Formal tender, then direct negotiation",
+        "currentRatio": 1.5,
+        "sharesOutstanding": {
+          "low": 0,
+          "high": 0
+        },
+        "technicalExpenses": {
+          "low": 35000000,
+          "high": 0
+        },
+        "itPerEmployee": {
+          "low": 13333,
+          "high": 0
+        },
+        "socialMediaPlatforms": {
+          "low": 8,
+          "high": 0
+        },
+        "enrichment_confidence": 0.98,
+        "marketingPerEmployee": {
+          "low": 17778,
+          "high": 0
+        },
+        "ebitda": {
+          "low": 40000000,
+          "high": 0
+        },
+        "sustainabilityPrograms": {
+          "low": 12,
+          "high": 0
+        },
+        "yellow_panther_verified": true,
+        "last_enrichment_date": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 14,
+            "high": 0
+          }
+        },
+        "marketingExpenses": {
+          "low": 8000000,
+          "high": 0
+        },
+        "assetGrowth": 0.1,
+        "rdPerEmployee": {
+          "low": 11111,
+          "high": 0
+        },
+        "migration_batch": "Phase8_International_Federations",
+        "president": "Mohammed Ben Sulayem",
+        "equityPerEmployee": {
+          "low": 1111111,
+          "high": 0
+        },
+        "languagesSupported": {
+          "low": 12,
+          "high": 0
+        },
+        "technologyProviders": {
+          "low": 30,
+          "high": 0
+        },
+        "data_freshness": "2025-10-14",
+        "restoration_id": "fia_001_20251014",
+        "esportsInitiatives": {
+          "low": 6,
+          "high": 0
+        },
+        "type": "International Federation",
+        "lastUpdated": "2025-10-14",
+        "governmentRelations": {
+          "low": 80,
+          "high": 0
+        },
+        "officials": {
+          "low": 8500,
+          "high": 0
+        },
+        "eventsPerEmployee": {
+          "low": 11111,
+          "high": 0
+        },
+        "business_category": "Sports Governance",
+        "entertainmentPerEmployee": {
+          "low": 11111,
+          "high": 0
+        },
+        "netMargin": 0.12,
+        "decisionMaker": "President and Secretary General",
+        "returnOnInvestment": 0.06,
+        "streamingServices": {
+          "low": 10,
+          "high": 0
+        },
+        "fanBaseSize": {
+          "low": 2000000000,
+          "high": 0
+        },
+        "enterpriseValue": {
+          "low": 600000000,
+          "high": 0
+        },
+        "marketTrends": "Electric vehicles, sustainability, digital fan engagement",
+        "quickRatio": 1.2,
+        "digitalRevenue": {
+          "low": 20000000,
+          "high": 0
+        },
+        "ruleChanges": {
+          "low": 25,
+          "high": 0
+        },
+        "intellectualPropertyValue": {
+          "low": 60000000,
+          "high": 0
+        },
+        "amortization": {
+          "low": 5000000,
+          "high": 0
+        },
+        "brandValue": {
+          "low": 400000000,
+          "high": 0
+        },
+        "complianceAudits": {
+          "low": 60,
+          "high": 0
+        },
+        "liabilitiesPerEmployee": {
+          "low": 777778,
+          "high": 0
+        },
+        "virtualRacingPlatforms": {
+          "low": 4,
+          "high": 0
+        },
+        "legalExpenses": {
+          "low": 5000000,
+          "high": 0
+        },
+        "competitions": [
+          "Formula 1",
+          "Formula 2",
+          "Formula 3",
+          "World Endurance Championship",
+          "World Rally Championship",
+          "Formula E"
+        ],
+        "safetyExpenses": {
+          "low": 20000000,
+          "high": 0
+        },
+        "opportunities": "Emerging markets, digital transformation",
+        "risk_level": "Low - Established monopoly position",
+        "operatingCashFlow": {
+          "low": 45000000,
+          "high": 0
+        },
+        "technicalInspections": {
+          "low": 15000,
+          "high": 0
+        },
+        "current_suppliers": [
+          "Rolex",
+          "Pirelli",
+          "AWS",
+          "DHL"
+        ],
+        "medicalGuidelines": {
+          "low": 40,
+          "high": 0
+        },
+        "priceToEarnings": {
+          "low": 0,
+          "high": 0
+        },
+        "membershipRevenue": {
+          "low": 25000000,
+          "high": 0
+        },
+        "broadcastRevenue": {
+          "low": 45000000,
+          "high": 0
+        },
+        "eventsExpenses": {
+          "low": 5000000,
+          "high": 0
+        },
+        "revenue": {
+          "low": 145000000,
+          "high": 0
+        },
+        "cashReserves": {
+          "low": 80000000,
+          "high": 0
+        },
+        "zeniValue": 0.88,
+        "regulationsUpdates": {
+          "low": 50,
+          "high": 0
+        },
+        "certificationPrograms": {
+          "low": 35,
+          "high": 0
+        },
+        "technologyValue": {
+          "low": 90000000,
+          "high": 0
+        },
+        "legalPerEmployee": {
+          "low": 11111,
+          "high": 0
+        },
+        "level": "Global",
+        "capex": {
+          "low": 20000000,
+          "high": 0
+        },
+        "travelPerEmployee": {
+          "low": 15556,
+          "high": 0
+        },
+        "marketPosition": 1,
+        "commercialRevenue": {
+          "low": 65000000,
+          "high": 0
+        },
+        "safetyStandards": {
+          "low": 150,
+          "high": 0
+        },
+        "headquarters": "Place de la Concorde, Paris, France",
+        "digitalFanPlatforms": {
+          "low": 8,
+          "high": 0
+        },
+        "mobileApps": {
+          "low": 5,
+          "high": 0
+        },
+        "contentProduction": {
+          "low": 5000,
+          "high": 0
+        },
+        "hrPerEmployee": {
+          "low": 5556,
+          "high": 0
+        },
+        "licensingAgreements": {
+          "low": 200,
+          "high": 0
+        },
+        "financingCashFlow": {
+          "low": -20000000,
+          "high": -1
+        },
+        "marketInvestments": {
+          "low": 120000000,
+          "high": 0
+        },
+        "market_segment": "International Federation",
+        "businessModel": "Membership fees, commercial rights, sanctions",
+        "continentalAssociations": {
+          "low": 5,
+          "high": 0
+        },
+        "data_quality": "COMPLETED",
+        "procurement_stage": "Active",
+        "memberServices": {
+          "low": 15000,
+          "high": 0
+        },
+        "opportunityScore": {
+          "low": 95,
+          "high": 0
+        },
+        "estimatedValue": "$50-100M annually",
+        "currentLiabilities": {
+          "low": 200000000,
+          "high": 0
+        },
+        "partnership_opportunities": [
+          "Technology",
+          "Safety",
+          "Sustainability",
+          "Telecommunications",
+          "Automotive"
+        ],
+        "revenuePerEmployee": {
+          "low": 322222,
+          "high": 0
+        },
+        "strategic_value": "Gateway to global motorsport industry",
+        "techAdoption": 0.82,
+        "youthPrograms": {
+          "low": 15,
+          "high": 0
+        },
+        "returnOnAssets": 0.02,
+        "industry_sector": "Motorsport",
+        "profitPerEmployee": {
+          "low": 40000,
+          "high": 0
+        },
+        "facilitiesPerEmployee": {
+          "low": 22222,
+          "high": 0
+        },
+        "sponsorshipValue": 0.92,
+        "sanctioningRevenue": {
+          "low": 10000000,
+          "high": 0
+        },
+        "broadcastDeals": {
+          "low": 35,
+          "high": 0
+        },
+        "affiliatedChampionships": {
+          "low": 25,
+          "high": 0
+        },
+        "returnOnEquity": 0.04,
+        "grossMargin": 0.85,
+        "administrativeExpenses": {
+          "low": 25000000,
+          "high": 0
+        },
+        "sport": "Motorsport",
+        "priceToBook": {
+          "low": 0,
+          "high": 0
+        }
+      },
+      "type": "Entity"
+    },
+    {
+      "labels": [
+        "Entity",
+        "Organization",
+        "International_Federation"
+      ],
+      "properties": {
+        "transportationEquipment": {
+          "low": 30,
+          "high": 0
+        },
+        "medicalEquipment": {
+          "low": 80,
+          "high": 0
+        },
+        "facilityConstructionProjects": {
+          "low": 25,
+          "high": 0
+        },
+        "registrationSystems": {
+          "low": 2,
+          "high": 0
+        },
+        "growth_potential": "High - Digital growth, emerging markets",
+        "achievements": [
+          "Olympic sport governance",
+          "Global development",
+          "Gender equality leadership",
+          "Digital innovation"
+        ],
+        "nationalTeams": {
+          "low": 350,
+          "high": 0
+        },
+        "injuryPreventionStudies": {
+          "low": 15,
+          "high": 0
+        },
+        "value_proposition": "Global volleyball governance with massive participation base",
+        "officialSuppliers": {
+          "low": 25,
+          "high": 0
+        },
+        "communityOutreachPrograms": {
+          "low": 30,
+          "high": 0
+        },
+        "partnership_history": "Sports equipment and media partnerships",
+        "environmentalInitiatives": {
+          "low": 8,
+          "high": 0
+        },
+        "olympicSolidarityPrograms": {
+          "low": 20,
+          "high": 0
+        },
+        "procedureEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "digitalLiteracyPrograms": {
+          "low": 8,
+          "high": 0
+        },
+        "migrated_at": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 14,
+            "high": 0
+          },
+          "hour": {
+            "low": 6,
+            "high": 0
+          },
+          "minute": {
+            "low": 12,
+            "high": 0
+          },
+          "second": {
+            "low": 16,
+            "high": 0
+          },
+          "nanosecond": {
+            "low": 985000000,
+            "high": 0
+          },
+          "timeZoneOffsetSeconds": {
+            "low": 0,
+            "high": 0
+          }
+        },
+        "equipmentTechnologyResearch": {
+          "low": 10,
+          "high": 0
+        },
+        "source_system": "Supabase Migration",
+        "sponsorshipCategories": {
+          "low": 12,
+          "high": 0
+        },
+        "standardEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "competitive_advantages": [
+          "Olympic inclusion",
+          "Global participation",
+          "Gender equality",
+          "Digital innovation"
+        ],
+        "retrievalEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "facilityDesignResearch": {
+          "low": 8,
+          "high": 0
+        },
+        "cloudInfrastructure": {
+          "low": 1,
+          "high": 0
+        },
+        "beachVolleyballPlayers": {
+          "low": 1500000,
+          "high": 0
+        },
+        "hospitalityPartners": {
+          "low": 8,
+          "high": 0
+        },
+        "clubCompetitions": {
+          "low": 6,
+          "high": 0
+        },
+        "growthStrategy": "Digital platforms, new competitions, market development",
+        "communicationEquipment": {
+          "low": 100,
+          "high": 0
+        },
+        "editingEquipment": {
+          "low": 40,
+          "high": 0
+        },
+        "geographic_focus": "Global",
+        "securitySystems": {
+          "low": 2,
+          "high": 0
+        },
+        "experimentalEquipment": {
+          "low": 10,
+          "high": 0
+        },
+        "demonstrationEquipment": {
+          "low": 12,
+          "high": 0
+        },
+        "facilityAccreditations": {
+          "low": 100,
+          "high": 0
+        },
+        "partnershipPotential": 0.88,
+        "virtualCompetitions": {
+          "low": 8,
+          "high": 0
+        },
+        "merchandiseLines": {
+          "low": 20,
+          "high": 0
+        },
+        "secretary_general": "Fernando Lima",
+        "genderEqualityPrograms": {
+          "low": 6,
+          "high": 0
+        },
+        "meetingEquipment": {
+          "low": 40,
+          "high": 0
+        },
+        "youthDevelopmentPrograms": {
+          "low": 15,
+          "high": 0
+        },
+        "trainingEquipment": {
+          "low": 50,
+          "high": 0
+        },
+        "specificationEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "titleSponsors": {
+          "low": 8,
+          "high": 0
+        },
+        "digitalEngagement": 0.82,
+        "confidenceScore": {
+          "low": 95,
+          "high": 0
+        },
+        "archivingEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "dataAnalyticsProjects": {
+          "low": 20,
+          "high": 0
+        },
+        "technicalPartners": {
+          "low": 15,
+          "high": 0
+        },
+        "publicHealthCampaigns": {
+          "low": 6,
+          "high": 0
+        },
+        "socialMediaFollowers": {
+          "low": 2800000,
+          "high": 0
+        },
+        "fanEngagementPlatforms": {
+          "low": 10,
+          "high": 0
+        },
+        "reportingEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "videoEquipment": {
+          "low": 50,
+          "high": 0
+        },
+        "computers": {
+          "low": 250,
+          "high": 0
+        },
+        "digitalPlatforms": {
+          "low": 12,
+          "high": 0
+        },
+        "procurement_categories": [
+          "Sports Equipment",
+          "Technology Infrastructure",
+          "Media Services",
+          "Medical Services"
+        ],
+        "website": "https://www.fivb.com",
+        "complianceEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "governanceEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "monitoringSystems": {
+          "low": 3,
+          "high": 0
+        },
+        "founded": {
+          "low": 1947,
+          "high": 0
+        },
+        "artificialIntelligenceProjects": {
+          "low": 8,
+          "high": 0
+        },
+        "streamingEquipment": {
+          "low": 80,
+          "high": 0
+        },
+        "refereeTrainingPrograms": {
+          "low": 200,
+          "high": 0
+        },
+        "sportsEquipment": {
+          "low": 500,
+          "high": 0
+        },
+        "entity_type": "International Sports Federation",
+        "procurementProcess": "International competitive bidding",
+        "recordkeepingEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "currentPartners": [
+          "Mikasa",
+          "Milan",
+          "CCTV",
+          "Nike"
+        ],
+        "pilotEquipment": {
+          "low": 6,
+          "high": 0
+        },
+        "netWorth": {
+          "low": 420000000,
+          "high": 0
+        },
+        "safetyInspections": {
+          "low": 150,
+          "high": 0
+        },
+        "accreditationEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "budgetCycle": "Annual (January)",
+        "country": "Switzerland",
+        "decision_timeline": "4-8 months",
+        "disasterReliefPrograms": {
+          "low": 3,
+          "high": 0
+        },
+        "source": "YELLOW_PANTHER_OPTIMIZED",
+        "qualityControlEquipment": {
+          "low": 20,
+          "high": 0
+        },
+        "nftProjects": {
+          "low": 2,
+          "high": 0
+        },
+        "metricEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "employeeCount": {
+          "low": 280,
+          "high": 0
+        },
+        "performanceTrackingSystems": {
+          "low": 5,
+          "high": 0
+        },
+        "peaceBuildingPrograms": {
+          "low": 3,
+          "high": 0
+        },
+        "evaluationEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "machineLearningApplications": {
+          "low": 5,
+          "high": 0
+        },
+        "culturalExchangePrograms": {
+          "low": 5,
+          "high": 0
+        },
+        "furniture": {
+          "low": 400,
+          "high": 0
+        },
+        "thomasFranckValue": 0.85,
+        "customScore3": 0.86,
+        "customScore2": 0.84,
+        "customScore1": 0.88,
+        "hospitalitySystems": {
+          "low": 2,
+          "high": 0
+        },
+        "augmentedRealityProjects": {
+          "low": 2,
+          "high": 0
+        },
+        "scoutingSystems": {
+          "low": 2,
+          "high": 0
+        },
+        "neo4j_id": "fivb_001",
+        "upgradeEquipment": {
+          "low": 25,
+          "high": 0
+        },
+        "benchmarkEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "business_intelligence_applied": true,
+        "registeredPlayers": {
+          "low": 500000000,
+          "high": 0
+        },
+        "measurementEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "name": "Fédération Internationale de Volleyball",
+        "socialResponsibilityInitiatives": {
+          "low": 12,
+          "high": 0
+        },
+        "partnershipHistory": "Sports equipment and media partnerships",
+        "criterionEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "calibrationEquipment": {
+          "low": 15,
+          "high": 0
+        },
+        "scanners": {
+          "low": 30,
+          "high": 0
+        },
+        "preferredSuppliers": [
+          "Technology",
+          "Sports Equipment",
+          "Media",
+          "Healthcare"
+        ],
+        "riskFactors": "Competition from other sports, regional conflicts",
+        "digitalPlatformDevelopment": {
+          "low": 15,
+          "high": 0
+        },
+        "assessmentEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "enrichmentStatus": "COMPLETED",
+        "serverInfrastructure": {
+          "low": 1,
+          "high": 0
+        },
+        "tentEquipment": {
+          "low": 20,
+          "high": 0
+        },
+        "networkEquipment": {
+          "low": 80,
+          "high": 0
+        },
+        "broadcastEquipment": {
+          "low": 120,
+          "high": 0
+        },
+        "researchEquipment": {
+          "low": 20,
+          "high": 0
+        },
+        "backupEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "contactPreferences": "Formal tender process",
+        "socialMediaManagementSystems": {
+          "low": 2,
+          "high": 0
+        },
+        "firstAidEquipment": {
+          "low": 30,
+          "high": 0
+        },
+        "enrichment_confidence": 0.95,
+        "dataCenters": {
+          "low": 1,
+          "high": 0
+        },
+        "trialEquipment": {
+          "low": 4,
+          "high": 0
+        },
+        "antiDopingTests": {
+          "low": 8000,
+          "high": 0
+        },
+        "sustainabilityPrograms": {
+          "low": 8,
+          "high": 0
+        },
+        "yellow_panther_verified": true,
+        "last_enrichment_date": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 14,
+            "high": 0
+          }
+        },
+        "metaverseInitiatives": {
+          "low": 1,
+          "high": 0
+        },
+        "expansionEquipment": {
+          "low": 20,
+          "high": 0
+        },
+        "healthPromotionPrograms": {
+          "low": 10,
+          "high": 0
+        },
+        "developmentEquipment": {
+          "low": 25,
+          "high": 0
+        },
+        "migration_batch": "Phase8_International_Federations",
+        "president": "Fabio Azevedo",
+        "fantasySportsPlatforms": {
+          "low": 6,
+          "high": 0
+        },
+        "virtualRealityProjects": {
+          "low": 3,
+          "high": 0
+        },
+        "data_freshness": "2025-10-14",
+        "restoration_id": "fivb_001_20251014",
+        "esportsInitiatives": {
+          "low": 4,
+          "high": 0
+        },
+        "safetyEquipment": {
+          "low": 150,
+          "high": 0
+        },
+        "type": "International Federation",
+        "storageEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "soundEquipment": {
+          "low": 50,
+          "high": 0
+        },
+        "lastUpdated": "2025-10-14",
+        "backupSystems": {
+          "low": 2,
+          "high": 0
+        },
+        "indicatorEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "annualTournaments": {
+          "low": 25,
+          "high": 0
+        },
+        "athleteManagementSystems": {
+          "low": 4,
+          "high": 0
+        },
+        "securityEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "officials": {
+          "low": 50000,
+          "high": 0
+        },
+        "worldChampionships": {
+          "low": 4,
+          "high": 0
+        },
+        "innovationEquipment": {
+          "low": 15,
+          "high": 0
+        },
+        "documentationEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "business_category": "Sports Governance",
+        "equipmentCertifications": {
+          "low": 25,
+          "high": 0
+        },
+        "memberFederations": {
+          "low": 222,
+          "high": 0
+        },
+        "guidelineEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "coachingCourses": {
+          "low": 200,
+          "high": 0
+        },
+        "decisionMaker": "President and technical committees",
+        "educationalEquipment": {
+          "low": 30,
+          "high": 0
+        },
+        "refereeCourses": {
+          "low": 150,
+          "high": 0
+        },
+        "coaches": {
+          "low": 200000,
+          "high": 0
+        },
+        "brandingEquipment": {
+          "low": 40,
+          "high": 0
+        },
+        "eventEquipment": {
+          "low": 300,
+          "high": 0
+        },
+        "streamingServices": {
+          "low": 15,
+          "high": 0
+        },
+        "displayEquipment": {
+          "low": 30,
+          "high": 0
+        },
+        "fanBaseSize": {
+          "low": 800000000,
+          "high": 0
+        },
+        "marketTrends": "Digital engagement, emerging markets, gender equality",
+        "socialMediaChannels": {
+          "low": 8,
+          "high": 0
+        },
+        "marketingEquipment": {
+          "low": 60,
+          "high": 0
+        },
+        "mobileApplicationDevelopment": {
+          "low": 6,
+          "high": 0
+        },
+        "medicalSymposiums": {
+          "low": 12,
+          "high": 0
+        },
+        "softwareLicenses": {
+          "low": 50,
+          "high": 0
+        },
+        "broadcastingTechnologyResearch": {
+          "low": 12,
+          "high": 0
+        },
+        "mediaRights": {
+          "low": 45,
+          "high": 0
+        },
+        "developmentFunds": {
+          "low": 5,
+          "high": 0
+        },
+        "equipmentDonations": {
+          "low": 200,
+          "high": 0
+        },
+        "coachEducationScholarships": {
+          "low": 300,
+          "high": 0
+        },
+        "regulatoryEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "antiDopingManagementSystems": {
+          "low": 2,
+          "high": 0
+        },
+        "complianceAudits": {
+          "low": 60,
+          "high": 0
+        },
+        "cameras": {
+          "low": 60,
+          "high": 0
+        },
+        "merchandiseSystems": {
+          "low": 3,
+          "high": 0
+        },
+        "hardwareAssets": {
+          "low": 200,
+          "high": 0
+        },
+        "educationPrograms": {
+          "low": 25,
+          "high": 0
+        },
+        "licensingSystems": {
+          "low": 2,
+          "high": 0
+        },
+        "lightingEquipment": {
+          "low": 40,
+          "high": 0
+        },
+        "humanitarianProjects": {
+          "low": 8,
+          "high": 0
+        },
+        "promotionalEquipment": {
+          "low": 80,
+          "high": 0
+        },
+        "competitions": [
+          "Volleyball Nations League",
+          "World Championships",
+          "World Cup",
+          "Club World Championship"
+        ],
+        "stagingEquipment": {
+          "low": 30,
+          "high": 0
+        },
+        "productionEquipment": {
+          "low": 60,
+          "high": 0
+        },
+        "developmentPrograms": {
+          "low": 40,
+          "high": 0
+        },
+        "recruitmentPlatforms": {
+          "low": 3,
+          "high": 0
+        },
+        "performanceEnhancementResearch": {
+          "low": 20,
+          "high": 0
+        },
+        "opportunities": "Digital growth, emerging markets, beach volleyball",
+        "risk_level": "Medium - Competition from other sports",
+        "conferenceEquipment": {
+          "low": 20,
+          "high": 0
+        },
+        "policyEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "accessEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "repairEquipment": {
+          "low": 20,
+          "high": 0
+        },
+        "videoGamePartnerships": {
+          "low": 3,
+          "high": 0
+        },
+        "signageEquipment": {
+          "low": 50,
+          "high": 0
+        },
+        "analyticsPlatforms": {
+          "low": 4,
+          "high": 0
+        },
+        "current_suppliers": [
+          "Mikasa",
+          "Milan",
+          "CCTV",
+          "Nike"
+        ],
+        "maintenanceEquipment": {
+          "low": 30,
+          "high": 0
+        },
+        "technicalSeminars": {
+          "low": 80,
+          "high": 0
+        },
+        "affiliatedContinentalConfederations": {
+          "low": 5,
+          "high": 0
+        },
+        "contentDistributionSystems": {
+          "low": 3,
+          "high": 0
+        },
+        "medicalPartners": {
+          "low": 6,
+          "high": 0
+        },
+        "exhibitionEquipment": {
+          "low": 25,
+          "high": 0
+        },
+        "beachVolleyballEvents": {
+          "low": 50,
+          "high": 0
+        },
+        "validationEquipment": {
+          "low": 4,
+          "high": 0
+        },
+        "accreditationSystems": {
+          "low": 2,
+          "high": 0
+        },
+        "protectionEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "revenue": {
+          "low": 95000000,
+          "high": 0
+        },
+        "sportsScienceResearch": {
+          "low": 25,
+          "high": 0
+        },
+        "zeniValue": 0.82,
+        "recoveryEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "laboratoryEquipment": {
+          "low": 15,
+          "high": 0
+        },
+        "projectors": {
+          "low": 25,
+          "high": 0
+        },
+        "competitionManagementSystems": {
+          "low": 3,
+          "high": 0
+        },
+        "level": "Global",
+        "officeEquipment": {
+          "low": 200,
+          "high": 0
+        },
+        "indoorVolleyballPlayers": {
+          "low": 498500000,
+          "high": 0
+        },
+        "digitalRightsManagementSystems": {
+          "low": 2,
+          "high": 0
+        },
+        "marketPosition": 0.92,
+        "testingEquipment": {
+          "low": 30,
+          "high": 0
+        },
+        "verificationEquipment": {
+          "low": 3,
+          "high": 0
+        },
+        "headquarters": "Lausanne, Switzerland",
+        "medicalEducationPrograms": {
+          "low": 50,
+          "high": 0
+        },
+        "mobileApps": {
+          "low": 4,
+          "high": 0
+        },
+        "mobileDevices": {
+          "low": 150,
+          "high": 0
+        },
+        "referees": {
+          "low": 18000,
+          "high": 0
+        },
+        "licensingAgreements": {
+          "low": 50,
+          "high": 0
+        },
+        "continentalChampionships": {
+          "low": 20,
+          "high": 0
+        },
+        "educationScholarships": {
+          "low": 150,
+          "high": 0
+        },
+        "trainingGrants": {
+          "low": 80,
+          "high": 0
+        },
+        "market_segment": "International Federation",
+        "businessModel": "Broadcast rights, sponsorships, event hosting",
+        "data_quality": "COMPLETED",
+        "procurement_stage": "Active",
+        "prototypeEquipment": {
+          "low": 8,
+          "high": 0
+        },
+        "opportunityScore": {
+          "low": 88,
+          "high": 0
+        },
+        "cateringEquipment": {
+          "low": 40,
+          "high": 0
+        },
+        "analysisEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "medicalRecordsSystems": {
+          "low": 3,
+          "high": 0
+        },
+        "ticketingSystems": {
+          "low": 4,
+          "high": 0
+        },
+        "estimatedValue": "$40-80M annually",
+        "partnership_opportunities": [
+          "Technology",
+          "Sports Equipment",
+          "Media",
+          "Healthcare",
+          "Sustainability"
+        ],
+        "audioEquipment": {
+          "low": 40,
+          "high": 0
+        },
+        "clubs": {
+          "low": 250000,
+          "high": 0
+        },
+        "emergencyEquipment": {
+          "low": 20,
+          "high": 0
+        },
+        "graphicsEquipment": {
+          "low": 30,
+          "high": 0
+        },
+        "strategic_value": "Access to global volleyball market and Olympic movement",
+        "techAdoption": 0.78,
+        "printers": {
+          "low": 80,
+          "high": 0
+        },
+        "storageInfrastructure": {
+          "low": 1,
+          "high": 0
+        },
+        "standardizationEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "broadcastPartners": {
+          "low": 35,
+          "high": 0
+        },
+        "industry_sector": "Volleyball",
+        "presentationEquipment": {
+          "low": 40,
+          "high": 0
+        },
+        "technologyAccessPrograms": {
+          "low": 12,
+          "high": 0
+        },
+        "requirementEquipment": {
+          "low": 1,
+          "high": 0
+        },
+        "certificationEquipment": {
+          "low": 2,
+          "high": 0
+        },
+        "sponsorshipValue": 0.85,
+        "inspectionEquipment": {
+          "low": 25,
+          "high": 0
+        },
+        "replacementEquipment": {
+          "low": 15,
+          "high": 0
+        },
+        "networkInfrastructure": {
+          "low": 1,
+          "high": 0
+        },
+        "sport": "Volleyball",
+        "disasterRecoverySystems": {
+          "low": 2,
+          "high": 0
+        }
+      },
+      "type": "Entity"
+    },
+    {
+      "labels": [
+        "Entity",
+        "Organization",
+        "International_Federation"
+      ],
+      "properties": {
+        "growth_potential": "High - European/American market expansion",
+        "achievements": [
+          "Olympic sport governance",
+          "Asian dominance expansion",
+          "Global development",
+          "Technology integration"
+        ],
+        "nationalTeams": {
+          "low": 200,
+          "high": 0
+        },
+        "sportsTacticsEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "medicalCourses": {
+          "low": 6,
+          "high": 0
+        },
+        "sportsTaperingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsArbitrationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsCommunicationsCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "value_proposition": "Global badminton governance with strong Asian market presence",
+        "sportsRecoveryCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsJournalismCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "partnership_history": "Sports equipment and apparel partnerships",
+        "sportsAdministrationCourses": {
+          "low": 6,
+          "high": 0
+        },
+        "communicationsCourses": {
+          "low": 8,
+          "high": 0
+        },
+        "migrated_at": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 14,
+            "high": 0
+          },
+          "hour": {
+            "low": 6,
+            "high": 0
+          },
+          "minute": {
+            "low": 12,
+            "high": 0
+          },
+          "second": {
+            "low": 54,
+            "high": 0
+          },
+          "nanosecond": {
+            "low": 808000000,
+            "high": 0
+          },
+          "timeZoneOffsetSeconds": {
+            "low": 0,
+            "high": 0
+          }
+        },
+        "sportsWellnessEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "source_system": "Supabase Migration",
+        "managementCourses": {
+          "low": 15,
+          "high": 0
+        },
+        "sportsBettingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "competitive_advantages": [
+          "Olympic inclusion",
+          "Asian market dominance",
+          "Technology integration"
+        ],
+        "nutritionCourses": {
+          "low": 3,
+          "high": 0
+        },
+        "sportsRiskCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsPsychologyCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "continentalConfederations": {
+          "low": 5,
+          "high": 0
+        },
+        "growthStrategy": "Market development in Europe/Americas, digital expansion",
+        "sportsGamingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsFitnessProgramCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsCoachingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "geographic_focus": "Global",
+        "sportsEthicsCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsSocialMediaCourses": {
+          "low": 4,
+          "high": 0
+        },
+        "sportsMassageCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsBracingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "partnershipPotential": 0.82,
+        "secretary_general": "Thomas Lund",
+        "sportsOperationsCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsAnalyticsCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "sportsTrainingProgramCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsFantasyCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsGamificationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsBrandingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "digitalEngagement": 0.79,
+        "confidenceScore": {
+          "low": 92,
+          "high": 0
+        },
+        "sportsSituationalAwarenessCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsAugmentedRealityCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "socialMediaFollowers": {
+          "low": 2200000,
+          "high": 0
+        },
+        "researchCourses": {
+          "low": 5,
+          "high": 0
+        },
+        "sportsMarketingDigitalCourses": {
+          "low": 3,
+          "high": 0
+        },
+        "sportsMachineLearningCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "marketingCourses": {
+          "low": 10,
+          "high": 0
+        },
+        "procurement_categories": [
+          "Sports Equipment",
+          "Technology Infrastructure",
+          "Apparel",
+          "Media Services"
+        ],
+        "website": "https://bwfbadminton.com",
+        "sportsArtificialIntelligenceCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "itCourses": {
+          "low": 5,
+          "high": 0
+        },
+        "founded": {
+          "low": 1934,
+          "high": 0
+        },
+        "sportsMobilityCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsLawCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsPerformanceEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsCoordinationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "leadershipCourses": {
+          "low": 8,
+          "high": 0
+        },
+        "sportsInjuryTreatmentCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "entity_type": "International Sports Federation",
+        "procurementProcess": "International competitive bidding",
+        "currentPartners": [
+          "Yonex",
+          "Li-Ning",
+          "Victor",
+          "FILA"
+        ],
+        "sportsRegulationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "netWorth": {
+          "low": 280000000,
+          "high": 0
+        },
+        "sportsExerciseCourses": {
+          "low": 3,
+          "high": 0
+        },
+        "sportsRestorationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsFacilityManagementCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "budgetCycle": "Annual (January)",
+        "psychologyCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "country": "Malaysia",
+        "academyPrograms": {
+          "low": 15,
+          "high": 0
+        },
+        "decision_timeline": "3-6 months",
+        "sportsLeadershipCourses": {
+          "low": 5,
+          "high": 0
+        },
+        "source": "YELLOW_PANTHER_OPTIMIZED",
+        "employeeCount": {
+          "low": 180,
+          "high": 0
+        },
+        "sportsRiskManagementCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "photographyCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "medicalOfficials": {
+          "low": 2000,
+          "high": 0
+        },
+        "sportsVideoCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "thomasFranckValue": 0.78,
+        "customScore3": 0.8,
+        "customScore2": 0.79,
+        "customScore1": 0.82,
+        "productionCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "sportsLogisticsCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "neo4j_id": "bwf_001",
+        "sportsSupportsCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "business_intelligence_applied": true,
+        "physiotherapyCourses": {
+          "low": 4,
+          "high": 0
+        },
+        "registeredPlayers": {
+          "low": 400000000,
+          "high": 0
+        },
+        "sportsStrappingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsPlanningCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "sportsCuppingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsPartnershipCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsScienceCourses": {
+          "low": 3,
+          "high": 0
+        },
+        "sportsManagementCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "socialMediaCourses": {
+          "low": 6,
+          "high": 0
+        },
+        "name": "Badminton World Federation",
+        "sportsVirtualRealityCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "partnershipHistory": "Sports equipment and apparel partnerships",
+        "sportsPeriodizationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsQualityManagementCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsEventManagementCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "preferredSuppliers": [
+          "Sports Equipment",
+          "Technology",
+          "Media",
+          "Apparel"
+        ],
+        "riskFactors": "Concentration in Asian markets, player retirements",
+        "sportsDataCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "scientificCourses": {
+          "low": 3,
+          "high": 0
+        },
+        "sportsRegenerationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "enrichmentStatus": "COMPLETED",
+        "antiDopingOfficials": {
+          "low": 500,
+          "high": 0
+        },
+        "sportsTapingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsMentalHealthEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsEnduranceCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "lineJudges": {
+          "low": 15000,
+          "high": 0
+        },
+        "sportsInsuranceCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "contactPreferences": "Formal tender process",
+        "sportsPodcastCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsGameIntelligenceCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "communityPrograms": {
+          "low": 150,
+          "high": 0
+        },
+        "enrichment_confidence": 0.92,
+        "sportsConditioningCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "technicalCourses": {
+          "low": 40,
+          "high": 0
+        },
+        "broadcastingCourses": {
+          "low": 3,
+          "high": 0
+        },
+        "sportsSafetyCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsSkillsEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "administrationCourses": {
+          "low": 12,
+          "high": 0
+        },
+        "yellow_panther_verified": true,
+        "sportsAntiDopingEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "last_enrichment_date": {
+          "year": {
+            "low": 2025,
+            "high": 0
+          },
+          "month": {
+            "low": 10,
+            "high": 0
+          },
+          "day": {
+            "low": 14,
+            "high": 0
+          }
+        },
+        "sportsPhysicalTherapyCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "antiDopingCourses": {
+          "low": 10,
+          "high": 0
+        },
+        "injuryPreventionCourses": {
+          "low": 5,
+          "high": 0
+        },
+        "migration_batch": "Phase8_International_Federations",
+        "president": "Poul-Erik Høyer Larsen",
+        "developmentCourses": {
+          "low": 20,
+          "high": 0
+        },
+        "rehabilitationCourses": {
+          "low": 3,
+          "high": 0
+        },
+        "sportsPublicRelationsCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsContentCourses": {
+          "low": 3,
+          "high": 0
+        },
+        "exercisePhysiologyCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "data_freshness": "2025-10-14",
+        "restoration_id": "bwf_001_20251014",
+        "type": "International Federation",
+        "developmentProjects": {
+          "low": 80,
+          "high": 0
+        },
+        "lastUpdated": "2025-10-14",
+        "officials": {
+          "low": 30000,
+          "high": 0
+        },
+        "sportsMedicineCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "sportsAgilityCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "business_category": "Sports Governance",
+        "memberFederations": {
+          "low": 191,
+          "high": 0
+        },
+        "sportsAcupunctureCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "coachingCourses": {
+          "low": 120,
+          "high": 0
+        },
+        "sportsTrainingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsDisputeResolutionCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "strengthConditioningCourses": {
+          "low": 4,
+          "high": 0
+        },
+        "decisionMaker": "President and Executive Committee",
+        "sportsResearchCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsTransformationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "refereeCourses": {
+          "low": 80,
+          "high": 0
+        },
+        "sportsMediationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "coaches": {
+          "low": 80000,
+          "high": 0
+        },
+        "sportsLegalCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsStrengthCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsStorytellingCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "sportsPolicyCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "financeCourses": {
+          "low": 6,
+          "high": 0
+        },
+        "fanBaseSize": {
+          "low": 500000000,
+          "high": 0
+        },
+        "contentCreationCourses": {
+          "low": 4,
+          "high": 0
+        },
+        "marketTrends": "Asian market growth, digital streaming, player development",
+        "sportsStaminaCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsVenueManagementCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsStrategyCourses": {
+          "low": 3,
+          "high": 0
+        },
+        "sportsComplianceCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsDryNeedlingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsStreamingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "biomechanicsCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "academicCourses": {
+          "low": 8,
+          "high": 0
+        },
+        "sportsTechnologyCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsNutritionEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsRehabilitationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsDecisionMakingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsTournamentManagementCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "technicalOfficials": {
+          "low": 5000,
+          "high": 0
+        },
+        "sportsEquipmentCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "competitions": [
+          "World Championships",
+          "Thomas Cup",
+          "Uber Cup",
+          "Sudirman Cup",
+          "World Tour"
+        ],
+        "sportsSpatialAwarenessCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsMediaCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "opportunities": "European/American market growth, digital platforms",
+        "risk_level": "Medium - Geographic concentration in Asia",
+        "trainingCenters": {
+          "low": 25,
+          "high": 0
+        },
+        "sportsFitnessEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsStrategyEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsMarketingCourses": {
+          "low": 4,
+          "high": 0
+        },
+        "sportsMedicalEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsAntiMatchFixingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsInnovationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "videographyCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsTimingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsContractCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "current_suppliers": [
+          "Yonex",
+          "Li-Ning",
+          "Victor",
+          "FILA"
+        ],
+        "sportsAntiCorruptionCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsDrillCourses": {
+          "low": 4,
+          "high": 0
+        },
+        "sportsPowerCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsFinanceCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "sportsInjuryRehabilitationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsRhythmCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsDevelopmentPlanCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "revenue": {
+          "low": 65000000,
+          "high": 0
+        },
+        "sportsFlexibilityCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsInjuryManagementCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsPracticeCourses": {
+          "low": 6,
+          "high": 0
+        },
+        "zeniValue": 0.75,
+        "sportsWorkoutCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "sportsDigitalCourses": {
+          "low": 6,
+          "high": 0
+        },
+        "editingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "fitnessCourses": {
+          "low": 8,
+          "high": 0
+        },
+        "performanceAnalysisCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "level": "Global",
+        "sportsOrthoticsCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "designCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "schoolsPrograms": {
+          "low": 200,
+          "high": 0
+        },
+        "sportsTechniqueEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "marketPosition": 0.85,
+        "digitalCourses": {
+          "low": 8,
+          "high": 0
+        },
+        "headquarters": "Kuala Lumpur, Malaysia",
+        "sportsBroadcastingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsProjectManagementCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "referees": {
+          "low": 12000,
+          "high": 0
+        },
+        "sportsInjuryPreventionCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsNegotiationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "conditioningCourses": {
+          "low": 6,
+          "high": 0
+        },
+        "market_segment": "International Federation",
+        "businessModel": "Broadcast rights, sponsorships, event hosting fees",
+        "data_quality": "COMPLETED",
+        "procurement_stage": "Active",
+        "sportsSecurityCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "opportunityScore": {
+          "low": 82,
+          "high": 0
+        },
+        "sportsPhotographyCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsProductionCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "estimatedValue": "$25-50M annually",
+        "sportsEsportsCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsPeakingCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsOsteopathyCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "partnership_opportunities": [
+          "Sports Equipment",
+          "Technology",
+          "Media",
+          "Apparel",
+          "Healthcare"
+        ],
+        "clubs": {
+          "low": 150000,
+          "high": 0
+        },
+        "sportsGovernanceCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "strategic_value": "Access to Asian badminton market and Olympic movement",
+        "techAdoption": 0.75,
+        "youthPrograms": {
+          "low": 40,
+          "high": 0
+        },
+        "sportsChiropracticCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "recoveryCourses": {
+          "low": 4,
+          "high": 0
+        },
+        "industry_sector": "Badminton",
+        "sportsSponsorshipCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "journalismCourses": {
+          "low": 2,
+          "high": 0
+        },
+        "coachingDirectors": {
+          "low": 50,
+          "high": 0
+        },
+        "sponsorshipValue": 0.78,
+        "sportsProstheticsCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsHealthEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsBalanceCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "developmentOfficers": {
+          "low": 100,
+          "high": 0
+        },
+        "sportsDevelopmentCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "umpires": {
+          "low": 8000,
+          "high": 0
+        },
+        "sportsEthicsComplianceCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsStabilityCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsIntegrityCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sport": "Badminton",
+        "sportsChangeManagementCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsPsychologyEducationCourses": {
+          "low": 1,
+          "high": 0
+        },
+        "sportsNutritionCourses": {
+          "low": 1,
+          "high": 0
+        }
+      },
+      "type": "Entity"
+    }
+  ],
+  "sportDistribution": {
+    "Football": {
+      "low": 425,
+      "high": 0
+    },
+    "Basketball": {
+      "low": 184,
+      "high": 0
+    },
+    "Handball": {
+      "low": 126,
+      "high": 0
+    },
+    "Motorsport": {
+      "low": 108,
+      "high": 0
+    },
+    "Cricket": {
+      "low": 102,
+      "high": 0
+    },
+    "Volleyball": {
+      "low": 98,
+      "high": 0
+    },
+    "Baseball": {
+      "low": 86,
+      "high": 0
+    },
+    "Ice Hockey": {
+      "low": 76,
+      "high": 0
+    },
+    "Cycling": {
+      "low": 62,
+      "high": 0
+    },
+    "Rugby Union": {
+      "low": 52,
+      "high": 0
+    }
+  },
+  "countryDistribution": {
+    "England": {
+      "low": 99,
+      "high": 0
+    },
+    "United States": {
+      "low": 93,
+      "high": 0
+    },
+    "Germany": {
+      "low": 65,
+      "high": 0
+    },
+    "France": {
+      "low": 65,
+      "high": 0
+    },
+    "Italy": {
+      "low": 61,
+      "high": 0
+    },
+    "Global": {
+      "low": 57,
+      "high": 0
+    },
+    "Brazil": {
+      "low": 57,
+      "high": 0
+    },
+    "Australia": {
+      "low": 56,
+      "high": 0
+    },
+    "Spain": {
+      "low": 56,
+      "high": 0
+    },
+    "Japan": {
+      "low": 53,
+      "high": 0
+    }
+  }
+}

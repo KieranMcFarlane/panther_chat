@@ -1,0 +1,371 @@
+{
+  "timestamp": "2025-10-10T01:16:56.978Z",
+  "execution_summary": {
+    "total_duration_seconds": "29.51",
+    "overall_success": true,
+    "phases_completed": [
+      "neo4j_retrieval",
+      "rfp_discovery",
+      "neo4j_integration"
+    ]
+  },
+  "key_metrics": {
+    "entities_processed": 10,
+    "rfps_discovered": 9,
+    "high_value_opportunities": 6,
+    "neo4j_relationships_created": 9,
+    "competitive_analyses_completed": 6,
+    "average_fit_score": 88
+  },
+  "entity_breakdown": [
+    {
+      "entity_name": "Brooklyn Nets",
+      "entity_type": "Club",
+      "sport": "Basketball",
+      "rfp_count": 1,
+      "high_value_count": 1,
+      "opportunities": [
+        {
+          "id": "rfp_brooklyn_nets_1760058989081_0",
+          "title": "Brooklyn Nets Data Analytics Platform",
+          "organization": "Brooklyn Nets",
+          "description": "Request for proposals from experienced vendors to develop and deploy a modern technology infrastructure for Brooklyn Nets. The project requires expertise in Basketball industry solutions with proven track record of similar implementations. Deadline: 11/10/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+          "value": "$300,000-$800,000",
+          "category": "Website Development",
+          "source_url": "https://procurement.brooklyn-nets.com/rfp-1760058989160",
+          "published": "2025-10-09",
+          "location": "Toronto",
+          "yellow_panther_fit": 94,
+          "confidence": 85,
+          "urgency": "high",
+          "entity_id": "entity_brooklyn_nets",
+          "entity_name": "Brooklyn Nets",
+          "detected_at": "2025-10-10T01:16:29.162Z"
+        }
+      ]
+    },
+    {
+      "entity_name": "Sunderland",
+      "entity_type": "Club",
+      "sport": "Football",
+      "rfp_count": 3,
+      "high_value_count": 1,
+      "opportunities": [
+        {
+          "id": "rfp_sunderland_1760058992621_0",
+          "title": "Sunderland Technology Partnership Tender",
+          "organization": "Sunderland",
+          "description": "Sunderland is seeking qualified technology partners to implement a comprehensive digital transformation solution. This includes mobile application development, fan engagement platforms, and data analytics systems specifically designed for Football operations. Deadline: 16/10/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+          "value": "$150,000-$400,000",
+          "category": "Digital Transformation",
+          "source_url": "https://procurement.sunderland.com/rfp-1760058992621",
+          "published": "2025-09-17",
+          "location": "Toronto",
+          "yellow_panther_fit": 83,
+          "confidence": 84,
+          "urgency": "medium",
+          "entity_id": "entity_sunderland",
+          "entity_name": "Sunderland",
+          "detected_at": "2025-10-10T01:16:32.621Z"
+        },
+        {
+          "id": "rfp_sunderland_1760058992621_1",
+          "title": "Sunderland Technology Partnership Tender",
+          "organization": "Sunderland",
+          "description": "Sunderland invites proposals for advanced technology solutions to enhance fan experience and operational efficiency. Requirements include mobile app development, real-time analytics, and integration with existing Football management systems. Deadline: 05/11/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+          "value": "$150,000-$400,000",
+          "category": "Fan Engagement Platform",
+          "source_url": "https://procurement.sunderland.com/rfp-1760058992621",
+          "published": "2025-10-04",
+          "location": "London",
+          "yellow_panther_fit": 82,
+          "confidence": 80,
+          "urgency": "medium",
+          "entity_id": "entity_sunderland",
+          "entity_name": "Sunderland",
+          "detected_at": "2025-10-10T01:16:32.621Z"
+        },
+        {
+          "id": "rfp_sunderland_1760058992621_2",
+          "title": "Sunderland Data Analytics Platform",
+          "organization": "Sunderland",
+          "description": "Sunderland is seeking qualified technology partners to implement a comprehensive digital transformation solution. This includes mobile application development, fan engagement platforms, and data analytics systems specifically designed for Football operations. Deadline: 10/11/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+          "value": "$200,000-$600,000",
+          "category": "Software Integration",
+          "source_url": "https://procurement.sunderland.com/rfp-1760058992621",
+          "published": "2025-09-11",
+          "location": "Berlin",
+          "yellow_panther_fit": 89,
+          "confidence": 83,
+          "urgency": "medium",
+          "entity_id": "entity_sunderland",
+          "entity_name": "Sunderland",
+          "detected_at": "2025-10-10T01:16:32.621Z"
+        }
+      ]
+    },
+    {
+      "entity_name": "Athletics Club 1015",
+      "entity_type": "Club",
+      "sport": "Athletics",
+      "rfp_count": 0,
+      "high_value_count": 0,
+      "opportunities": []
+    },
+    {
+      "entity_name": "Netherlands Royal",
+      "entity_type": "Club",
+      "sport": "Cycling",
+      "rfp_count": 0,
+      "high_value_count": 0,
+      "opportunities": []
+    },
+    {
+      "entity_name": "Golf Club 1018",
+      "entity_type": "Club",
+      "sport": "Golf",
+      "rfp_count": 1,
+      "high_value_count": 1,
+      "opportunities": [
+        {
+          "id": "rfp_golf_club_1018_1760059001340_0",
+          "title": "Golf Club 1018 CRM System Implementation",
+          "organization": "Golf Club 1018",
+          "description": "Golf Club 1018 is seeking qualified technology partners to implement a comprehensive digital transformation solution. This includes mobile application development, fan engagement platforms, and data analytics systems specifically designed for Golf operations. Deadline: 02/11/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+          "value": "$300,000-$800,000",
+          "category": "Fan Engagement Platform",
+          "source_url": "https://procurement.golf-club-1018.com/rfp-1760059001341",
+          "published": "2025-09-24",
+          "location": "San Francisco",
+          "yellow_panther_fit": 93,
+          "confidence": 86,
+          "urgency": "high",
+          "entity_id": "entity_golf_club_1018",
+          "entity_name": "Golf Club 1018",
+          "detected_at": "2025-10-10T01:16:41.341Z"
+        }
+      ]
+    },
+    {
+      "entity_name": "Boxing Club 1019",
+      "entity_type": "Club",
+      "sport": "Boxing",
+      "rfp_count": 1,
+      "high_value_count": 1,
+      "opportunities": [
+        {
+          "id": "rfp_boxing_club_1019_1760059005112_0",
+          "title": "Boxing Club 1019 CRM System Implementation",
+          "organization": "Boxing Club 1019",
+          "description": "Boxing Club 1019 is seeking qualified technology partners to implement a comprehensive digital transformation solution. This includes mobile application development, fan engagement platforms, and data analytics systems specifically designed for Boxing operations. Deadline: 19/11/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+          "value": "$300,000-$800,000",
+          "category": "Website Development",
+          "source_url": "https://procurement.boxing-club-1019.com/rfp-1760059005112",
+          "published": "2025-10-03",
+          "location": "London",
+          "yellow_panther_fit": 93,
+          "confidence": 98,
+          "urgency": "high",
+          "entity_id": "entity_boxing_club_1019",
+          "entity_name": "Boxing Club 1019",
+          "detected_at": "2025-10-10T01:16:45.112Z"
+        }
+      ]
+    },
+    {
+      "entity_name": "Entity 7491 (Baseball, South Africa)",
+      "entity_type": "Club",
+      "sport": "Baseball",
+      "rfp_count": 0,
+      "high_value_count": 0,
+      "opportunities": []
+    },
+    {
+      "entity_name": "Entity 7689 (Cricket, Brazil)",
+      "entity_type": "Club",
+      "sport": "Cricket",
+      "rfp_count": 1,
+      "high_value_count": 1,
+      "opportunities": [
+        {
+          "id": "rfp_entity_7689_(cricket,_brazil)_1760059009619_0",
+          "title": "Entity 7689 (Cricket, Brazil) Website Modernization Project",
+          "organization": "Entity 7689 (Cricket, Brazil)",
+          "description": "Request for proposals from experienced vendors to develop and deploy a modern technology infrastructure for Entity 7689 (Cricket, Brazil). The project requires expertise in Cricket industry solutions with proven track record of similar implementations. Deadline: 20/10/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+          "value": "$200,000-$600,000",
+          "category": "CRM and Data Analytics",
+          "source_url": "https://procurement.entity-7689-cricket-brazil.com/rfp-1760059009620",
+          "published": "2025-09-29",
+          "location": "Los Angeles",
+          "yellow_panther_fit": 89,
+          "confidence": 99,
+          "urgency": "medium",
+          "entity_id": "entity_cricket_brazil_7689",
+          "entity_name": "Entity 7689 (Cricket, Brazil)",
+          "detected_at": "2025-10-10T01:16:49.620Z"
+        }
+      ]
+    },
+    {
+      "entity_name": "Gymnastics Club 1016",
+      "entity_type": "Club",
+      "sport": "Gymnastics",
+      "rfp_count": 2,
+      "high_value_count": 1,
+      "opportunities": [
+        {
+          "id": "rfp_gymnastics_club_1016_1760059013426_0",
+          "title": "Gymnastics Club 1016 CRM System Implementation",
+          "organization": "Gymnastics Club 1016",
+          "description": "Gymnastics Club 1016 is seeking qualified technology partners to implement a comprehensive digital transformation solution. This includes mobile application development, fan engagement platforms, and data analytics systems specifically designed for Gymnastics operations. Deadline: 21/12/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+          "value": "$200,000-$600,000",
+          "category": "CRM and Data Analytics",
+          "source_url": "https://procurement.gymnastics-club-1016.com/rfp-1760059013426",
+          "published": "2025-09-13",
+          "location": "Miami",
+          "yellow_panther_fit": 89,
+          "confidence": 84,
+          "urgency": "medium",
+          "entity_id": "entity_gymnastics_club_1016",
+          "entity_name": "Gymnastics Club 1016",
+          "detected_at": "2025-10-10T01:16:53.426Z"
+        },
+        {
+          "id": "rfp_gymnastics_club_1016_1760059013426_1",
+          "title": "Gymnastics Club 1016 CRM System Implementation",
+          "organization": "Gymnastics Club 1016",
+          "description": "Gymnastics Club 1016 is seeking qualified technology partners to implement a comprehensive digital transformation solution. This includes mobile application development, fan engagement platforms, and data analytics systems specifically designed for Gymnastics operations. Deadline: 01/12/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+          "value": "$150,000-$400,000",
+          "category": "Cloud Services",
+          "source_url": "https://procurement.gymnastics-club-1016.com/rfp-1760059013429",
+          "published": "2025-09-24",
+          "location": "Miami",
+          "yellow_panther_fit": 82,
+          "confidence": 95,
+          "urgency": "medium",
+          "entity_id": "entity_gymnastics_club_1016",
+          "entity_name": "Gymnastics Club 1016",
+          "detected_at": "2025-10-10T01:16:53.429Z"
+        }
+      ]
+    },
+    {
+      "entity_name": "Entity 7336 (Handball, USA)",
+      "entity_type": "Club",
+      "sport": "Handball",
+      "rfp_count": 0,
+      "high_value_count": 0,
+      "opportunities": []
+    }
+  ],
+  "top_opportunities": [
+    {
+      "id": "rfp_brooklyn_nets_1760058989081_0",
+      "title": "Brooklyn Nets Data Analytics Platform",
+      "organization": "Brooklyn Nets",
+      "description": "Request for proposals from experienced vendors to develop and deploy a modern technology infrastructure for Brooklyn Nets. The project requires expertise in Basketball industry solutions with proven track record of similar implementations. Deadline: 11/10/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+      "value": "$300,000-$800,000",
+      "category": "Website Development",
+      "source_url": "https://procurement.brooklyn-nets.com/rfp-1760058989160",
+      "published": "2025-10-09",
+      "location": "Toronto",
+      "yellow_panther_fit": 94,
+      "confidence": 85,
+      "urgency": "high",
+      "entity_id": "entity_brooklyn_nets",
+      "entity_name": "Brooklyn Nets",
+      "detected_at": "2025-10-10T01:16:29.162Z"
+    },
+    {
+      "id": "rfp_golf_club_1018_1760059001340_0",
+      "title": "Golf Club 1018 CRM System Implementation",
+      "organization": "Golf Club 1018",
+      "description": "Golf Club 1018 is seeking qualified technology partners to implement a comprehensive digital transformation solution. This includes mobile application development, fan engagement platforms, and data analytics systems specifically designed for Golf operations. Deadline: 02/11/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+      "value": "$300,000-$800,000",
+      "category": "Fan Engagement Platform",
+      "source_url": "https://procurement.golf-club-1018.com/rfp-1760059001341",
+      "published": "2025-09-24",
+      "location": "San Francisco",
+      "yellow_panther_fit": 93,
+      "confidence": 86,
+      "urgency": "high",
+      "entity_id": "entity_golf_club_1018",
+      "entity_name": "Golf Club 1018",
+      "detected_at": "2025-10-10T01:16:41.341Z"
+    },
+    {
+      "id": "rfp_boxing_club_1019_1760059005112_0",
+      "title": "Boxing Club 1019 CRM System Implementation",
+      "organization": "Boxing Club 1019",
+      "description": "Boxing Club 1019 is seeking qualified technology partners to implement a comprehensive digital transformation solution. This includes mobile application development, fan engagement platforms, and data analytics systems specifically designed for Boxing operations. Deadline: 19/11/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+      "value": "$300,000-$800,000",
+      "category": "Website Development",
+      "source_url": "https://procurement.boxing-club-1019.com/rfp-1760059005112",
+      "published": "2025-10-03",
+      "location": "London",
+      "yellow_panther_fit": 93,
+      "confidence": 98,
+      "urgency": "high",
+      "entity_id": "entity_boxing_club_1019",
+      "entity_name": "Boxing Club 1019",
+      "detected_at": "2025-10-10T01:16:45.112Z"
+    },
+    {
+      "id": "rfp_sunderland_1760058992621_2",
+      "title": "Sunderland Data Analytics Platform",
+      "organization": "Sunderland",
+      "description": "Sunderland is seeking qualified technology partners to implement a comprehensive digital transformation solution. This includes mobile application development, fan engagement platforms, and data analytics systems specifically designed for Football operations. Deadline: 10/11/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+      "value": "$200,000-$600,000",
+      "category": "Software Integration",
+      "source_url": "https://procurement.sunderland.com/rfp-1760058992621",
+      "published": "2025-09-11",
+      "location": "Berlin",
+      "yellow_panther_fit": 89,
+      "confidence": 83,
+      "urgency": "medium",
+      "entity_id": "entity_sunderland",
+      "entity_name": "Sunderland",
+      "detected_at": "2025-10-10T01:16:32.621Z"
+    },
+    {
+      "id": "rfp_entity_7689_(cricket,_brazil)_1760059009619_0",
+      "title": "Entity 7689 (Cricket, Brazil) Website Modernization Project",
+      "organization": "Entity 7689 (Cricket, Brazil)",
+      "description": "Request for proposals from experienced vendors to develop and deploy a modern technology infrastructure for Entity 7689 (Cricket, Brazil). The project requires expertise in Cricket industry solutions with proven track record of similar implementations. Deadline: 20/10/2025. Requirements: 5+ years experience, relevant portfolio, industry expertise preferred.",
+      "value": "$200,000-$600,000",
+      "category": "CRM and Data Analytics",
+      "source_url": "https://procurement.entity-7689-cricket-brazil.com/rfp-1760059009620",
+      "published": "2025-09-29",
+      "location": "Los Angeles",
+      "yellow_panther_fit": 89,
+      "confidence": 99,
+      "urgency": "medium",
+      "entity_id": "entity_cricket_brazil_7689",
+      "entity_name": "Entity 7689 (Cricket, Brazil)",
+      "detected_at": "2025-10-10T01:16:49.620Z"
+    }
+  ],
+  "business_impact": {
+    "success_rate": "90.0",
+    "high_value_rate": "66.7",
+    "estimated_pipeline_min": 1800,
+    "estimated_pipeline_max": 4800
+  },
+  "recommendations": [
+    {
+      "priority": "high",
+      "action": "Configure BrightData MCP for real web research",
+      "reason": "Current system uses simulated data - real MCP integration needed"
+    },
+    {
+      "priority": "medium",
+      "action": "Implement Supabase storage for RFP data persistence",
+      "reason": "RFP opportunities need persistent storage and retrieval"
+    },
+    {
+      "priority": "medium",
+      "action": "Set up automated scheduling for continuous monitoring",
+      "reason": "Regular RFP scanning needed for comprehensive coverage"
+    }
+  ]
+}
