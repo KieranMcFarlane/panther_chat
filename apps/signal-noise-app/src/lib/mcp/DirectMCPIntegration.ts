@@ -125,7 +125,7 @@ export class DirectMCPIntegration {
     
     try {
       const env = {
-        PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY || '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'
+        PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY || ''
       };
 
       const request = {
@@ -329,7 +329,7 @@ export class DirectMCPIntegration {
       };
 
       const perplexityResult = await this.executeMCPCommand('npx', ['-y', 'mcp-perplexity-search'], perplexityRequest, {
-        PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY || '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'
+        PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY || ''
       });
 
       if (perplexityResult.result?.tools) {

@@ -272,7 +272,7 @@ export class MCPToolExecutor {
     const { messages, model = 'sonar' } = args;
     
     const apiUrl = 'https://api.perplexity.ai/chat/completions';
-    const apiKey = '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';
+    const apiKey = process.env.PERPLEXITY_API_KEY || '';
     
     try {
       const response = await fetch(apiUrl, {
