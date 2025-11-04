@@ -1,0 +1,83 @@
+{
+  "timestamp": "2025-09-29T07:14:43.842Z",
+  "total": 15,
+  "successful": 0,
+  "failed": 15,
+  "results": [
+    {
+      "clubName": "Atletico Madrid",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Valencia",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Sevilla",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Villarreal",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Real Betis",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Athletic Bilbao",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Real Sociedad",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Celta Vigo",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Getafe",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Granada",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Osasuna",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Mallorca",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Alaves",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Espanyol",
+      "success": false,
+      "error": "All download methods failed"
+    },
+    {
+      "clubName": "Elche",
+      "success": false,
+      "error": "All download methods failed"
+    }
+  ]
+}
