@@ -320,7 +320,7 @@ export const HTTP_MCP_SERVERS: MCPServerConfig[] = [
     command: 'npx',
     args: ['-y', 'mcp-perplexity-search'],
     env: {
-      PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY || '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'
+      PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY || ''
     },
     port: 3012 // Specific port for Perplexity MCP
   }
