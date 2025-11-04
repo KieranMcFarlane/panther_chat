@@ -80,7 +80,7 @@ const perplexityClient = {
     console.log(`🔍 PERPLEXITY CHAT: ${messages[messages.length - 1]?.content?.substring(0, 50)}...`);
     
     const apiUrl = 'https://api.perplexity.ai/chat/completions';
-    const apiKey = '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';
+    const apiKey = process.env.PERPLEXITY_API_KEY || '';
     
     try {
       const response = await fetch(apiUrl, {
