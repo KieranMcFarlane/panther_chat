@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-})
+// Mark route as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,6 +22,12 @@ export async function POST(request: NextRequest) {
       })
     }
     
+    // Lazy-load OpenAI client only when needed (not during build)
+    const { default: OpenAI } = await import('openai')
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
+    })
+    
     const embedding = await openai.embeddings.create({
       model: "text-embedding-3-small",
       input: query,
@@ -31,7 +36,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({
       embedding: embedding.data[0].embedding,
-      model: embedding.data[0].model,
+      model: embedding.model || "text-embedding-3-small",
       usage: embedding.usage
     })
   } catch (error) {
