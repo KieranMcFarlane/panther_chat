@@ -1,13 +1,10 @@
 // Relationship-based Entity Traversal and Enrichment API
 import { NextRequest, NextResponse } from 'next/server';
 import { neo4jService } from '@/lib/neo4j';
-import { createClient } from '@supabase/supabase-js';
 
-// Supabase configuration
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Mark route as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 interface TraversalRequest {
   start_from?: 'all' | 'leagues' | 'clubs' | 'unenriched';
