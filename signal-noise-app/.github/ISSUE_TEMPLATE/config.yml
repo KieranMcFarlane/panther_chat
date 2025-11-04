@@ -1,9 +1,0 @@
-# Issue Template Configuration
-# This file configures the appearance and behavior of issue templates
-
-# Template chooser settings
-blank_issues_enabled: false
-contact_links:
-  - name: 🚀 Signal Noise App Support
-    url: https://github.com/your-org/signal-noise-app/issues
-    about: Please use the issue templates above for bug reports, feature requests, and other issues.

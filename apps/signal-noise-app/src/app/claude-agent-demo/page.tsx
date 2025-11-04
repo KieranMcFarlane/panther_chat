@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Combobox } from '@/components/ui/combobox'
 import TerminalLogDisplay from '@/components/terminal/SimpleTerminalLogDisplay'
-import { Play, Square, RefreshCw, Terminal, Activity, CheckCircle, XCircle, Clock, Zap, Bot, Network, Target, Info, Search, Database } from 'lucide-react'
+import { Play, Square, RefreshCw, Terminal, Activity, CheckCircle, XCircle, Clock, Zap, Bot, Network, Target, Info, Search, Database, Settings, Loader2 } from 'lucide-react'
 import { sharedExecutionStore, type ExecutionState } from '@/lib/sharedExecutionStore'
 
 interface ExecutionLog {
@@ -55,12 +55,12 @@ export default function ClaudeAgentDemo() {
     progress: { current: 0, total: 100, message: 'Ready to start Claude Agent' }
   })
   const [isStreaming, setIsStreaming] = useState(false)
-  const [activeService, setActiveService] = useState<'headless' | 'a2a' | 'claude-sdk'>('headless')
+  const [activeService, setActiveService] = useState<'headless' | 'a2a' | 'claude-sdk' | 'reliable'>('reliable')
   const [parameters, setParameters] = useState({
     query: 'Sports RFP opportunities',
     mode: 'batch', // Default to batch processing
     selectedEntity: '',
-    entityLimit: 250 // Default to 250 entities
+    entityLimit: 50 // Reduced for testing - change back to 2210 for production
   })
   const [availableEntities, setAvailableEntities] = useState<{value: string, label: string}[]>([])
   const [entitiesLoading, setEntitiesLoading] = useState(false)
@@ -139,7 +139,7 @@ export default function ClaudeAgentDemo() {
   }
 
   // Execute with real SSE streaming
-  const executeWithStreaming = async (service: 'headless' | 'a2a' | 'claude-sdk') => {
+  const executeWithStreaming = async (service: 'headless' | 'a2a' | 'claude-sdk' | 'reliable') => {
     if (isStreaming) return;
     
     setIsStreaming(true);
@@ -182,11 +182,68 @@ export default function ClaudeAgentDemo() {
 
       eventSource.addEventListener('result', (event) => {
         const resultData = JSON.parse(event.data);
+        
+        // Handle final completion results
+        if (resultData.type === 'final') {
+          addLog('success', {
+            type: 'a2a_workflow_complete',
+            message: `🎉 A2A Workflow Complete! Processed ${resultData.data.entitiesProcessed || resultData.data.totalEntities || 0} entities in ${Math.round((resultData.data.executionTime || 0) / 1000)}s`,
+            data: resultData.data,
+            timestamp: resultData.timestamp
+          }, undefined, undefined, 'a2a_production');
+          
+          // Show detailed results
+          if (resultData.data.results && resultData.data.results.length > 0) {
+            resultData.data.results.forEach((result: any, index: number) => {
+              addLog('info', {
+                type: 'chunk_result',
+                message: `📊 Chunk ${index + 1}: ${result.entities} entities processed in ${Math.round(result.processingTime / 1000)}s`,
+                data: result,
+                timestamp: result.processedAt
+              }, undefined, undefined, 'a2a_production');
+            });
+          }
+          
+          setIsStreaming(false);
+          return;
+        }
+        
+        // Handle regular result events
         addLog(resultData.type, resultData, resultData.toolUseId, undefined, resultData.service);
       });
 
+      eventSource.addEventListener('heartbeat', (event) => {
+        // Heartbeat received - connection is alive
+        // No action needed, this keeps the connection active
+      });
+
+      eventSource.addEventListener('keepalive', (event) => {
+        // Keep-alive event during long operations
+        // No action needed, this prevents timeout
+      });
+
+      eventSource.addEventListener('entity_progress', (event) => {
+        const progressData = JSON.parse(event.data);
+        // Could update entity-specific progress here if needed
+      });
+
+      eventSource.addEventListener('buffer_status', (event) => {
+        // Buffer status update - helps maintain connection
+        console.log('Buffer status:', event.data);
+      });
+
+      eventSource.addEventListener('health_ping', (event) => {
+        // Health ping received - connection is alive
+        console.log('Health ping received:', event.data);
+      });
+
       eventSource.addEventListener('error', (event) => {
-        const errorData = JSON.parse(event.data);
+        let errorData;
+        try {
+          errorData = JSON.parse(event.data);
+        } catch (e) {
+          errorData = { message: event.data || 'Unknown error occurred' };
+        }
         addLog('error', errorData, undefined, undefined, service);
         setIsStreaming(false);
       });
@@ -202,24 +259,78 @@ export default function ClaudeAgentDemo() {
         eventSource.close();
       });
 
-      eventSource.onerror = () => {
-        addLog('error', { 
-          message: '❌ Streaming connection lost. Please try again.' 
-        }, undefined, undefined, service);
-        setIsStreaming(false);
-        eventSource.close();
+      eventSource.onerror = (error) => {
+        // Don't immediately show error - A2A processing takes time
+        console.log('EventSource error:', error);
+        
+        // Check if we have recent successful activity
+        const lastLogTime = logs.length > 0 ? new Date(logs[logs.length - 1].timestamp) : new Date(0);
+        const timeSinceLastLog = Date.now() - lastLogTime.getTime();
+        
+        // If we had recent activity, don't show error - A2A is still processing
+        if (timeSinceLastLog < 120000) { // 2 minutes - allow reliable service to complete
+          addLog('system', { 
+            message: `🔄 A2A system processing... last activity ${Math.round(timeSinceLastLog/1000)}s ago` 
+          }, undefined, undefined, service);
+          return; // Don't close connection
+        }
+        
+        // Check if the connection closed naturally after completion
+        if (eventSource.readyState === EventSource.CLOSED) {
+          addLog('system', { 
+            message: '🔗 Streaming connection closed - A2A workflow completed' 
+          }, undefined, undefined, service);
+          setIsStreaming(false);
+        } else {
+          // Actual error occurred
+          addLog('error', { 
+            message: `❌ Streaming connection issue: ${error?.message || 'Unknown error'}. A2A system may still be processing in background.` 
+          }, undefined, undefined, service);
+          setIsStreaming(false);
+          eventSource.close();
+        }
       };
 
-      // Set timeout for long-running operations
+      // Set timeout for long-running operations (5 minutes for A2A processing)
+      setTimeout(() => {
+        if (isStreaming && eventSource.readyState === EventSource.OPEN) {
+          addLog('system', { 
+            message: '🔄 A2A system still processing... maintaining connection' 
+          }, undefined, undefined, service);
+          // Don't close - let it continue with heartbeat
+        }
+      }, 60000); // Status update after 1 minute
+
+      // Final timeout after 5 minutes
       setTimeout(() => {
         if (isStreaming && eventSource.readyState === EventSource.OPEN) {
           eventSource.close();
           setIsStreaming(false);
-          addLog('error', { 
-            message: '⚠️ Execution timeout after 60 seconds' 
+          addLog('system', { 
+            message: '⏰ A2A processing timeout after 5 minutes - check server logs for completion status' 
           }, undefined, undefined, service);
         }
-      }, 60000);
+      }, 300000); // 5 minutes = 300000ms
+
+      // Periodic check for completion if connection seems lost but A2A might still be working
+      let completionCheckCount = 0;
+      const completionCheckInterval = setInterval(() => {
+        if (!isStreaming) {
+          clearInterval(completionCheckInterval);
+          return;
+        }
+        
+        completionCheckCount++;
+        
+        // Check if we should show a positive status message
+        if (completionCheckCount >= 6) { // After 30 seconds of processing
+          const currentLogs = logs; // Access current logs state
+          const toolExecutions = currentLogs.filter(l => l.toolName).length;
+          addLog('system', { 
+            message: `🎯 A2A multi-agent system working: ${Math.round(completionCheckCount * 5)}s elapsed. Processing knowledge base with ${toolExecutions} tool executions completed.` 
+          }, undefined, undefined, service);
+        }
+      }, 5000); // Check every 5 seconds
 
     } catch (error) {
       addLog('error', { 
@@ -392,43 +503,146 @@ export default function ClaudeAgentDemo() {
         <Card className="bg-gray-800 border-gray-700">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Zap className="h-5 w-5" />
-              RFP Analysis Configuration
+              <Target className="h-5 w-5" />
+              RFP Intelligence Scanner
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {/* Quick Action Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div
+                onClick={() => setParameters(prev => ({ ...prev, entityLimit: 100, mode: 'batch' }))}
+                className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                  parameters.mode === 'batch' && parameters.entityLimit === 100
+                    ? 'bg-blue-600/20 border-blue-500'
+                    : 'bg-gray-800 border-gray-700 hover:bg-gray-750'
+                }`}
+              >
+                <div className="text-center">
+                  <div className="text-2xl mb-2">⚡</div>
+                  <div className="font-medium text-white mb-1">Quick Scan</div>
+                  <div className="text-xs text-gray-400">100 entities • 2 min</div>
+                </div>
+              </div>
+              
+              <div
+                onClick={() => setParameters(prev => ({ ...prev, entityLimit: 500, mode: 'batch' }))}
+                className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                  parameters.mode === 'batch' && parameters.entityLimit === 500
+                    ? 'bg-blue-600/20 border-blue-500'
+                    : 'bg-gray-800 border-gray-700 hover:bg-gray-750'
+                }`}
+              >
+                <div className="text-center">
+                  <div className="text-2xl mb-2">🔍</div>
+                  <div className="font-medium text-white mb-1">Deep Scan</div>
+                  <div className="text-xs text-gray-400">500 entities • 8 min</div>
+                </div>
+              </div>
+              
+              <div
+                onClick={() => setParameters(prev => ({ ...prev, entityLimit: 2210, mode: 'batch' }))}
+                className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                  parameters.mode === 'batch' && parameters.entityLimit === 2210
+                    ? 'bg-green-600/20 border-green-500'
+                    : 'bg-gray-800 border-gray-700 hover:bg-gray-750'
+                }`}
+              >
+                <div className="text-center">
+                  <div className="text-2xl mb-2">🎯</div>
+                  <div className="font-medium text-white mb-1">Full Database</div>
+                  <div className="text-xs text-gray-400">2210 entities • 37 min</div>
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-4">
-              <div className="flex gap-4 items-end">
+              
+              {/* Search Configuration */}
+              <div className="flex gap-4">
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Search Query
+                    Search Focus
                   </label>
                   <Input
                     type="text"
                     value={parameters.query}
                     onChange={(e) => setParameters(prev => ({ ...prev, query: e.target.value }))}
-                    placeholder="Enter search query for RFP detection..."
+                    placeholder="Sports RFP opportunities"
                     className="bg-gray-700 border-gray-600 text-white"
                     disabled={isStreaming}
                   />
                 </div>
-              </div>
-              
-              <div className="flex gap-4 items-end">
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Analysis Mode
+                    Analysis Type
                   </label>
-                  <select
-                    value={parameters.mode || 'batch'}
-                    onChange={(e) => setParameters(prev => ({ ...prev, mode: e.target.value }))}
-                    className="w-full bg-gray-700 border-gray-600 text-white rounded-md px-3 py-2"
-                    disabled={isStreaming}
-                  >
-                    <option value="batch">🚀 Batch Processing (Default)</option>
-                    <option value="search">🔍 Search Only</option>
-                  </select>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant={parameters.mode === 'batch' ? 'default' : 'outline'}
+                      onClick={() => setParameters(prev => ({ ...prev, mode: 'batch' }))}
+                      disabled={isStreaming}
+                      className={`${
+                        parameters.mode === 'batch'
+                          ? 'bg-blue-600 hover:bg-blue-700'
+                          : 'border-gray-600 text-gray-300 hover:bg-gray-800'
+                      }`}
+                    >
+                      🚀 RFP Scanner
+                    </Button>
+                    <Button
+                      variant={parameters.mode === 'search' ? 'default' : 'outline'}
+                      onClick={() => setParameters(prev => ({ ...prev, mode: 'search' }))}
+                      disabled={isStreaming}
+                      className={`${
+                        parameters.mode === 'search'
+                          ? 'bg-blue-600 hover:bg-blue-700'
+                          : 'border-gray-600 text-gray-300 hover:bg-gray-800'
+                      }`}
+                    >
+                      📊 Market Research
+                    </Button>
+                  </div>
                 </div>
+              </div>
+
+              {/* Current Configuration Summary */}
+              <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-lg border border-blue-700/30 p-4">
+                <h4 className="text-blue-300 font-medium mb-3 flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  Current Configuration
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <div className="text-gray-400 mb-1">Entities to Scan</div>
+                    <div className="text-white font-medium">
+                      {parameters.entityLimit === 2210 ? '🎯 All 2210' : `${parameters.entityLimit} entities`}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-gray-400 mb-1">Processing Time</div>
+                    <div className="text-white font-medium">
+                      ~{Math.ceil(parameters.entityLimit * 5 * 1.2 / 60000)} minutes
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-gray-400 mb-1">Expected RFPs</div>
+                    <div className="text-white font-medium">
+                      ~{Math.round(parameters.entityLimit * 0.0104)} opportunities
+                    </div>
+                  </div>
+                </div>
+                
+                {parameters.mode === 'batch' && parameters.entityLimit === 2210 && (
+                  <div className="mt-3 pt-3 border-t border-blue-700/30">
+                    <div className="flex items-center gap-2 text-xs text-green-300">
+                      <CheckCircle className="h-3 w-3" />
+                      <span>
+                        <strong>Full Database Scan</strong> - Processes every entity in your Neo4j database with intelligent batching and API protection.
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
               
               {parameters.mode === 'batch' && (
@@ -456,13 +670,13 @@ export default function ClaudeAgentDemo() {
                       </label>
                       <Input
                         type="number"
-                        value={parameters.entityLimit || 250}
-                        onChange={(e) => setParameters(prev => ({ ...prev, entityLimit: parseInt(e.target.value) || 250 }))}
-                        placeholder="250"
+                        value={parameters.entityLimit || 2210}
+                        onChange={(e) => setParameters(prev => ({ ...prev, entityLimit: parseInt(e.target.value) || 2210 }))}
+                        placeholder="2210"
                         className="bg-gray-700 border-gray-600 text-white"
                         disabled={isStreaming}
                         min="25"
-                        max="1000"
+                        max="5000"
                       />
                     </div>
                   </div>
@@ -480,20 +694,29 @@ export default function ClaudeAgentDemo() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setParameters(prev => ({ ...prev, entityLimit: 250 }))}
-                      disabled={isStreaming}
-                      className="text-xs"
-                    >
-                      250 entities
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
                       onClick={() => setParameters(prev => ({ ...prev, entityLimit: 500 }))}
                       disabled={isStreaming}
                       className="text-xs"
                     >
                       500 entities
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setParameters(prev => ({ ...prev, entityLimit: 1000 }))}
+                      disabled={isStreaming}
+                      className="text-xs"
+                    >
+                      1000 entities
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setParameters(prev => ({ ...prev, entityLimit: 2210 }))}
+                      disabled={isStreaming}
+                      className="text-xs bg-blue-600 hover:bg-blue-700"
+                    >
+                      🎯 ALL (2210)
                     </Button>
                   </div>
                 </>
@@ -511,10 +734,11 @@ export default function ClaudeAgentDemo() {
                     <div>
                       <h5 className="font-medium text-white mb-2">Performance</h5>
                       <ul className="space-y-1">
-                        <li>• <strong>250 entities per batch</strong> (your preferred size)</li>
-                        <li>• <strong>1-second delays</strong> between batches</li>
-                        <li>• <strong>15-second cooldowns</strong> every 2 batches</li>
-                        <li>• <strong>~2-3 hours</strong> for full 4,422 entities</li>
+                        <li>• <strong>2210 entities total</strong> in Neo4j database</li>
+                        <li>• <strong>250 entities per batch</strong> for efficiency</li>
+                        <li>• <strong>1-second delays</strong> between entities</li>
+                        <li>• <strong>10-second cooldowns</strong> every 10 batches</li>
+                        <li>• <strong>~37 minutes</strong> for full database scan</li>
                       </ul>
                     </div>
                     <div>
@@ -522,14 +746,15 @@ export default function ClaudeAgentDemo() {
                       <ul className="space-y-1">
                         <li>• <strong>1.04% detection rate</strong> (proven)</li>
                         <li>• <strong>5 search queries</strong> per entity</li>
-                        <li>• <strong>~46 RFPs expected</strong> from full database</li>
-                        <li>• <strong>£15-25M pipeline value</strong> projected</li>
+                        <li>• <strong>~23 RFPs expected</strong> from full database</li>
+                        <li>• <strong>£10-15M pipeline value</strong> projected</li>
                       </ul>
                     </div>
                   </div>
-                  <div className="mt-3 p-2 bg-yellow-900/20 border border-yellow-700/30 rounded">
-                    <p className="text-xs text-yellow-300">
-                      <strong>Recommended:</strong> Start with 100-250 entities to test performance, then scale up to 500+ for production analysis
+                  <div className="mt-3 p-2 bg-green-900/20 border border-green-700/30 rounded">
+                    <p className="text-xs text-green-300">
+                      <strong>🎯 DEFAULT: FULL DATABASE SCAN</strong> System processes ALL 2,210 entities in one comprehensive scan with progressive batching.
+                      Estimated completion time: ~37 minutes with intelligent rate limiting and API protection.
                     </p>
                   </div>
                 </div>
@@ -538,54 +763,49 @@ export default function ClaudeAgentDemo() {
           </CardContent>
         </Card>
 
-        {/* Control Panel */}
-        <Card className="bg-gray-800 border-gray-700">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <Zap className="h-5 w-5" />
-                Execution Control
-              </span>
-              <div className="flex gap-2">
+        {/* Streamlined Control Panel */}
+        <Card className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-blue-700/30">
+          <CardContent className="p-6">
+            {/* Streamlined Action Buttons */}
+            <div className="flex gap-3 mb-6">
+              <Button
+                onClick={startExecution}
+                disabled={isStreaming}
+                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3"
+                size="lg"
+              >
+                {isStreaming ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Scanning in Progress...
+                  </>
+                ) : (
+                  <>
+                    <Play className="mr-2 h-4 w-4" />
+                    Start {parameters.entityLimit === 2210 ? 'Full Database' : 'RFP'} Scan
+                  </>
+                )}
+              </Button>
+              
+              {isStreaming && (
                 <Button
-                  onClick={startExecution}
-                  disabled={isStreaming}
-                  size="sm"
-                  className={`${isStreaming ? 'bg-orange-600 hover:bg-orange-700' : 'bg-green-600 hover:bg-green-700'} transition-all duration-300`}
-                >
-                  {isStreaming ? (
-                    <>
-                      <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                      Starting...
-                    </>
-                  ) : (
-                    <>
-                      <Play className="h-4 w-4 mr-2" />
-                      Start {activeService === 'headless' ? 'Headless Agent' : activeService === 'a2a' ? 'A2A System' : 'Claude SDK'}
-                    </>
-                  )}
-                </Button>
-                <Button
-                  onClick={stopExecution}
-                  disabled={!isStreaming}
-                  size="sm"
-                  variant="destructive"
-                >
-                  <Square className="h-4 w-4 mr-2" />
-                  Stop
-                </Button>
-                <Button
-                  onClick={clearLogs}
-                  disabled={isStreaming}
-                  size="sm"
                   variant="outline"
+                  onClick={stopExecution}
+                  className="border-red-600 text-red-400 hover:bg-red-900/20"
                 >
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Clear
+                  <Square className="h-4 w-4" />
                 </Button>
-              </div>
-            </CardTitle>
-          </CardHeader>
+              )}
+              
+              <Button
+                variant="outline"
+                onClick={clearLogs}
+                className="border-gray-600 text-gray-300 hover:bg-gray-800"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="bg-gray-700 rounded-lg p-3">

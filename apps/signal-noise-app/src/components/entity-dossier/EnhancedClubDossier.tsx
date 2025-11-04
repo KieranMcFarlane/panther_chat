@@ -55,6 +55,11 @@ interface EnhancedClubDossierProps {
 
 export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: EnhancedClubDossierProps) {
   const [activeTab, setActiveTab] = useState('overview')
+  
+  // Debug log to track tab changes
+  useEffect(() => {
+    console.log('Active tab changed to:', activeTab)
+  }, [activeTab])
   const [enhancedData, setEnhancedData] = useState<EnhancedClubDossier | null>(null)
   const [isLoadingIntelligence, setIsLoadingIntelligence] = useState(false)
   const [connectionAnalysis, setConnectionAnalysis] = useState<any>(null)
@@ -844,48 +849,88 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
       </Card>
 
       {/* Enhanced Tabbed Interface Following ASCII Wireframe */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-9">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
+      <Tabs 
+        key={`tabs-${entity.id}-${activeTab}`}
+        value={activeTab} 
+        onValueChange={(value) => {
+          console.log('Tab changing to:', value);
+          setActiveTab(value);
+        }} 
+        className="space-y-6"
+        defaultValue="overview"
+      >
+        <TabsList className="grid w-full grid-cols-9 h-auto p-1 bg-gray-100 rounded-lg">
+          <TabsTrigger 
+            value="overview" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
             <Eye className="h-4 w-4" />
             Overview
           </TabsTrigger>
-          <TabsTrigger value="digital" className="flex items-center gap-2">
+          <TabsTrigger 
+            value="digital" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
             <Zap className="h-4 w-4" />
             Digital
           </TabsTrigger>
-          <TabsTrigger value="ai-reasoner" className="flex items-center gap-2">
+          <TabsTrigger 
+            value="ai-reasoner" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
             <Brain className="h-4 w-4" />
             AI Insights
           </TabsTrigger>
-          <TabsTrigger value="opportunities" className="flex items-center gap-2">
+          <TabsTrigger 
+            value="opportunities" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
             <Target className="h-4 w-4" />
             Opportunities
           </TabsTrigger>
-          <TabsTrigger value="leadership" className="flex items-center gap-2">
+          <TabsTrigger 
+            value="leadership" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
             <Users className="h-4 w-4" />
             Leadership
           </TabsTrigger>
-          <TabsTrigger value="connections" className="flex items-center gap-2">
+          <TabsTrigger 
+            value="connections" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
             <Network className="h-4 w-4" />
             Connections
           </TabsTrigger>
-          <TabsTrigger value="news" className="flex items-center gap-2">
+          <TabsTrigger 
+            value="news" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
             <FileText className="h-4 w-4" />
             News
           </TabsTrigger>
-          <TabsTrigger value="league" className="flex items-center gap-2">
+          <TabsTrigger 
+            value="league" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
             <Trophy className="h-4 w-4" />
             League
           </TabsTrigger>
-          <TabsTrigger value="contact" className="flex items-center gap-2">
+          <TabsTrigger 
+            value="contact" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
             <Mail className="h-4 w-4" />
             Contact
           </TabsTrigger>
         </TabsList>
 
         {/* Core Info Overview Tab */}
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent 
+          value="overview" 
+          className="space-y-6 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               <Card>
@@ -1007,7 +1052,11 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         </TabsContent>
 
         {/* Digital Transformation Tab */}
-        <TabsContent value="digital" className="space-y-6">
+        <TabsContent 
+          value="digital" 
+          className="space-y-6 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -1094,7 +1143,11 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         </TabsContent>
 
         {/* AI Reasoner Feedback Tab */}
-        <TabsContent value="ai-reasoner" className="space-y-6">
+        <TabsContent 
+          value="ai-reasoner" 
+          className="space-y-6 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1161,7 +1214,11 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         </TabsContent>
 
         {/* Strategic Opportunities Tab */}
-        <TabsContent value="opportunities" className="space-y-6">
+        <TabsContent 
+          value="opportunities" 
+          className="space-y-6 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <Card>
               <CardHeader>
@@ -1253,7 +1310,11 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         </TabsContent>
 
         {/* Leadership Tab */}
-        <TabsContent value="leadership" className="space-y-6">
+        <TabsContent 
+          value="leadership" 
+          className="space-y-6 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {enhancedData?.keyDecisionMakers?.map((person, index) => (
               <Card key={index} className="hover:shadow-lg transition-shadow">
@@ -1324,7 +1385,11 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         </TabsContent>
 
         {/* Recent News Tab */}
-        <TabsContent value="news" className="space-y-6">
+        <TabsContent 
+          value="news" 
+          className="space-y-6 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -1371,7 +1436,11 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         </TabsContent>
 
         {/* League Context Tab */}
-        <TabsContent value="league" className="space-y-6">
+        <TabsContent 
+          value="league" 
+          className="space-y-6 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -1458,7 +1527,11 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         </TabsContent>
 
         {/* Contact Tab */}
-        <TabsContent value="contact" className="space-y-6">
+        <TabsContent 
+          value="contact" 
+          className="space-y-6 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -1526,7 +1599,11 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
         </TabsContent>
 
         {/* LinkedIn Connections Tab */}
-        <TabsContent value="connections" className="space-y-6">
+        <TabsContent 
+          value="connections" 
+          className="space-y-6 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               {/* Yellow Panther UK Team Analysis */}

@@ -8,6 +8,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { StreamingClaudeAgent } from '@/lib/agents/StreamingClaudeAgent';
 import { liveLogService } from '@/services/LiveLogService';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -18,7 +21,7 @@ export async function POST(request: NextRequest) {
       message: `🚀 Starting streaming agent: ${action}`,
       source: 'Streaming Agent API',
       category: 'api',
-      metadata: {
+      data: {
         action,
         entityId,
         analysisType,
@@ -86,7 +89,7 @@ export async function POST(request: NextRequest) {
                 message: `📡 Streaming agent ${chunk.type}: ${chunk.message || 'Data received'}`,
                 source: 'Streaming Agent API',
                 category: 'api',
-                metadata: {
+                data: {
                   action,
                   chunkType: chunk.type,
                   tool: chunk.tool,
@@ -101,7 +104,7 @@ export async function POST(request: NextRequest) {
                 message: `❌ Streaming agent error: ${chunk.data}`,
                 source: 'Streaming Agent API',
                 category: 'api',
-                metadata: {
+                data: {
                   action,
                   error: chunk.data
                 }
@@ -121,18 +124,18 @@ export async function POST(request: NextRequest) {
             message: `✅ Streaming agent completed: ${action}`,
             source: 'Streaming Agent API',
             category: 'api',
-            metadata: {
+            data: {
               action,
               completedAt: new Date().toISOString()
             }
           });
 
-        } catch (error) {
+        } catch (error: any) {
           console.error('Streaming agent error:', error);
           
           const errorData = {
             type: 'error',
-            message: `Agent execution failed: ${error.message}`,
+            message: `Agent execution failed: ${error?.message || 'Unknown error'}`,
             timestamp: new Date().toISOString()
           };
           
@@ -140,12 +143,12 @@ export async function POST(request: NextRequest) {
           
           await liveLogService.log({
             level: 'error',
-            message: `❌ Streaming agent failed: ${error.message}`,
+            message: `❌ Streaming agent failed: ${error?.message || 'Unknown error'}`,
             source: 'Streaming Agent API',
             category: 'api',
-            metadata: {
-              error: error.message,
-              stack: error.stack
+            data: {
+              error: error?.message || 'Unknown error',
+              stack: error?.stack
             }
           });
         } finally {
@@ -166,22 +169,22 @@ export async function POST(request: NextRequest) {
       }
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Streaming API error:', error);
     
     await liveLogService.log({
       level: 'error',
-      message: `❌ Streaming API error: ${error.message}`,
+      message: `❌ Streaming API error: ${error?.message || 'Unknown error'}`,
       source: 'Streaming Agent API',
       category: 'api',
-      metadata: {
-        error: error.message
+      data: {
+        error: error?.message || 'Unknown error'
       }
     });
 
     return NextResponse.json({
       error: 'Streaming API error',
-      message: error.message
+      message: error?.message || 'Unknown error'
     }, { status: 500 });
   }
 }

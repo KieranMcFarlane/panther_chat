@@ -672,7 +672,7 @@ class EnhancedRFPMonitoringService {
         recommended_action: analysis.recommended_actions[0]?.action
       };
       
-      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/notifications/rfp-detected`, {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/notifications/rfp-detected-migrated`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(alertData)

@@ -6,6 +6,9 @@
 import { NextRequest } from 'next/server';
 import { liveLogService } from '@/services/LiveLogService';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
   

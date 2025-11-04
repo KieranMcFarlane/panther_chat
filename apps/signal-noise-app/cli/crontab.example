@@ -1,0 +1,78 @@
+# RFP Intelligence Cron Jobs
+# 
+# Add these lines to your crontab with: crontab -e
+# 
+# Make sure to update the paths to match your actual installation directory
+
+# ==================== MAIN RFP INTELLIGENCE RUNS ====================
+
+# Run every 6 hours with Claude (6am, 12pm, 6pm, 12am)
+0 */6 * * * cd /path/to/signal-noise-app && /usr/bin/node cli/run-blueprint.ts >> cli/logs/cron.log 2>&1
+
+# Alternative: Run with GLM 4.6
+# 0 */6 * * * cd /path/to/signal-noise-app && /usr/bin/node cli/run-blueprint.ts --model glm-4-6 >> cli/logs/cron.log 2>&1
+
+# ==================== WEEKLY DIGEST GENERATION ====================
+
+# Generate weekly digest every Sunday at 8pm
+0 20 * * 0 cd /path/to/signal-noise-app && /usr/bin/node cli/generate-weekly-digest.ts >> cli/logs/digest.log 2>&1
+
+# Alternative: Generate digest every Monday at 8am
+# 0 8 * * 1 cd /path/to/signal-noise-app && /usr/bin/node cli/generate-weekly-digest.ts >> cli/logs/digest.log 2>&1
+
+# ==================== SYSTEM MAINTENANCE ====================
+
+# Clean up old logs (keep last 30 days) - Daily at 2am
+0 2 * * * find /path/to/signal-noise-app/RUN_LOGS -name "*.md" -mtime +30 -delete
+
+# Backup important files - Weekly on Saturday at 3am
+0 3 * * 6 cd /path/to/signal-noise-app && tar -czf backup_$(date +\%Y\%m\%d).tar.gz RUN_LOGS/ cli/logs/ .env
+
+# ==================== MONITORING ====================
+
+# Check system health - Every hour
+0 * * * * cd /path/to/signal-noise-app && /usr/bin/node cli/run-blueprint.ts --test-connection >> cli/logs/health.log 2>&1
+
+# ==================== ENVIRONMENT-SPECIFIC EXAMPLES ====================
+
+# Development Environment (every 2 hours for testing)
+# 0 */2 * * * cd /home/user/signal-noise-app && /usr/bin/node cli/run-blueprint.ts >> cli/logs/dev-cron.log 2>&1
+
+# Production Environment (every 6 hours)
+# 0 */6 * * * cd /opt/signal-noise-app && /usr/bin/node cli/run-blueprint.ts >> cli/logs/prod-cron.log 2>&1
+
+# Docker Environment
+# 0 */6 * * * docker exec -it signal-noise-app node cli/run-blueprint.ts >> /app/cli/logs/docker-cron.log 2>&1
+
+# ==================== ADVANCED SCHEDULING ====================
+
+# Business hours only (8am-6pm, weekdays)
+# 0 8-18 * * 1-5 cd /path/to/signal-noise-app && /usr/bin/node cli/run-blueprint.ts >> cli/logs/business-hours.log 2>&1
+
+# High frequency monitoring (every 30 minutes during critical periods)
+# */30 9-17 * * 1-5 cd /path/to/signal-noise-app && /usr/bin/node cli/run-blueprint.ts >> cli/logs/high-frequency.log 2>&1
+
+# ==================== LOG ROTATION ====================
+
+# Rotate cron logs weekly
+0 0 * * 0 cd /path/to/signal-noise-app/cli/logs && mv cron.log cron_$(date +\%Y\%m\%d).log && touch cron.log
+
+# ==================== NOTIFICATIONS ====================
+
+# Send email digest (requires mail setup)
+# 0 8 * * 1 cd /path/to/signal-noise-app && tail -n 50 cli/logs/cron.log | mail -s "RFP System Weekly Report" admin@yellowpanther.com
+
+# ==================== SETUP INSTRUCTIONS ====================
+
+# 1. Open crontab editor:
+#    crontab -e
+#
+# 2. Copy the desired lines above and update paths
+#
+# 3. Save and exit (Ctrl+X, Y, Enter in nano)
+#
+# 4. Verify cron jobs:
+#    crontab -l
+#
+# 5. Monitor logs:
+#    tail -f cli/logs/cron.log

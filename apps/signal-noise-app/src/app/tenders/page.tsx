@@ -25,7 +25,10 @@ import {
   Target,
   Clock,
   Plus,
-  TrendingUp
+  TrendingUp,
+  Play,
+  Activity,
+  Sparkles
 } from 'lucide-react';
 
 // Import comprehensive RFP opportunities from shared database
@@ -43,6 +46,8 @@ export default function TendersPage() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [showDetectedOnly, setShowDetectedOnly] = useState(false);
   const [rfpStats, setRfpStats] = useState({ total: 0, recent: 0 });
+  const [a2aRunning, setA2aRunning] = useState(false);
+  const [a2aStatus, setA2aStatus] = useState(null);
   // Calculate initial stats from real opportunities
   const [stats, setStats] = useState(() => {
     const totalValueEstimate = realOpportunities.reduce((sum, opp) => {
@@ -131,6 +136,9 @@ export default function TendersPage() {
 
     loadDetectedRFPs();
     
+    // Check A2A system status on load
+    checkA2AStatus();
+    
     // Set up real-time subscription for new RFPs
     const subscription = supabase
       .channel('rfp-changes')
@@ -156,6 +164,83 @@ export default function TendersPage() {
       subscription.unsubscribe();
     };
   }, []);
+
+  // Check A2A system status
+  const checkA2AStatus = async () => {
+    try {
+      const response = await fetch('/api/a2a-system/start');
+      const data = await response.json();
+      
+      if (data.success) {
+        setA2aStatus(data.status);
+        setA2aRunning(data.apiStatus?.isCurrentlyRunning || false);
+      }
+    } catch (error) {
+      console.error('Failed to check A2A status:', error);
+    }
+  };
+
+  // Start A2A system
+  const startA2A = async () => {
+    if (a2aRunning) {
+      console.log('A2A system is already running');
+      return;
+    }
+
+    try {
+      setA2aRunning(true);
+      
+      const response = await fetch('/api/a2a-system/start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          entityLimit: 50,
+          startImmediate: true,
+          monitoringMode: 'discovery'
+        })
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        console.log('🚀 A2A system started successfully');
+        setA2aStatus('running');
+        
+        // Check status every 30 seconds
+        const statusInterval = setInterval(async () => {
+          const statusResponse = await fetch('/api/a2a-system/start');
+          const statusData = await statusResponse.json();
+          
+          if (statusData.success) {
+            setA2aStatus(statusData.status);
+            
+            // Stop checking when system is no longer running
+            if (!statusData.apiStatus?.isCurrentlyRunning) {
+              clearInterval(statusInterval);
+              setA2aRunning(false);
+              // Reload detected RFPs to get new opportunities
+              window.location.reload();
+            }
+          }
+        }, 30000);
+
+        // Auto-stop checking after 10 minutes
+        setTimeout(() => {
+          clearInterval(statusInterval);
+          setA2aRunning(false);
+        }, 10 * 60 * 1000);
+
+      } else {
+        console.error('Failed to start A2A system:', result);
+        setA2aRunning(false);
+      }
+    } catch (error) {
+      console.error('Error starting A2A system:', error);
+      setA2aRunning(false);
+    }
+  };
 
   // Load real RFP data
   useEffect(() => {
@@ -501,6 +586,23 @@ export default function TendersPage() {
           </div>
           <div className="flex gap-2">
             <Button 
+              onClick={startA2A} 
+              disabled={a2aRunning}
+              className={a2aRunning ? "bg-green-600 hover:bg-green-700" : "bg-purple-600 hover:bg-purple-700"}
+            >
+              {a2aRunning ? (
+                <>
+                  <Activity className="w-4 h-4 mr-2 animate-pulse" />
+                  A2A Running...
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 mr-2" />
+                  Start A2A Discovery
+                </>
+              )}
+            </Button>
+            <Button 
               onClick={() => setShowDetectedOnly(!showDetectedOnly)} 
               variant={showDetectedOnly ? "default" : "outline"}
               className={showDetectedOnly ? "bg-green-600 hover:bg-green-700" : ""}
@@ -519,6 +621,49 @@ export default function TendersPage() {
           </div>
         </div>
       </div>
+
+      {/* A2A System Status */}
+      {a2aRunning && (
+        <Card className="mb-6 border-purple-200 bg-purple-50">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <div>
+                  <h3 className="font-semibold text-purple-900 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    A2A Autonomous Discovery Active
+                  </h3>
+                  <p className="text-sm text-purple-700">
+                    AI agents are scanning Neo4j entities with yellowPantherPriority ≤ 5 for RFP opportunities
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4 text-sm">
+                {a2aStatus && (
+                  <>
+                    <div>
+                      <span className="text-muted-foreground">Entities:</span>
+                      <span className="ml-1 font-medium">{a2aStatus.totalEntitiesProcessed || 0}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Opportunities:</span>
+                      <span className="ml-1 font-medium text-green-600">{a2aStatus.totalOpportunitiesFound || 0}</span>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">MCP Calls:</span>
+                      <span className="ml-1 font-medium">{a2aStatus.totalMCPCalls || 0}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="mt-3 text-xs text-purple-600">
+              🎯 Discovered opportunities will automatically appear below and be stored to the database
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">

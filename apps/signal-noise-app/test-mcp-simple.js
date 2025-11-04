@@ -1,60 +1,139 @@
 /**
- * Simple MCP Bus Test
- * Test MCP connection and list available tools
+ * Simple test to verify MCP server connection and tool execution
  */
 
-import { mcpBus } from './src/lib/mcp/MCPClientBus.js';
+const { spawn } = require('child_process');
 
-async function testMCPBus() {
-  console.log('🧪 Testing MCP Client Bus...');
+// Test direct MCP server connection
+async function testDirectMCPServer() {
+  console.log('🧪 Testing direct BrightData MCP server connection...');
   
-  try {
-    // Initialize the MCP Bus
-    console.log('🔌 Initializing MCP Bus...');
-    await mcpBus.initialize();
-    
-    // Get server status
-    const status = mcpBus.getServerStatus();
-    console.log('📊 Server Status:', status);
-    
-    // Get available tools
-    const tools = mcpBus.getAvailableTools();
-    console.log(`📝 Found ${tools.length} tools:`);
-    tools.forEach(tool => {
-      console.log(`  - ${tool.name} (${tool.server}): ${tool.description}`);
+  return new Promise((resolve) => {
+    const mcpServer = spawn('npx', ['-y', '@brightdata/mcp'], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: {
+        ...process.env,
+        API_TOKEN: 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
+        PRO_MODE: 'true'
+      }
     });
     
-    if (tools.length === 0) {
-      console.log('❌ No tools found. MCP servers failed to connect.');
-      console.log('\nTroubleshooting:');
-      console.log('1. Check if npm packages are installed:');
-      console.log('   - @alanse/mcp-neo4j-server');
-      console.log('   - @brightdata/mcp'); 
-      console.log('   - mcp-perplexity-search');
-      console.log('\n2. Try installing them manually:');
-      console.log('   npm install -g @alanse/mcp-neo4j-server @brightdata/mcp mcp-perplexity-search');
-    } else {
-      console.log('✅ MCP Bus is working!');
-      
-      // Test first available tool
-      const firstTool = tools[0];
-      console.log(`\n🧪 Testing tool: ${firstTool.name}`);
-      
-      try {
-        const result = await mcpBus.callTool(firstTool.name, {});
-        console.log('✅ Tool call successful:', result.content?.[0]?.text?.substring(0, 100) + '...');
-      } catch (error) {
-        console.log('❌ Tool call failed:', error.message);
-      }
-    }
+    let output = '';
+    let messageId = 1;
     
-  } catch (error) {
-    console.error('❌ MCP Bus test failed:', error.message);
-    console.error('Full error:', error);
-  } finally {
-    // Clean up
-    await mcpBus.close();
-  }
+    mcpServer.stdout.on('data', (data) => {
+      output += data.toString();
+      
+      // Process complete JSON lines
+      const lines = output.split('\n');
+      output = lines.pop() || '';
+      
+      for (const line of lines) {
+        if (line.trim()) {
+          try {
+            const message = JSON.parse(line);
+            console.log('📨 MCP Response:', JSON.stringify(message, null, 2));
+            
+            if (message.method === 'tools/call' && message.result) {
+              console.log('✅ Tool execution result received');
+              console.log('📊 Result type:', typeof message.result);
+              console.log('📊 Result keys:', Object.keys(message.result || {}));
+              
+              if (message.result.content) {
+                console.log('📄 Content length:', message.result.content.length);
+                console.log('🔍 Content preview:', message.result.content.substring(0, 300) + '...');
+                
+                // Check for real data
+                const hasRealUrl = message.result.content.includes('http') && 
+                                   !message.result.content.includes('example.com') &&
+                                   !message.result.content.includes('placeholder');
+                
+                console.log(hasRealUrl ? '✅ Real data found' : '⚠️ No real data found');
+                
+                mcpServer.kill();
+                resolve(hasRealUrl);
+                return;
+              }
+            }
+          } catch (error) {
+            console.warn('Failed to parse MCP message:', line);
+          }
+        }
+      }
+    });
+    
+    mcpServer.stderr.on('data', (data) => {
+      console.log('MCP stderr:', data.toString());
+    });
+    
+    mcpServer.on('error', (error) => {
+      console.error('MCP Server error:', error.message);
+      resolve(false);
+    });
+    
+    // Wait for server to start
+    setTimeout(() => {
+      console.log('📤 Sending tool list request...');
+      const listRequest = {
+        jsonrpc: '2.0',
+        id: messageId++,
+        method: 'tools/list',
+        params: {}
+      };
+      mcpServer.stdin.write(JSON.stringify(listRequest) + '\n');
+    }, 2000);
+    
+    // Wait for tools list, then call search tool
+    setTimeout(() => {
+      console.log('📤 Sending search tool call...');
+      const callRequest = {
+        jsonrpc: '2.0',
+        id: messageId++,
+        method: 'tools/call',
+        params: {
+          name: 'search_engine',
+          arguments: {
+            query: 'Manchester United RFP 2025',
+            engine: 'google'
+          }
+        }
+      };
+      mcpServer.stdin.write(JSON.stringify(callRequest) + '\n');
+    }, 4000);
+    
+    // Timeout after 15 seconds
+    setTimeout(() => {
+      console.log('⏰ Test timeout');
+      mcpServer.kill();
+      resolve(false);
+    }, 15000);
+  });
 }
 
-testMCPBus();
+// Test the complete flow
+async function runSimpleMCPTest() {
+  console.log('🧪 Simple MCP Server Test');
+  console.log('=' .repeat(50));
+  
+  const success = await testDirectMCPServer();
+  
+  console.log('\n🎯 Test Result:', success ? '✅ PASS' : '❌ FAIL');
+  
+  if (success) {
+    console.log('🎉 BrightData MCP server is working and returning real data!');
+  } else {
+    console.log('❌ BrightData MCP server test failed');
+  }
+  
+  return success;
+}
+
+// Run the test
+runSimpleMCPTest()
+  .then(success => {
+    process.exit(success ? 0 : 1);
+  })
+  .catch(error => {
+    console.error('Test error:', error);
+    process.exit(1);
+  });

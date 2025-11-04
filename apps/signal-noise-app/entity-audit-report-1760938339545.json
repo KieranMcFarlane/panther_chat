@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-10-20T05:32:19.537Z",
+  "summary": {
+    "totalEntities": 5000,
+    "validEntities": 4485,
+    "entitiesWithIssues": 515,
+    "suspiciousEntities": 0,
+    "highPriorityIssues": 0,
+    "mediumPriorityIssues": 0,
+    "lowPriorityIssues": 515,
+    "suspiciousPatterns": {}
+  },
+  "suspiciousPatterns": {},
+  "entitiesByType": {
+    "Entity": {
+      "count": 515,
+      "issues": 515
+    }
+  },
+  "highPriorityEntities": [],
+  "suspiciousEntities": [],
+  "detailedIssues": []
+}

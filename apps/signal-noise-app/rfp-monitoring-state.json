@@ -1,0 +1,18 @@
+{
+  "startedAt": "2025-11-02T04:26:40.749Z",
+  "currentBatch": 4,
+  "entitiesChecked": 61,
+  "totalEntities": 0,
+  "rfpsDetected": 81,
+  "lastEntityOffset": 305,
+  "status": "running",
+  "errors": [
+    {
+      "timestamp": "2025-11-02T07:07:18.618Z",
+      "batch": 3,
+      "error": "mcp__neo4j__execute_query is not defined"
+    }
+  ],
+  "lastUpdated": "2025-11-02T07:09:28.072Z",
+  "completedAt": "2025-11-02T07:07:18.618Z"
+}

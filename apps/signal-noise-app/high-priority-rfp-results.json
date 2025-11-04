@@ -1,0 +1,131 @@
+{
+  "scanCompleted": "2025-10-26T17:19:33.234Z",
+  "scanType": "SYSTEMATIC HIGH-PRIORITY SCAN",
+  "summary": {
+    "entitiesProcessed": 5,
+    "entitiesWithOpportunities": 1,
+    "totalOpportunities": 1,
+    "successRate": "20.0",
+    "averageFitScore": "99.0"
+  },
+  "entities": [
+    {
+      "name": "Brazilian Baseball Softball Confederation (CBBS)",
+      "sport": "Baseball/Softball",
+      "country": "Brazil",
+      "priority": 1,
+      "digital_score": 75,
+      "yellowPantherFit": "PREMIUM"
+    },
+    {
+      "name": "Manchester City",
+      "sport": "Football",
+      "country": "England",
+      "priority": 4,
+      "digital_score": 65,
+      "yellowPantherFit": "HIGH"
+    },
+    {
+      "name": "Liverpool",
+      "sport": "Football",
+      "country": "England",
+      "priority": 4,
+      "digital_score": 65,
+      "yellowPantherFit": "HIGH"
+    },
+    {
+      "name": "Chelsea",
+      "sport": "Football",
+      "country": "England",
+      "priority": 4,
+      "digital_score": 65,
+      "yellowPantherFit": "HIGH"
+    },
+    {
+      "name": "Arsenal",
+      "sport": "Football",
+      "country": "England",
+      "priority": 4,
+      "digital_score": 65,
+      "yellowPantherFit": "HIGH"
+    }
+  ],
+  "topOpportunities": [
+    {
+      "title": "Manchester City - Ticketing System RFP",
+      "fitScore": 99,
+      "value": "$250,000-$500,000",
+      "deadline": "2025-12-25",
+      "contact": "procurement@manchester-city.org",
+      "category": "Ticketing System",
+      "urgency": "HIGH"
+    }
+  ],
+  "detailedResults": [
+    {
+      "entity": {
+        "name": "Brazilian Baseball Softball Confederation (CBBS)",
+        "sport": "Baseball/Softball",
+        "country": "Brazil",
+        "priority": 1,
+        "digital_score": 75
+      },
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:19:28.715Z"
+    },
+    {
+      "entity": {
+        "name": "Manchester City",
+        "sport": "Football",
+        "country": "England",
+        "priority": 4,
+        "digital_score": 65
+      },
+      "opportunities": [
+        {
+          "title": "Manchester City - Ticketing System RFP",
+          "fitScore": 99,
+          "value": "$250,000-$500,000",
+          "deadline": "2025-12-25",
+          "contact": "procurement@manchester-city.org",
+          "category": "Ticketing System",
+          "urgency": "HIGH"
+        }
+      ],
+      "processedAt": "2025-10-26T17:19:30.153Z"
+    },
+    {
+      "entity": {
+        "name": "Liverpool",
+        "sport": "Football",
+        "country": "England",
+        "priority": 4,
+        "digital_score": 65
+      },
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:19:31.196Z"
+    },
+    {
+      "entity": {
+        "name": "Chelsea",
+        "sport": "Football",
+        "country": "England",
+        "priority": 4,
+        "digital_score": 65
+      },
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:19:32.014Z"
+    },
+    {
+      "entity": {
+        "name": "Arsenal",
+        "sport": "Football",
+        "country": "England",
+        "priority": 4,
+        "digital_score": 65
+      },
+      "opportunities": [],
+      "processedAt": "2025-10-26T17:19:33.234Z"
+    }
+  ]
+}

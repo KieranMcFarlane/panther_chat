@@ -606,9 +606,9 @@ const TemplateSelector = ({ currentProject, onClose, onTemplateApplied }) => {
                   <div className="flex-1">
                     <h4 className="font-medium text-gray-900 dark:text-white">{template.name}</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{template.description}</p>
-                    <span className="inline-block text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded mt-2">
+                    {/* <span className="inline-block text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded mt-2">
                       {template.category}
-                    </span>
+                    </span> */}
                   </div>
                   <ArrowRight className="w-4 h-4 text-gray-400 mt-1" />
                 </div>

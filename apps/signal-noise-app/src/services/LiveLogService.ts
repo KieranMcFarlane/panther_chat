@@ -121,6 +121,13 @@ export class LiveLogService {
   }
 
   /**
+   * Add a log entry directly (for compatibility with A2A services)
+   */
+  addLog(entry: Omit<LogEntry, 'id' | 'timestamp'>): void {
+    this.log(entry);
+  }
+
+  /**
    * Convenience methods for different log levels
    */
   debug(message: string, data?: LogEntry): void {

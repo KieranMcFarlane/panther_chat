@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DossierAccordion, DossierSection } from './DossierAccordion';
 import { 
   Users, 
@@ -31,7 +32,12 @@ import {
   Shield,
   BarChart3,
   Lightbulb,
-  DollarSign
+  DollarSign,
+  Eye,
+  Zap,
+  Brain,
+  Trophy,
+  FileText
 } from 'lucide-react';
 
 // Sample enhanced Arsenal data structure for accordion
@@ -719,6 +725,7 @@ function EnhancedArsenalDossier({
 }: EnhancedArsenalDossierProps) {
   const [data, setData] = useState(enhancedArsenalData);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
 
   const handleRefresh = async () => {
     setLoading(true);
@@ -831,67 +838,245 @@ function EnhancedArsenalDossier({
         </CardContent>
       </Card>
 
-      {/* Navigation Tabs */}
-      <div className="flex items-center space-x-4 p-1 bg-gray-100 rounded-lg">
-        <Button variant="ghost" className="bg-white shadow-sm">Overview</Button>
-        <Button variant="ghost">Digital</Button>
-        <Button variant="ghost">AI Insights</Button>
-        <Button variant="ghost">Opportunities</Button>
-        <Button variant="ghost">Leadership</Button>
-        <Button variant="ghost">News</Button>
-        <Button variant="ghost">League</Button>
-        <Button variant="ghost">Contact</Button>
+      {/* Enhanced Tabbed Interface */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-8 h-auto p-1 bg-gray-100 rounded-lg">
+          <TabsTrigger 
+            value="overview" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            <Eye className="h-4 w-4" />
+            Overview
+          </TabsTrigger>
+          <TabsTrigger 
+            value="digital" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            <Zap className="h-4 w-4" />
+            Digital
+          </TabsTrigger>
+          <TabsTrigger 
+            value="ai-insights" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            <Brain className="h-4 w-4" />
+            AI Insights
+          </TabsTrigger>
+          <TabsTrigger 
+            value="opportunities" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            <Target className="h-4 w-4" />
+            Opportunities
+          </TabsTrigger>
+          <TabsTrigger 
+            value="leadership" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            <Users className="h-4 w-4" />
+            Leadership
+          </TabsTrigger>
+          <TabsTrigger 
+            value="news" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            <FileText className="h-4 w-4" />
+            News
+          </TabsTrigger>
+          <TabsTrigger 
+            value="league" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            <Trophy className="h-4 w-4" />
+            League
+          </TabsTrigger>
+          <TabsTrigger 
+            value="contact" 
+            className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            <Mail className="h-4 w-4" />
+            Contact
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Overview Tab - Show all accordion sections */}
+        <TabsContent 
+          value="overview" 
+          className="space-y-4 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
+          <DossierAccordion sections={enhancedArsenalData.sections} />
+        </TabsContent>
+
+        {/* Digital Tab - Show digital-related sections */}
+        <TabsContent 
+          value="digital" 
+          className="space-y-4 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
+          <DossierAccordion sections={enhancedArsenalData.sections.filter(section => 
+            section.id === 'digital' || section.title.toLowerCase().includes('digital')
+          )} />
+        </TabsContent>
+
+        {/* AI Insights Tab - Show intelligence sections */}
+        <TabsContent 
+          value="ai-insights" 
+          className="space-y-4 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
+          <DossierAccordion sections={enhancedArsenalData.sections.filter(section => 
+            section.id === 'executive' || section.title.toLowerCase().includes('intelligence')
+          )} />
+        </TabsContent>
+
+        {/* Opportunities Tab - Show opportunity sections */}
+        <TabsContent 
+          value="opportunities" 
+          className="space-y-4 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
+          <DossierAccordion sections={enhancedArsenalData.sections.filter(section => 
+            section.id === 'opportunities' || section.title.toLowerCase().includes('opportunit')
+          )} />
+        </TabsContent>
+
+        {/* Leadership Tab - Show leadership sections */}
+        <TabsContent 
+          value="leadership" 
+          className="space-y-4 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
+          <DossierAccordion sections={enhancedArsenalData.sections.filter(section => 
+            section.id === 'leadership' || section.title.toLowerCase().includes('decision')
+          )} />
+        </TabsContent>
+
+        {/* News Tab - Show news-related content */}
+        <TabsContent 
+          value="news" 
+          className="space-y-4 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                Recent News & Developments
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="p-4 border rounded-lg">
+                  <h4 className="font-semibold mb-2">Arsenal and Emirates renew sustainability partnership</h4>
+                  <p className="text-sm text-gray-600 mb-2">Extension of long-term commercial partnership with enhanced sustainability focus.</p>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline">Partnership</Badge>
+                    <span className="text-xs text-gray-500">September 2024</span>
+                  </div>
+                </div>
+                <div className="p-4 border rounded-lg">
+                  <h4 className="font-semibold mb-2">Arsenal Women reach record 17,000 season ticket sales</h4>
+                  <p className="text-sm text-gray-600 mb-2">Historic milestone for women's football demonstrates commercial growth.</p>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline">Sports</Badge>
+                    <span className="text-xs text-gray-500">September 2024</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* League Tab - Show league context */}
+        <TabsContent 
+          value="league" 
+          className="space-y-4 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                Premier League Context
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h4 className="font-semibold">Current Position</h4>
+                  <div className="text-3xl font-bold">2nd</div>
+                  <div className="text-sm text-gray-600">17 points, 5 matches</div>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="font-semibold">Recent Form</h4>
+                  <div className="flex gap-2">
+                    <div className="w-8 h-8 bg-green-500 rounded flex items-center justify-center text-white text-xs font-bold">W</div>
+                    <div className="w-8 h-8 bg-gray-400 rounded flex items-center justify-center text-white text-xs font-bold">D</div>
+                    <div className="w-8 h-8 bg-green-500 rounded flex items-center justify-center text-white text-xs font-bold">W</div>
+                    <div className="w-8 h-8 bg-green-500 rounded flex items-center justify-center text-white text-xs font-bold">W</div>
+                    <div className="w-8 h-8 bg-green-500 rounded flex items-center justify-center text-white text-xs font-bold">W</div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Contact Tab - Show contact information */}
+        <TabsContent 
+          value="contact" 
+          className="space-y-4 mt-6 animate-in fade-in-0 duration-200 data-[state=active]:block data-[state=inactive]:hidden"
+          forceMount={false}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Phone className="h-5 w-5" />
+                Contact Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold mb-3">Key Contacts</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Juliet Slot - Commercial Director</span>
+                      <Badge variant="outline">Formal proposal preferred</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Mark Gonnella - Comms Director</span>
+                      <Badge variant="outline">Creative pitch preferred</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Josh Kroenke - Vice Chairman</span>
+                      <Badge variant="outline">Executive summary preferred</Badge>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-3">Organization</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center gap-2">
+                      <Globe className="h-4 w-4 text-gray-500" />
+                      <a href="https://www.arsenal.com/" target="_blank" rel="noopener noreferrer" 
+                         className="text-blue-600 hover:underline">https://www.arsenal.com/</a>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Building className="h-4 w-4 text-gray-500" />
+                      <span>Emirates Stadium, London, England</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
       </div>
-
-      {/* Enhanced Accordion Content */}
-      <DossierAccordion sections={enhancedArsenalData.sections} />
-
-      {/* Contact Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Phone className="h-5 w-5" />
-            Contact Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-semibold mb-3">Key Contacts</h4>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Juliet Slot - Commercial Director</span>
-                  <Badge variant="outline">Formal proposal preferred</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Mark Gonnella - Comms Director</span>
-                  <Badge variant="outline">Creative pitch preferred</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">Josh Kroenke - Vice Chairman</span>
-                  <Badge variant="outline">Executive summary preferred</Badge>
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-3">Organization</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <Globe className="h-4 w-4 text-gray-500" />
-                  <a href="https://www.arsenal.com/" target="_blank" rel="noopener noreferrer" 
-                     className="text-blue-600 hover:underline">https://www.arsenal.com/</a>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Building className="h-4 w-4 text-gray-500" />
-                  <span>Emirates Stadium, London, England</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
   );
 };
 

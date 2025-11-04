@@ -21,6 +21,7 @@ interface SportsEntity {
   country: string
   level: string
   enriched: boolean
+  type?: string
   website?: string
   linkedin?: string
   enrichment_summary?: string

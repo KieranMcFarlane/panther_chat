@@ -2,6 +2,9 @@ import { NextRequest } from 'next/server';
 import { supabase } from '@/lib/supabase-client';
 import { cacheService } from '@/lib/supabase-cache';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 /**
  * Real-time RFP streaming API for CopilotKit frontend
  * Provides Server-Sent Events (SSE) for live updates

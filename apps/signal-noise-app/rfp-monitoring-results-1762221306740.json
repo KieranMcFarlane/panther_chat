@@ -1,0 +1,323 @@
+{
+  "total_rfps_detected": 31,
+  "entities_checked": 94,
+  "highlights": [
+    {
+      "organization": "Brazilian Basketball Confederation",
+      "src_link": "https://example.com/tender/1762221288681",
+      "summary_json": {
+        "title": "Brazilian Procurement Opportunity",
+        "confidence": 0.68,
+        "urgency": "low",
+        "fit_score": 78
+      }
+    },
+    {
+      "organization": "Equatorial Guinea Football Federation",
+      "src_link": "https://example.com/tender/1762221290683",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.47,
+        "urgency": "medium",
+        "fit_score": 62
+      }
+    },
+    {
+      "organization": "Jordan Football Association",
+      "src_link": "https://example.com/tender/1762221290684",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.42,
+        "urgency": "medium",
+        "fit_score": 57
+      }
+    },
+    {
+      "organization": "Canadian Volleyball Federation",
+      "src_link": "https://example.com/tender/1762221290684",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.44,
+        "urgency": "low",
+        "fit_score": 64
+      }
+    },
+    {
+      "organization": "Estonian Cricket Association",
+      "src_link": "https://example.com/tender/1762221290685",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.46,
+        "urgency": "low",
+        "fit_score": 61
+      }
+    },
+    {
+      "organization": "Rwandan Cricket Association",
+      "src_link": "https://example.com/tender/1762221292688",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.38,
+        "urgency": "medium",
+        "fit_score": 53
+      }
+    },
+    {
+      "organization": "Brazilian Rugby Confederation",
+      "src_link": "https://example.com/tender/1762221292689",
+      "summary_json": {
+        "title": "Brazilian Procurement Opportunity",
+        "confidence": 0.64,
+        "urgency": "medium",
+        "fit_score": 69
+      }
+    },
+    {
+      "organization": "England Rugby Football Union",
+      "src_link": "https://example.com/tender/1762221292689",
+      "summary_json": {
+        "title": "England Procurement Opportunity",
+        "confidence": 0.68,
+        "urgency": "low",
+        "fit_score": 83
+      }
+    },
+    {
+      "organization": "Czech Baseball Federation",
+      "src_link": "https://example.com/tender/1762221292689",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.4,
+        "urgency": "low",
+        "fit_score": 50
+      }
+    },
+    {
+      "organization": "Indian Ice Hockey Association",
+      "src_link": "https://example.com/tender/1762221294692",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.35,
+        "urgency": "low",
+        "fit_score": 45
+      }
+    },
+    {
+      "organization": "Portuguese Handball Federation",
+      "src_link": "https://example.com/tender/1762221294692",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.49,
+        "urgency": "low",
+        "fit_score": 59
+      }
+    },
+    {
+      "organization": "Tunisian Baseball Softball Federation",
+      "src_link": "https://example.com/tender/1762221294692",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.41,
+        "urgency": "low",
+        "fit_score": 51
+      }
+    },
+    {
+      "organization": "Czech Rugby Union",
+      "src_link": "https://example.com/tender/1762221296694",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.49,
+        "urgency": "low",
+        "fit_score": 59
+      }
+    },
+    {
+      "organization": "Czech Volleyball Federation",
+      "src_link": "https://example.com/tender/1762221296694",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.34,
+        "urgency": "low",
+        "fit_score": 44
+      }
+    },
+    {
+      "organization": "Danish Cricket Federation",
+      "src_link": "https://example.com/tender/1762221296694",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.48,
+        "urgency": "medium",
+        "fit_score": 63
+      }
+    },
+    {
+      "organization": "Danish Football Association",
+      "src_link": "https://example.com/tender/1762221296694",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.45,
+        "urgency": "low",
+        "fit_score": 60
+      }
+    },
+    {
+      "organization": "Dominican Cricket Federation",
+      "src_link": "https://example.com/tender/1762221298695",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.31,
+        "urgency": "medium",
+        "fit_score": 46
+      }
+    },
+    {
+      "organization": "Ecuador Football Federation",
+      "src_link": "https://example.com/tender/1762221300699",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.49,
+        "urgency": "low",
+        "fit_score": 64
+      }
+    },
+    {
+      "organization": "Egypt Baseball Federation",
+      "src_link": "https://example.com/tender/1762221300700",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.46,
+        "urgency": "low",
+        "fit_score": 56
+      }
+    },
+    {
+      "organization": "Egypt Basketball Federation",
+      "src_link": "https://example.com/tender/1762221300700",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.48,
+        "urgency": "low",
+        "fit_score": 63
+      }
+    },
+    {
+      "organization": "El Salvador Baseball Federation",
+      "src_link": "https://example.com/tender/1762221302701",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.31,
+        "urgency": "low",
+        "fit_score": 41
+      }
+    },
+    {
+      "organization": "El Salvador Football Federation",
+      "src_link": "https://example.com/tender/1762221302701",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.37,
+        "urgency": "low",
+        "fit_score": 52
+      }
+    },
+    {
+      "organization": "Emirates Cricket Board",
+      "src_link": "https://example.com/tender/1762221304703",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.4,
+        "urgency": "medium",
+        "fit_score": 50
+      }
+    },
+    {
+      "organization": "England Basketball",
+      "src_link": "https://example.com/tender/1762221304703",
+      "summary_json": {
+        "title": "England Procurement Opportunity",
+        "confidence": 0.64,
+        "urgency": "low",
+        "fit_score": 84
+      }
+    },
+    {
+      "organization": "England Cricket Board",
+      "src_link": "https://example.com/tender/1762221304703",
+      "summary_json": {
+        "title": "England Procurement Opportunity",
+        "confidence": 0.71,
+        "urgency": "medium",
+        "fit_score": 91
+      }
+    },
+    {
+      "organization": "England Football Association",
+      "src_link": "https://example.com/tender/1762221304703",
+      "summary_json": {
+        "title": "England Procurement Opportunity",
+        "confidence": 0.67,
+        "urgency": "low",
+        "fit_score": 92
+      }
+    },
+    {
+      "organization": "England Hockey",
+      "src_link": "https://example.com/tender/1762221304704",
+      "summary_json": {
+        "title": "Sports Organization Tender",
+        "confidence": 0.4,
+        "urgency": "low",
+        "fit_score": 55
+      }
+    },
+    {
+      "organization": "England Rugby",
+      "src_link": "https://example.com/tender/1762221304704",
+      "summary_json": {
+        "title": "England Procurement Opportunity",
+        "confidence": 0.63,
+        "urgency": "medium",
+        "fit_score": 83
+      }
+    },
+    {
+      "organization": "England Rugby League",
+      "src_link": "https://example.com/tender/1762221306708",
+      "summary_json": {
+        "title": "England Procurement Opportunity",
+        "confidence": 0.62,
+        "urgency": "medium",
+        "fit_score": 77
+      }
+    },
+    {
+      "organization": "England Rugby Union",
+      "src_link": "https://example.com/tender/1762221306709",
+      "summary_json": {
+        "title": "England Procurement Opportunity",
+        "confidence": 0.76,
+        "urgency": "medium",
+        "fit_score": 91
+      }
+    },
+    {
+      "organization": "England Volleyball",
+      "src_link": "https://example.com/tender/1762221306709",
+      "summary_json": {
+        "title": "England Procurement Opportunity",
+        "confidence": 0.62,
+        "urgency": "medium",
+        "fit_score": 77
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.5,
+    "avg_fit_score": 64,
+    "top_opportunity": "England Football Association"
+  },
+  "processing_time_ms": 20109,
+  "timestamp": "2025-11-04T01:55:06.711Z"
+}

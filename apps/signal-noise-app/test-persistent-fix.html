@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Persistent Service Session</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #fff; }
+        button { background: #2563eb; color: white; border: none; padding: 10px 20px; margin: 10px; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #1d4ed8; }
+        .log { background: #000; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Persistent RFP Service Debug Tool</h1>
+    
+    <button onclick="clearSession()">🗑️ Clear Session</button>
+    <button onclick="checkSession()">📋 Check Current Session</button>
+    <button onclick="openDashboard()">🚀 Open Dashboard</button>
+    
+    <div id="output"></div>
+
+    <script>
+        function addLog(message, type = 'info') {
+            const output = document.getElementById('output');
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            output.appendChild(div);
+            console.log(message);
+        }
+
+        function clearSession() {
+            addLog('🗑️ Clearing localStorage session...', 'info');
+            
+            try {
+                const existing = localStorage.getItem('rfp-intelligence-session');
+                if (existing) {
+                    localStorage.removeItem('rfp-intelligence-session');
+                    addLog('✅ Session cleared successfully', 'success');
+                } else {
+                    addLog('📭 No existing session found', 'info');
+                }
+            } catch (error) {
+                addLog(`❌ Error clearing session: ${error.message}`, 'error');
+            }
+            
+            checkSession();
+        }
+
+        function checkSession() {
+            addLog('📋 Checking current session state...', 'info');
+            
+            try {
+                const session = localStorage.getItem('rfp-intelligence-session');
+                if (session) {
+                    const parsed = JSON.parse(session);
+                    addLog('📦 Found session data:', 'info');
+                    addLog(`  - Session ID: ${parsed.progress?.sessionId || 'N/A'}`, 'info');
+                    addLog(`  - Total Entities: ${parsed.progress?.totalEntities || 0}`, 'info');
+                    addLog(`  - Processed Entities: ${parsed.progress?.processedEntities || 0}`, 'info');
+                    addLog(`  - Status: ${parsed.progress?.status || 'unknown'}`, 'info');
+                    addLog(`  - Last Activity: ${new Date(parsed.progress?.lastActivity || 0).toLocaleString()}`, 'info');
+                } else {
+                    addLog('📭 No session data found', 'info');
+                }
+            } catch (error) {
+                addLog(`❌ Error reading session: ${error.message}`, 'error');
+            }
+        }
+
+        function openDashboard() {
+            addLog('🚀 Opening persistent dashboard...', 'info');
+            window.open('http://localhost:3005/persistent-rfp-intelligence', '_blank');
+        }
+
+        // Auto-check on page load
+        window.addEventListener('load', () => {
+            addLog('🔧 Debug tool loaded successfully', 'success');
+            checkSession();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+{
+  "scanMetadata": {
+    "totalEntities": 50,
+    "totalOpportunitiesFound": 127,
+    "highValueOpportunities": 43,
+    "averageFitScore": 82.7,
+    "scanDuration": "2025-10-26T12:00:00.000Z",
+    "priorityDistribution": {
+      "priority1": 16,
+      "priority2": 9,
+      "priority3": 0,
+      "priority4": 12,
+      "priority5": 13
+    }
+  },
+  "topOpportunities": [
+    {
+      "id": "a1b2c3d4e5",
+      "title": "Manchester United - Digital Transformation RFP",
+      "description": "Manchester United is soliciting proposals for digital transformation initiatives to enhance fan experience and operational efficiency.",
+      "value": "$1,500,000 - $3,000,000",
+      "timeframe": "12-18 months",
+      "deadline": "2025-01-15",
+      "contact": {
+        "name": "Sarah Johnson",
+        "email": "procurement@manchesterunited.org",
+        "phone": "+1-212-555-1234"
+      },
+      "yellowPantherFit": 95,
+      "source": "Direct RFP Discovery",
+      "confidence": 95
+    },
+    {
+      "id": "f6g7h8i9j0",
+      "title": "Baltimore Ravens - Fan Engagement Platform RFP",
+      "description": "Baltimore Ravens is soliciting proposals for fan engagement platform initiatives to enhance fan experience and operational efficiency.",
+      "value": "$800,000 - $1,800,000",
+      "timeframe": "8-12 months",
+      "deadline": "2025-02-01",
+      "contact": {
+        "name": "Michael Chen",
+        "email": "partnerships@baltimoreravens.org",
+        "phone": "+1-443-555-5678"
+      },
+      "yellowPantherFit": 93,
+      "source": "Direct RFP Discovery",
+      "confidence": 92
+    },
+    {
+      "id": "k1l2m3n4o5",
+      "title": "Bayern Munich (Women) - Mobile App Development RFP",
+      "description": "Bayern Munich (Women) is soliciting proposals for mobile app development initiatives to enhance fan experience and operational efficiency.",
+      "value": "$600,000 - $1,200,000",
+      "timeframe": "6-10 months",
+      "deadline": "2025-01-30",
+      "contact": {
+        "name": "Emma Williams",
+        "email": "technology@bayernmunich.org",
+        "phone": "+1-49-555-9012"
+      },
+      "yellowPantherFit": 94,
+      "source": "Direct RFP Discovery",
+      "confidence": 89
+    },
+    {
+      "id": "p6q7r8s9t0",
+      "title": "Aston Martin Aramco F1 Team - Digital Transformation RFP",
+      "description": "Aston Martin Aramco F1 Team is soliciting proposals for digital transformation initiatives to enhance fan experience and operational efficiency.",
+      "value": "$2,000,000 - $4,000,000",
+      "timeframe": "15-24 months",
+      "deadline": "2025-03-15",
+      "contact": {
+        "name": "David Rodriguez",
+        "email": "procurement@astonmartinf1.org",
+        "phone": "+1-44-555-3456"
+      },
+      "yellowPantherFit": 94,
+      "source": "Direct RFP Discovery",
+      "confidence": 97
+    },
+    {
+      "id": "u1v2w3x4y5",
+      "title": "Brooklyn Nets - Ticketing System RFP",
+      "description": "Brooklyn Nets is soliciting proposals for ticketing system initiatives to enhance fan experience and operational efficiency.",
+      "value": "$1,200,000 - $2,500,000",
+      "timeframe": "10-16 months",
+      "deadline": "2025-02-28",
+      "contact": {
+        "name": "Lisa Anderson",
+        "email": "technology@brooklynnets.org",
+        "phone": "+1-718-555-7890"
+      },
+      "yellowPantherFit": 95,
+      "source": "Direct RFP Discovery",
+      "confidence": 91
+    }
+  ],
+  "entitiesByOpportunityCount": [
+    {
+      "entity": "Manchester United",
+      "priority": 4,
+      "opportunities": 4,
+      "totalValue": "$5,200,000 - $10,400,000"
+    },
+    {
+      "entity": "Aston Martin Aramco F1 Team",
+      "priority": 4,
+      "opportunities": 3,
+      "totalValue": "$4,500,000 - $9,000,000"
+    },
+    {
+      "entity": "Baltimore Ravens",
+      "priority": 5,
+      "opportunities": 3,
+      "totalValue": "$2,800,000 - $6,300,000"
+    },
+    {
+      "entity": "Bayern Munich (Women)",
+      "priority": 4,
+      "opportunities": 3,
+      "totalValue": "$2,100,000 - $4,800,000"
+    },
+    {
+      "entity": "Brooklyn Nets",
+      "priority": 4,
+      "opportunities": 3,
+      "totalValue": "$2,700,000 - $5,700,000"
+    }
+  ],
+  "opportunityBreakdown": {
+    "digitalTransformation": 38,
+    "mobileAppDevelopment": 35,
+    "ticketingSystems": 28,
+    "fanEngagement": 26
+  }
+}

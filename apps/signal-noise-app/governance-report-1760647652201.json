@@ -1,0 +1,1122 @@
+{
+  "timestamp": "2025-10-16T20:47:32.170Z",
+  "totalEntities": 100,
+  "summary": {
+    "valid": 0,
+    "issuesFound": 100,
+    "highRiskIssues": 0,
+    "mediumRiskIssues": 0,
+    "lowRiskIssues": 0
+  },
+  "problematicEntities": [
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:0",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:1",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:2",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:4",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:11",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:12",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:27",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:28",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:32",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:38",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:41",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:45",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:48",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:49",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:54",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:63",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:65",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:67",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:68",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:77",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:94",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:99",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:100",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:107",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:110",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:112",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:117",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:120",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:122",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:127",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:129",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:132",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:133",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:139",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:141",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:146",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:147",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:157",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:171",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:188",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:192",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:199",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:200",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:201",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:202",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:204",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:205",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:206",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:207",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:208",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:210",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:211",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:212",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:213",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:214",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:215",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:216",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:217",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:218",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:230",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:231",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:232",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:233",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:234",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:235",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:236",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:237",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:238",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:240",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:241",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:242",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:243",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:244",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:245",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:246",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:267",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:268",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:272",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:273",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:275",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:276",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:277",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:278",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:281",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:282",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:283",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:296",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:297",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:300",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:301",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:302",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:303",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:304",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:305",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:307",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:308",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:327",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:331",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:332",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    },
+    {
+      "name": "Unknown",
+      "neo4jId": "4:8e1529dc-70d1-42bd-8b6e-8902349a9325:333",
+      "issues": [],
+      "missingFields": [
+        "name",
+        "type"
+      ],
+      "score": 0,
+      "recommendation": "REJECT"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "category": "Process Improvement",
+      "issue": "High percentage of problematic entities (>10%)",
+      "action": "Implement stricter data validation and pre-import screening",
+      "estimatedImpact": "HIGH"
+    }
+  ]
+}

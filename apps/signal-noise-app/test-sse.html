@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSE Test</title>
+</head>
+<body>
+    <h1>SSE Connection Test</h1>
+    <div id="logs"></div>
+    <button onclick="testSSE()">Test SSE Connection</button>
+    
+    <script>
+        function testSSE() {
+            const logsDiv = document.getElementById('logs');
+            logsDiv.innerHTML = '<h2>Testing SSE Connection...</h2>';
+            
+            const eventSource = new EventSource(
+                'http://localhost:3005/api/claude-agent-demo/stream?service=reliable&query=Test&mode=batch&entityLimit=1'
+            );
+            
+            eventSource.onopen = () => {
+                logsDiv.innerHTML += '<p style="color: green;">✅ SSE Connection Opened</p>';
+            };
+            
+            eventSource.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                logsDiv.innerHTML += `<p>📨 Event: ${data.type} - ${data.message || 'No message'}</p>`;
+                console.log('SSE Event:', data);
+            };
+            
+            eventSource.addEventListener('progress', (event) => {
+                const data = JSON.parse(event.data);
+                logsDiv.innerHTML += `<p style="color: blue;">📊 Progress: ${data.message}</p>`;
+            });
+            
+            eventSource.addEventListener('result', (event) => {
+                const data = JSON.parse(event.data);
+                logsDiv.innerHTML += `<p style="color: green;">✅ Result: ${data.totalFound || 0} items found</p>`;
+                eventSource.close();
+            });
+            
+            eventSource.onerror = (error) => {
+                logsDiv.innerHTML += `<p style="color: red;">❌ SSE Error: ${error}</p>`;
+                console.error('SSE Error:', error);
+                eventSource.close();
+            };
+            
+            // Auto-close after 3 minutes
+            setTimeout(() => {
+                if (eventSource.readyState !== 2) {
+                    logsDiv.innerHTML += '<p style="color: orange;">⏰ Timeout reached</p>';
+                    eventSource.close();
+                }
+            }, 180000);
+        }
+    </script>
+</body>
+</html>

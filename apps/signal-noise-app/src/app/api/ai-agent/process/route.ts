@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Inbound } from '@inboundemail/sdk';
 
-const inbound = new Inbound({
-  apiKey: process.env.INBOUND_API_KEY || 'demoZddUekPUOokPVAIgILCUkljUXaLsKPWAKCSlYZBwyFntfqegGIsRBxVyjKvSkPjN'
-});
+const inbound = new Inbound(process.env.INBOUND_API_KEY || 'demoZddUekPUOokPVAIgILCUkljUXaLsKPWAKCSlYZBwyFntfqegGIsRBxVyjKvSkPjN');
 
 interface AIEmailRequest {
   entityId: string;
@@ -127,7 +125,8 @@ export async function POST(request: NextRequest) {
           });
 
           if (error) {
-            throw new Error(`Failed to send auto-reply: ${error.message}`);
+            const errorMsg = typeof error === 'string' ? error : 'Unknown error';
+            throw new Error(`Failed to send auto-reply: ${errorMsg}`);
           }
 
           response.autoReply.sent = true;
@@ -145,7 +144,7 @@ export async function POST(request: NextRequest) {
 
       case 'forward':
         response.forwarded = {
-          to: action.destination,
+          to: 'admin@yellowpanther.ai',
           reason: 'Forward rule triggered'
         };
         break;
