@@ -7,12 +7,12 @@
         "@alanse/mcp-neo4j-server"
       ],
       "env": {
-        "NEO4J_URI": "neo4j+s://cce1f84b.databases.neo4j.io",
-        "NEO4J_USERNAME": "neo4j",
-        "NEO4J_PASSWORD": "llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0",
-        "NEO4J_DATABASE": "neo4j",
-        "AURA_INSTANCEID": "cce1f84b",
-        "AURA_INSTANCENAME": "Instance01"
+        "NEO4J_URI": "${NEO4J_URI}",
+        "NEO4J_USERNAME": "${NEO4J_USERNAME}",
+        "NEO4J_PASSWORD": "${NEO4J_PASSWORD}",
+        "NEO4J_DATABASE": "${NEO4J_DATABASE}",
+        "AURA_INSTANCEID": "${AURA_INSTANCEID}",
+        "AURA_INSTANCENAME": "${AURA_INSTANCENAME}"
       }
     },
     "brightData": {
@@ -23,7 +23,7 @@
         "@brightdata/mcp"
       ],
       "env": {
-        "API_TOKEN": "bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4",
+        "API_TOKEN": "${BRIGHTDATA_API_TOKEN}",
         "PRO_MODE": "true"
       }
     },
@@ -35,7 +35,7 @@
         "--project-ref=itlcuazbybqlkicsaola"
       ],
       "env": {
-        "SUPABASE_ACCESS_TOKEN": "sbp_8421d6c18ec244bbfbacb9536edb207ed8ddce0b"
+        "SUPABASE_ACCESS_TOKEN": "${SUPABASE_ACCESS_TOKEN}"
       }
     },
     "perplexity-mcp": {

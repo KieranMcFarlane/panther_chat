@@ -298,7 +298,7 @@ export const HTTP_MCP_SERVERS: MCPServerConfig[] = [
     env: {
       NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
       NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-      NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || 'llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0',
+      NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || '',
       NEO4J_DATABASE: process.env.NEO4J_DATABASE || 'neo4j',
       AURA_INSTANCEID: process.env.AURA_INSTANCEID || 'cce1f84b',
       AURA_INSTANCENAME: process.env.AURA_INSTANCENAME || 'Instance01'
@@ -310,7 +310,7 @@ export const HTTP_MCP_SERVERS: MCPServerConfig[] = [
     command: 'npx',
     args: ['-y', '@brightdata/mcp'],
     env: {
-      API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || 'bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4',
+      API_TOKEN: process.env.BRIGHTDATA_API_TOKEN || '',
       PRO_MODE: 'true'
     },
     port: 3011 // Specific port for BrightData MCP
