@@ -32,7 +32,7 @@ export const createMCPTools = () => {
       const neo4j = require('neo4j-driver');
       const driver = neo4j.driver(
         'neo4j+s://cce1f84b.databases.neo4j.io',
-        neo4j.auth.basic('neo4j', 'llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0')
+        neo4j.auth.basic('neo4j', 'process.env.NEO4J_PASSWORD || ""')
       );
       
       const session = driver.session();

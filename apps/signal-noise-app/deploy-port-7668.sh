@@ -93,7 +93,7 @@ BRIGHTDATA_API_TOKEN=bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27
 BRIGHTDATA_API_URL=https://api.brightdata.com
 
 # Perplexity API
-PERPLEXITY_API_KEY=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
+PERPLEXITY_API_KEY=${PERPLEXITY_API_KEY}
 
 # Processing Configuration
 BATCH_SIZE=3

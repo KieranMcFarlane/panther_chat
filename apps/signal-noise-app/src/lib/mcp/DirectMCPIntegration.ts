@@ -35,7 +35,7 @@ export class DirectMCPIntegration {
       const env = {
         NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
         NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-        NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || 'llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0',
+        NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || '',
         NEO4J_DATABASE: process.env.NEO4J_DATABASE || 'neo4j',
         AURA_INSTANCEID: process.env.AURA_INSTANCEID || 'cce1f84b',
         AURA_INSTANCENAME: process.env.AURA_INSTANCENAME || 'Instance01'
@@ -283,7 +283,7 @@ export class DirectMCPIntegration {
       const neo4jResult = await this.executeMCPCommand('npx', ['-y', '@alanse/mcp-neo4j-server'], neo4jRequest, {
         NEO4J_URI: process.env.NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
         NEO4J_USERNAME: process.env.NEO4J_USERNAME || 'neo4j',
-        NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || 'llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0'
+        NEO4J_PASSWORD: process.env.NEO4J_PASSWORD || ''
       });
 
       if (neo4jResult.result?.tools) {
