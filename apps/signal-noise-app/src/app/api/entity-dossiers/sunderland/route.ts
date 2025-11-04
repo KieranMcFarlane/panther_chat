@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { Neo4jService } from '@/lib/neo4j';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-// Initialize Neo4j service
-const neo4jService = new Neo4jService();
+// Mark route as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // Sunderland FC Dossier Data (import from our generated file)
 import sunderlandDossierData from '../../../../../dossiers/sunderland-fc-intelligence-data.json';
@@ -82,6 +76,26 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { action } = await request.json();
+
+    // Lazy-load clients only when needed (not during build)
+    const { createClient } = await import('@supabase/supabase-js');
+    const { Neo4jService } = await import('@/lib/neo4j');
+    
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    if (!supabaseUrl || !supabaseKey) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Supabase configuration missing. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables.'
+        },
+        { status: 500 }
+      );
+    }
+    
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const neo4jService = new Neo4jService();
 
     if (action === 'store') {
       // Store Sunderland dossier in both databases
