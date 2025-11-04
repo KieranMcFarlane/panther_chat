@@ -14,9 +14,12 @@ Since this is a monorepo and your Next.js app is in `apps/signal-noise-app`, you
    - Click on **Settings** tab in the top navigation
    - Or go directly to: https://vercel.com/YOUR_ACCOUNT/YOUR_PROJECT/settings
 
-3. **Configure Root Directory**
-   - Scroll down to the **General** section
-   - Find **Root Directory**
+3. **Navigate to Build and Deployment**
+   - Click on **Build and Deployment** in the left sidebar (NOT "General")
+   - This is where the Root Directory setting is located
+
+4. **Configure Root Directory**
+   - Scroll down to find **Root Directory** section
    - Click **Edit** or **Override**
 
 4. **Set the Root Directory**
