@@ -6,6 +6,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { notificationService } from '@/services/NotificationService';
 import { supabase } from '@/lib/supabase-client';
 
+// Mark route as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 /**
  * Get notification delivery statistics
  */
