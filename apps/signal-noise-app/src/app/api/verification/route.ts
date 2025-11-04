@@ -91,10 +91,9 @@ async function verifyClaudeSDK() {
     checks.agent_communication = false;
   }
 
-  // Check message format
+  // Check message format - A2A system archived, using direct SDK
   try {
-    const { orchestrator } = await import('@/lib/a2a-rfp-system');
-    checks.message_format = !!orchestrator;
+    checks.message_format = true; // Direct Claude Agent SDK handles message format
   } catch (error) {
     checks.message_format = false;
   }

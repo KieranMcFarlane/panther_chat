@@ -93,7 +93,11 @@ async function simulateClassification(email: any) {
     }
   ];
 
-  let bestMatch = {
+  let bestMatch: {
+    type: string;
+    confidence: number;
+    keywords: string[];
+  } = {
     type: 'general',
     confidence: 0.5,
     keywords: []

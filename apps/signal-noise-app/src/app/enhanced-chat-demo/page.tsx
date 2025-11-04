@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import EnhancedSimpleChatSidebar from '@/components/chat/EnhancedSimpleChatSidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -58,7 +58,9 @@ export default function EnhancedChatDemo() {
   return (
     <div className="min-h-screen bg-custom-bg">
       {/* Enhanced Copilot Sidebar */}
-      <EnhancedSimpleChatSidebar />
+      <Suspense fallback={<div className="fixed right-0 top-0 h-full w-96 bg-gray-900 animate-pulse" />}>
+        <EnhancedSimpleChatSidebar />
+      </Suspense>
 
       {/* Main Content */}
       <div className="p-8 max-w-6xl mx-auto">

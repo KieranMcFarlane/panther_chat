@@ -1,6 +1,9 @@
 import { NextRequest } from "next/server";
 import { query } from "@anthropic-ai/claude-agent-sdk";
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 /**
  * Real-time RFP Notifications Stream
  * Provides Server-Sent Events (SSE) for live RFP alerts and analysis updates

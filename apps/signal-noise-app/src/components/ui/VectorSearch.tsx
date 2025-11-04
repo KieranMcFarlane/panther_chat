@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Search, X, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Search, X, Loader2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 interface SearchResult {
 	id: string;
+	entity_id?: string;
 	name: string;
 	type: 'club' | 'sportsperson' | 'poi' | 'tender' | 'contact' | 'unknown';
 	score: number;
@@ -20,6 +22,7 @@ interface VectorSearchProps {
 }
 
 export default function VectorSearch({ className }: VectorSearchProps) {
+	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const [query, setQuery] = useState('');
 	const [results, setResults] = useState<SearchResult[]>([]);
@@ -39,13 +42,25 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 		try {
 			const response = await fetch('/api/vector-search', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ query: searchQuery, limit: 10, score_threshold: 0.2 }),
+				headers: { 
+					'Content-Type': 'application/json',
+					'Cache-Control': 'no-cache',
+					'Pragma': 'no-cache'
+				},
+				body: JSON.stringify({ 
+					query: searchQuery, 
+					limit: 10, 
+					score_threshold: 0.1,
+					entity_types: null,
+					timestamp: Date.now() // Add timestamp to prevent caching
+				}),
 			});
 			if (!response.ok) throw new Error(`HTTP ${response.status}`);
 			const data = await response.json();
 			setResults(data.results || []);
+			console.log('Vector search results for', searchQuery, ':', data.results);
 		} catch (err) {
+			console.error('Vector search error:', err);
 			setError('Search failed. Please try again.');
 			setResults([]);
 		} finally {
@@ -62,8 +77,32 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 
 	const handleResultClick = (result: SearchResult) => {
 		console.log('Navigating to:', result);
+		// Close search immediately
 		setIsOpen(false);
 		setQuery('');
+		
+		// Navigate to entity page
+		if (result.entity_id) {
+			// The entity_id might need to be converted if it comes from Neo4j vs Supabase
+			const entityId = result.entity_id;
+			
+			// Check if it's one of our demo entities first
+			const demoEntityRoutes = {
+				'arsenal_fc_001': '/entity/arsenal_fc_001',
+				'chelsea_fc_002': '/entity/chelsea_fc_002', 
+				'martin_odegaard_003': '/entity/martin_odegaard_003',
+				'tender_premier_league_001': '/entity/tender_premier_league_001',
+				'contact_sports_agent_001': '/entity/contact_sports_agent_001'
+			};
+			
+			if (demoEntityRoutes[entityId]) {
+				router.push(demoEntityRoutes[entityId]);
+				return;
+			}
+			
+			// For Neo4j entities, use the entity/[entityId] route
+			router.push(`/entity/${entityId}`);
+		}
 	};
 
 	const getTypeColor = (type: string) => {

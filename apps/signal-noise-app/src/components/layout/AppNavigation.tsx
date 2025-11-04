@@ -43,38 +43,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import PageTransition from './PageTransition';
-import VectorSearch from '@/components/ui/VectorSearch';
+import VectorSearchDebounced from '@/components/ui/VectorSearch-debounced';
 import { authClient } from '@/lib/auth-client';
 
 // Navigation items - Core demo functionality only
 const navItems = [
   { icon: Home, label: 'Home', href: '/' },
-  { icon: Search, label: 'Entities', href: '/entity-browser' },
+  { icon: Database, label: 'Entities', href: '/entity-browser' },
   { icon: FileText, label: "RFP's/Tenders", href: '/tenders' },
-  { 
-    icon: Bot, 
-    label: 'Claude Agent Demo', 
-    href: '/claude-agent-demo',
-    badge: { text: 'LIVE', variant: 'default' as const }
-  },
-  { 
-    icon: Monitor, 
-    label: 'Agent Logs', 
-    href: '/agent-logs',
-    badge: { text: 'LIVE', variant: 'destructive' as const }
-  },
-  { 
-    icon: Radar, 
-    label: 'A2A RFP Discovery', 
-    href: '/a2a-rfp-discovery',
-    badge: { text: 'AI', variant: 'default' as const }
-  },
-  { 
-    icon: Network, 
-    label: 'MCP-Enabled A2A', 
-    href: '/mcp-a2a-discovery',
-    badge: { text: 'MCP', variant: 'destructive' as const }
-  },
   { 
     icon: BarChart3, 
     label: 'Graph', 
@@ -91,6 +67,12 @@ const navItems = [
     label: 'Conventions', 
     href: '/conventions',
     badge: { text: 'NEW', variant: 'default' as const }
+  },
+  { 
+    icon: Search, 
+    label: 'Search', 
+    href: '#',
+    isSearch: true
   },
 ];
 
@@ -110,6 +92,10 @@ export default function AppNavigation({ children }: AppNavigationProps) {
       if (item.hasSubmenu) {
         e.preventDefault();
         setIsOpen(!isOpen);
+      }
+      if (item.isSearch) {
+        e.preventDefault();
+        // Search item doesn't navigate, it opens the modal via the VectorSearch component
       }
     };
     
@@ -137,10 +123,45 @@ export default function AppNavigation({ children }: AppNavigationProps) {
             </div>
           </>
         )}
-      </div>
+        </div>
     );
 
-    // When collapsed, wrap in popover for tooltip
+    // Special handling for search item
+    if (item.isSearch) {
+      // When collapsed, wrap in popover for tooltip
+      if (!sidebarExpanded) {
+        return (
+          <Popover key={item.label} open={isOpen} onOpenChange={setIsOpen}>
+            <PopoverTrigger 
+              asChild
+              onMouseEnter={() => setIsOpen(true)}
+              onMouseLeave={() => setIsOpen(false)}
+            >
+              <div className="cursor-pointer">
+                <VectorSearchDebounced variant="navitem" className="w-full justify-center" />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent 
+              side="right" 
+              className="w-auto p-2"
+              sideOffset={8}
+              onMouseEnter={() => setIsOpen(true)}
+              onMouseLeave={() => setIsOpen(false)}
+            >
+              <p className="text-sm font-medium">{item.label}</p>
+            </PopoverContent>
+          </Popover>
+        );
+      }
+
+      return (
+        <div key={item.href} className="w-full">
+          <VectorSearchDebounced variant="navitem" className="w-full" />
+        </div>
+      );
+    }
+
+    // When collapsed, wrap in popover for tooltip for other items
     if (!sidebarExpanded) {
       return (
         <Popover key={item.label} open={isOpen} onOpenChange={setIsOpen}>
@@ -276,7 +297,7 @@ export default function AppNavigation({ children }: AppNavigationProps) {
                 {renderNavItem(item)}
               </div>
             ))}
-            </div>
+          </div>
         </div>
       </div>
 

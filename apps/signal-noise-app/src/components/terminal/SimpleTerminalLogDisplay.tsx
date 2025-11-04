@@ -63,14 +63,15 @@ export default function TerminalLogDisplay({ logs, isStreaming = false }: Termin
         const message = log.content?.message || log.content || log.message || 'System message'
         content = (
           <span className="text-cyan-400">
-            {message}
+            {typeof message === 'string' ? message : JSON.stringify(message)}
           </span>
         )
         break
       case 'error':
+        const errorMessage = log.content?.message || log.content?.error || log.message || JSON.stringify(log.content)
         content = (
           <span className="text-red-400">
-            {log.content?.message || log.content?.error || log.message || JSON.stringify(log.content)}
+            {typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage)}
           </span>
         )
         break
@@ -129,27 +130,29 @@ export default function TerminalLogDisplay({ logs, isStreaming = false }: Termin
           <span>
             <span className="text-purple-400">📨</span>{' '}
             <span className="text-purple-300">
-              {log.content?.from} → {log.content?.to}
+              {log.content?.from || 'Unknown'} → {log.content?.to || 'Unknown'}
             </span>
             {log.content?.message && (
               <div className="text-gray-400 mt-1 italic text-xs">
-                "{log.content?.message}"
+                "{typeof log.content.message === 'string' ? log.content.message : JSON.stringify(log.content.message)}"
               </div>
             )}
           </span>
         )
         break
       case 'assistant':
+        const assistantContent = log.content?.content || log.content || 'Assistant message'
         content = (
           <span className="text-blue-400">
-            🤖 {log.content?.content || JSON.stringify(log.content)}
+            🤖 {typeof assistantContent === 'string' ? assistantContent : JSON.stringify(assistantContent)}
           </span>
         )
         break
       default:
+        const defaultMessage = log.content?.message || log.message || 'Log message'
         content = (
           <span className="text-gray-300">
-            {log.content?.message || log.message || JSON.stringify(log.content)}
+            {typeof defaultMessage === 'string' ? defaultMessage : JSON.stringify(defaultMessage)}
           </span>
         )
     }

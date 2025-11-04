@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSportsIntelligenceQuery } from '@/lib/claude-agent-manager';
-import { EmailCampaignService } from '@/services/email-campaign-service';
+import { EmailCampaignService } from '@/services/email/email-campaign-service';
 
 interface GenerateEmailRequest {
   entityId: string;

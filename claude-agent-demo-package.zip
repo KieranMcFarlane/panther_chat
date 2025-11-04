@@ -1,0 +1,53 @@
+# Claude Agent Demo Deployment Package
+
+## Files to Deploy:
+
+### 1. Demo Page
+- `src/app/claude-agent-demo/page.tsx` - Main demo UI with real-time logs
+
+### 2. API Endpoint  
+- `src/app/api/claude-agent-demo/execute/route.ts` - Streaming API for Claude Agent execution
+
+### 3. Dependencies Required
+```json
+{
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.0.0", 
+    "react-dom": "^18.0.0",
+    "@anthropic-ai/claude-agent-sdk": "latest",
+    "tailwindcss": "^3.0.0",
+    "lucide-react": "^0.263.1"
+  }
+}
+```
+
+### 4. Environment Variables
+```bash
+NEO4J_URI=your-neo4j-uri
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=your-password
+BRIGHTDATA_API_TOKEN=your-token
+BRIGHTDATA_ZONE=linkedin_posts_monitor
+PERPLEXITY_API_KEY=your-key
+```
+
+## Deployment Commands:
+
+```bash
+# On server
+mkdir -p /home/ubuntu/claude-agent-demo
+cd /home/ubuntu/claude-agent-demo
+
+# Upload files from local machine:
+scp -i yellowpanther.pem -r src/ ubuntu@13.60.60.50:/home/ubuntu/claude-agent-demo/
+
+# Install dependencies
+npm install
+
+# Run demo
+npm run dev
+```
+
+## Access URL:
+http://13.60.60.50:3005/claude-agent-demo

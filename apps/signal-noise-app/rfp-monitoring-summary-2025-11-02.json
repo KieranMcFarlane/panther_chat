@@ -1,0 +1,139 @@
+{
+  "monitoring_summary": {
+    "started_at": "2025-11-02T04:26:40.749Z",
+    "completed_at": "2025-11-02T07:07:18.618Z",
+    "total_rfps_detected": 12,
+    "entities_checked": 10,
+    "batch_count": 3,
+    "total_entities_processed": 5,
+    "processing_errors": 1
+  },
+  "highlights": [
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "confidence": 0.95,
+      "detection_method": "mock",
+      "key_findings": "REQUEST FOR PROPOSAL: CWI DIGITAL TRANSFORMATION",
+      "src_link": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633-fIlN"
+    },
+    {
+      "organization": "Manchester United",
+      "type": "Club",
+      "sport": "Football",
+      "confidence": 0.85,
+      "detection_method": "mock",
+      "key_findings": "Manchester United Digital Platform Modernization",
+      "src_link": "https://example.com/rfp-manchester-united"
+    },
+    {
+      "organization": "Premier League",
+      "type": "League",
+      "sport": "Football",
+      "confidence": 0.85,
+      "detection_method": "mock",
+      "key_findings": "Premier League Digital Platform Modernization",
+      "src_link": "https://example.com/rfp-premier-league"
+    },
+    {
+      "organization": "International Olympic Committee",
+      "type": "Federation",
+      "sport": "Multi-sport",
+      "confidence": 0.75,
+      "detection_method": "perplexity",
+      "key_findings": "digital_transformation, mobile_app, fan_engagement",
+      "src_link": null
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "confidence": 0.7,
+      "detection_method": "brightdata",
+      "key_findings": "Cricket West Indies Digital Transformation RFP",
+      "src_link": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "confidence": 0.7,
+      "detection_method": "brightdata",
+      "key_findings": "Cricket West Indies Digital Transformation RFP",
+      "src_link": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "confidence": 0.7,
+      "detection_method": "brightdata",
+      "key_findings": "Cricket West Indies Digital Transformation RFP",
+      "src_link": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "confidence": 0.7,
+      "detection_method": "brightdata",
+      "key_findings": "Cricket West Indies Digital Transformation RFP",
+      "src_link": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633"
+    },
+    {
+      "organization": "Premier League",
+      "type": "League",
+      "sport": "Football",
+      "confidence": 0.7,
+      "detection_method": "brightdata",
+      "key_findings": "Premier League Fan Experience Platform EOI",
+      "src_link": "https://www.premierleague.com/tenders/digital-innovation"
+    },
+    {
+      "organization": "Premier League",
+      "type": "League",
+      "sport": "Football",
+      "confidence": 0.7,
+      "detection_method": "brightdata",
+      "key_findings": "Premier League Fan Experience Platform EOI",
+      "src_link": "https://www.premierleague.com/tenders/digital-innovation"
+    }
+  ],
+  "source_links": [
+    "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633-fIlN",
+    "https://example.com/rfp-manchester-united",
+    "https://example.com/rfp-premier-league",
+    "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633",
+    "https://www.premierleague.com/tenders/digital-innovation"
+  ],
+  "analytics": {
+    "by_sport": {
+      "Cricket": 5,
+      "Football": 6,
+      "Multi-sport": 1
+    },
+    "by_type": {
+      "Federation": 6,
+      "Club": 1,
+      "League": 5
+    },
+    "by_detection_method": {
+      "mock": 3,
+      "perplexity": 1,
+      "brightdata": 8
+    },
+    "confidence_distribution": {
+      "high": 3,
+      "medium": 9,
+      "low": 0
+    }
+  },
+  "errors": [
+    {
+      "timestamp": "2025-11-02T07:07:18.618Z",
+      "batch": 3,
+      "error": "mcp__neo4j__execute_query is not defined"
+    }
+  ]
+}

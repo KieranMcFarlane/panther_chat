@@ -1,0 +1,78 @@
+{
+  "scan_metadata": {
+    "scan_date": "2025-10-26",
+    "total_entities": 50,
+    "priority_filter": "yellowPantherPriority <= 5",
+    "scan_status": "IN PROGRESS",
+    "technical_issues": ["Search API limitations", "Web scraping restrictions"]
+  },
+  "entities_analyzed": 20,
+  "results": {
+    "opportunities_found": 0,
+    "high_priority_entities": 15,
+    "geographic_distribution": {
+      "Europe": 12,
+      "Middle_East": 7,
+      "Americas": 3,
+      "Africa": 3,
+      "Asia": 1,
+      "Australia": 2
+    },
+    "sports_distribution": {
+      "Football": 15,
+      "Motorsport": 4,
+      "Basketball": 4,
+      "Handball": 3,
+      "Other": 14
+    }
+  },
+  "top_targets": [
+    {
+      "entity": "Al Hilal Saudi FC",
+      "country": "Saudi Arabia",
+      "priority": 5,
+      "opportunity_potential": "HIGH",
+      "focus_areas": ["Digital Transformation", "Fan Engagement", "Mobile Apps"]
+    },
+    {
+      "entity": "Al Nassr",
+      "country": "Saudi Arabia",
+      "priority": 5,
+      "opportunity_potential": "HIGH",
+      "focus_areas": ["Web Platform", "Ticketing Systems", "Mobile Apps"]
+    },
+    {
+      "entity": "AFL",
+      "country": "Australia",
+      "priority": 3,
+      "opportunity_potential": "HIGH",
+      "focus_areas": ["Digital Transformation", "Broadcasting Platforms", "Fan Engagement"]
+    },
+    {
+      "entity": "AC Milan",
+      "country": "Italy",
+      "priority": 4,
+      "opportunity_potential": "MEDIUM",
+      "focus_areas": ["Mobile Apps", "Ticketing", "E-commerce"]
+    },
+    {
+      "entity": "Ajax",
+      "country": "Netherlands",
+      "priority": 5,
+      "opportunity_potential": "MEDIUM",
+      "focus_areas": ["Youth Development Platforms", "Fan Engagement"]
+    }
+  ],
+  "recommendations": [
+    "Establish direct monitoring of Saudi sports federation procurement portals",
+    "Develop Arabic-language RFP response capabilities",
+    "Create sports-specific solution templates",
+    "Set up automated alert system for sports organizations",
+    "Focus on Middle East market where sports investment is highest"
+  ],
+  "scan_progress": {
+    "completed": 20,
+    "remaining": 30,
+    "percentage": 40
+  }
+}

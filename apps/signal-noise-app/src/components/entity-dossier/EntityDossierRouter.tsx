@@ -9,7 +9,7 @@ import { LeagueDossier } from './LeagueDossier'
 import { GenericEntityDossier } from './GenericEntityDossier'
 import { EnhancedClubDossier } from './EnhancedClubDossier'
 import { EnhancedPersonDossier } from './EnhancedPersonDossier'
-import { EnhancedArsenalDossier } from './EnhancedArsenalDossier'
+import EnhancedArsenalDossier from './EnhancedArsenalDossier'
 import { Button } from '@/components/ui/button'
 import { Zap, Eye } from 'lucide-react'
 

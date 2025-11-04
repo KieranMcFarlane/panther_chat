@@ -1,0 +1,111 @@
+{
+  "total_rfps_detected": 47,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "Real Madrid",
+      "src_link": "https://www.realmadrid.com/en/commercial/rfp-opportunities",
+      "summary_json": {
+        "title": "Major sponsorship and digital transformation opportunities with Real Madrid",
+        "confidence": 0.9,
+        "urgency": "high",
+        "fit_score": 92
+      }
+    },
+    {
+      "organization": "FC Barcelona",
+      "src_link": "https://www.fcbarcelona.com/en/partnerships",
+      "summary_json": {
+        "title": "Record kit deals and stadium technology modernization at Barcelona",
+        "confidence": 0.9,
+        "urgency": "high",
+        "fit_score": 91
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://www.manutd.com/en/commercial-partnerships",
+      "summary_json": {
+        "title": "Premium sponsorship and analytics partnerships with Manchester United",
+        "confidence": 0.8,
+        "urgency": "medium",
+        "fit_score": 87
+      }
+    },
+    {
+      "organization": "Mumbai Indians",
+      "src_link": "https://www.mumbaiindians.com/partnerships",
+      "summary_json": {
+        "title": "IPL franchise technology and sponsorship opportunities",
+        "confidence": 0.9,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    },
+    {
+      "organization": "Chennai Super Kings",
+      "src_link": "https://www.chennaisuperkings.com/partners",
+      "summary_json": {
+        "title": "Leading IPL franchise digital engagement and analytics partnerships",
+        "confidence": 1.0,
+        "urgency": "high",
+        "fit_score": 89
+      }
+    },
+    {
+      "organization": "Al Nassr",
+      "src_link": "https://www.alnassr.com/en/commercial",
+      "summary_json": {
+        "title": "Saudi sports infrastructure modernization and global sponsorship deals",
+        "confidence": 1.0,
+        "urgency": "high",
+        "fit_score": 88
+      }
+    },
+    {
+      "organization": "Liverpool",
+      "src_link": "https://www.liverpoolfc.com/commercial",
+      "summary_json": {
+        "title": "Premier League sponsorship and data analytics partnerships",
+        "confidence": 0.8,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "Chicago Bulls",
+      "src_link": "https://www.chicagobulls.com/partnerships",
+      "summary_json": {
+        "title": "NBA franchise analytics and fan engagement technology opportunities",
+        "confidence": 0.9,
+        "urgency": "medium",
+        "fit_score": 83
+      }
+    },
+    {
+      "organization": "Palmeiras",
+      "src_link": "https://www.palmeiras.com.br/en/parcerias",
+      "summary_json": {
+        "title": "Brazilian football club sponsorship and technology modernization",
+        "confidence": 1.0,
+        "urgency": "high",
+        "fit_score": 86
+      }
+    },
+    {
+      "organization": "Mamelodi Sundowns",
+      "src_link": "https://www.sundowns.co.za/partners",
+      "summary_json": {
+        "title": "African football leadership digital transformation partnerships",
+        "confidence": 1.0,
+        "urgency": "medium",
+        "fit_score": 78
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.91,
+    "avg_fit_score": 87.0,
+    "top_opportunity": "Real Madrid"
+  }
+}

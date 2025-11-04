@@ -57,6 +57,9 @@ export class AutonomousRFPManager {
     
     // Initialize Neo4j connection
     this.neo4jService.initialize();
+    
+    // Populate standard entities from Neo4j
+    this.populateEntitiesFromNeo4j();
   }
 
   /**
@@ -72,12 +75,8 @@ export class AutonomousRFPManager {
       'Liverpool FC', 'Chelsea FC', 'Manchester City', 'PSG', 'Juventus'
     ];
 
-    // Standard entities (top 500 from your analysis)
-    const standardEntities = [
-      'Boston Athletic Association', 'Athletics Canada', 'Cricket West Indies',
-      'American Cricket Enterprises', 'UCI (Union Cycliste Internationale)',
-      // ... 495 more entities from your successful analysis
-    ];
+    // Standard entities from Neo4j with yellowPantherPriority scoring
+    // Will be populated dynamically from Neo4j query
 
     return {
       priorityEntities,
@@ -293,8 +292,8 @@ export class AutonomousRFPManager {
     });
 
     try {
-      // For standard monitoring, use batch processing to manage load
-      const batchSize = 50;
+      // For standard monitoring, use 250-entity batch processing (from COMPREHENSIVE-RFP-MONITORING-SYSTEM.md)
+      const batchSize = 250;
       const batches = Math.ceil(this.config.standardEntities.length / batchSize);
       let totalResults = [];
 
@@ -440,6 +439,55 @@ export class AutonomousRFPManager {
     }
     
     return batchResults;
+  }
+
+  /**
+   * Populate entities from Neo4j using the original methodology criteria
+   */
+  private async populateEntitiesFromNeo4j(): Promise<void> {
+    try {
+      const session = this.neo4jService.getDriver().session();
+      
+      // Query for entities matching COMPREHENSIVE-RFP-MONITORING-SYSTEM.md criteria
+      const query = `
+        MATCH (e:Entity)
+        WHERE e.yellowPantherPriority <= 5
+        AND e.type IN ['Club', 'League', 'Federation', 'Tournament', 'International Federation', 'Sports Federation', 'Professional Football League']
+        AND e.digitalTransformationScore >= 60
+        RETURN e.name as name
+        ORDER BY e.yellowPantherPriority ASC, e.digitalTransformationScore DESC
+        LIMIT 1000
+      `;
+      
+      const result = await session.run(query);
+      const entityNames = result.records.map(record => record.get('name'));
+      
+      // Update the config with dynamically fetched entities
+      this.config.standardEntities = entityNames;
+      
+      await session.close();
+      
+      await liveLogService.info('Populated entities from Neo4j', {
+        category: 'neo4j',
+        source: 'AutonomousRFPManager',
+        message: `Loaded ${entityNames.length} high-priority entities from Neo4j`,
+        data: {
+          totalEntities: entityNames.length,
+          priorityCriteria: 'yellowPantherPriority <= 5',
+          digitalScoreCriteria: 'digitalTransformationScore >= 60'
+        },
+        tags: ['neo4j-population', 'entity-loading']
+      });
+      
+    } catch (error) {
+      await liveLogService.error('Failed to populate entities from Neo4j', {
+        category: 'error',
+        source: 'AutonomousRFPManager',
+        message: `Neo4j population error: ${error.message}`,
+        data: { error: error.message },
+        tags: ['neo4j-population', 'error']
+      });
+    }
   }
 
   /**

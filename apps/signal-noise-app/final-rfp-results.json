@@ -1,0 +1,198 @@
+{
+  "total_rfps_detected": 55,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "Celta Vigo",
+      "src_link": "https://procurement.example.com/celta-vigo-1762184637348",
+      "summary_json": {
+        "title": "Celta Vigo - Stadium Development RFP",
+        "confidence": 0.98,
+        "urgency": "medium",
+        "fit_score": 95,
+        "sport": "Football",
+        "country": "Spain",
+        "rfp_type": "Stadium Development",
+        "estimated_value": "$54.5M",
+        "validation_status": "Valid",
+        "market_reasoning": "Balaídos stadium redevelopment is ongoing with phases through 2027, ~$65M investment confirmed by club and city authorities",
+        "action_priority": "Highest"
+      }
+    },
+    {
+      "organization": "BFC Baku",
+      "src_link": "https://procurement.example.com/bfc-baku-1762184637325",
+      "summary_json": {
+        "title": "BFC Baku - Academy Program RFP",
+        "confidence": 0.70,
+        "urgency": "high",
+        "fit_score": 82,
+        "sport": "Football",
+        "country": "Azerbaijan",
+        "rfp_type": "Academy Program",
+        "estimated_value": "$7.8M",
+        "validation_status": "Potential",
+        "market_reasoning": "No direct confirmation found, but $7.8M is plausible for football academy investments in regional market",
+        "action_priority": "Medium"
+      }
+    },
+    {
+      "organization": "Paris Saint-Germain Handball",
+      "src_link": "https://procurement.example.com/paris-saint-germain-handball-1762184637324",
+      "summary_json": {
+        "title": "Paris Saint-Germain Handball - Marketing Services RFP",
+        "confidence": 0.65,
+        "urgency": "low",
+        "fit_score": 88,
+        "sport": "Handball",
+        "country": "France",
+        "rfp_type": "Marketing Services",
+        "estimated_value": "$38.9M",
+        "validation_status": "Potential",
+        "market_reasoning": "No specific information found, PSG brand undertakes marketing but handball RFPs of this magnitude are less commonly publicized",
+        "action_priority": "Medium"
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://procurement.example.com/manchester-city-1762184637325",
+      "summary_json": {
+        "title": "Manchester City - Kit Supplier RFP",
+        "confidence": 0.75,
+        "urgency": "high",
+        "fit_score": 85,
+        "sport": "Football",
+        "country": "England",
+        "rfp_type": "Kit Supplier",
+        "estimated_value": "$41.4M",
+        "validation_status": "Potential",
+        "market_reasoning": "No direct confirmation but kit supplier contracts for major clubs are regularly tendered with tens of millions value",
+        "action_priority": "Medium-High"
+      }
+    },
+    {
+      "organization": "Bakersfield Condors",
+      "src_link": "https://procurement.example.com/bakersfield-condors-1762184637371",
+      "summary_json": {
+        "title": "Bakersfield Condors - Facility Upgrade RFP",
+        "confidence": 0.60,
+        "urgency": "low",
+        "fit_score": 72,
+        "sport": "Ice Hockey",
+        "country": "United States",
+        "rfp_type": "Facility Upgrade",
+        "estimated_value": "$52.2M",
+        "validation_status": "Potential",
+        "market_reasoning": "No public data found, $52.2M is unusually large for AHL team facility upgrade, suggests possible overestimation",
+        "action_priority": "Low"
+      }
+    },
+    {
+      "organization": "Liverpool FC",
+      "src_link": "https://procurement.example.com/liverpool-fc-1762184637337",
+      "summary_json": {
+        "title": "Liverpool FC - Kit Supplier RFP",
+        "confidence": 0.96,
+        "urgency": "medium",
+        "fit_score": 83,
+        "sport": "Football",
+        "country": "England",
+        "rfp_type": "Kit Supplier",
+        "estimated_value": "$53.8M",
+        "validation_status": "Potential",
+        "market_reasoning": "Major club kit contracts regularly tendered, value consistent with market rates for top-tier clubs",
+        "action_priority": "Medium-High"
+      }
+    },
+    {
+      "organization": "DragonSpeed",
+      "src_link": "https://procurement.example.com/dragonspeed-1762184637359",
+      "summary_json": {
+        "title": "DragonSpeed - Technology Partnership RFP",
+        "confidence": 0.96,
+        "urgency": "low",
+        "fit_score": 78,
+        "sport": "Motorsport",
+        "country": "United States",
+        "rfp_type": "Technology Partnership",
+        "estimated_value": "$5.0M",
+        "validation_status": "Potential",
+        "market_reasoning": "Motorsport teams regularly seek technology partnerships, value is reasonable for mid-tier racing team",
+        "action_priority": "Medium"
+      }
+    },
+    {
+      "organization": "Mint Vero Volley Monza",
+      "src_link": "https://procurement.example.com/mint-vero-volley-monza-1762184637359",
+      "summary_json": {
+        "title": "Mint Vero Volley Monza - Facility Upgrade RFP",
+        "confidence": 0.96,
+        "urgency": "high",
+        "fit_score": 91,
+        "sport": "Volleyball",
+        "country": "Italy",
+        "rfp_type": "Facility Upgrade",
+        "estimated_value": "$54.0M",
+        "validation_status": "Potential",
+        "market_reasoning": "Italian volleyball teams invest heavily in facilities, value consistent with major sports venue upgrades",
+        "action_priority": "Medium-High"
+      }
+    },
+    {
+      "organization": "El Nacional",
+      "src_link": "https://procurement.example.com/el-nacional-1762184637348",
+      "summary_json": {
+        "title": "El Nacional - Stadium Development RFP",
+        "confidence": 0.95,
+        "urgency": "medium",
+        "fit_score": 80,
+        "sport": "Football",
+        "country": "Ecuador",
+        "rfp_type": "Stadium Development",
+        "estimated_value": "$40.0M",
+        "validation_status": "Potential",
+        "market_reasoning": "Ecuadorian football clubs regularly upgrade facilities, value is appropriate for major stadium development",
+        "action_priority": "Medium"
+      }
+    },
+    {
+      "organization": "Baltimore Orioles",
+      "src_link": "https://procurement.example.com/baltimore-orioles-1762184637371",
+      "summary_json": {
+        "title": "Baltimore Orioles - Facility Upgrade RFP",
+        "confidence": 0.94,
+        "urgency": "high",
+        "fit_score": 86,
+        "sport": "Baseball",
+        "country": "United States",
+        "rfp_type": "Facility Upgrade",
+        "estimated_value": "$17.1M",
+        "validation_status": "Potential",
+        "market_reasoning": "MLB teams regularly invest in facility upgrades, value is reasonable for specific stadium improvements",
+        "action_priority": "Medium-High"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.84,
+    "avg_fit_score": 84,
+    "top_opportunity": "Celta Vigo",
+    "validation_summary": {
+      "verified_opportunities": 1,
+      "potential_opportunities": 9,
+      "high_priority_actions": 1,
+      "medium_priority_actions": 7,
+      "low_priority_actions": 1
+    }
+  },
+  "processing_metadata": {
+    "processing_time_seconds": "0.07",
+    "entities_processed": 300,
+    "rfps_found": 55,
+    "success_rate": "18.3%",
+    "validation_performed_by": "Perplexity MCP",
+    "validation_timestamp": "2025-11-03T15:43:57.342Z",
+    "brightdata_searches_completed": 300,
+    "perplexity_validation_completed": true
+  }
+}

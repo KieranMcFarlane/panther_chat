@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { config } from '@/lib/config';
-import { embedText } from '@/lib/embeddings';
+import { searchEntityEmbeddings } from '@/lib/embeddings';
 
 export async function POST(request: NextRequest) {
 	try {
-		const { query, limit = 10, score_threshold = 0.2 } = await request.json();
+		const { query, limit = 10, score_threshold = 0.2, entity_types } = await request.json();
 		if (!query || typeof query !== 'string') {
 			return NextResponse.json({ results: [], total: 0, query: '', note: 'empty_query' });
 		}
@@ -14,34 +13,26 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ results: [], total: 0, query, note: 'missing_openai_api_key' });
 		}
 
-		const vector = await embedText(query);
-		const res = await fetch(`${config.qdrant.url}/collections/${config.qdrant.collection}/points/search`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'api-key': config.qdrant.apiKey,
-			},
-			body: JSON.stringify({ vector, limit, score_threshold, with_payload: true }),
+		// Use Supabase vector search instead of Qdrant
+		const results = await searchEntityEmbeddings(query, {
+			entityTypes: entity_types,
+			matchThreshold: score_threshold,
+			matchCount: limit
 		});
 
-		if (!res.ok) {
-			const text = await res.text().catch(() => '');
-			return NextResponse.json({ results: [], total: 0, query, note: `qdrant_error:${res.status}`, details: text });
-		}
-		const data = await res.json().catch(() => ({ result: [] }));
-		const results = (data.result || []).map((r: any) => {
-			const payload = r.payload || {};
-			return {
-				id: String(r.id),
-				name: payload.title || payload.name || String(r.id),
-				type: payload.entity_type || 'unknown',
-				score: r.score,
-				metadata: payload,
-			};
-		});
+		// Transform results to match expected format
+		const transformedResults = results.map((r: any) => ({
+			id: String(r.id),
+			entity_id: r.entity_id,
+			name: r.name,
+			type: r.entity_type,
+			score: r.similarity,
+			metadata: r.metadata || {},
+		}));
 
-		return NextResponse.json({ results, total: results.length, query });
+		return NextResponse.json({ results: transformedResults, total: transformedResults.length, query });
 	} catch (error: any) {
+		console.error('Vector search error:', error);
 		// Graceful fallback
 		return NextResponse.json({ results: [], total: 0, query: '', note: 'internal_error' });
 	}

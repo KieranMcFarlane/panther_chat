@@ -1,338 +1,270 @@
-# 🚀 Level 3 Autonomous RFP System - Production Deployment Guide
+# �� Signal Noise App - Complete Deployment Guide
 
-## Server Information
-- **Server IP**: 13.60.60.50
-- **User**: kieranmcfarlane
-- **SSH Key**: `/Users/kieranmcfarlane/Downloads/panther_chat/yellowpanther.pem`
-- **System**: Level 3 Autonomous RFP Intelligence
+## Overview
 
-## 🔐 SSH Connection Troubleshooting
+This guide explains how to build and deploy the Signal Noise App to your EC2 server.
 
-### Issue: Permission Denied (publickey,gssapi-keyex,gssapi-with-mic)
+## What Gets Deployed
 
-The SSH key is being rejected. This could be due to:
+### Files Included in Deployment Package:
+- ✅ **`.next/`** - Pre-built Next.js application (built locally)
+- ✅ **`public/`** - Static assets (images, icons, etc.)
+- ✅ **`package.json` & `package-lock.json`** - Dependencies list
+- ✅ **`next.config.js`** - Next.js configuration
+- ✅ **`tsconfig.json`** - TypeScript configuration
+- ✅ **`.env.production`** - Production environment variables
+- ✅ **`mcp-config.json` & `.mcp.json`** - MCP server configuration
+- ✅ **`src/`** - Source code (needed for API routes)
+- ✅ **`components/`** - React components (if exists)
+- ✅ **`lib/`** - Library files (if exists)
 
-1. **Server SSH Configuration**: The server may not have the public key in `authorized_keys`
-2. **SSH Key Format**: The key format may not be compatible
-3. **Server SSH Settings**: Server may require specific SSH settings
+### Files Excluded:
+- ❌ `node_modules/` - Will be installed on server
+- ❌ `.git/` - Not needed for production
+- ❌ `*.md` - Documentation files
+- ❌ `*.log` - Log files
+- ❌ `.next/` is included (but built locally, not on server)
 
-### Solution 1: Copy Public Key to Server
+## Prerequisites
+
+1. **Local Machine:**
+   - Node.js 18+ installed
+   - npm installed
+   - SSH access to EC2 server
+   - `.pem` file for EC2 authentication
+
+2. **EC2 Server:**
+   - Ubuntu/Debian-based Linux
+   - SSH access configured
+   - Port 8001 accessible (or your chosen port)
+
+3. **Required Files:**
+   - `yellowpanther.pem` at `/Users/kieranmcfarlane/Downloads/panther_chat/yellowpanther.pem`
+   - `.env.production` configured with your API keys
+
+## Quick Deployment
+
+### Option 1: Automated Script (Recommended)
 
 ```bash
-# Extract public key from private key
-ssh-keygen -y -f /Users/kieranmcfarlane/Downloads/panther_chat/yellowpanther.pem > /tmp/public_key.pub
-
-# Display the public key (copy this output)
-echo "=== PUBLIC KEY TO ADD TO SERVER ==="
-cat /tmp/public_key.pub
-echo "=================================="
+cd apps/signal-noise-app
+./deploy-complete.sh
 ```
 
-### Solution 2: Manual Key Setup
+This script will:
+1. ✅ Build the app locally (verifies it works)
+2. ✅ Create a deployment package with all necessary files
+3. ✅ Test SSH connection to server
+4. ✅ Upload package to server
+5. ✅ Install Node.js (if needed)
+6. ✅ Install PM2 process manager (if needed)
+7. ✅ Install dependencies on server
+8. ✅ Configure PM2 to run the app
+9. ✅ Start the application
+10. ✅ Verify deployment
 
-If you have server access through other means (console access, etc.):
+### Option 2: Manual Deployment
+
+#### Step 1: Build Locally
 
 ```bash
-# On the server (13.60.60.50):
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
-echo "YOUR_PUBLIC_KEY_HERE" >> ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
-```
-
-### Solution 3: Alternative Deployment Methods
-
-1. **SCP File Transfer**:
-```bash
-# Copy deployment package directly
-scp -i /Users/kieranmcfarlane/Downloads/panther_chat/yellowpanther.pem production-deploy/* kieranmcfarlane@13.60.60.50:/tmp/
-```
-
-2. **Git-based Deployment**:
-```bash
-# Deploy via git repository
-git clone https://your-repo.git
-cd your-repo
-npm install
+cd apps/signal-noise-app
 npm run build
-npm run deploy:prod
 ```
 
-3. **Manual Deployment**:
-- Upload files via SFTP or file manager
-- Use server console to run commands
+Verify build succeeded:
+```bash
+ls -la .next/
+```
 
-## 📦 Deployment Files Created
-
-The following deployment files have been prepared:
-
-### Core Deployment Scripts
-- `deploy-production.sh` - Main deployment script
-- `ecosystem.config.js` - PM2 process management
-- `nginx.conf` - Nginx reverse proxy configuration
-- `.env.production.template` - Environment variables template
-
-### Monitoring & Maintenance
-- `scripts/monitor-system.sh` - System monitoring
-- `scripts/backup-system.sh` - Automated backups
-- `scripts/update-system.sh` - System updates
-- `scripts/ssl-setup.sh` - SSL certificate setup
-
-### Configuration Files
-- `system-services/rfp-autonomous.service` - System service configuration
-- `logrotate/rfp-autonomous` - Log rotation setup
-- `monit/monitrc` - Service monitoring
-
-## 🚀 Quick Start Deployment
-
-### Option 1: Automated Deployment (Preferred)
+#### Step 2: Create Deployment Package
 
 ```bash
-# 1. Copy deployment files to server
+tar -czf /tmp/deploy.tar.gz \
+  .next/ \
+  public/ \
+  package.json \
+  package-lock.json \
+  next.config.js \
+  tsconfig.json \
+  .env.production \
+  mcp-config.json \
+  .mcp.json \
+  src/
+```
+
+#### Step 3: Upload to Server
+
+```bash
 scp -i /Users/kieranmcfarlane/Downloads/panther_chat/yellowpanther.pem \
-   production-deploy/deploy-production.sh \
-   kieranmcfarlane@13.60.60.50:/tmp/
-
-# 2. Connect to server and run deployment
-ssh -i /Users/kieranmcfarlane/Downloads/panther_chat/yellowpanther.pem \
-   kieranmcfarlane@13.60.60.50 \
-   "chmod +x /tmp/deploy-production.sh && /tmp/deploy-production.sh"
+  /tmp/deploy.tar.gz \
+  ec2-user@51.20.117.84:/tmp/
 ```
 
-### Option 2: Step-by-Step Manual Deployment
+#### Step 4: Setup Server
 
+SSH into server:
 ```bash
-# 1. Connect to server
 ssh -i /Users/kieranmcfarlane/Downloads/panther_chat/yellowpanther.pem \
-   kieranmcfarlane@13.60.60.50
+  ec2-user@51.20.117.84
+```
 
-# 2. Run these commands on the server:
-sudo apt update && sudo apt upgrade -y
+On the server:
+```bash
+# Create directory
+mkdir -p /home/ec2-user/signal-noise-app
+cd /home/ec2-user/signal-noise-app
+
+# Extract files
+tar -xzf /tmp/deploy.tar.gz
+rm /tmp/deploy.tar.gz
+
+# Install Node.js (if needed)
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs npm nginx
+sudo apt-get install -y nodejs
+
+# Install PM2
 sudo npm install -g pm2
 
-# 3. Setup application
-sudo mkdir -p /opt/rfp-autonomous
-sudo chown kieranmcfarlane:kieranmcfarlane /opt/rfp-autonomous
-cd /opt/rfp-autonomous
+# Install dependencies
+npm install --production
 
-# 4. Copy your application files here (via git or scp)
-# 5. Install dependencies
-npm install
-npm run build
+# Copy environment file
+cp .env.production .env.local
 
-# 6. Setup environment
-cp .env.production.template .env.production
-# Edit .env.production with your actual API keys
+# Create PM2 config
+cat > ecosystem.config.js << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'signal-noise-app',
+    script: 'npm',
+    args: 'start',
+    cwd: '/home/ec2-user/signal-noise-app',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 8001
+    }
+  }]
+};
+EOF
 
-# 7. Start with PM2
+# Start app
 pm2 start ecosystem.config.js
 pm2 save
 pm2 startup
 ```
 
-## 🔧 Environment Configuration
+## Server Configuration
 
-### Required Environment Variables
+### Port Configuration
 
-Update `.env.production` with your actual values:
+The app runs on **port 8001** by default. To change:
+
+1. Update `PORT` in `deploy-complete.sh`
+2. Update `package.json` start script: `"start": "next start -p YOUR_PORT"`
+3. Update PM2 ecosystem config
+4. Update AWS Security Group to allow your port
+
+### Environment Variables
+
+Ensure `.env.production` contains:
 
 ```bash
-# Claude Agent SDK
-ANTHROPIC_API_KEY=your-anthropic-api-key
-ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic
+# Neo4j
+NEO4J_URI=neo4j+s://your-instance.databases.neo4j.io
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=your-password
 
-# Supabase Database
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-key
-
-# Neo4j Knowledge Graph
-NEO4J_URI=neo4j+s://your-neo4j-instance
-NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=your-neo4j-password
+# Claude API
+CLAUDE_API_KEY=your-key
 
 # MCP Tools
-BRIGHTDATA_API_TOKEN=your-brightdata-token
-PERPLEXITY_API_KEY=your-perplexity-key
+BRIGHTDATA_API_KEY=your-key
+PERPLEXITY_API_KEY=your-key
 
-# AWS S3 (for badges)
-AWS_ACCESS_KEY_ID=your-aws-access-key
-AWS_SECRET_ACCESS_KEY=your-aws-secret-key
-AWS_REGION=us-east-1
-S3_BUCKET_NAME=your-s3-bucket
-
-# Security
-NEXTAUTH_URL=https://your-domain.com
-NEXTAUTH_SECRET=$(openssl rand -base64 32)
-BRIGHTDATA_WEBHOOK_SECRET=$(openssl rand -base64 32)
+# Other API keys as needed
 ```
 
-## 🏥 Verification & Testing
+## Monitoring & Maintenance
 
-### 1. System Health Check
+### Check Application Status
 
 ```bash
-# Check application status
-pm2 status
-pm2 logs rfp-autonomous
-
-# Check web application
-curl http://localhost:3000/api/verification?check=all
-
-# Check system services
-sudo systemctl status nginx
+ssh -i yellowpanther.pem ec2-user@51.20.117.84 'pm2 status'
 ```
 
-### 2. Autonomous System Verification
+### View Logs
 
 ```bash
-# Test Claude Agent SDK
-curl http://localhost:3000/api/verification?check=sdk
-
-# Test MCP Tools
-curl http://localhost:3000/api/verification?check=mcp
-
-# Test Autonomous Workflow
-curl http://localhost:3000/api/verification?check=autonomous
+ssh -i yellowpanther.pem ec2-user@51.20.117.84 'pm2 logs signal-noise-app'
 ```
 
-### 3. Dashboard Access
-
-- **Main Application**: `http://your-domain.com`
-- **Autonomous Dashboard**: `http://your-domain.com/level3-autonomous`
-- **System Monitoring**: `http://your-domain.com/terminal`
-- **API Verification**: `http://your-domain.com/api/verification?check=all`
-
-## 🔍 Monitoring & Maintenance
-
-### Real-time Monitoring
+### Restart Application
 
 ```bash
-# Application logs
-pm2 logs rfp-autonomous --lines 100
-
-# System monitoring
-pm2 monit
-
-# System logs
-tail -f /var/log/rfp-autonomous.log
+ssh -i yellowpanther.pem ec2-user@51.20.117.84 'pm2 restart signal-noise-app'
 ```
 
-### Automated Backups
+### Stop Application
 
 ```bash
-# Manual backup
-./scripts/backup-system.sh
-
-# Check backup schedule
-crontab -l
+ssh -i yellowpanther.pem ec2-user@51.20.117.84 'pm2 stop signal-noise-app'
 ```
 
-### System Updates
+## Troubleshooting
 
-```bash
-# Run system updates
-./scripts/update-system.sh
+### Build Fails Locally
 
-# Update application
-git pull origin main
-npm install
-npm run build
-pm2 restart rfp-autonomous
-```
+- Check Node.js version: `node --version` (should be 18+)
+- Clear cache: `rm -rf .next node_modules && npm install`
+- Check for TypeScript errors: `npm run build`
 
-## 🎯 Level 3 Autonomous Features
+### Deployment Fails
 
-### Autonomous Workflow Status
+- Verify SSH connection: `ssh -i yellowpanther.pem ec2-user@51.20.117.84`
+- Check server has enough space: `df -h`
+- Check server logs: `pm2 logs signal-noise-app`
 
-The system includes these autonomous components:
+### App Not Responding
 
-1. **LinkedIn Monitor Agent**: Scans LinkedIn for RFP opportunities 24/7
-2. **RFP Analysis Agent**: Analyzes opportunities using Claude AI
-3. **Response Generator Agent**: Creates customized proposals
-4. **Outreach Coordinator Agent**: Manages email campaigns
-5. **Learning Agent**: Improves from outcomes and feedback
+- Check if app is running: `pm2 status`
+- Check port is open: `curl http://localhost:8001`
+- Check AWS Security Group allows port 8001
+- View error logs: `pm2 logs signal-noise-app --err`
 
-### Verification Commands
+### Dependencies Issues
 
-```bash
-# Check autonomous agents status
-curl http://localhost:3000/api/autonomous/status
+If you get "module not found" errors:
+- Reinstall dependencies: `npm install --production`
+- Check `package.json` has all required dependencies
+- Verify `.next` folder contains the built app
 
-# View recent autonomous activities
-curl http://localhost:3000/api/autonomous/activities
+## Updating the Deployment
 
-# Check learning progress
-curl http://localhost:3000/api/autonomous/learning
-```
+To update after code changes:
 
-## 🚨 Troubleshooting
+1. Make your code changes
+2. Run `./deploy-complete.sh` again
+3. The script will rebuild and redeploy automatically
 
-### Common Issues
+## Access the Application
 
-1. **Application won't start**:
-   ```bash
-   pm2 logs rfp-autonomous
-   # Check environment variables in .env.production
-   ```
+After successful deployment:
 
-2. **Claude Agent SDK not working**:
-   ```bash
-   curl http://localhost:3000/api/verification?check=sdk
-   # Verify ANTHROPIC_API_KEY is correct
-   ```
+**URL:** `http://51.20.117.84:8001`
 
-3. **MCP Tools not connected**:
-   ```bash
-   curl http://localhost:3000/api/verification?check=mcp
-   # Check MCP server configurations
-   ```
+Make sure:
+- ✅ AWS Security Group allows inbound traffic on port 8001
+- ✅ EC2 instance has a public IP
+- ✅ Firewall (ufw) allows port 8001
 
-4. **Database connection issues**:
-   ```bash
-   curl http://localhost:3000/api/verification?check=database
-   # Verify database credentials and network access
-   ```
+## Notes
 
-### Performance Optimization
-
-```bash
-# Check memory usage
-pm2 show rfp-autonomous
-
-# Optimize PM2 configuration
-pm2 delete rfp-autonomous
-pm2 start ecosystem.config.js
-
-# Restart services
-sudo systemctl restart nginx
-```
-
-## 📞 Support
-
-If you encounter issues:
-
-1. Check logs: `pm2 logs rfp-autonomous`
-2. Run verification: `curl http://localhost:3000/api/verification?check=all`
-3. Check system status: `pm2 status`
-4. Review this guide for common solutions
-
-## 🎉 Success Criteria
-
-Your Level 3 Autonomous RFP System is successfully deployed when:
-
-- ✅ Application responds on port 3000
-- ✅ Nginx reverse proxy is working
-- ✅ PM2 processes are running stable
-- ✅ Claude Agent SDK verification passes
-- ✅ MCP tools are connected
-- ✅ Autonomous agents are active
-- ✅ Database connections work
-- ✅ SSL certificate is installed (optional)
-- ✅ System monitoring is active
-- ✅ Backup scripts are scheduled
-
----
-
-**Next Steps**: After successful deployment, access your autonomous dashboard and initialize the learning system with your first RFP analysis workflow.
+- The deployment script builds locally to catch errors early
+- Only production dependencies are installed on the server
+- PM2 ensures the app restarts automatically if it crashes
+- PM2 is configured to start on server reboot

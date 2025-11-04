@@ -193,7 +193,8 @@ function generateWebhookId(): string {
 /**
  * 📊 Example webhook payloads for testing
  */
-export const exampleWebhookPayloads = {
+// Example webhook payloads - moved to documentation
+const exampleWebhookPayloads = {
   rfp_alert: {
     type: 'rfp_alert',
     data: {
