@@ -1,0 +1,173 @@
+# BrightData LinkedIn Monitoring Zone Configuration
+# Deployed zones for continuous LinkedIn procurement monitoring
+
+zones:
+  linkedin_posts_monitor:
+    description: "Continuous monitoring of LinkedIn posts for procurement signals"
+    website: "linkedin.com"
+    pages:
+      - path: "/feed/"
+        type: "dynamic_content"
+        poll_interval: 300  # 5 minutes
+        filters:
+          content_contains:
+            - "request for proposal"
+            - "rfp"
+            - "tende"
+            - "procurement"
+            - "digital transformation"
+            - "technology upgrade"
+            - "consultancy services"
+            - "vendor selection"
+          industry_contains:
+            - "Sports"
+            - "Entertainment"
+            - "Recreation"
+            - "Leisure"
+          exclude_brands:
+            - "sales"
+            - "marketing"
+            - "recruiting"
+            - "job posting"
+        webhooks:
+          - url: "https://your-domain.com/webhook/brightdata/linkedin"
+            secret: "webhook_secret_key"
+            events:
+              - "new_procurement_post"
+              - "high_engagement_post"
+              - "author_role_match"
+
+  linkedin_articles_monitor:
+    description: "Monitor LinkedIn articles for detailed procurement announcements"
+    website: "linkedin.com"
+    pages:
+      - path: "/posts/"
+        type: "article_content"
+        poll_interval: 600  # 10 minutes
+        filters:
+          content_contains:
+            - "sports technology"
+            - "stadium innovation"
+            - "fan engagement technology"
+            - "competition management"
+            - "digital transformation sports"
+          author_role_contains:
+            - "Director"
+            - "Manager"
+            - "Chief Technology Officer"
+            - "Procurement"
+            - "Operations"
+       删除webhooks:
+          - url: "https://your-domain.com/webhook/brightdata/linkedin"
+            secret: "webhook_secret_key"
+            events:
+              - "detailed_procurement_article"
+
+  linkedin_companies_monitor:
+    description: "Monitor sports companies for procurement announcements"
+    website: "linkedin.com"
+    pages:
+      - path: "/company/"
+        companies:
+          - "Premier League"
+          - "Championship Football"
+          - "Rugby World Cup"
+          - "ICC Cricket"
+          - "Wimbledon"
+          - "Ryder Cup"
+          - "European Tour"
+          - "Formula 1"
+          - "Manchester United"
+          - "Liverpool FC"
+          - "Arsenal FC"
+          - "Chelsea FC"
+          - "Manchester City"
+          - "Tottenham Hotspur"
+        type: "company_updates"
+        poll_interval: 900  # 15 minutes
+        filters:
+          post_types:
+            - "company_announcements"
+            - "technology_updates"
+            - "procurement_notices"
+            - "digital_transformation"
+        webhooks:
+          - url: "https://your-domain.com/webhook/brightdata/linkedin"
+            secret: "webhook_secret_key"
+            events:
+              - "company_procurement_update"
+
+webhook_security:
+  signature_header: "X-Brightdata-Signature"
+  timestamp_tolerance: 300  # 5 minutes
+  allowed_ips: []  # Restrict to BrightData IP ranges
+  rate_limits:
+    max_requests_per_minute: 100
+    burst_limit: 20
+
+monitoring_settings:
+  detection_thresholds:
+    confidence_score: 0.7
+    author_credibility_weight: 0.3
+    content_relevance_weight: 0.5
+    engagement_weight: 0.2
+  
+  notification_levels:
+    high_priority:
+      min_opportunity_score: 80
+      required_fields: ["organization", "contact_person", "estimated_value"]
+    medium_priority:
+      min_opportunity_score: 60
+      required_fields: ["organization", "procurement_type"]
+    low_priority:
+      min_opportunity_score: 40
+      required_fields: ["organization"]
+
+automated_actions:
+  high_priority_rfp:
+    - send_immediate_notification
+    - create_dossier_task
+    - schedule_research_call
+    - add_to_crm_pipeline
+  
+  medium_priority_rfp:
+    - send_daily_summary
+    - add_to_monitoring_list
+    - schedule_follow_up
+  
+  low_priority_rfp:
+    - archive_for_analysis
+    - add_to_weekly_report
+
+integration_endpoints:
+  neo4j_mcp:
+    endpoint: "http://localhost:8080/api/mcp/neo4j"
+    operations:
+      - name: "createRFPNodes"
+        description: "Store detected RFPs in knowledge graph"
+      - name: "updateOrganizationProfile"
+        description: "Update organization profile with procurement info"
+  
+  copilotkit_dashboard:
+    endpoint: "http://localhost:3000/api/copilotkit"
+    operations:
+      - name: "push_notification"
+        description: "Send real-time notification to dashboard"
+  
+  email_service:
+    endpoint: "http://localhost:5000/api/email"
+    operations:
+      - name: "send_rfp_alert"
+        description: "Email notification for high-priority RFPs"
+
+environment_config:
+  development:
+    webhook_url: "http://localhost:8002/webhook/brightdata/linkedin"
+    brightdata_zone: "linkedin_posts_monitor_dev"
+    log_level: "DEBUG"
+  
+  production:
+    webhook_url: "https://yellow-panther.com/webhook/brightdata/linkedin"
+    brightdata_zone: "linkedin_posts_monitor"
+    log_level: "INFO"
+

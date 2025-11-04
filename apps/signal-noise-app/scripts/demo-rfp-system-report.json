@@ -1,0 +1,268 @@
+{
+  "timestamp": "2025-10-10T01:01:22.728Z",
+  "execution_summary": {
+    "total_duration_seconds": "0.06",
+    "overall_success": true,
+    "phases_completed": [
+      "capture",
+      "storage",
+      "neo4j"
+    ]
+  },
+  "key_metrics": {
+    "entities_monitored": 10,
+    "rfps_discovered": 13,
+    "high_value_opportunities": 11,
+    "rfps_stored": 13,
+    "links_verified": 11,
+    "neo4j_nodes_created": 13,
+    "neo4j_relationships_created": 34,
+    "entities_with_intelligence": 7
+  },
+  "top_opportunities": [
+    {
+      "title": "Mobile App Development for NFL",
+      "organization": "NFL",
+      "fit_score": 97,
+      "confidence": 86,
+      "category": "Mobile Application Development",
+      "value": "$300,000-$600,000",
+      "urgency": "high",
+      "source_url": "https://procurement.nfl.com/rfp-1760058082727"
+    },
+    {
+      "title": "Fan Engagement Platform - Arsenal",
+      "organization": "Arsenal",
+      "fit_score": 94,
+      "confidence": 92,
+      "category": "Fan Engagement Platform",
+      "value": "$400,000-$800,000",
+      "urgency": "high",
+      "source_url": "https://procurement.arsenal.com/rfp-1760058082727"
+    },
+    {
+      "title": "Ticketing System Integration - Manchester United",
+      "organization": "Manchester United",
+      "fit_score": 89,
+      "confidence": 92,
+      "category": "Ticketing System",
+      "value": "$250,000-$500,000",
+      "urgency": "medium",
+      "source_url": "https://procurement.manchesterunited.com/rfp-1760058082727"
+    },
+    {
+      "title": "Fan Engagement Platform - NFL",
+      "organization": "NFL",
+      "fit_score": 89,
+      "confidence": 92,
+      "category": "Fan Engagement Platform",
+      "value": "$400,000-$800,000",
+      "urgency": "medium",
+      "source_url": "https://procurement.nfl.com/rfp-1760058082727"
+    },
+    {
+      "title": "Manchester United Digital Transformation RFP",
+      "organization": "Manchester United",
+      "fit_score": 88,
+      "confidence": 87,
+      "category": "Digital Transformation",
+      "value": "$500,000-$1,000,000",
+      "urgency": "medium",
+      "source_url": "https://procurement.manchesterunited.com/rfp-1760058082727"
+    },
+    {
+      "title": "Ticketing System Integration - NBA",
+      "organization": "NBA",
+      "fit_score": 87,
+      "confidence": 90,
+      "category": "Ticketing System",
+      "value": "$250,000-$500,000",
+      "urgency": "medium",
+      "source_url": "https://procurement.nba.com/rfp-1760058082727"
+    },
+    {
+      "title": "NFL Digital Transformation RFP",
+      "organization": "NFL",
+      "fit_score": 86,
+      "confidence": 88,
+      "category": "Digital Transformation",
+      "value": "$500,000-$1,000,000",
+      "urgency": "medium",
+      "source_url": "https://procurement.nfl.com/rfp-1760058082727"
+    },
+    {
+      "title": "CRM and Data Analytics Platform for British Olympic Association (Team GB)",
+      "organization": "British Olympic Association (Team GB)",
+      "fit_score": 85,
+      "confidence": 87,
+      "category": "CRM System",
+      "value": "$350,000-$700,000",
+      "urgency": "medium",
+      "source_url": "https://procurement.britisholympicassociation(teamgb).com/rfp-1760058082727"
+    },
+    {
+      "title": "CRM and Data Analytics Platform for Manchester United",
+      "organization": "Manchester United",
+      "fit_score": 84,
+      "confidence": 87,
+      "category": "CRM System",
+      "value": "$350,000-$700,000",
+      "urgency": "medium",
+      "source_url": "https://procurement.manchesterunited.com/rfp-1760058082725"
+    },
+    {
+      "title": "Ticketing System Integration - British Olympic Association (Team GB)",
+      "organization": "British Olympic Association (Team GB)",
+      "fit_score": 84,
+      "confidence": 91,
+      "category": "Ticketing System",
+      "value": "$250,000-$500,000",
+      "urgency": "medium",
+      "source_url": "https://procurement.britisholympicassociation(teamgb).com/rfp-1760058082727"
+    }
+  ],
+  "entity_breakdown": [
+    {
+      "name": "Manchester United",
+      "type": "Club",
+      "sport": "Football",
+      "rfp_count": 3,
+      "high_value_count": 3,
+      "top_opportunity": {
+        "title": "Ticketing System Integration - Manchester United",
+        "fit_score": 89,
+        "category": "Ticketing System"
+      }
+    },
+    {
+      "name": "British Olympic Association (Team GB)",
+      "type": "Organization",
+      "sport": "Olympic Sports",
+      "rfp_count": 2,
+      "high_value_count": 2,
+      "top_opportunity": {
+        "title": "CRM and Data Analytics Platform for British Olympic Association (Team GB)",
+        "fit_score": 85,
+        "category": "CRM System"
+      }
+    },
+    {
+      "name": "FIFA",
+      "type": "Federation",
+      "sport": "Football",
+      "rfp_count": 1,
+      "high_value_count": 0,
+      "top_opportunity": {
+        "title": "CRM and Data Analytics Platform for FIFA",
+        "fit_score": 79,
+        "category": "CRM System"
+      }
+    },
+    {
+      "name": "International Olympic Committee",
+      "type": "Federation",
+      "sport": "Olympic Sports",
+      "rfp_count": 0,
+      "high_value_count": 0,
+      "top_opportunity": null
+    },
+    {
+      "name": "Premier League",
+      "type": "League",
+      "sport": "Football",
+      "rfp_count": 0,
+      "high_value_count": 0,
+      "top_opportunity": null
+    },
+    {
+      "name": "UEFA",
+      "type": "Federation",
+      "sport": "Football",
+      "rfp_count": 0,
+      "high_value_count": 0,
+      "top_opportunity": null
+    },
+    {
+      "name": "Arsenal",
+      "type": "Club",
+      "sport": "Football",
+      "rfp_count": 1,
+      "high_value_count": 1,
+      "top_opportunity": {
+        "title": "Fan Engagement Platform - Arsenal",
+        "fit_score": 94,
+        "category": "Fan Engagement Platform"
+      }
+    },
+    {
+      "name": "NBA",
+      "type": "League",
+      "sport": "Basketball",
+      "rfp_count": 2,
+      "high_value_count": 2,
+      "top_opportunity": {
+        "title": "Ticketing System Integration - NBA",
+        "fit_score": 87,
+        "category": "Ticketing System"
+      }
+    },
+    {
+      "name": "NFL",
+      "type": "League",
+      "sport": "American Football",
+      "rfp_count": 3,
+      "high_value_count": 3,
+      "top_opportunity": {
+        "title": "Mobile App Development for NFL",
+        "fit_score": 97,
+        "category": "Mobile Application Development"
+      }
+    },
+    {
+      "name": "World Athletics",
+      "type": "Federation",
+      "sport": "Athletics",
+      "rfp_count": 1,
+      "high_value_count": 0,
+      "top_opportunity": {
+        "title": "CRM and Data Analytics Platform for World Athletics",
+        "fit_score": 78,
+        "category": "CRM System"
+      }
+    }
+  ],
+  "data_quality": {
+    "average_confidence": 88,
+    "average_fit_score": 86,
+    "link_verification_rate": "84.6",
+    "completeness_score": 95
+  },
+  "business_impact": {
+    "estimated_pipeline_value": "$2M-$5M",
+    "immediate_actions": [
+      {
+        "priority": "critical",
+        "action": "Contact NFL about Mobile Application Development",
+        "deadline": "Within 48 hours",
+        "estimated_value": "$300,000-$600,000"
+      },
+      {
+        "priority": "high",
+        "action": "Contact Arsenal about Fan Engagement Platform",
+        "deadline": "Within 48 hours",
+        "estimated_value": "$400,000-$800,000"
+      },
+      {
+        "priority": "medium",
+        "action": "Contact Manchester United about Ticketing System",
+        "deadline": "Within 48 hours",
+        "estimated_value": "$250,000-$500,000"
+      }
+    ],
+    "strategic_insights": [
+      "Most active entities: NFL, Manchester United, NBA",
+      "Most common opportunity: CRM System (5 occurrences)",
+      "Average Yellow Panther fit: 86%"
+    ]
+  }
+}

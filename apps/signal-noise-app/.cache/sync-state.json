@@ -1,0 +1,32 @@
+{
+  "lastSync": "2025-10-06T18:25:05.380Z",
+  "processedEntities": {
+    "premier-league": {
+      "lastProcessed": "2025-10-06T18:25:03.873Z",
+      "entityType": "league",
+      "entityName": "Premier League",
+      "sport": "Football",
+      "tier": 1
+    },
+    "manchester-united": {
+      "lastProcessed": "2025-10-06T18:25:04.376Z",
+      "entityType": "club",
+      "entityName": "Manchester United",
+      "sport": "Football",
+      "tier": 1
+    },
+    "liverpool-fc": {
+      "lastProcessed": "2025-10-06T18:25:04.879Z",
+      "entityType": "club",
+      "entityName": "Liverpool FC",
+      "sport": "Football",
+      "tier": 1
+    }
+  },
+  "fullSyncCompleted": true,
+  "stats": {
+    "totalProcessed": 4,
+    "lastProcessedCount": 0,
+    "consecutiveFailures": 0
+  }
+}

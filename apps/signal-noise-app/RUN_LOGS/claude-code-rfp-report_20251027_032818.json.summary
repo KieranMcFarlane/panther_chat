@@ -1,0 +1,17 @@
+{
+    "run_metadata": {
+        "timestamp": "2025-10-27T03:30:10+00:00",
+        "total_entities_queried": 5,
+        "success_rate": 1.0,
+        "tools_used": [
+            "neo4j-mcp",
+            "brightData",
+            "perplexity-mcp"
+        ]
+    },
+    "entities_analyzed": "See raw output",
+    "summary": {
+        "total_opportunities": "See raw output",
+        "status": "completed"
+    }
+}

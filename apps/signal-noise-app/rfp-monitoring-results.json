@@ -1,0 +1,300 @@
+{
+  "monitoring_session": {
+    "started_at": "2025-11-02T04:26:40.749Z",
+    "last_updated": "2025-11-02T07:07:18.618Z",
+    "total_entities_checked": 10,
+    "total_batches_processed": 3,
+    "total_rfps_detected": 12,
+    "status": "completed"
+  },
+  "rfp_opportunities": [
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "West Indies",
+      "src_link": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633-fIlN",
+      "summary_json": {
+        "entity": "Cricket West Indies",
+        "source": "mock",
+        "search_query": "Cricket West Indies digital transformation RFP",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "REQUEST FOR PROPOSAL: CWI DIGITAL TRANSFORMATION",
+            "description": "Cricket West Indies invites proposals from digital transformation agencies for website redesign and mobile app development."
+          }
+        ]
+      },
+      "confidence": 0.95,
+      "detected_at": "2025-11-02T04:26:40.763Z",
+      "detection_method": "mock"
+    },
+    {
+      "organization": "Manchester United",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England",
+      "src_link": "https://example.com/rfp-manchester-united",
+      "summary_json": {
+        "entity": "Manchester United",
+        "source": "mock",
+        "search_query": "Manchester United digital platform RFP",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "Manchester United Digital Platform Modernization",
+            "description": "Seeking technology partners for comprehensive digital platform modernization and fan experience enhancement."
+          }
+        ]
+      },
+      "confidence": 0.85,
+      "detected_at": "2025-11-02T04:26:41.767Z",
+      "detection_method": "mock"
+    },
+    {
+      "organization": "Premier League",
+      "type": "League",
+      "sport": "Football",
+      "country": "England",
+      "src_link": "https://example.com/rfp-premier-league",
+      "summary_json": {
+        "entity": "Premier League",
+        "source": "mock",
+        "search_query": "Premier League digital platform RFP",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "Premier League Digital Platform Modernization",
+            "description": "Seeking technology partners for comprehensive digital platform modernization and fan experience enhancement."
+          }
+        ]
+      },
+      "confidence": 0.85,
+      "detected_at": "2025-11-02T04:26:42.770Z",
+      "detection_method": "mock"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "International",
+      "src_link": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633",
+      "summary_json": {
+        "entity": "Cricket West Indies",
+        "source": "brightdata",
+        "search_query": "site:linkedin.com \"Cricket West Indies\" request for proposal OR RFP OR request for tender",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "Cricket West Indies Digital Transformation RFP",
+            "url": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633",
+            "description": "Cricket West Indies invites proposals from highly skilled digital transformation and web development agencies to spearhead a comprehensive Digital Transformation initiative including website redesign ..."
+          }
+        ]
+      },
+      "confidence": 0.7,
+      "detected_at": "2025-11-02T04:33:05.430Z",
+      "detection_method": "brightdata"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "International",
+      "src_link": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633",
+      "summary_json": {
+        "entity": "Cricket West Indies",
+        "source": "brightdata",
+        "search_query": "site:linkedin.com \"Cricket West Indies\" digital transformation OR website development OR mobile app",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "Cricket West Indies Digital Transformation RFP",
+            "url": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633",
+            "description": "Cricket West Indies invites proposals from highly skilled digital transformation and web development agencies to spearhead a comprehensive Digital Transformation initiative including website redesign ..."
+          }
+        ]
+      },
+      "confidence": 0.7,
+      "detected_at": "2025-11-02T04:33:06.432Z",
+      "detection_method": "brightdata"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "International",
+      "src_link": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633",
+      "summary_json": {
+        "entity": "Cricket West Indies",
+        "source": "brightdata",
+        "search_query": "\"Cricket West Indies\" request for proposal OR RFP digital transformation OR website development",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "Cricket West Indies Digital Transformation RFP",
+            "url": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633",
+            "description": "Cricket West Indies invites proposals from highly skilled digital transformation and web development agencies to spearhead a comprehensive Digital Transformation initiative including website redesign ..."
+          }
+        ]
+      },
+      "confidence": 0.7,
+      "detected_at": "2025-11-02T04:33:07.434Z",
+      "detection_method": "brightdata"
+    },
+    {
+      "organization": "Cricket West Indies",
+      "type": "Federation",
+      "sport": "Cricket",
+      "country": "International",
+      "src_link": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633",
+      "summary_json": {
+        "entity": "Cricket West Indies",
+        "source": "brightdata",
+        "search_query": "\"Cricket West Indies\" fan engagement platform OR ticketing system strategic investment OR budget allocation",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "Cricket West Indies Digital Transformation RFP",
+            "url": "https://www.linkedin.com/posts/west-indies-cricket-board-inc-request-for-proposal-cwi-digital-transformation-activity-7294794944286789633",
+            "description": "Cricket West Indies invites proposals from highly skilled digital transformation and web development agencies to spearhead a comprehensive Digital Transformation initiative including website redesign ..."
+          }
+        ]
+      },
+      "confidence": 0.7,
+      "detected_at": "2025-11-02T04:33:08.435Z",
+      "detection_method": "brightdata"
+    },
+    {
+      "organization": "Premier League",
+      "type": "League",
+      "sport": "Football",
+      "country": "England",
+      "src_link": "https://www.premierleague.com/tenders/digital-innovation",
+      "summary_json": {
+        "entity": "Premier League",
+        "source": "brightdata",
+        "search_query": "site:linkedin.com \"Premier League\" request for proposal OR RFP OR request for tender",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "Premier League Fan Experience Platform EOI",
+            "url": "https://www.premierleague.com/tenders/digital-innovation",
+            "description": "Premier League seeking innovative digital partners for next-generation fan engagement platform including mobile experiences and venue technology integration...."
+          }
+        ]
+      },
+      "confidence": 0.7,
+      "detected_at": "2025-11-02T04:33:09.940Z",
+      "detection_method": "brightdata"
+    },
+    {
+      "organization": "Premier League",
+      "type": "League",
+      "sport": "Football",
+      "country": "England",
+      "src_link": "https://www.premierleague.com/tenders/digital-innovation",
+      "summary_json": {
+        "entity": "Premier League",
+        "source": "brightdata",
+        "search_query": "site:linkedin.com \"Premier League\" digital transformation OR website development OR mobile app",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "Premier League Fan Experience Platform EOI",
+            "url": "https://www.premierleague.com/tenders/digital-innovation",
+            "description": "Premier League seeking innovative digital partners for next-generation fan engagement platform including mobile experiences and venue technology integration...."
+          }
+        ]
+      },
+      "confidence": 0.7,
+      "detected_at": "2025-11-02T04:33:10.941Z",
+      "detection_method": "brightdata"
+    },
+    {
+      "organization": "Premier League",
+      "type": "League",
+      "sport": "Football",
+      "country": "England",
+      "src_link": "https://www.premierleague.com/tenders/digital-innovation",
+      "summary_json": {
+        "entity": "Premier League",
+        "source": "brightdata",
+        "search_query": "\"Premier League\" request for proposal OR RFP digital transformation OR website development",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "Premier League Fan Experience Platform EOI",
+            "url": "https://www.premierleague.com/tenders/digital-innovation",
+            "description": "Premier League seeking innovative digital partners for next-generation fan engagement platform including mobile experiences and venue technology integration...."
+          }
+        ]
+      },
+      "confidence": 0.7,
+      "detected_at": "2025-11-02T04:33:11.943Z",
+      "detection_method": "brightdata"
+    },
+    {
+      "organization": "Premier League",
+      "type": "League",
+      "sport": "Football",
+      "country": "England",
+      "src_link": "https://www.premierleague.com/tenders/digital-innovation",
+      "summary_json": {
+        "entity": "Premier League",
+        "source": "brightdata",
+        "search_query": "\"Premier League\" fan engagement platform OR ticketing system strategic investment OR budget allocation",
+        "total_results": 1,
+        "relevant_results": 1,
+        "sample_findings": [
+          {
+            "title": "Premier League Fan Experience Platform EOI",
+            "url": "https://www.premierleague.com/tenders/digital-innovation",
+            "description": "Premier League seeking innovative digital partners for next-generation fan engagement platform including mobile experiences and venue technology integration...."
+          }
+        ]
+      },
+      "confidence": 0.7,
+      "detected_at": "2025-11-02T04:33:12.945Z",
+      "detection_method": "brightdata"
+    },
+    {
+      "organization": "International Olympic Committee",
+      "type": "Federation",
+      "sport": "Multi-sport",
+      "country": "International",
+      "src_link": null,
+      "summary_json": {
+        "entity": "International Olympic Committee",
+        "source": "perplexity",
+        "query": "\n        Research \"International Olympic Committee\" for any recent digital transformation initiatives, RFPs, tenders, or technology partnership opportunities \n        in the last 6 months. Focus on mobile app development, website projects, fan engagement systems, or digital platform modernization.\n      ",
+        "content_summary": "IOC has announced several digital transformation initiatives including mobile app development for fan engagement and digital platform modernization for upcoming Olympic Games. Technology partnership opportunities available....",
+        "opportunities_detected": [
+          "digital_transformation",
+          "mobile_app",
+          "fan_engagement"
+        ],
+        "sources": [
+          {
+            "url": "https://olympics.com",
+            "title": "IOC Official Website"
+          }
+        ]
+      },
+      "confidence": 0.75,
+      "detected_at": "2025-11-02T04:33:18.457Z",
+      "detection_method": "perplexity"
+    }
+  ]
+}

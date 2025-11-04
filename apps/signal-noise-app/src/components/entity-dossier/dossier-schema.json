@@ -1,0 +1,397 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Multi-Entity Sports Intelligence Dossier System",
+  "description": "Complete schema for AI-native sports entity intelligence system with club, person, and organization dossiers",
+  "type": "object",
+  "definitions": {
+    "Entity": {
+      "type": "object",
+      "properties": {
+        "neo4j_id": {
+          "type": ["string", "null"],
+          "description": "Neo4j database identifier"
+        },
+        "labels": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Neo4j node labels for entity classification"
+        },
+        "properties": {
+          "type": "object",
+          "description": "Core entity properties",
+          "properties": {
+            "name": { "type": "string" },
+            "type": { "type": "string" },
+            "description": { "type": "string" },
+            "industry": { "type": "string" },
+            "location": { "type": "string" },
+            "website": { "type": "string" },
+            "founded": { "type": ["string", "integer"] },
+            "size": { "type": "string" },
+            "revenue": { "type": "string" },
+            "digitalPresence": { "type": "object" },
+            "opportunityScore": { "type": "number" },
+            "trustRating": { "type": "number" },
+            "priorityScore": { "type": "number" },
+            "entityId": { "type": "string" },
+            "entityType": { "type": "string" },
+            "email": { "type": "string" },
+            "phone": { "type": "string" },
+            "department": { "type": "string" },
+            "seniority": { "type": "string" },
+            "linkedIn": { "type": "string" },
+            "twitter": { "type": "string" }
+          }
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Entity priority level"
+        },
+        "priorityScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Calculated priority score (0-100)"
+        }
+      },
+      "required": ["neo4j_id", "labels", "properties"]
+    },
+    "EntityType": {
+      "type": "string",
+      "enum": ["Club", "Person", "League", "Partner", "Venue", "Sponsor", "Agency", "Media", "Other"],
+      "description": "Supported entity types in the dossier system"
+    },
+    "PerplexityIntelligence": {
+      "type": "object",
+      "description": "AI-generated intelligence for club/organization entities",
+      "properties": {
+        "financialPerformance": {
+          "type": "object",
+          "properties": {
+            "revenue": { "type": "string" },
+            "growth": { "type": "string" },
+            "marketCap": { "type": "string" },
+            "partnerships": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "technologyInitiatives": {
+          "type": "object",
+          "properties": {
+            "partnerships": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "digitalStrategy": { "type": "string" },
+            "innovations": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "businessOpportunities": {
+          "type": "object",
+          "properties": {
+            "sponsorshipPipeline": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "expansion": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "priorities": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "competitiveAnalysis": {
+          "type": "object",
+          "properties": {
+            "position": { "type": "string" },
+            "strategy": { "type": "string" },
+            "focus": { "type": "string" }
+          }
+        },
+        "lastUpdated": { "type": "string", "format": "date-time" },
+        "sources": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "PersonIntelligence": {
+      "type": "object",
+      "description": "AI-generated intelligence for individual entities",
+      "properties": {
+        "careerBackground": {
+          "type": "object",
+          "properties": {
+            "previousRoles": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "education": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "recognition": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "decisionMakingPatterns": {
+          "type": "object",
+          "properties": {
+            "partnershipPhilosophy": { "type": "string" },
+            "technologyFocus": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "recentInvestments": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "strategicFocus": {
+          "type": "object",
+          "properties": {
+            "currentPriorities": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "technologyScouting": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "innovationCriteria": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "budgetAuthority": { "type": "string" }
+          }
+        },
+        "lastUpdated": { "type": "string", "format": "date-time" },
+        "sources": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "DossierDisplayOptions": {
+      "type": "object",
+      "description": "Configuration for dossier display and behavior",
+      "properties": {
+        "showAscii": {
+          "type": "boolean",
+          "default": false,
+          "description": "Display ASCII art version"
+        },
+        "refreshInterval": {
+          "type": "integer",
+          "default": 300000,
+          "description": "Auto-refresh interval in milliseconds"
+        },
+        "enableRealTimeUpdates": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable real-time data updates"
+        },
+        "showIntelligenceConfidence": {
+          "type": "boolean",
+          "default": true,
+          "description": "Display confidence scores for AI insights"
+        },
+        "maxResearchQueries": {
+          "type": "integer",
+          "default": 6,
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Maximum number of research queries per entity"
+        }
+      }
+    },
+    "DossierMetadata": {
+      "type": "object",
+      "description": "Metadata for dossier tracking and management",
+      "properties": {
+        "entityId": { "type": "string" },
+        "entityType": { "$ref": "#/definitions/EntityType" },
+        "dossierVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "lastIntelligenceUpdate": { "type": "string", "format": "date-time" },
+        "intelligenceFreshness": {
+          "type": "string",
+          "enum": ["fresh", "stale", "expired"]
+        },
+        "researchQueriesCount": { "type": "integer" },
+        "dataSourcesCount": { "type": "integer" },
+        "completionScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "accessCount": { "type": "integer", "default": 0 },
+        "lastAccessed": { "type": "string", "format": "date-time" },
+        "shareableLink": { "type": "string", "format": "uri" },
+        "isPublic": { "type": "boolean", "default": false },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "DossierAction": {
+      "type": "object",
+      "description": "Available actions for dossier entities",
+      "properties": {
+        "actionId": { "type": "string" },
+        "actionType": {
+          "type": "string",
+          "enum": ["email", "research", "monitor", "export", "share", "schedule_meeting"]
+        },
+        "label": { "type": "string" },
+        "description": { "type": "string" },
+        "icon": { "type": "string" },
+        "enabled": { "type": "boolean", "default": true },
+        "requiresAuth": { "type": "boolean", "default": false },
+        "endpoint": { "type": "string", "format": "uri" },
+        "payload": { "type": "object" }
+      }
+    },
+    "DossierTab": {
+      "type": "object",
+      "description": "Tab configuration for dossier interface",
+      "properties": {
+        "tabId": { "type": "string" },
+        "label": { "type": "string" },
+        "icon": { "type": "string" },
+        "enabled": { "type": "boolean", "default": true },
+        "order": { "type": "integer" },
+        "badge": {
+          "type": "object",
+          "properties": {
+            "text": { "type": "string" },
+            "variant": {
+              "type": "string",
+              "enum": ["default", "success", "warning", "error", "info"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "entity": {
+      "$ref": "#/definitions/Entity",
+      "description": "The core entity for which the dossier is generated"
+    },
+    "entityType": {
+      "$ref": "#/definitions/EntityType",
+      "description": "Detected entity type"
+    },
+    "perplexityIntelligence": {
+      "$ref": "#/definitions/PerplexityIntelligence",
+      "description": "AI-generated intelligence for club/organization entities"
+    },
+    "personIntelligence": {
+      "$ref": "#/definitions/PersonIntelligence",
+      "description": "AI-generated intelligence for individual entities"
+    },
+    "metadata": {
+      "$ref": "#/definitions/DossierMetadata",
+      "description": "Dossier metadata and tracking information"
+    },
+    "displayOptions": {
+      "$ref": "#/definitions/DossierDisplayOptions",
+      "description": "Display and behavior configuration"
+    },
+    "availableActions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/DossierAction" },
+      "description": "Available actions for this entity"
+    },
+    "tabs": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/DossierTab" },
+      "description": "Available tabs in the dossier interface"
+    },
+    "loading": {
+      "type": "object",
+      "properties": {
+        "isLoadingResearch": { "type": "boolean" },
+        "isRefreshing": { "type": "boolean" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "details": { "type": "object" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "required": ["entity", "entityType", "metadata"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "entity": {
+        "neo4j_id": "197",
+        "labels": ["Club"],
+        "properties": {
+          "name": "Arsenal FC",
+          "type": "club",
+          "description": "Professional football club",
+          "industry": "Sports",
+          "location": "London, England",
+          "website": "https://www.arsenal.com",
+          "founded": "1886",
+          "revenue": "£400M+",
+          "priorityScore": 95
+        },
+        "priority": "high",
+        "priorityScore": 95
+      },
+      "entityType": "Club",
+      "perplexityIntelligence": {
+        "financialPerformance": {
+          "revenue": "£400M+ (2023/2024)",
+          "growth": "15% YoY driven by sponsorship and digital revenue",
+          "marketCap": "£2.6B+ - Consistently top 10 most valuable football clubs globally",
+          "partnerships": ["Emirates", "Adidas", "Nike"]
+        },
+        "technologyInitiatives": {
+          "partnerships": ["AWS", "SAP", "Oracle"],
+          "digitalStrategy": "Comprehensive digital transformation strategy",
+          "innovations": ["Fan engagement platforms", "Digital experiences", "Data analytics"]
+        },
+        "lastUpdated": "2025-01-15T10:30:00Z",
+        "sources": ["Perplexity Research Query 1", "Perplexity Research Query 2"]
+      },
+      "metadata": {
+        "entityId": "197",
+        "entityType": "Club",
+        "dossierVersion": "1.0.0",
+        "lastIntelligenceUpdate": "2025-01-15T10:30:00Z",
+        "intelligenceFreshness": "fresh",
+        "researchQueriesCount": 6,
+        "dataSourcesCount": 3,
+        "completionScore": 0.85,
+        "accessCount": 12,
+        "lastAccessed": "2025-01-15T14:25:00Z",
+        "tags": ["premier-league", "london", "top-6", "european-competitions"]
+      },
+      "displayOptions": {
+        "showAscii": false,
+        "refreshInterval": 300000,
+        "enableRealTimeUpdates": true,
+        "showIntelligenceConfidence": true
+      }
+    }
+  ]
+}

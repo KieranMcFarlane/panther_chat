@@ -1,0 +1,41 @@
+{
+  "mcpServers": {
+    "neo4j-mcp": {
+      "command": "node",
+      "args": ["neo4j-mcp-server.js"],
+      "env": {
+        "NEO4J_URI": "neo4j+s://e6bb5665.databases.neo4j.io",
+        "NEO4J_USERNAME": "neo4j",
+        "NEO4J_PASSWORD": "NeO4jPaSSworD!"
+      }
+    },
+    "brightdata-mcp": {
+      "command": "node",
+      "args": ["src/mcp-brightdata-server.js"],
+      "env": {
+        "BRIGHTDATA_API_TOKEN": "bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4",
+        "BRIGHTDATA_TOKEN": "bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4",
+        "BRIGHTDATA_ZONE": "linkedin_posts_monitor"
+      }
+    },
+    "byterover-mcp": {
+      "command": "npx",
+      "args": ["-y", "@byterover/mcp"],
+      "env": {
+        "BYTEROVER_API_KEY": "YOUR_BYTEROVER_API_KEY"
+      }
+    },
+    "supabase-mcp": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-supabase"],
+      "env": {
+        "SUPABASE_PROJECT_URL": "https://fjqnvompecezasmgntix.supabase.co",
+        "SUPABASE_SERVICE_KEY": "YOUR_SUPABASE_SERVICE_KEY"
+      }
+    },
+    "chrome-mcp-server": {
+      "type": "streamableHttp",
+      "url": "http://127.0.0.1:12306/mcp"
+    }
+  }
+}

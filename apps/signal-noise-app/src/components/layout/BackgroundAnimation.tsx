@@ -1,0 +1,189 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import gsap from 'gsap'
+
+const BackgroundAnimation = () => {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient || typeof window === 'undefined') return
+    
+    // Use refs to access DOM elements after render
+    const paths = Array.from(document.querySelectorAll('#background-svg path'))
+    const background = document.querySelector('.background-container')
+    const button = buttonRef.current
+    
+    console.log('BackgroundAnimation: Initializing...', {
+      pathsFound: paths.length,
+      buttonFound: !!button,
+      backgroundFound: !!background
+    })
+    
+    if (!button || paths.length === 0) {
+      console.log('BackgroundAnimation: Missing required elements')
+      return
+    }
+    
+    let isReversed = false
+    let isAnimating = true
+
+    const masterTl = gsap.timeline({
+      paused: true,
+      onComplete: () => isAnimating = false,
+      onReverseComplete: () => isAnimating = false,
+    })
+
+    masterTl.from(paths, {
+      opacity: 0,
+      scale: 0,
+      transformOrigin: '0% 100%',
+      duration: 1.5,
+      ease: 'sine.out',
+      stagger: {
+        from: "bottom-left",
+        amount: 1.5,
+      }
+    })
+
+    masterTl.play()
+
+    const handleClick = () => {
+      console.log('BackgroundAnimation: Button clicked!', {
+        isAnimating,
+        isReversed: !isReversed
+      })
+      
+      if (isAnimating) return
+      isAnimating = true
+      isReversed = !isReversed
+
+      if (button) {
+        if (isReversed) {
+          button.textContent = "Play Forward"
+          gsap.to(background, { backgroundColor: "#E31B23", duration: masterTl.duration() })
+          masterTl.reverse()
+        } else {
+          button.textContent = "Reverse"
+          gsap.to(background, { backgroundColor: "#FDEE00", duration: masterTl.duration() })
+          masterTl.play()
+        }
+      }
+    }
+
+    // Add click handler to the button
+    button.addEventListener('click', handleClick)
+
+    return () => {
+      button.removeEventListener('click', handleClick)
+    }
+  }, [isClient])
+
+  if (!isClient) return null
+
+  return (
+    <>
+      <div className="bg-custom-bg fixed inset-0 z-[-1]" ref={containerRef}>
+        <div className="background-container">
+          <svg 
+            id="background-svg" 
+            width="1738" 
+            height="1030" 
+            viewBox="0 0 1738 1030" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg" 
+            preserveAspectRatio="xMidYMid slice"
+            className="w-full h-full"
+          >
+            <g>
+              <path d="M1513.29 129.402L1559.6 129.402L1732.05 0.945492L1684.14 0.945487L1513.29 129.402Z" fill="#1B1E2D"/>
+              <path d="M1516.49 -0.187927L1444.41 -0.0545107L1297.95 129.402L1368.45 129.402L1516.49 -0.187927Z" fill="#1B1E2D"/>
+              <path d="M1300.92 -0.329926L1204.66 -0.0545128L1082.63 129.402L1177.29 129.402L1300.92 -0.329926Z" fill="#1B1E2D"/>
+              <path d="M1085.36 -0.46048L964.918 -0.0545149L867.291 129.402L986.139 129.402L1085.36 -0.46048Z" fill="#1B1E2D"/>
+              <path d="M869.798 -0.593903L725.18 -0.054517L651.952 129.402L794.974 129.402L869.798 -0.593903Z" fill="#1B1E2D"/>
+              <path d="M654.237 -0.724548L485.443 -0.0545192L436.613 129.402L603.826 129.402L654.237 -0.724548Z" fill="#1B1E2D"/>
+              <path d="M438.674 -0.86647L245.689 -0.0545365L221.291 129.402L412.663 129.402L438.674 -0.86647Z" fill="#1B1E2D"/>
+              <path d="M223.11 0.000119447L5.9515 0.945473L5.95149 129.402L221.515 129.402L223.11 0.000119447Z" fill="#1B1E2D"/>
+              <path d="M1513.29 129.402L1559.6 129.402L1734 -0.0545044L1682.55 -0.0545089L1513.29 129.402Z" fill="#1B1E2D"/>
+              <path d="M1513.29 1021.05L1730.45 1021.05L1730.45 893.541L1514.89 893.541L1513.29 1021.05Z" fill="#1B1E2D"/>
+              <path d="M1513.29 1022.05L1730.45 1022.05L1730.45 893.541L1514.89 893.541L1513.29 1022.05Z" fill="#1B1E2D"/>
+              <path d="M1297.95 1022.19L1490.71 1022.19L1515.11 893.542L1323.5 893.542L1297.95 1022.19Z" fill="#1B1E2D"/>
+              <path d="M1082.63 1022.33L1250.96 1022.33L1299.79 893.542L1132.13 893.542L1082.63 1022.33Z" fill="#1B1E2D"/>
+              <path d="M867.291 1022.46L1011.22 1022.46L1084.45 893.541L940.744 893.541L867.291 1022.46Z" fill="#1B1E2D"/>
+              <path d="M651.951 1022.59L771.487 1022.59L869.11 893.542L749.354 893.542L651.951 1022.59Z" fill="#1B1E2D"/>
+              <path d="M436.613 1022.73L531.75 1022.73L653.771 893.542L557.967 893.542L436.613 1022.73Z" fill="#1B1E2D"/>
+              <path d="M221.29 1022.87L291.995 1022.87L438.449 893.541L366.595 893.541L221.29 1022.87Z" fill="#1B1E2D"/>
+              <path d="M5.95149 1022L52.2579 1022L223.11 893.542L175.208 893.542L5.95149 1022Z" fill="#1B1E2D"/>
+              <path d="M223 -0.999985L4 -0.05027L3.99998 129L221.391 129L223 -0.999985Z" fill="#1B1E2D"/>
+              <path d="M1513.29 256.783L1584.01 256.783L1730.45 128.46L1658.6 128.46L1513.29 256.783Z" fill="#1B1E2D"/>
+              <path d="M1297.95 256.803L1385.9 256.803L1515.11 128.346L1425.96 128.459L1297.95 256.803Z" fill="#1B1E2D"/>
+              <path d="M1082.63 256.822L1187.81 256.822L1299.79 128.232L1193.32 128.459L1082.63 256.822Z" fill="#1B1E2D"/>
+              <path d="M867.291 256.84L989.716 256.84L1084.45 128.108L960.685 128.46L867.291 256.84Z" fill="#1B1E2D"/>
+              <path d="M651.951 256.859L791.62 256.859L869.11 127.997L728.039 128.459L651.951 256.859Z" fill="#1B1E2D"/>
+              <path d="M436.613 256.879L593.526 256.879L653.771 127.883L495.405 128.459L436.613 256.879Z" fill="#1B1E2D"/>
+              <path d="M221.29 256.896L395.433 256.896L438.449 127.77L262.774 128.459L221.29 256.896Z" fill="#1B1E2D"/>
+              <path d="M3.95146 256.916L197.338 256.916L223.11 127.644L-29.8746 128.459L3.95146 256.916Z" fill="#1B1E2D"/>
+              <path d="M1513.29 384.156L1608.41 384.156L1730.45 255.972L1634.65 255.972L1513.29 384.156Z" fill="#1B1E2D"/>
+              <path d="M1297.95 384.203L1403.37 384.203L1515.11 255.877L1408.88 255.97L1297.95 384.203Z" fill="#1B1E2D"/>
+              <path d="M1082.63 384.24L1198.35 384.24L1299.79 255.783L1183.12 255.971L1082.63 384.24Z" fill="#1B1E2D"/>
+              <path d="M867.291 384.281L993.308 384.281L1084.45 255.68L957.366 255.972L867.291 384.281Z" fill="#1B1E2D"/>
+              <path d="M651.951 384.318L788.268 384.318L869.11 255.586L731.599 255.972L651.951 384.318Z" fill="#1B1E2D"/>
+              <path d="M436.613 384.353L583.229 384.354L653.771 255.491L505.833 255.97L436.613 384.353Z" fill="#1B1E2D"/>
+              <path d="M221.29 384.395L378.189 384.395L438.449 255.395L280.066 255.972L221.29 384.395Z" fill="#1B1E2D"/>
+              <path d="M-94.0485 384.432L173.147 384.432L223.11 255.302L-45.6837 255.972L-94.0485 384.432Z" fill="#1B1E2D"/>
+              <path d="M1513.29 511.539L1632.83 511.539L1730.45 383.485L1610.69 383.485L1513.29 511.539Z" fill="#1B1E2D"/>
+              <path d="M1297.95 511.596L1420.84 511.596L1515.11 383.411L1391.81 383.485L1297.95 511.596Z" fill="#1B1E2D"/>
+              <path d="M1082.63 511.652L1208.87 511.652L1299.79 383.335L1172.93 383.485L1082.63 511.652Z" fill="#1B1E2D"/>
+              <path d="M867.291 511.719L996.885 511.719L1084.45 383.259L954.045 383.486L867.291 511.719Z" fill="#1B1E2D"/>
+              <path d="M651.951 511.775L784.915 511.775L869.11 383.174L735.142 383.486L651.951 511.775Z" fill="#1B1E2D"/>
+              <path d="M436.613 511.832L572.929 511.832L653.771 383.1L516.26 383.486L436.613 511.832Z" fill="#1B1E2D"/>
+              <path d="M221.29 511.889L360.959 511.889L438.449 383.023L297.375 383.486L221.29 511.889Z" fill="#1B1E2D"/>
+              <path d="M-134.049 511.945L148.973 511.945L223.11 382.949L-61.507 383.486L-134.049 511.945Z" fill="#1B1E2D"/>
+              <path d="M1513.29 638.92L1657.22 638.92L1730.45 511L1586.74 511L1513.29 638.92Z" fill="#1B1E2D"/>
+              <path d="M1297.95 638.996L1438.31 638.996L1515.11 510.942L1374.73 510.999L1297.95 638.996Z" fill="#1B1E2D"/>
+              <path d="M1082.63 639.07L1219.39 639.07L1299.79 510.886L1162.72 510.999L1082.63 639.07Z" fill="#1B1E2D"/>
+              <path d="M867.291 639.146L1000.48 639.146L1084.45 510.829L950.706 510.999L867.291 639.146Z" fill="#1B1E2D"/>
+              <path d="M651.951 639.232L781.545 639.232L869.11 510.773L738.705 511L651.951 639.232Z" fill="#1B1E2D"/>
+              <path d="M436.613 639.307L562.629 639.307L653.771 510.708L526.688 511L436.613 639.307Z" fill="#1B1E2D"/>
+              <path d="M221.29 639.383L343.713 639.383L438.449 510.651L314.684 511L221.29 639.383Z" fill="#1B1E2D"/>
+              <path d="M-134.049 639.459L124.799 639.459L223.11 510.593L-37.3331 510.999L-134.049 639.459Z" fill="#1B1E2D"/>
+              <path d="M1513.29 766.301L1681.64 766.301L1730.45 638.514L1562.79 638.514L1513.29 766.301Z" fill="#1B1E2D"/>
+              <path d="M1297.95 766.396L1455.78 766.396L1515.11 638.478L1357.66 638.515L1297.95 766.396Z" fill="#1B1E2D"/>
+              <path d="M1082.63 766.49L1229.92 766.49L1299.79 638.437L1152.52 638.514L1082.63 766.49Z" fill="#1B1E2D"/>
+              <path d="M867.291 766.584L1004.05 766.584L1084.45 638.4L947.384 638.513L867.291 766.584Z" fill="#1B1E2D"/>
+              <path d="M651.951 766.68L778.192 766.68L869.11 638.364L742.248 638.515L651.951 766.68Z" fill="#1B1E2D"/>
+              <path d="M436.613 766.783L552.329 766.783L653.771 638.324L537.112 638.514L436.613 766.783Z" fill="#1B1E2D"/>
+              <path d="M221.29 766.877L326.469 766.877L438.449 638.286L331.976 638.513L221.29 766.877Z" fill="#1B1E2D"/>
+              <path d="M-184.049 766.973L100.623 766.973L223.11 638.239L-63.1564 638.515L-184.049 766.973Z" fill="#1B1E2D"/>
+              <path d="M1513.29 893.674L1706.04 893.674L1730.45 766.028L1538.84 766.028L1513.29 893.674Z" fill="#1B1E2D"/>
+              <path d="M1297.95 893.797L1473.25 893.797L1515.11 766.009L1340.59 766.028L1297.95 893.797Z" fill="#1B1E2D"/>
+              <path d="M1082.63 893.91L1240.44 893.91L1299.79 765.99L1142.32 766.028L1082.63 893.91Z" fill="#1B1E2D"/>
+              <path d="M867.291 894.023L1007.65 894.023L1084.45 765.971L944.063 766.028L867.291 894.023Z" fill="#1B1E2D"/>
+              <path d="M651.951 894.137L774.839 894.137L869.11 765.952L745.811 766.028L651.951 894.137Z" fill="#1B1E2D"/>
+              <path d="M436.613 894.26L542.032 894.26L653.771 765.934L547.54 766.028L436.613 894.26Z" fill="#1B1E2D"/>
+              <path d="M221.29 894.373L309.239 894.373L438.449 765.914L349.286 766.028L221.29 894.373Z" fill="#1B1E2D"/>
+              <path d="M-134.049 894.486L76.4318 894.486L223.11 765.896L-88.9655 766.028L-134.049 894.486Z" fill="#1B1E2D"/>
+              <path d="M-254.049 1022L52.2579 1022L223.11 893.542L-84.7916 893.542L-254.049 1022Z" fill="#1B1E2D"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+      
+      {/* Button for animation control */}
+      <button
+        ref={buttonRef}
+        className="fixed top-4 right-4 z-50 px-4 py-2 bg-black text-white rounded-lg shadow-lg hover:bg-gray-800 transition-colors"
+      >
+        Reverse
+      </button>
+    </>
+  )
+}
+
+export default BackgroundAnimation

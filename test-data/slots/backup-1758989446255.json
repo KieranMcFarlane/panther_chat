@@ -1,0 +1,497 @@
+{
+  "slots": {
+    "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f": {
+      "id": "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f",
+      "userId": "user_e9e931b1-96e2-4980-81f2-63b0332a66d3",
+      "status": "assigned",
+      "type": "standard",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.355Z",
+      "updatedAt": "2025-09-27T16:10:46.243Z",
+      "allocatedAt": "2025-09-27T16:10:46.243Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "least-connections",
+        "recycledAt": "2025-09-27T16:09:56.463Z"
+      },
+      "state": {
+        "phase": "ready",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": {
+      "id": "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9",
+      "userId": "user_e9e931b1-96e2-4980-81f2-63b0332a66d3",
+      "status": "assigned",
+      "type": "priority",
+      "priority": "high",
+      "createdAt": "2025-09-27T16:09:56.356Z",
+      "updatedAt": "2025-09-27T16:10:46.253Z",
+      "allocatedAt": "2025-09-27T16:10:46.253Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "least-connections",
+        "recycledAt": "2025-09-27T16:10:46.252Z"
+      },
+      "state": {
+        "phase": "ready",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": {
+      "id": "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06",
+      "userId": "user_c5278118-b0c1-4dc2-a64b-936491036199",
+      "status": "assigned",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:10:46.245Z",
+      "allocatedAt": "2025-09-27T16:10:46.245Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "least-connections",
+        "recycledAt": "2025-09-27T16:09:56.463Z"
+      },
+      "state": {
+        "phase": "ready",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": {
+      "id": "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0",
+      "userId": "user_e9e931b1-96e2-4980-81f2-63b0332a66d3",
+      "status": "assigned",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:10:46.253Z",
+      "allocatedAt": "2025-09-27T16:10:46.253Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "least-connections",
+        "recycledAt": "2025-09-27T16:10:46.252Z"
+      },
+      "state": {
+        "phase": "ready",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": {
+      "id": "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0",
+      "userId": "user_e9e931b1-96e2-4980-81f2-63b0332a66d3",
+      "status": "assigned",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:10:46.250Z",
+      "allocatedAt": "2025-09-27T16:10:46.250Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "least-connections",
+        "recycledAt": "2025-09-27T16:09:56.464Z"
+      },
+      "state": {
+        "phase": "ready",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": {
+      "id": "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c",
+      "userId": "user_e4050919-b5a2-4e71-ba15-94e5c2338c33",
+      "status": "assigned",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:10:46.251Z",
+      "allocatedAt": "2025-09-27T16:10:46.251Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "round-robin",
+        "recycledAt": "2025-09-27T16:09:56.464Z"
+      },
+      "state": {
+        "phase": "ready",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": {
+      "id": "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd",
+      "userId": "user_e4050919-b5a2-4e71-ba15-94e5c2338c33",
+      "status": "assigned",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:10:46.244Z",
+      "allocatedAt": "2025-09-27T16:10:46.244Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "round-robin",
+        "recycledAt": "2025-09-27T16:09:56.465Z"
+      },
+      "state": {
+        "phase": "ready",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": {
+      "id": "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed",
+      "userId": "user_c5278118-b0c1-4dc2-a64b-936491036199",
+      "status": "assigned",
+      "type": "test",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:09:56.357Z",
+      "updatedAt": "2025-09-27T16:10:46.251Z",
+      "allocatedAt": "2025-09-27T16:10:46.251Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "round-robin",
+        "recycledAt": "2025-09-27T16:10:46.247Z"
+      },
+      "state": {
+        "phase": "ready",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    },
+    "slot_95a733a8-2098-46fe-9d9f-c3639d331b2f": {
+      "id": "slot_95a733a8-2098-46fe-9d9f-c3639d331b2f",
+      "userId": "user_e9e931b1-96e2-4980-81f2-63b0332a66d3",
+      "status": "assigned",
+      "type": "standard",
+      "priority": "normal",
+      "createdAt": "2025-09-27T16:10:46.254Z",
+      "updatedAt": "2025-09-27T16:10:46.254Z",
+      "allocatedAt": "2025-09-27T16:10:46.254Z",
+      "lastUsedAt": null,
+      "timeout": 1800000,
+      "resourceLimits": {
+        "maxMemoryPerSlot": 512,
+        "maxCpuPerSlot": 50,
+        "maxDiskPerSlot": 1024,
+        "maxNetworkConnections": 100,
+        "maxConcurrentOperations": 10
+      },
+      "metadata": {
+        "createdBy": "slot-registry",
+        "strategy": "resource-based"
+      },
+      "state": {
+        "phase": "initializing",
+        "health": "healthy",
+        "performance": {
+          "cpu": 0,
+          "memory": 0,
+          "disk": 0,
+          "network": 0
+        },
+        "connections": 0,
+        "operations": 0
+      }
+    }
+  },
+  "userSlots": {
+    "user_8dbe7eb7-e806-49b4-a48b-bbd74c52a6f9": [],
+    "user_5f1bf62f-8927-4254-93b3-27b90a86c827": [],
+    "user_e9e931b1-96e2-4980-81f2-63b0332a66d3": [
+      "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f",
+      "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0",
+      "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0",
+      "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9",
+      "slot_95a733a8-2098-46fe-9d9f-c3639d331b2f"
+    ],
+    "user_e4050919-b5a2-4e71-ba15-94e5c2338c33": [
+      "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd",
+      "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c"
+    ],
+    "user_c5278118-b0c1-4dc2-a64b-936491036199": [
+      "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06",
+      "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed"
+    ]
+  },
+  "availableSlots": [],
+  "assignedSlots": [
+    "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f",
+    "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd",
+    "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06",
+    "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0",
+    "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c",
+    "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed",
+    "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0",
+    "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9",
+    "slot_95a733a8-2098-46fe-9d9f-c3639d331b2f"
+  ],
+  "blacklistedSlots": [],
+  "resourceMetrics": {
+    "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f": {
+      "timestamp": "2025-09-27T16:10:46.243Z",
+      "memory": 244.30484160712197,
+      "cpu": 18.800422683446136,
+      "disk": 38.35023893283288,
+      "network": 48.35283881570594,
+      "connections": 3,
+      "operations": 18
+    },
+    "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": {
+      "timestamp": "2025-09-27T16:10:46.252Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": {
+      "timestamp": "2025-09-27T16:10:46.246Z",
+      "memory": 25.25030857809736,
+      "cpu": 4.983657665802967,
+      "disk": 24.492228657937133,
+      "network": 2.592379447027815,
+      "connections": 0,
+      "operations": 16
+    },
+    "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": {
+      "timestamp": "2025-09-27T16:10:46.252Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": {
+      "timestamp": "2025-09-27T16:09:56.464Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": {
+      "timestamp": "2025-09-27T16:09:56.464Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": {
+      "timestamp": "2025-09-27T16:10:46.244Z",
+      "memory": 213.57678482483277,
+      "cpu": 21.321779594513302,
+      "disk": 43.622446796112015,
+      "network": 48.50069959765621,
+      "connections": 7,
+      "operations": 9
+    },
+    "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": {
+      "timestamp": "2025-09-27T16:10:46.247Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    },
+    "slot_95a733a8-2098-46fe-9d9f-c3639d331b2f": {
+      "timestamp": "2025-09-27T16:10:46.254Z",
+      "memory": 0,
+      "cpu": 0,
+      "disk": 0,
+      "network": 0,
+      "connections": 0,
+      "operations": 0
+    }
+  },
+  "loadBalancer": {
+    "currentStrategy": "resource-based",
+    "connectionCounts": {
+      "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f": 1,
+      "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": 1,
+      "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": 1,
+      "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": 1,
+      "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": 1,
+      "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": 1,
+      "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": 1,
+      "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": 1,
+      "slot_95a733a8-2098-46fe-9d9f-c3639d331b2f": 1
+    },
+    "lastUsed": {
+      "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f": 1758989446243,
+      "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": 1758989446244,
+      "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": 1758989446245,
+      "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": 1758989446250,
+      "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": 1758989446251,
+      "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": 1758989446251,
+      "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": 1758989446253,
+      "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": 1758989446253,
+      "slot_95a733a8-2098-46fe-9d9f-c3639d331b2f": 1758989446254
+    },
+    "healthStatus": {
+      "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f": "healthy",
+      "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": "healthy",
+      "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": "healthy",
+      "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": "healthy",
+      "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": "healthy",
+      "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": "healthy",
+      "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": "healthy",
+      "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": "healthy",
+      "slot_95a733a8-2098-46fe-9d9f-c3639d331b2f": "healthy"
+    },
+    "slotWeights": {
+      "slot_cc73e3a0-7208-41a6-b0d3-f5bbfc5cb10f": 0.6933343063937591,
+      "slot_0a1e0ea9-b3b7-41a5-8858-b77ce881edb9": 0.9969999999999999,
+      "slot_347e3fd6-0ce7-44dc-b9ed-037de6db3f06": 0.9473712504285436,
+      "slot_28c0fcac-a897-4117-9c28-bf3f9132b1a0": 0.9969999999999999,
+      "slot_3a2698ec-6ea4-40d4-9312-719bcb1cc4e0": 0.9969999999999999,
+      "slot_5c2ef0bc-227a-422f-9b19-e62c614a6f5c": 0.9969999999999999,
+      "slot_98c45382-efaa-42eb-b3e0-7f66c62fa2cd": 0.7022124592885195,
+      "slot_4fc154f4-4c7d-4cf2-8439-92502e2e23ed": 0.9969999999999999,
+      "slot_95a733a8-2098-46fe-9d9f-c3639d331b2f": 0.9969999999999999
+    }
+  },
+  "metrics": {
+    "totalAllocations": 19,
+    "totalDeallocations": 21,
+    "failedAllocations": 4,
+    "currentLoad": 0.45,
+    "averageResponseTime": 0
+  },
+  "savedAt": "2025-09-27T16:10:46.255Z"
+}

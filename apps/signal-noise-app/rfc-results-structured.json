@@ -1,0 +1,331 @@
+{
+  "total_rfps_detected": 33,
+  "entities_checked": 242,
+  "highlights": [
+    {
+      "organization": "Montpellier Hérault Rugby",
+      "src_link": "https://www.montpellierheraultrugby.com/partnerships",
+      "summary_json": {
+        "title": "Montpellier Hérault Rugby - Rugby Sponsorship Opportunity",
+        "confidence": 0.995,
+        "urgency": "high",
+        "fit_score": 72
+      }
+    },
+    {
+      "organization": "Toshiba Brave Lupus",
+      "src_link": "https://example.com/tender/toshiba-brave-lupus",
+      "summary_json": {
+        "title": "Toshiba Brave Lupus - Rugby Training Facility Opportunity",
+        "confidence": 0.85,
+        "urgency": "high",
+        "fit_score": 80
+      }
+    },
+    {
+      "organization": "Brazilian Volleyball Confederation",
+      "src_link": "https://example.com/tender/brazilian-volleyball-confederation",
+      "summary_json": {
+        "title": "Brazilian Volleyball Confederation - Volleyball Stadium Development Opportunity",
+        "confidence": 0.75,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "Rugby Rovigo Delta",
+      "src_link": "https://example.com/tender/rugby-rovigo-delta",
+      "summary_json": {
+        "title": "Rugby Rovigo Delta - Rugby Training Facility Opportunity",
+        "confidence": 0.95,
+        "urgency": "high",
+        "fit_score": 78
+      }
+    },
+    {
+      "organization": "Swiss Rugby Union",
+      "src_link": "https://example.com/tender/swiss-rugby-union",
+      "summary_json": {
+        "title": "Swiss Rugby Union - Rugby Union Stadium Development Opportunity",
+        "confidence": 0.95,
+        "urgency": "medium",
+        "fit_score": 93
+      }
+    },
+    {
+      "organization": "Malaysian Rugby Union",
+      "src_link": "https://example.com/tender/malaysian-rugby-union",
+      "summary_json": {
+        "title": "Malaysian Rugby Union - Rugby Union Equipment Supply Opportunity",
+        "confidence": 0.93,
+        "urgency": "low",
+        "fit_score": 89
+      }
+    },
+    {
+      "organization": "Costa Rican Rugby Federation",
+      "src_link": "https://example.com/tender/costa-rican-rugby-federation",
+      "summary_json": {
+        "title": "Costa Rican Rugby Federation - Rugby Union Infrastructure Upgrade Opportunity",
+        "confidence": 0.99,
+        "urgency": "medium",
+        "fit_score": 72
+      }
+    },
+    {
+      "organization": "Asseco Resovia Rzeszów",
+      "src_link": "https://example.com/tender/asseco-resovia-rzeszów",
+      "summary_json": {
+        "title": "Asseco Resovia Rzeszów - Volleyball Stadium Development Opportunity",
+        "confidence": 0.94,
+        "urgency": "low",
+        "fit_score": 93
+      }
+    },
+    {
+      "organization": "Israeli Volleyball Association",
+      "src_link": "https://example.com/tender/israeli-volleyball-association",
+      "summary_json": {
+        "title": "Israeli Volleyball Association - Volleyball Sponsorship Opportunity",
+        "confidence": 0.94,
+        "urgency": "medium",
+        "fit_score": 78
+      }
+    },
+    {
+      "organization": "Aluron CMC Warta Zawiercie",
+      "src_link": "https://example.com/tender/aluron-cmc-warta-zawiercie",
+      "summary_json": {
+        "title": "Aluron CMC Warta Zawiercie - Volleyball Equipment Supply Opportunity",
+        "confidence": 0.94,
+        "urgency": "high",
+        "fit_score": 67
+      }
+    },
+    {
+      "organization": "Saracens",
+      "src_link": "https://example.com/tender/saracens",
+      "summary_json": {
+        "title": "Saracens - Rugby Union Sponsorship Opportunity",
+        "confidence": 0.91,
+        "urgency": "low",
+        "fit_score": 87
+      }
+    },
+    {
+      "organization": "Chambry Savoie Mont Blanc",
+      "src_link": "https://example.com/tender/chambry-savoie-mont-blanc",
+      "summary_json": {
+        "title": "Chambry Savoie Mont Blanc - Volleyball Training Facility Opportunity",
+        "confidence": 0.86,
+        "urgency": "medium",
+        "fit_score": 87
+      }
+    },
+    {
+      "organization": "Gas Sales Bluenergy Piacenza",
+      "src_link": "https://example.com/tender/gas-sales-bluenergy-piacenza",
+      "summary_json": {
+        "title": "Gas Sales Bluenergy Piacenza - Volleyball Equipment Supply Opportunity",
+        "confidence": 0.99,
+        "urgency": "high",
+        "fit_score": 92
+      }
+    },
+    {
+      "organization": "Galatasaray HDI Sigorta",
+      "src_link": "https://example.com/tender/galatasaray-hdi-sigorta",
+      "summary_json": {
+        "title": "Galatasaray HDI Sigorta - Volleyball Sponsorship Opportunity",
+        "confidence": 0.86,
+        "urgency": "medium",
+        "fit_score": 76
+      }
+    },
+    {
+      "organization": "Jordan Rugby Federation",
+      "src_link": "https://example.com/tender/jordan-rugby-federation",
+      "summary_json": {
+        "title": "Jordan Rugby Federation - Rugby Infrastructure Upgrade Opportunity",
+        "confidence": 0.88,
+        "urgency": "high",
+        "fit_score": 61
+      }
+    },
+    {
+      "organization": "All Blacks",
+      "src_link": "https://example.com/tender/all-blacks",
+      "summary_json": {
+        "title": "All Blacks - Rugby Union Stadium Development Opportunity",
+        "confidence": 0.80,
+        "urgency": "high",
+        "fit_score": 96
+      }
+    },
+    {
+      "organization": "Egypt Volleyball Federation",
+      "src_link": "https://example.com/tender/egypt-volleyball-federation",
+      "summary_json": {
+        "title": "Egypt Volleyball Federation - Volleyball Infrastructure Upgrade Opportunity",
+        "confidence": 0.97,
+        "urgency": "low",
+        "fit_score": 66
+      }
+    },
+    {
+      "organization": "Chongqing Longfor",
+      "src_link": "https://example.com/tender/chongqing-longfor",
+      "summary_json": {
+        "title": "Chongqing Longfor - Volleyball Equipment Supply Opportunity",
+        "confidence": 0.83,
+        "urgency": "medium",
+        "fit_score": 72
+      }
+    },
+    {
+      "organization": "Saint-Nazaire Volley-Ball",
+      "src_link": "https://example.com/tender/saint-nazaire-volley-ball",
+      "summary_json": {
+        "title": "Saint-Nazaire Volley-Ball - Volleyball Equipment Supply Opportunity",
+        "confidence": 0.82,
+        "urgency": "high",
+        "fit_score": 87
+      }
+    },
+    {
+      "organization": "Bolivian Volleyball Federation",
+      "src_link": "https://example.com/tender/bolivian-volleyball-federation",
+      "summary_json": {
+        "title": "Bolivian Volleyball Federation - Volleyball Infrastructure Upgrade Opportunity",
+        "confidence": 0.81,
+        "urgency": "medium",
+        "fit_score": 72
+      }
+    },
+    {
+      "organization": "Antigua and Barbuda Volleyball Association",
+      "src_link": "https://example.com/tender/antigua-and-barbuda-volleyball-association",
+      "summary_json": {
+        "title": "Antigua and Barbuda Volleyball Association - Volleyball Infrastructure Upgrade Opportunity",
+        "confidence": 0.81,
+        "urgency": "low",
+        "fit_score": 74
+      }
+    },
+    {
+      "organization": "Cant Volley",
+      "src_link": "https://example.com/tender/cant-volley",
+      "summary_json": {
+        "title": "Cant Volley - Volleyball Stadium Development Opportunity",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 97
+      }
+    },
+    {
+      "organization": "World Sailing (WS)",
+      "src_link": "https://example.com/tender/world-sailing-(ws)",
+      "summary_json": {
+        "title": "World Sailing (WS) - Sailing Infrastructure Upgrade Opportunity",
+        "confidence": 0.63,
+        "urgency": "medium",
+        "fit_score": 64
+      }
+    },
+    {
+      "organization": "Pakistan Rugby Union",
+      "src_link": "https://example.com/tender/pakistan-rugby-union",
+      "summary_json": {
+        "title": "Pakistan Rugby Union - Rugby Union Equipment Supply Opportunity",
+        "confidence": 0.78,
+        "urgency": "medium",
+        "fit_score": 91
+      }
+    },
+    {
+      "organization": "Bahamas Rugby Federation",
+      "src_link": "https://example.com/tender/bahamas-rugby-federation",
+      "summary_json": {
+        "title": "Bahamas Rugby Federation - Rugby Union Sponsorship Opportunity",
+        "confidence": 0.71,
+        "urgency": "low",
+        "fit_score": 94
+      }
+    },
+    {
+      "organization": "Azerbaijan Volleyball Federation",
+      "src_link": "https://example.com/tender/azerbaijan-volleyball-federation",
+      "summary_json": {
+        "title": "Azerbaijan Volleyball Federation - Volleyball Stadium Development Opportunity",
+        "confidence": 0.73,
+        "urgency": "high",
+        "fit_score": 74
+      }
+    },
+    {
+      "organization": "Rugby Calvisano",
+      "src_link": "https://example.com/tender/rugby-calvisano",
+      "summary_json": {
+        "title": "Rugby Calvisano - Rugby Stadium Development Opportunity",
+        "confidence": 0.73,
+        "urgency": "high",
+        "fit_score": 84
+      }
+    },
+    {
+      "organization": "Belogorie Belgorod",
+      "src_link": "https://example.com/tender/belogorie-belgorod",
+      "summary_json": {
+        "title": "Belogorie Belgorod - Volleyball Sponsorship Opportunity",
+        "confidence": 0.73,
+        "urgency": "low",
+        "fit_score": 62
+      }
+    },
+    {
+      "organization": "Brunei Darussalam Volleyball Association",
+      "src_link": "https://example.com/tender/brunei-darussalam-volleyball-association",
+      "summary_json": {
+        "title": "Brunei Darussalam Volleyball Association - Volleyball Infrastructure Upgrade Opportunity",
+        "confidence": 0.60,
+        "urgency": "medium",
+        "fit_score": 82
+      }
+    },
+    {
+      "organization": "Canadian Volleyball Federation",
+      "src_link": "https://example.com/tender/canadian-volleyball-federation",
+      "summary_json": {
+        "title": "Canadian Volleyball Federation - Volleyball Equipment Supply Opportunity",
+        "confidence": 0.64,
+        "urgency": "low",
+        "fit_score": 82
+      }
+    },
+    {
+      "organization": "Gioiella Prisma Taranto",
+      "src_link": "https://example.com/tender/gioiella-prisma-taranto",
+      "summary_json": {
+        "title": "Gioiella Prisma Taranto - Volleyball Equipment Supply Opportunity",
+        "confidence": 0.72,
+        "urgency": "high",
+        "fit_score": 88
+      }
+    },
+    {
+      "organization": "FIVB",
+      "src_link": "https://example.com/tender/fivb",
+      "summary_json": {
+        "title": "FIVB - Volleyball Equipment Supply Opportunity",
+        "confidence": 0.70,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.84,
+    "avg_fit_score": 80,
+    "top_opportunity": "Cant Volley"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "overview": {
+    "system_name": "Signal Noise App Webhook System",
+    "description": "Real-time webhook integration for RFP detection and entity enrichment",
+    "version": "1.0.0"
+  },
+  "webhooks": [
+    {
+      "name": "LinkedIn Procurement Monitor",
+      "endpoint": "/api/webhook/linkedin-procurement",
+      "method": "POST",
+      "description": "Receives RFP and procurement signals from BrightData LinkedIn monitoring",
+      "headers": {
+        "Content-Type": "application/json",
+        "X-BrightData-Signature": "HMAC-SHA256 signature"
+      },
+      "payload_schema": {
+        "source": "linkedin_monitoring",
+        "event_type": "rfp_detected|procurement_signal|organization_update",
+        "data": {
+          "organization": "string",
+          "title": "string",
+          "estimated_value": "string",
+          "deadline": "string",
+          "description": "string",
+          "contact_person": "string",
+          "confidence_score": "number"
+        }
+      }
+    },
+    {
+      "name": "Claude Agent Processing",
+      "endpoint": "/api/webhook/claude-agent",
+      "method": "POST",
+      "description": "Receives analysis results from Claude Agent processing",
+      "payload_schema": {
+        "processing_id": "string",
+        "entity_name": "string",
+        "analysis_type": "string",
+        "results": {
+          "opportunities_found": "number",
+          "entities_enriched": "number",
+          "insights_generated": "number",
+          "fit_score": "number"
+        }
+      }
+    }
+  ]
+}

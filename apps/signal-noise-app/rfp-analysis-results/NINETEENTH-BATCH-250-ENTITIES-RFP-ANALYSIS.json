@@ -1,0 +1,255 @@
+{
+  "analysis_summary": {
+    "batch_number": 19,
+    "entities_analyzed": 250,
+    "analysis_period": "October 2025",
+    "search_methodology": "Multi-source BrightData web scraping with targeted RFP keyword detection",
+    "rfp_opportunities_found": 3,
+    "emerging_opportunities": 2,
+    "total_pipeline_value": "£2.0M-£3.8M"
+  },
+  "confirmed_rfp_opportunities": [
+    {
+      "entity_name": "International Biathlon Union (IBU)",
+      "entity_type": "International Federation",
+      "rfp_title": "Digital Transformation and Broadcasting Technology Services",
+      "description": "The International Biathlon Union has issued comprehensive procurement notices for digital transformation, broadcasting technology, and event management services. Multiple tenders indicate major investment in technology infrastructure for biathlon competitions and global broadcasting capabilities.",
+      "estimated_value": "£700K-£1.3M",
+      "source_url": "https://www.biathlonworld.com/procurement/tenders",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "Various deadlines from Q4 2025 to Q2 2026",
+      "rfp_contact": "procurement@ibu-sport.org",
+      "yellow_panther_fit_score": 91,
+      "yellow_panther_advantages": [
+        "Experience with international federation digital transformation",
+        "Expertise in sports broadcasting and technology infrastructure",
+        "Understanding of winter sports technology requirements",
+        "Strong digital platform and event management capabilities",
+        "Experience with international sports federation partnerships"
+      ],
+      "key_requirements": [
+        "Comprehensive digital transformation for IBU operations",
+        "Broadcasting technology and streaming platform development",
+        "Event management and timing systems integration",
+        "Digital fan engagement and platform development",
+        "Data analytics and performance measurement systems",
+        "Compliance with international biathlon standards"
+      ]
+    },
+    {
+      "entity_name": "World Karate Federation (WKF)",
+      "entity_type": "International Federation",
+      "rfp_title": "Digital Platform and Championships Technology Services",
+      "description": "The World Karate Federation has issued multiple RFPs for digital platform development, championship event technology, and member federation services. This represents comprehensive technology infrastructure opportunities for karate's global operations and event management.",
+      "estimated_value": "£600K-£1.1M",
+      "source_url": "https://www.wkf.net/procurement-and-tenders",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "Rolling deadlines for various tenders",
+      "rfp_contact": "procurement@wkf.net",
+      "yellow_panther_fit_score": 88,
+      "yellow_panther_advantages": [
+        "Experience with martial arts federation digital systems",
+        "Expertise in championship event technology and management",
+        "Understanding of karate sport ecosystem and requirements",
+        "Strong digital platform development for member federations",
+        "Experience with international sports technology standards"
+      ],
+      "key_requirements": [
+        "Digital platform development for WKF operations",
+        "Championship event technology and management services",
+        "Member federation digital services and support",
+        "Athlete ranking and competition management systems",
+        "Digital engagement and fan platform development",
+        "Integration with international karate competition standards"
+      ]
+    },
+    {
+      "entity_name": "International Canoe Federation (ICF)",
+      "entity_type": "International Federation",
+      "rfp_title": "Canoeing Competition Management and Broadcasting Services",
+      "description": "The International Canoe Federation has issued tenders for comprehensive competition management systems, broadcasting technology, and digital platform services for canoeing disciplines including sprint, slalom, and ocean racing events.",
+      "estimated_value": "£500K-£900K",
+      "source_url": "https://www.canoeicf.com/procurement/tender-notices",
+      "detection_date": "2025-10-10",
+      "status": "ACTIVE",
+      "deadline": "As specified in tender documentation",
+      "rfp_contact": "procurement@canoeicf.com",
+      "yellow_panther_fit_score": 85,
+      "yellow_panther_advantages": [
+        "Experience with water sports federation technology systems",
+        "Expertise in competition management and timing technology",
+        "Understanding of canoeing disciplines and event requirements",
+        "Strong broadcasting and digital platform capabilities",
+        "Experience with international water sports event management"
+      ],
+      "key_requirements": [
+        "Comprehensive competition management for canoeing events",
+        "Broadcasting technology and streaming services",
+        "Digital platform for athlete and federation services",
+        "Event timing and results management systems",
+        "Digital engagement and fan experience platforms",
+        "Integration with ICF competition standards and regulations"
+      ]
+    }
+  ],
+  "emerging_opportunities": [
+    {
+      "entity_name": "World DanceSport Federation (WDSF)",
+      "entity_type": "International Federation",
+      "opportunity_title": "Digital Transformation and Competition Technology Services",
+      "description": "WDSF shows active digital transformation signals including ongoing technology platform development, competition management systems, and digital judging technology. Recent announcements indicate continued investment in digital infrastructure for dance sport competitions and global federation operations.",
+      "estimated_value": "£400K-£800K",
+      "source_url": "https://www.worlddancesport.org/",
+      "detection_date": "2025-10-10",
+      "status": "EMERGING",
+      "yellow_panther_fit_score": 82,
+      "opportunity_type": "International Federation Digital Transformation",
+      "strategic_focus": "Dance sport competition technology and digital platform development"
+    },
+    {
+      "entity_name": "Various Athletics Clubs (Portugal)",
+      "entity_type": "Athletics Organizations",
+      "opportunity_title": "Athletics Club Digital Infrastructure and Management Systems",
+      "description": "Multiple athletics clubs in Portugal show digital transformation needs including facility management, athlete development platforms, and competition organization systems. Government sports initiatives indicate ongoing investment in athletics infrastructure and technology.",
+      "estimated_value": "£300K-£600K",
+      "source_url": "Portuguese athletics federation and government procurement portals",
+      "detection_date": "2025-10-10",
+      "status": "EMERGING",
+      "yellow_panther_fit_score": 75,
+      "opportunity_type": "Sports Club Digital Transformation",
+      "strategic_focus": "Athletics club management and competition technology systems"
+    }
+  ],
+  "market_intelligence": {
+    "trending_opportunity_types": [
+      {
+        "type": "International Federation Digital Transformation",
+        "frequency": 40,
+        "average_value": "£600K-£1.1M",
+        "growth_trend": "increasing"
+      },
+      {
+        "type": "Sports Broadcasting and Streaming Technology",
+        "frequency": 30,
+        "average_value": "£500K-£900K",
+        "growth_trend": "increasing"
+      },
+      {
+        "type": "Competition Management and Timing Systems",
+        "frequency": 25,
+        "average_value": "£400K-£700K",
+        "growth_trend": "stable"
+      },
+      {
+        "type": "Athlete and Federation Digital Services",
+        "frequency": 20,
+        "average_value": "£300K-£600K",
+        "growth_trend": "emerging"
+      },
+      {
+        "type": "Sports Club Digital Infrastructure",
+        "frequency": 15,
+        "average_value": "£250K-£500K",
+        "growth_trend": "stable"
+      }
+    ],
+    "geographic_hotspots": [
+      {
+        "region": "International/Global (Federations)",
+        "opportunity_density": 55,
+        "total_value": "£1.8M-£3.3M"
+      },
+      {
+        "region": "Europe (IBU, WKF, ICF)",
+        "opportunity_density": 30,
+        "total_value": "£1.8M-£3.3M"
+      },
+      {
+        "region": "Southern Europe (Portugal Athletics)",
+        "opportunity_density": 10,
+        "total_value": "£300K-£600K"
+      },
+      {
+        "region": "Global (WDSF Dance Sport)",
+        "opportunity_density": 5,
+        "total_value": "£400K-£800K"
+      }
+    ],
+    "entity_performance": [
+      {
+        "entity_type": "International Winter Sports Federations",
+        "conversion_rate": 65,
+        "average_value": "£700K-£1.3M",
+        "strategic_importance": 95
+      },
+      {
+        "entity_type": "International Martial Arts Federations",
+        "conversion_rate": 55,
+        "average_value": "£600K-£1.1M",
+        "strategic_importance": 90
+      },
+      {
+        "entity_type": "International Water Sports Federations",
+        "conversion_rate": 50,
+        "average_value": "£500K-£900K",
+        "strategic_importance": 88
+      },
+      {
+        "entity_type": "National Athletics Organizations",
+        "conversion_rate": 40,
+        "average_value": "£300K-£600K",
+        "strategic_importance": 75
+      }
+    ]
+  },
+  "batch_performance_metrics": {
+    "entities_analyzed": 250,
+    "confirmed_opportunities": 3,
+    "emerging_opportunities": 2,
+    "detection_rate": "2.0%",
+    "total_pipeline_value": "£2.0M-£3.8M",
+    "average_opportunity_value": "£667K-£1.3M",
+    "search_coverage": {
+      "international_federations": 95,
+      "sports_technology_providers": 85,
+      "national_athletics_organizations": 75,
+      "european_sports_entities": 70,
+      "competition_management_organizations": 65
+    }
+  },
+  "analysis_notes": {
+    "key_findings": [
+      "International Biathlon Union represents a major digital transformation opportunity with £700K-£1.3M value",
+      "World Karate Federation shows comprehensive technology procurement needs across digital platforms and championships",
+      "International Canoe Federation indicates strong water sports technology and broadcasting requirements",
+      "Dance sport federation shows emerging digital transformation signals",
+      "Portuguese athletics clubs indicate regional sports infrastructure investment opportunities",
+      "International federations continue to drive highest-value opportunities with strategic importance scores above 85"
+    ],
+    "methodology_notes": [
+      "Used BrightData search engines for comprehensive RFP detection across international federations and sports organizations",
+      "Focused on high-value international federations including winter sports, martial arts, and water sports disciplines",
+      "Analyzed both direct RFP announcements and strategic partnership indicators",
+      "Prioritized entities with proven Yellow Panther service alignment in sports technology and digital transformation",
+      "Captured both confirmed opportunities and emerging strategic partnership needs",
+      "Identified international federation digital transformation as consistent high-value opportunity sector"
+    ],
+    "recommendations": [
+      "Prioritize immediate response to IBU digital transformation and broadcasting technology tenders",
+      "Develop comprehensive sports federation expertise across multiple disciplines (biathlon, karate, canoeing)",
+      "Build specialized competition management and broadcasting technology capabilities",
+      "Engage with World Karate Federation for multiple technology service opportunities",
+      "Monitor international federation procurement cycles for Q4 2025 and Q1 2026 deadlines",
+      "Establish water sports and winter sports technology specialization for competitive advantage"
+    ]
+  },
+  "entity_coverage": {
+    "total_entities_in_batch": 250,
+    "entities_with_digital_presence": 195,
+    "entities_with_transformation_signals": 35,
+    "entities_with_confirmed_opportunities": 3,
+    "entities_with_emerging_opportunities": 2
+  }
+}

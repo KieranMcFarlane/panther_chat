@@ -1,0 +1,419 @@
+import { tool, createSdkMcpServer } from '@anthropic-ai/claude-agent-sdk';
+import { z } from 'zod';
+
+// Better Auth MCP Server for user-specific memory operations
+interface UserMemory {
+  userId: string;
+  threadId: string;
+  messages: Array<{
+    id: string;
+    role: 'user' | 'assistant';
+    content: string;
+    timestamp: Date;
+    metadata?: any;
+  }>;
+  insights: Array<{
+    id: string;
+    content: string;
+    category: string;
+    confidence: number;
+    timestamp: Date;
+    source: 'claude_agent' | 'user_input' | 'analysis';
+  }>;
+  entities: Array<{
+    id: string;
+    name: string;
+    type: string;
+    properties: any;
+    lastSeen: Date;
+    context: string;
+  }>;
+  preferences: {
+    communicationStyle: string;
+    focusAreas: string[];
+    avoidTopics: string[];
+    expertiseLevel: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+  lastAccessed: Date;
+}
+
+// In-memory storage for Better Auth (in production, this would connect to actual Better Auth database)
+const betterAuthStorage = new Map<string, UserMemory>();
+
+// Better Auth MCP Tools
+const betterAuthStoreMemoryTool = tool('better-auth-store-memory', 'Store conversation memory in Better Auth for a specific user', {
+  userId: z.string().describe('The user ID to store memory for'),
+  threadId: z.string().describe('The thread/conversation ID'),
+  message: z.object({
+    id: z.string(),
+    role: z.enum(['user', 'assistant']),
+    content: z.string(),
+    timestamp: z.string().optional(),
+    metadata: z.any().optional()
+  }),
+  insights: z.array(z.object({
+    id: z.string().optional(),
+    content: z.string(),
+    category: z.string(),
+    confidence: z.number(),
+    source: z.enum(['claude_agent', 'user_input', 'analysis']),
+    timestamp: z.string().optional()
+  })).optional(),
+  entities: z.array(z.object({
+    id: z.string().optional(),
+    name: z.string(),
+    type: z.string(),
+    properties: z.any(),
+    context: z.string()
+  })).optional()
+})
+async function betterAuthStoreMemory(args: any) {
+  try {
+    const { userId, threadId, message, insights = [], entities = [] } = args;
+    
+    console.log(`Better Auth MCP: Storing memory for user ${userId}, thread ${threadId}`);
+    
+    const memoryKey = `${userId}_${threadId}`;
+    let memory = betterAuthStorage.get(memoryKey);
+    
+    if (!memory) {
+      memory = {
+        userId,
+        threadId,
+        messages: [],
+        insights: [],
+        entities: [],
+        preferences: {
+          communicationStyle: 'professional',
+          focusAreas: [],
+          avoidTopics: [],
+          expertiseLevel: 'intermediate'
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastAccessed: new Date()
+      };
+      betterAuthStorage.set(memoryKey, memory);
+    }
+    
+    // Add message
+    memory.messages.push({
+      id: message.id,
+      role: message.role,
+      content: message.content,
+      timestamp: new Date(message.timestamp || Date.now()),
+      metadata: message.metadata
+    });
+    
+    // Add insights
+    insights.forEach((insight: any) => {
+      memory.insights.push({
+        id: insight.id || `insight_${Date.now()}_${Math.random()}`,
+        content: insight.content,
+        category: insight.category,
+        confidence: insight.confidence,
+        source: insight.source,
+        timestamp: new Date(insight.timestamp || Date.now())
+      });
+    });
+    
+    // Add entities
+    entities.forEach((entity: any) => {
+      memory.entities.push({
+        id: entity.id || `entity_${Date.now()}_${Math.random()}`,
+        name: entity.name,
+        type: entity.type,
+        properties: entity.properties || {},
+        lastSeen: new Date(),
+        context: entity.context
+      });
+    });
+    
+    memory.updatedAt = new Date();
+    memory.lastAccessed = new Date();
+    
+    return {
+      content: [{
+        type: 'text',
+        text: `Successfully stored memory for user ${userId}, thread ${threadId}. Added 1 message, ${insights.length} insights, ${entities.length} entities.`
+      }]
+    };
+  } catch (error) {
+    console.error('Better Auth MCP: Store memory error:', error);
+    return {
+      content: [{
+        type: 'text',
+        text: `Error storing memory: ${error}`
+      }],
+      isError: true
+    };
+  }
+}
+
+@tool('better-auth-retrieve-memory', 'Retrieve conversation memory from Better Auth for a specific user', {
+  userId: z.string().describe('The user ID to retrieve memory for'),
+  threadId: z.string().optional().describe('Optional thread ID to retrieve specific thread'),
+  type: z.enum(['all', 'messages', 'insights', 'entities', 'stats']).default('all').describe('Type of memory to retrieve')
+})
+async function betterAuthRetrieveMemory(args: any) {
+  try {
+    const { userId, threadId, type = 'all' } = args;
+    
+    console.log(`Better Auth MCP: Retrieving memory for user ${userId}, thread ${threadId || 'all'}, type: ${type}`);
+    
+    const memories = Array.from(betterAuthStorage.values())
+      .filter(memory => memory.userId === userId)
+      .filter(memory => !threadId || memory.threadId === threadId);
+    
+    if (type === 'stats') {
+      const stats = memories.reduce((acc, memory) => ({
+        totalMemories: acc.totalMemories + 1,
+        totalMessages: acc.totalMessages + memory.messages.length,
+        totalInsights: acc.totalInsights + memory.insights.length,
+        totalEntities: acc.totalEntities + memory.entities.length,
+        insightsByCategory: memory.insights.reduce((categoryAcc, insight) => {
+          categoryAcc[insight.category] = (categoryAcc[insight.category] || 0) + 1;
+          return categoryAcc;
+        }, acc.insightsByCategory)
+      }), {
+        totalMemories: 0,
+        totalMessages: 0,
+        totalInsights: 0,
+        totalEntities: 0,
+        insightsByCategory: {}
+      });
+      
+      return {
+        content: [{
+          type: 'text',
+          text: `Memory stats for user ${userId}:\\n` +
+                `- Total memories: ${stats.totalMemories}\\n` +
+                `- Total messages: ${stats.totalMessages}\\n` +
+                `- Total insights: ${stats.totalInsights}\\n` +
+                `- Total entities: ${stats.totalEntities}\\n` +
+                `- Insights by category: ${JSON.stringify(stats.insightsByCategory, null, 2)}`
+        }]
+      };
+    }
+    
+    let resultText = `Retrieved ${memories.length} memories for user ${userId}:\\n\\n`;
+    
+    memories.forEach((memory, index) => {
+      resultText += `Memory ${index + 1} (Thread: ${memory.threadId}):\\n`;
+      
+      if (type === 'all' || type === 'messages') {
+        resultText += `  Messages: ${memory.messages.length}\\n`;
+        memory.messages.slice(-3).forEach(msg => {
+          resultText += `    - [${msg.role}] ${msg.content.substring(0, 50)}...\\n`;
+        });
+      }
+      
+      if (type === 'all' || type === 'insights') {
+        resultText += `  Insights: ${memory.insights.length}\\n`;
+        memory.insights.slice(-3).forEach(insight => {
+          resultText += `    - [${insight.category}] ${insight.content.substring(0, 50)}... (confidence: ${insight.confidence})\\n`;
+        });
+      }
+      
+      if (type === 'all' || type === 'entities') {
+        resultText += `  Entities: ${memory.entities.length}\\n`;
+        memory.entities.slice(-3).forEach(entity => {
+          resultText += `    - [${entity.type}] ${entity.name}\\n`;
+        });
+      }
+      
+      resultText += `  Last accessed: ${memory.lastAccessed.toISOString()}\\n\\n`;
+    });
+    
+    return {
+      content: [{
+        type: 'text',
+        text: resultText
+      }]
+    };
+  } catch (error) {
+    console.error('Better Auth MCP: Retrieve memory error:', error);
+    return {
+      content: [{
+        type: 'text',
+        text: `Error retrieving memory: ${error}`
+      }],
+      isError: true
+    };
+  }
+}
+
+@tool('better-auth-search-memory', 'Search through Better Auth memory for specific content', {
+  userId: z.string().describe('The user ID to search memory for'),
+  query: z.string().describe('Search query'),
+  category: z.string().optional().describe('Filter by insight category'),
+  entityType: z.string().optional().describe('Filter by entity type'),
+  limit: z.number().default(10).describe('Maximum number of results')
+})
+async function betterAuthSearchMemory(args: any) {
+  try {
+    const { userId, query, category, entityType, limit = 10 } = args;
+    
+    console.log(`Better Auth MCP: Searching memory for user ${userId}, query: ${query}`);
+    
+    const memories = Array.from(betterAuthStorage.values())
+      .filter(memory => memory.userId === userId);
+    
+    const results: any[] = [];
+    const queryLower = query.toLowerCase();
+    
+    memories.forEach(memory => {
+      // Search messages
+      memory.messages.forEach(msg => {
+        if (msg.content.toLowerCase().includes(queryLower)) {
+          results.push({
+            type: 'message',
+            threadId: memory.threadId,
+            content: msg.content,
+            role: msg.role,
+            timestamp: msg.timestamp,
+            relevance: 'direct_match'
+          });
+        }
+      });
+      
+      // Search insights
+      memory.insights.forEach(insight => {
+        if (insight.content.toLowerCase().includes(queryLower) && 
+            (!category || insight.category === category)) {
+          results.push({
+            type: 'insight',
+            threadId: memory.threadId,
+            content: insight.content,
+            category: insight.category,
+            confidence: insight.confidence,
+            timestamp: insight.timestamp,
+            relevance: 'content_match'
+          });
+        }
+      });
+      
+      // Search entities
+      memory.entities.forEach(entity => {
+        if ((entity.name.toLowerCase().includes(queryLower) || 
+             entity.type.toLowerCase().includes(queryLower)) &&
+            (!entityType || entity.type === entityType)) {
+          results.push({
+            type: 'entity',
+            threadId: memory.threadId,
+            name: entity.name,
+            entityType: entity.type,
+            properties: entity.properties,
+            lastSeen: entity.lastSeen,
+            context: entity.context,
+            relevance: 'name_match'
+          });
+        }
+      });
+    });
+    
+    // Sort by relevance and timestamp
+    results.sort((a, b) => {
+      const relevanceOrder = { 'direct_match': 3, 'content_match': 2, 'name_match': 1 };
+      const relevanceA = relevanceOrder[a.relevance] || 0;
+      const relevanceB = relevanceOrder[b.relevance] || 0;
+      
+      if (relevanceA !== relevanceB) {
+        return relevanceB - relevanceA;
+      }
+      
+      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+    });
+    
+    const limitedResults = results.slice(0, limit);
+    
+    let resultText = `Found ${results.length} results for query "${query}" (showing ${limitedResults.length}):\\n\\n`;
+    
+    limitedResults.forEach((result, index) => {
+      resultText += `${index + 1}. [${result.type.toUpperCase()}] ${result.threadId}\\n`;
+      
+      if (result.type === 'message') {
+        resultText += `   ${result.role}: ${result.content.substring(0, 100)}...\\n`;
+      } else if (result.type === 'insight') {
+        resultText += `   [${result.category}] ${result.content.substring(0, 100)}... (confidence: ${result.confidence})\\n`;
+      } else if (result.type === 'entity') {
+        resultText += `   [${result.entityType}] ${result.name} - ${result.context}\\n`;
+      }
+      
+      resultText += `   Date: ${new Date(result.timestamp).toLocaleDateString()}\\n\\n`;
+    });
+    
+    return {
+      content: [{
+        type: 'text',
+        text: resultText
+      }]
+    };
+  } catch (error) {
+    console.error('Better Auth MCP: Search memory error:', error);
+    return {
+      content: [{
+        type: 'text',
+        text: `Error searching memory: ${error}`
+      }],
+      isError: true
+    };
+  }
+}
+
+@tool('better-auth-update-preferences', 'Update user preferences in Better Auth', {
+  userId: z.string().describe('The user ID to update preferences for'),
+  communicationStyle: z.string().optional().describe('Preferred communication style'),
+  focusAreas: z.array(z.string()).optional().describe('Areas of focus'),
+  avoidTopics: z.array(z.string()).optional().describe('Topics to avoid'),
+  expertiseLevel: z.string().optional().describe('User expertise level')
+})
+async function betterAuthUpdatePreferences(args: any) {
+  try {
+    const { userId, communicationStyle, focusAreas = [], avoidTopics = [], expertiseLevel } = args;
+    
+    console.log(`Better Auth MCP: Updating preferences for user ${userId}`);
+    
+    // Update all memories for this user with new preferences
+    const userMemories = Array.from(betterAuthStorage.values())
+      .filter(memory => memory.userId === userId);
+    
+    userMemories.forEach(memory => {
+      if (communicationStyle) memory.preferences.communicationStyle = communicationStyle;
+      if (focusAreas.length > 0) memory.preferences.focusAreas = focusAreas;
+      if (avoidTopics.length > 0) memory.preferences.avoidTopics = avoidTopics;
+      if (expertiseLevel) memory.preferences.expertiseLevel = expertiseLevel;
+      memory.updatedAt = new Date();
+    });
+    
+    return {
+      content: [{
+        type: 'text',
+        text: `Updated preferences for user ${userId}:\\n` +
+              `- Communication style: ${communicationStyle || 'unchanged'}\\n` +
+              `- Focus areas: ${focusAreas.length > 0 ? focusAreas.join(', ') : 'unchanged'}\\n` +
+              `- Avoid topics: ${avoidTopics.length > 0 ? avoidTopics.join(', ') : 'unchanged'}\\n` +
+              `- Expertise level: ${expertiseLevel || 'unchanged'}\\n` +
+              `Updated ${userMemories.length} memory records.`
+      }]
+    };
+  } catch (error) {
+    console.error('Better Auth MCP: Update preferences error:', error);
+    return {
+      content: [{
+        type: 'text',
+        text: `Error updating preferences: ${error}`
+      }],
+      isError: true
+    };
+  }
+}
+
+// Create the Better Auth MCP Server
+export const betterAuthMcpServer = createSdkMcpServer(
+  'better-auth-memory-server',
+  '1.0.0',
+  [betterAuthStoreMemory, betterAuthRetrieveMemory, betterAuthSearchMemory, betterAuthUpdatePreferences]
+);

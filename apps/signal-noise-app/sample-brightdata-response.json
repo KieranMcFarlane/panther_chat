@@ -1,0 +1,150 @@
+{
+  "search_metadata": {
+    "id": "65f1a2b3c4d5e6f7",
+    "status": "Success",
+    "json_endpoint": "https://api.brightdata.com/serp/google",
+    "created_at": "2025-01-03T10:30:00Z",
+    "processed_at": "2025-01-03T10:30:02Z",
+    "google_url": "https://www.google.com/search?q=Cricket+West+Indies+RFP&oq=Cricket+West+Indies+RFP&num=10&hl=en&gl=us",
+    "total_time_taken": 1.23
+  },
+  "search_parameters": {
+    "engine": "google",
+    "q": "Cricket West Indies RFP",
+    "num": "10",
+    "hl": "en",
+    "gl": "us",
+    "api_key": "bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4"
+  },
+  "search_information": {
+    "query_displayed": "Cricket West Indies RFP",
+    "total_results": 8470,
+    "time_taken_displayed": 0.45,
+    "organic_results_state": "Results for exact spelling"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "REQUEST FOR PROPOSAL: TICKETING SOLUTION FOR CRICKET WEST INDIES",
+      "link": "https://www.windiescricket.com/cricket-west-indies/request-for-proposal-ticketing-solution-for-cricket-west-indies/",
+      "snippet": "Cricket West Indies (CWI) is seeking a visionary, technology-powered partner to design and implement a state-of-the-art, integrated ticketing and hospitality management solution for West Indies cricket.",
+      "date": "Feb 10, 2025",
+      "cached_page_link": "https://webcache.googleusercontent.com/search?q=cache:windiescricket.com-rfp-ticketing",
+      "favicon": "https://www.windiescricket.com/favicon.ico",
+      "displayed_link": "windiescricket.com",
+      "snippet_extra": "The RFP closes on March 15, 2025 at 5:00 PM AST."
+    },
+    {
+      "position": 2,
+      "title": "CRICKET WEST INDIES ISSUES RFP FOR CARIBBEAN RADIO PRODUCTION AND BROADCAST RIGHTS",
+      "link": "https://www.windiescricket.com/cricket-west-indies/cricket-west-indies-issues-rfp-caribbean-radio-production-and-broadcast-rights-2020-and-2021/",
+      "snippet": "Cricket West Indies (CWI) is inviting Caribbean radio production and broadcast partners to submit proposals to produce and broadcast high quality radio coverage of West Indies cricket matches.",
+      "date": "May 25, 2020",
+      "cached_page_link": "https://webcache.googleusercontent.com/search?q=cache:windiescricket.com-radio-rfp",
+      "favicon": "https://www.windiescricket.com/favicon.ico",
+      "displayed_link": "windiescricket.com"
+    },
+    {
+      "position": 3,
+      "title": "Request for Proposal (RFP) to design the Coolidge Cricket Ground land use master plan",
+      "link": "https://www.windiescricket.com/cricket-west-indies/request-proposal-rfp-design-coolidge-cricket-ground-land-use-master-plan-concept/",
+      "snippet": "The Board of Directors of Coolidge Cricket Ground has approved the tender for qualified architectural and/or engineering firms or individuals to design a comprehensive land use master plan.",
+      "date": "Jan 15, 2023",
+      "cached_page_link": "https://webcache.googleusercontent.com/search?q=cache:coolidge-rfp-masterplan",
+      "favicon": "https://www.windiescricket.com/favicon.ico",
+      "displayed_link": "windiescricket.com"
+    },
+    {
+      "position": 4,
+      "title": "CWI Digital Transformation - Request for Proposal",
+      "link": "https://cricviz-westindies-production.s3.amazonaws.com/documents/Cricket_West_Indies_-_REQUEST_FOR_PROPOSAL_-_Digital_Transformation_-_Feb_2025_nFaszsL.pdf",
+      "snippet": "Cricket West Indies (CWI) invites proposals from highly skilled digital transformation and web development agencies to spearhead a comprehensive Digital Transformation program.",
+      "date": "Feb 10, 2025",
+      "cached_page_link": null,
+      "favicon": null,
+      "displayed_link": "cricviz-westindies-production.s3.amazonaws.com",
+      "file_format": "PDF",
+      "snippet_extra": "Submission deadline: March 30, 2025"
+    },
+    {
+      "position": 5,
+      "title": "Bermuda Cricket Board - Request for proposal CWI Digital Transformation",
+      "link": "https://cricketbermuda.com/request-for-proposal-cwi-digital-transformation/",
+      "snippet": "Cricket West Indies (CWI) invites proposals from highly skilled digital transformation and web development agencies to spearhead a comprehensive Digital Transformation program across West Indies cricket.",
+      "date": "Feb 11, 2025",
+      "cached_page_link": "https://webcache.googleusercontent.com/search?q=cache:bermuda-cricket-cwi-digital",
+      "favicon": "https://cricketbermuda.com/favicon.ico",
+      "displayed_link": "cricketbermuda.com"
+    },
+    {
+      "position": 6,
+      "title": "Barbados Cricket Association - Party Stand Management RFP",
+      "link": "https://barbadoscricket.org/wp-content/uploads/2024/02/RFP-Party-Stand-Management-Final-1.pdf",
+      "snippet": "Request for Proposal for management of CWI Party Stands during international cricket matches at Kensington Oval. Seeking experienced hospitality partners.",
+      "date": "Feb 24, 2024",
+      "cached_page_link": null,
+      "favicon": null,
+      "displayed_link": "barbadoscricket.org",
+      "file_format": "PDF"
+    },
+    {
+      "position": 7,
+      "title": "CARICOM Demands Change: Is This the Turning Point for West Indies Cricket?",
+      "link": "https://www.youtube.com/watch?v=kdg2Vk3HEZQ",
+      "snippet": "Cricket West Indies (CWI) is under pressure as CARICOM and the Prime Ministerial Sub-Committee on Cricket (PMSC) call for urgent governance reforms and structural changes.",
+      "date": "3 months ago",
+      "cached_page_link": null,
+      "favicon": "https://www.youtube.com/favicon.ico",
+      "displayed_link": "youtube.com",
+      "video": {
+        "duration": "2:18",
+        "views": "80+"
+      }
+    },
+    {
+      "position": 8,
+      "title": "Cricket West Indies Welcomes CARICOM Proposal for Special Committee",
+      "link": "https://www.nevispages.com/cricket-west-indies-welcomes-caricom-proposal-for-special-committee/",
+      "snippet": "Cricket West Indies Welcomes CARICOM Proposal for Special Committee. On Jul 27, 2025. The governing body expresses openness to governance reform discussions.",
+      "date": "Jul 27, 2025",
+      "cached_page_link": "https://webcache.googleusercontent.com/search?q=cache:nevispages-cwi-caricom",
+      "favicon": "https://www.nevispages.com/favicon.ico",
+      "displayed_link": "nevispages.com"
+    }
+  ],
+  "related_searches": [
+    {
+      "query": "Cricket west indies rfp 2022",
+      "link": "https://www.google.com/search?q=Cricket+west+indies+rfp+2022"
+    },
+    {
+      "query": "Cricket west indies rfp 2021",
+      "link": "https://www.google.com/search?q=Cricket+west+indies+rfp+2021"
+    },
+    {
+      "query": "West Indies cricket digital transformation",
+      "link": "https://www.google.com/search?q=West+Indies+cricket+digital+transformation"
+    },
+    {
+      "query": "Cricket West Indies sponsorship opportunities",
+      "link": "https://www.google.com/search?q=Cricket+West+Indies+sponsorship+opportunities"
+    },
+    {
+      "query": "CWI procurement tender",
+      "link": "https://www.google.com/search?q=CWI+procurement+tender"
+    }
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://api.brightdata.com/serp/google?q=Cricket+West+Indies+RFP&start=10&api_key=bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4",
+    "other_pages": {
+      "2": "https://api.brightdata.com/serp/google?q=Cricket+West+Indies+RFP&start=10&api_key=bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4",
+      "3": "https://api.brightdata.com/serp/google?q=Cricket+West+Indies+RFP&start=20&api_key=bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4",
+      "4": "https://api.brightdata.com/serp/google?q=Cricket+West+Indies+RFP&start=30&api_key=bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4"
+    }
+  },
+  "serpapi_pagination": {
+    "current": 1,
+    "next_link": "https://api.brightdata.com/serp/google?q=Cricket+West+Indies+RFP&start=10&api_key=bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4"
+  }
+}

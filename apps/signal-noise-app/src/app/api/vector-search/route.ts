@@ -1,40 +1,46 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { Neo4jService, VectorSearchOptions } from '@/lib/neo4j'
-
-const neo4jService = new Neo4jService()
+import { NextRequest, NextResponse } from 'next/server';
+import { searchEntityEmbeddings } from '@/lib/embeddings';
 
 export async function POST(request: NextRequest) {
-  try {
-    const { query, limit = 10, threshold = 0.7, entityType } = await request.json()
+	try {
+		const { query, limit = 10, score_threshold = 0.2, entity_types } = await request.json();
+		if (!query || typeof query !== 'string') {
+			return NextResponse.json({ results: [], total: 0, query: '', note: 'empty_query' });
+		}
 
-    if (!query) {
-      return NextResponse.json(
-        { error: 'Query is required' },
-        { status: 400 }
-      )
-    }
+		// If no embedding key, return empty results gracefully
+		if (!process.env.OPENAI_API_KEY) {
+			return NextResponse.json({ results: [], total: 0, query, note: 'missing_openai_api_key' });
+		}
 
-    const options: VectorSearchOptions = {
-      limit: Number(limit) || 10,
-      threshold: Number(threshold) || 0.7,
-      entityType: entityType || undefined
-    }
+		// Use Supabase vector search instead of Qdrant
+		const results = await searchEntityEmbeddings(query, {
+			entityTypes: entity_types,
+			matchThreshold: score_threshold,
+			matchCount: limit
+		});
 
-    const results = await neo4jService.vectorSearch(query, options)
+		// Transform results to match expected format
+		const transformedResults = results.map((r: any) => ({
+			id: String(r.id),
+			entity_id: r.entity_id,
+			name: r.name,
+			type: r.entity_type,
+			score: r.similarity,
+			metadata: r.metadata || {},
+		}));
 
-    return NextResponse.json({
-      results,
-      query,
-      options
-    })
-  } catch (error) {
-    console.error('Vector search error:', error)
-    return NextResponse.json(
-      { 
-        error: error instanceof Error ? error.message : 'Vector search failed',
-        results: []
-      },
-      { status: 500 }
-    )
-  }
+		return NextResponse.json({ results: transformedResults, total: transformedResults.length, query });
+	} catch (error: any) {
+		console.error('Vector search error:', error);
+		// Graceful fallback
+		return NextResponse.json({ results: [], total: 0, query: '', note: 'internal_error' });
+	}
+}
+
+export async function GET() {
+	return NextResponse.json({
+		message: 'Vector search API endpoint',
+		usage: 'POST /api/vector-search { query, limit?, score_threshold? }',
+	});
 }

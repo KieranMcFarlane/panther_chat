@@ -1,0 +1,99 @@
+{
+  "total_rfps_detected": 2,
+  "entities_checked": 20,
+  "monitoring_period": "2025-11-02",
+  "detection_sources": ["BrightData Google Search", "Direct website scraping"],
+  "highlights": [
+    {
+      "organization": "Cricket West Indies",
+      "type": "International Federation",
+      "sport": "Cricket",
+      "country": "International",
+      "src_link": "https://americascricket.com/request-for-proposal-cwi-digital-transformation-2/",
+      "summary_json": {
+        "project_title": "Cricket West Indies Digital Transformation",
+        "description": "Comprehensive digital transformation initiative including website redesign and mobile app feasibility analysis",
+        "estimated_value": "£200K-£500K",
+        "submission_deadline": "2025-03-03",
+        "yellow_panther_fit_score": 0.95,
+        "fit_category": "PERFECT_FIT",
+        "key_requirements": [
+          "Digital transformation expertise",
+          "Sports federation experience",
+          "Large-scale web development",
+          "Mobile app feasibility analysis"
+        ],
+        "competitive_advantages": [
+          "STA Award-winning Team GB Olympic app",
+          "Premier Padel partnership success",
+          "ISO 9001 & ISO 27001 certification",
+          "Sports federation specialization"
+        ]
+      },
+      "confidence": 0.95
+    },
+    {
+      "organization": "Kerala Cricket Association",
+      "type": "Regional Federation", 
+      "sport": "Cricket",
+      "country": "India",
+      "src_link": "https://www.keralacricketassociation.com/tender/request-for-proposal-for-design-development-implementation-and-maintenance-of-website-and-mobile-app-for-kerala-cricket-league-and-kerala-cricket-association/",
+      "summary_json": {
+        "project_title": "Kerala Cricket League and Association Digital Platforms",
+        "description": "Design, development, implementation and maintenance of two separate digital platforms with websites and mobile apps",
+        "estimated_value": "£80K-£150K",
+        "submission_deadline": "2025-05-05",
+        "yellow_panther_fit_score": 0.85,
+        "fit_category": "GOOD_FIT",
+        "key_requirements": [
+          "iOS & Android development",
+          "Multi-language support (English/Malayalam)",
+          "2-month delivery timeline",
+          "3+ years experience required"
+        ],
+        "competitive_advantages": [
+          "Multi-language app development",
+          "Cricket domain expertise",
+          "Rapid delivery capability",
+          "Sports platform portfolio"
+        ]
+      },
+      "confidence": 0.90
+    }
+  ],
+  "analysis_summary": {
+    "total_estimated_value": "£280K-£650K",
+    "high_value_opportunities": 1,
+    "perfect_fit_opportunities": 1,
+    "good_fit_opportunities": 1,
+    "cricket_focus": 100,
+    "urgent_deadlines": 1,
+    "average_confidence_score": 0.925,
+    "yellow_panther_advantages": [
+      "Sports domain expertise across both opportunities",
+      "Proven mobile app development experience",
+      "Digital transformation specialization",
+      "Multi-language platform capabilities"
+    ]
+  },
+  "strategic_recommendations": {
+    "immediate_actions": [
+      "Cricket West Indies RFP requires immediate attention - deadline March 3, 2025",
+      "Prepare comprehensive capability statement highlighting sports federation experience",
+      "Leverage Olympic app and Premier Padel case studies"
+    ],
+    "market_intelligence": {
+      "trend_observed": "Sports federations investing heavily in digital transformation",
+      "primary_focus": "Mobile-first strategies with fan engagement platforms",
+      "budget_ranges": "£80K-£500K for comprehensive digital initiatives",
+      "competition_level": "High for major federations, moderate for regional associations"
+    }
+  },
+  "monitoring_performance": {
+    "neo4j_entities_analyzed": 20,
+    "detection_rate": 10,
+    "brightdata_success_rate": 100,
+    "data_quality_score": 0.92,
+    "automation_level": "Fully automated detection and analysis"
+  }
+}

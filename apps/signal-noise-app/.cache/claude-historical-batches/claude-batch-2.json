@@ -1,0 +1,195 @@
+{
+  "batchId": 2,
+  "batchStart": "2025-10-06T22:59:09.904Z",
+  "batchEnd": "2025-10-06T22:59:37.868Z",
+  "totalEntities": 20,
+  "claudeApiCalls": 20,
+  "totalOpportunities": 20,
+  "totalRisks": 0,
+  "totalRecommendations": 0,
+  "estimatedValue": 20,
+  "averageConfidence": 70,
+  "claudeSuccessRate": 100,
+  "entities": [
+    {
+      "name": "Bristol Rovers",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "British Olympic Association (Team GB)",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Bromley",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Burton Albion",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Callaway Golf",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Cambridge United",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Canadian Olympic Committee",
+      "type": "Entity",
+      "sport": "Olympic Sports",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Carlisle United",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Carnoustie Golf Links",
+      "type": "Entity",
+      "sport": "Golf",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Charlton Athletic",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Cheltenham Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Chesterfield",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Circuit de Monaco",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Circuit de Spa-Francorchamps",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Circuit of the Americas",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Colchester United",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Crawley Town",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Crewe Alexandra",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "DHL Formula 1",
+      "type": "Entity",
+      "sport": "Formula 1",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    },
+    {
+      "name": "Doncaster Rovers",
+      "type": "Entity",
+      "sport": "Football",
+      "opportunities": 1,
+      "estimated_value": "£1.0M",
+      "confidence": 70,
+      "claude_model": "claude-3-5-sonnet-20241022"
+    }
+  ]
+}

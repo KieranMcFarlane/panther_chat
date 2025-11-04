@@ -1,0 +1,41 @@
+{
+  "total_rfps_detected": 3,
+  "entities_checked": 9,
+  "highlights": [
+    {
+      "organization": "Inter Milan",
+      "src_link": "https://www.onefootball.com/en/news/ac-milan-inter-launch-tender-for-new-san-siro-project-four-firms-in-the-running-41109546",
+      "summary_json": {
+        "title": "AC Milan & Inter Launch €1B+ San Siro Stadium Project Tender",
+        "confidence": 1.0,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    },
+    {
+      "organization": "Arsenal FC",
+      "src_link": "https://www.gotocsp.com/our-clients/our-partners/arsenal-fc/",
+      "summary_json": {
+        "title": "Arsenal FC Competitive Tender Processes for Services & Infrastructure",
+        "confidence": 0.8,
+        "urgency": "medium",
+        "fit_score": 65
+      }
+    },
+    {
+      "organization": "Manchester City FC",
+      "src_link": "https://www.costantegroup.com/project/manchester-city-football-club/",
+      "summary_json": {
+        "title": "Manchester City Etihad Stadium Expansion RFP & Vendor Selection",
+        "confidence": 0.7,
+        "urgency": "medium",
+        "fit_score": 60
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.83,
+    "avg_fit_score": 73.3,
+    "top_opportunity": "Inter Milan"
+  }
+}

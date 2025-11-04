@@ -1,0 +1,163 @@
+{
+  "totalProcessed": 24,
+  "missingEntities": [
+    {
+      "name": "Paris 2024 Olympic Games",
+      "type": null,
+      "sport": "Olympic Sports",
+      "country": null
+    },
+    {
+      "name": "LA 2028 Olympic Games",
+      "type": null,
+      "sport": "Olympic Sports",
+      "country": null
+    },
+    {
+      "name": "Sevilla FC",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Spain"
+    },
+    {
+      "name": "Porto",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Portugal"
+    },
+    {
+      "name": "Benfica",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Portugal"
+    },
+    {
+      "name": "AS Roma",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Italy"
+    },
+    {
+      "name": "Napoli",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Italy"
+    },
+    {
+      "name": "Inter Milan",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Italy"
+    }
+  ],
+  "problematicEntities": [
+    {
+      "name": "AFC (json_seed)",
+      "type": "Organization",
+      "sport": "",
+      "country": "",
+      "reason": "Matches problematic pattern"
+    },
+    {
+      "name": "2. Bundesliga (json_seed)",
+      "type": "Organization",
+      "sport": "",
+      "country": "",
+      "reason": "Matches problematic pattern"
+    },
+    {
+      "name": "Academy Director",
+      "type": null,
+      "sport": null,
+      "country": null,
+      "reason": "Matches problematic pattern"
+    },
+    {
+      "name": "Test Person",
+      "type": null,
+      "sport": null,
+      "country": null,
+      "reason": "Matches problematic pattern"
+    }
+  ],
+  "duplicateEntries": [
+    {
+      "name": "Manchester United",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England"
+    },
+    {
+      "name": "FC Barcelona",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Spain"
+    },
+    {
+      "name": "Real Madrid",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Spain"
+    },
+    {
+      "name": "Bayern München",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Germany"
+    },
+    {
+      "name": "Liverpool",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England"
+    },
+    {
+      "name": "Paris Saint-Germain",
+      "type": "Club",
+      "sport": "Football",
+      "country": "France"
+    },
+    {
+      "name": "Juventus",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Italy"
+    },
+    {
+      "name": "Manchester City",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England"
+    },
+    {
+      "name": "Tottenham Hotspur",
+      "type": "Club",
+      "sport": "Football",
+      "country": "England"
+    },
+    {
+      "name": "Borussia Mönchengladbach",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Germany"
+    },
+    {
+      "name": "Ajax",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Netherlands"
+    },
+    {
+      "name": "Sporting CP",
+      "type": "Club",
+      "sport": "Football",
+      "country": "Portugal"
+    }
+  ],
+  "projections": {
+    "missing": 1474,
+    "problematic": 737,
+    "existing": 2211,
+    "batchesNeeded": 6
+  }
+}

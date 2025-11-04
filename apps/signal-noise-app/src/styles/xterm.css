@@ -1,0 +1,89 @@
+/* XTerm Custom Styling for Claude Agent Logs */
+.xterm {
+  background-color: #0a0a0a !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 8px !important;
+  font-family: 'Cascadia Code', 'Fira Code', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+}
+
+.xterm-viewport {
+  background-color: #0a0a0a !important;
+  scrollbar-width: thin;
+  scrollbar-color: #4a5568 #1a202c;
+}
+
+.xterm-viewport::-webkit-scrollbar {
+  width: 8px;
+}
+
+.xterm-viewport::-webkit-scrollbar-track {
+  background: #1a202c;
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb {
+  background-color: #4a5568;
+  border-radius: 4px;
+}
+
+.xterm-viewport::-webkit-scrollbar-thumb:hover {
+  background-color: #718096;
+}
+
+.xterm-screen {
+  background-color: #0a0a0a !important;
+}
+
+.xterm-rows {
+  padding: 0 !important;
+}
+
+.xterm-rows > div {
+  line-height: 1.4 !important;
+}
+
+/* Hide cursor when terminal is not focused */
+.xterm:not(.focus) .xterm-cursor {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Custom cursor styling */
+.xterm.focus .xterm-cursor {
+  background-color: #00ffff !important;
+  border: none !important;
+  animation: cursor-blink 1s infinite !important;
+}
+
+@keyframes cursor-blink {
+  0%, 49% { background-color: #00ffff; }
+  50%, 100% { background-color: transparent; }
+}
+
+/* Selection styling */
+.xterm-selection {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border: none !important;
+}
+
+/* Ensure terminal uses full height */
+.xterm {
+  height: 100% !important;
+}
+
+/* Font rendering optimization */
+.xterm {
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Remove focus outline */
+.xterm:focus {
+  outline: none !important;
+}
+
+/* Character spacing optimization */
+.xterm-char-measure-element {
+  font-family: 'Cascadia Code', 'Fira Code', 'SF Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+}

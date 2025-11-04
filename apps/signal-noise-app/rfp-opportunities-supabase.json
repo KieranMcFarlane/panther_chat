@@ -1,0 +1,114 @@
+[
+  {
+    "rfp_id": "CWI-DIGITAL-TRANSFORM-2025-001",
+    "organization": "Cricket West Indies",
+    "type": "International Federation",
+    "sport": "Cricket",
+    "country": "International",
+    "src_link": "https://americascricket.com/request-for-proposal-cwi-digital-transformation-2/",
+    "summary_json": {
+      "project_title": "Cricket West Indies Digital Transformation",
+      "description": "Comprehensive digital transformation initiative including strategic redesign and redevelopment of official website and mobile app feasibility analysis",
+      "scope": [
+        "Strategic redesign of www.windiescricket.com",
+        "Website redevelopment",
+        "Mobile application feasibility analysis",
+        "Digital platform modernization",
+        "Brand positioning fortification"
+      ],
+      "requirements": {
+        "technical": ["Web development", "Mobile app", "UX/UI design", "Digital strategy"],
+        "business": ["Fan engagement", "Revenue optimization", "Brand positioning"],
+        "experience": ["Digital transformation", "Sports industry", "Large-scale projects"]
+      },
+      "timeline": {
+        "posted_date": "2025-02-10",
+        "submission_deadline": "2025-03-03",
+        "project_duration": "12-18 months",
+        "urgency_level": "high"
+      },
+      "contact_info": {
+        "email": "cwiproposals@",
+        "contact_method": "Email submission",
+        "rfp_document": "Available for download from CWI website"
+      },
+      "estimated_value": "£200K-£500K",
+      "yellow_panther_fit": {
+        "fit_score": 0.95,
+        "fit_category": "PERFECT_FIT",
+        "service_alignment": {
+          "mobile_app_development": 1.0,
+          "web_development": 1.0,
+          "digital_transformation": 1.0,
+          "sports_domain_expertise": 1.0
+        },
+        "strategic_advantages": [
+          "STA Award-winning Team GB Olympic app",
+          "Premier Padel partnership success", 
+          "ISO 9001 & ISO 27001 certification",
+          "Sports federation specialization"
+        ]
+      }
+    },
+    "confidence": 0.95,
+    "detected_at": "2025-11-02T00:00:00Z"
+  },
+  {
+    "rfp_id": "KCA-DIGITAL-PLATFORMS-2025-002",
+    "organization": "Kerala Cricket Association",
+    "type": "Regional Federation",
+    "sport": "Cricket",
+    "country": "India",
+    "src_link": "https://www.keralacricketassociation.com/tender/request-for-proposal-for-design-development-implementation-and-maintenance-of-website-and-mobile-app-for-kerala-cricket-league-and-kerala-cricket-association/",
+    "summary_json": {
+      "project_title": "Kerala Cricket League and Association Digital Platforms",
+      "description": "Design, development, implementation and maintenance of two separate digital platforms comprising websites and mobile applications for Kerala Cricket League and Kerala Cricket Association",
+      "scope": [
+        "Two separate websites (KCL and KCA)",
+        "Two mobile applications (iOS and Android)",
+        "Requirement gathering & planning",
+        "Design & user interface",
+        "Third-party integrations",
+        "Security & performance",
+        "Content management system",
+        "Maintenance & support"
+      ],
+      "requirements": {
+        "technical": ["iOS & Android development", "CMS development", "Multi-language support"],
+        "business": ["Seamless transition", "SEO implementation", "Post-launch support"],
+        "experience": ["Minimum 3 years", "3+ similar projects", "Sports platform experience preferred"]
+      },
+      "timeline": {
+        "posted_date": "2025-04-25",
+        "submission_deadline": "2025-05-05",
+        "project_duration": "2 months",
+        "support_duration": "2 months post-launch",
+        "urgency_level": "medium"
+      },
+      "contact_info": {
+        "email": "office@keralacricket.in",
+        "contact_method": "Email submission",
+        "special_requirements": "Technical and Commercial proposals in two parts"
+      },
+      "estimated_value": "£80K-£150K",
+      "yellow_panther_fit": {
+        "fit_score": 0.85,
+        "fit_category": "GOOD_FIT",
+        "service_alignment": {
+          "mobile_app_development": 1.0,
+          "web_development": 1.0,
+          "multi_language_support": 0.9,
+          "sports_domain_expertise": 0.8
+        },
+        "strategic_advantages": [
+          "Multi-language app development experience",
+          "Cricket domain expertise",
+          "Rapid delivery capability (2-month timeline)",
+          "Sports platform portfolio"
+        ]
+      }
+    },
+    "confidence": 0.90,
+    "detected_at": "2025-11-02T00:00:00Z"
+  }
+]

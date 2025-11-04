@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Persistent Service</title>
+</head>
+<body>
+    <h1>Testing Persistent RFP Service</h1>
+    <button onclick="startService()">Start Service</button>
+    <button onclick="clearSession()">Clear Session</button>
+    <div id="logs"></div>
+
+    <script type="module">
+        // Import the PersistentRFPService
+        // Note: This won't work directly in browser, need to test via console
+        
+        function addLog(message) {
+            const logs = document.getElementById('logs');
+            const div = document.createElement('div');
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.appendChild(div);
+            console.log(message);
+        }
+
+        window.startService = () => {
+            addLog('Testing persistent service start...');
+            // This would need to be tested in the browser console on the actual page
+        };
+
+        window.clearSession = () => {
+            addLog('Clearing session...');
+            localStorage.removeItem('rfp-intelligence-session');
+        };
+
+        addLog('Page loaded. Test buttons ready.');
+    </script>
+</body>
+</html>

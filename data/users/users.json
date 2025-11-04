@@ -1,0 +1,229 @@
+{
+  "users": {
+    "user_e8aa13f2-8645-43e8-b5b8-5c508fbf1da8": {
+      "id": "user_e8aa13f2-8645-43e8-b5b8-5c508fbf1da8",
+      "email": "simple-test@example.com",
+      "username": "simpletestuser",
+      "displayName": "Simple Test User",
+      "role": "USER",
+      "authProvider": "oauth2",
+      "authId": "user_1758984868862_c938fztab",
+      "status": "active",
+      "createdAt": "2025-09-27T14:54:28.636Z",
+      "updatedAt": "2025-09-27T14:54:28.867Z",
+      "emailVerified": false,
+      "settings": {
+        "notifications": true,
+        "theme": "default",
+        "language": "en",
+        "timezone": "UTC"
+      },
+      "metadata": {
+        "registrationSource": "direct"
+      },
+      "lastLoginAt": "2025-09-27T14:54:28.867Z",
+      "lastLoginIp": "127.0.0.1"
+    },
+    "user_8dbe7eb7-e806-49b4-a48b-bbd74c52a6f9": {
+      "id": "user_8dbe7eb7-e806-49b4-a48b-bbd74c52a6f9",
+      "email": "slot-test@example.com",
+      "username": "slottester",
+      "displayName": "Slot Test User",
+      "role": "USER",
+      "authProvider": "oauth2",
+      "authId": "user_1758989396350_yjzfhprkr",
+      "status": "active",
+      "createdAt": "2025-09-27T16:09:56.247Z",
+      "updatedAt": "2025-09-27T16:09:56.247Z",
+      "emailVerified": false,
+      "settings": {
+        "notifications": true,
+        "theme": "default",
+        "language": "en",
+        "timezone": "UTC"
+      },
+      "metadata": {
+        "registrationSource": "direct"
+      }
+    },
+    "user_5f1bf62f-8927-4254-93b3-27b90a86c827": {
+      "id": "user_5f1bf62f-8927-4254-93b3-27b90a86c827",
+      "email": "limit-test@example.com",
+      "username": "limittester",
+      "displayName": "Limit Test User",
+      "role": "USER",
+      "authProvider": "oauth2",
+      "authId": "user_1758989396460_dzjolu78f",
+      "status": "active",
+      "createdAt": "2025-09-27T16:09:56.359Z",
+      "updatedAt": "2025-09-27T16:09:56.359Z",
+      "emailVerified": false,
+      "settings": {
+        "notifications": true,
+        "theme": "default",
+        "language": "en",
+        "timezone": "UTC"
+      },
+      "metadata": {
+        "registrationSource": "direct"
+      }
+    },
+    "user_e9e931b1-96e2-4980-81f2-63b0332a66d3": {
+      "id": "user_e9e931b1-96e2-4980-81f2-63b0332a66d3",
+      "email": "integration1@example.com",
+      "username": "integrationuser1",
+      "displayName": "Integration Test User 1",
+      "role": "USER",
+      "authProvider": "oauth2",
+      "authId": "user_1758989446028_po5g4tvd3",
+      "status": "active",
+      "createdAt": "2025-09-27T16:10:45.926Z",
+      "updatedAt": "2025-09-27T16:10:45.926Z",
+      "emailVerified": false,
+      "settings": {
+        "notifications": true,
+        "theme": "default",
+        "language": "en",
+        "timezone": "UTC"
+      },
+      "metadata": {
+        "registrationSource": "direct"
+      }
+    },
+    "user_e4050919-b5a2-4e71-ba15-94e5c2338c33": {
+      "id": "user_e4050919-b5a2-4e71-ba15-94e5c2338c33",
+      "email": "integration2@example.com",
+      "username": "integrationuser2",
+      "displayName": "Integration Test User 2",
+      "role": "USER",
+      "authProvider": "oauth2",
+      "authId": "user_1758989446134_0unfyi9e2",
+      "status": "active",
+      "createdAt": "2025-09-27T16:10:46.034Z",
+      "updatedAt": "2025-09-27T16:10:46.034Z",
+      "emailVerified": false,
+      "settings": {
+        "notifications": true,
+        "theme": "default",
+        "language": "en",
+        "timezone": "UTC"
+      },
+      "metadata": {
+        "registrationSource": "direct"
+      }
+    },
+    "user_c5278118-b0c1-4dc2-a64b-936491036199": {
+      "id": "user_c5278118-b0c1-4dc2-a64b-936491036199",
+      "email": "integration3@example.com",
+      "username": "integrationuser3",
+      "displayName": "Integration Test User 3",
+      "role": "USER",
+      "authProvider": "oauth2",
+      "authId": "user_1758989446239_i00utxmvr",
+      "status": "active",
+      "createdAt": "2025-09-27T16:10:46.138Z",
+      "updatedAt": "2025-09-27T16:10:46.138Z",
+      "emailVerified": false,
+      "settings": {
+        "notifications": true,
+        "theme": "default",
+        "language": "en",
+        "timezone": "UTC"
+      },
+      "metadata": {
+        "registrationSource": "direct"
+      }
+    },
+    "user_fdb55022-1ff1-47db-a8a3-946f5ea9e24a": {
+      "id": "user_fdb55022-1ff1-47db-a8a3-946f5ea9e24a",
+      "email": "session-test@example.com",
+      "username": "sessiontester",
+      "displayName": "Session Test User",
+      "role": "USER",
+      "authProvider": "oauth2",
+      "authId": "user_1758994715522_6ynmorvz7",
+      "status": "active",
+      "createdAt": "2025-09-27T17:38:35.406Z",
+      "updatedAt": "2025-09-27T17:38:35.406Z",
+      "emailVerified": false,
+      "settings": {
+        "notifications": true,
+        "theme": "default",
+        "language": "en",
+        "timezone": "UTC"
+      },
+      "metadata": {
+        "registrationSource": "direct"
+      }
+    }
+  },
+  "profiles": {
+    "user_e8aa13f2-8645-43e8-b5b8-5c508fbf1da8": {
+      "userId": "user_e8aa13f2-8645-43e8-b5b8-5c508fbf1da8",
+      "bio": "Updated bio from simple test",
+      "avatar": "",
+      "preferences": {
+        "theme": "dark",
+        "language": "en",
+        "notifications": true
+      },
+      "social": {},
+      "customFields": {},
+      "updatedAt": "2025-09-27T14:54:28.867Z"
+    },
+    "user_8dbe7eb7-e806-49b4-a48b-bbd74c52a6f9": {
+      "userId": "user_8dbe7eb7-e806-49b4-a48b-bbd74c52a6f9",
+      "bio": "",
+      "avatar": "",
+      "preferences": {},
+      "social": {},
+      "customFields": {}
+    },
+    "user_5f1bf62f-8927-4254-93b3-27b90a86c827": {
+      "userId": "user_5f1bf62f-8927-4254-93b3-27b90a86c827",
+      "bio": "",
+      "avatar": "",
+      "preferences": {},
+      "social": {},
+      "customFields": {}
+    },
+    "user_e9e931b1-96e2-4980-81f2-63b0332a66d3": {
+      "userId": "user_e9e931b1-96e2-4980-81f2-63b0332a66d3",
+      "bio": "",
+      "avatar": "",
+      "preferences": {},
+      "social": {},
+      "customFields": {}
+    },
+    "user_e4050919-b5a2-4e71-ba15-94e5c2338c33": {
+      "userId": "user_e4050919-b5a2-4e71-ba15-94e5c2338c33",
+      "bio": "",
+      "avatar": "",
+      "preferences": {},
+      "social": {},
+      "customFields": {}
+    },
+    "user_c5278118-b0c1-4dc2-a64b-936491036199": {
+      "userId": "user_c5278118-b0c1-4dc2-a64b-936491036199",
+      "bio": "",
+      "avatar": "",
+      "preferences": {},
+      "social": {},
+      "customFields": {}
+    },
+    "user_fdb55022-1ff1-47db-a8a3-946f5ea9e24a": {
+      "userId": "user_fdb55022-1ff1-47db-a8a3-946f5ea9e24a",
+      "bio": "",
+      "avatar": "",
+      "preferences": {},
+      "social": {},
+      "customFields": {}
+    }
+  },
+  "metadata": {
+    "totalUsers": 7,
+    "totalRegistrations": 0,
+    "totalLogins": 0,
+    "lastUpdated": "2025-09-27T19:35:07.670Z"
+  }
+}

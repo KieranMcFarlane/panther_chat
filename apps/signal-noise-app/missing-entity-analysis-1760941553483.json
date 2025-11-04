@@ -1,0 +1,392 @@
+{
+  "timestamp": "2025-10-20T06:25:53.483Z",
+  "results": {
+    "supabaseTotal": 4422,
+    "neo4jTotal": 2418,
+    "missingEntities": [
+      {
+        "supabaseId": 2401,
+        "neo4jId": "2401",
+        "name": "Team 1",
+        "labels": [
+          "Entity"
+        ],
+        "properties": {
+          "name": "Team 1",
+          "entity_type": "Team",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2402,
+        "neo4jId": "2402",
+        "name": "Organization 2",
+        "labels": [
+          "Entity",
+          "Organization"
+        ],
+        "properties": {
+          "name": "Organization 2",
+          "entity_type": "Organization",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2403,
+        "neo4jId": "2403",
+        "name": "Unknown Entity",
+        "labels": [
+          "Entity"
+        ],
+        "properties": {
+          "name": "Unknown Entity",
+          "entity_type": "Unknown",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2404,
+        "neo4jId": "2404",
+        "name": "Person 4",
+        "labels": [
+          "Entity",
+          "Person"
+        ],
+        "properties": {
+          "name": "Person 4",
+          "entity_type": "Person",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2405,
+        "neo4jId": "2405",
+        "name": "Club 5",
+        "labels": [
+          "Entity",
+          "Club"
+        ],
+        "properties": {
+          "name": "Club 5",
+          "entity_type": "Club",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2406,
+        "neo4jId": "2406",
+        "name": "Team 6",
+        "labels": [
+          "Entity"
+        ],
+        "properties": {
+          "name": "Team 6",
+          "entity_type": "Team",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2407,
+        "neo4jId": "2407",
+        "name": "Organization 7",
+        "labels": [
+          "Entity",
+          "Organization"
+        ],
+        "properties": {
+          "name": "Organization 7",
+          "entity_type": "Organization",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2408,
+        "neo4jId": "2408",
+        "name": "Unknown Entity",
+        "labels": [
+          "Entity"
+        ],
+        "properties": {
+          "name": "Unknown Entity",
+          "entity_type": "Unknown",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2409,
+        "neo4jId": "2409",
+        "name": "Person 9",
+        "labels": [
+          "Entity",
+          "Person"
+        ],
+        "properties": {
+          "name": "Person 9",
+          "entity_type": "Person",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2410,
+        "neo4jId": "2410",
+        "name": "Club 10",
+        "labels": [
+          "Entity",
+          "Club"
+        ],
+        "properties": {
+          "name": "Club 10",
+          "entity_type": "Club",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2411,
+        "neo4jId": "2411",
+        "name": "Team 11",
+        "labels": [
+          "Entity"
+        ],
+        "properties": {
+          "name": "Team 11",
+          "entity_type": "Team",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2412,
+        "neo4jId": "2412",
+        "name": "Organization 12",
+        "labels": [
+          "Entity",
+          "Organization"
+        ],
+        "properties": {
+          "name": "Organization 12",
+          "entity_type": "Organization",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2413,
+        "neo4jId": "2413",
+        "name": "Unknown Entity",
+        "labels": [
+          "Entity"
+        ],
+        "properties": {
+          "name": "Unknown Entity",
+          "entity_type": "Unknown",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2414,
+        "neo4jId": "2414",
+        "name": "Person 14",
+        "labels": [
+          "Entity",
+          "Person"
+        ],
+        "properties": {
+          "name": "Person 14",
+          "entity_type": "Person",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2415,
+        "neo4jId": "2415",
+        "name": "Club 15",
+        "labels": [
+          "Entity",
+          "Club"
+        ],
+        "properties": {
+          "name": "Club 15",
+          "entity_type": "Club",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2416,
+        "neo4jId": "2416",
+        "name": "Team 16",
+        "labels": [
+          "Entity"
+        ],
+        "properties": {
+          "name": "Team 16",
+          "entity_type": "Team",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2417,
+        "neo4jId": "2417",
+        "name": "Organization 17",
+        "labels": [
+          "Entity",
+          "Organization"
+        ],
+        "properties": {
+          "name": "Organization 17",
+          "entity_type": "Organization",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2418,
+        "neo4jId": "2418",
+        "name": "Unknown Entity",
+        "labels": [
+          "Entity"
+        ],
+        "properties": {
+          "name": "Unknown Entity",
+          "entity_type": "Unknown",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2419,
+        "neo4jId": "2419",
+        "name": "Person 19",
+        "labels": [
+          "Entity",
+          "Person"
+        ],
+        "properties": {
+          "name": "Person 19",
+          "entity_type": "Person",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      },
+      {
+        "supabaseId": 2420,
+        "neo4jId": "2420",
+        "name": "Club 20",
+        "labels": [
+          "Entity",
+          "Club"
+        ],
+        "properties": {
+          "name": "Club 20",
+          "entity_type": "Club",
+          "sport": "Football",
+          "level": "Amateur",
+          "country": "Unknown"
+        },
+        "missingReason": "not_found_in_neo4j"
+      }
+    ],
+    "foundEntities": [],
+    "sampleEntities": {
+      "supabase": [],
+      "neo4j": []
+    },
+    "analysis": {
+      "missingCount": 2004,
+      "foundCount": 2418,
+      "missingPercentage": "45.32",
+      "potentialIssues": [
+        {
+          "severity": "high",
+          "issue": "Very high percentage of missing entities (45.32%)",
+          "recommendation": "May indicate migration process issue or data sync problem"
+        }
+      ],
+      "missingByType": {
+        "Entity": 2004
+      },
+      "namePatterns": {
+        "Club-like names": 802,
+        "Person-like names": 0,
+        "Generic/Placeholder": 601,
+        "Numeric IDs": 0,
+        "Unknown entities": 401
+      }
+    }
+  },
+  "migrationPlan": {
+    "totalEntities": 2004,
+    "batchSize": 250,
+    "totalBatches": 9,
+    "estimatedDuration": "45-90 minutes",
+    "priorityEntities": [],
+    "recommendedApproach": [
+      {
+        "priority": "high",
+        "action": "Investigate data sync issue",
+        "description": "High percentage of missing entities suggests systematic issue"
+      },
+      {
+        "priority": "medium",
+        "action": "Migrate in batches",
+        "description": "Process 250 entities at a time to avoid overwhelming Neo4j"
+      },
+      {
+        "priority": "low",
+        "action": "Data quality cleanup",
+        "description": "Clean up placeholder and generic entity names during migration"
+      }
+    ]
+  }
+}
