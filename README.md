@@ -191,6 +191,15 @@ Contact
 ### Adding New Clients
 Update `scripts/seedGraph.js` to add new organizations, contacts, and opportunities.
 
+### CopilotKit Agent Endpoint and Environment
+- CopilotKit chat endpoint: `/apps/signal-noise-app/src/app/api/copilotkit/route.ts`
+- The endpoint streams via Claude Agent SDK and uses MCP servers.
+- Required environment variables (set in your `.env.local`):
+  - `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `NEO4J_DATABASE` (optional, defaults to `neo4j`)
+  - `AURA_INSTANCEID`, `AURA_INSTANCENAME` (if using Neo4j Aura)
+  - `BRIGHTDATA_API_TOKEN`, `BRIGHTDATA_PRO_MODE` (optional, defaults to `true`)
+  - Optional CopilotKit Cloud keys if used: `NEXT_PUBLIC_LICENSE_KEY`, `COPILOT_CLOUD_PUBLIC_API_KEY`
+
 ### Extending LinkedIn Integration
 Replace mock data in `src/lib/linkedin-scraper.ts` with real BrightData MCP calls:
 

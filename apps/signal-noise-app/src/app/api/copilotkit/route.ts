@@ -187,12 +187,12 @@ export async function POST(req: NextRequest) {
                       "@alanse/mcp-neo4j-server"
                     ],
                     "env": {
-                      "NEO4J_URI": "neo4j+s://cce1f84b.databases.neo4j.io",
-                      "NEO4J_USERNAME": "neo4j",
-                      "NEO4J_PASSWORD": "llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0",
-                      "NEO4J_DATABASE": "neo4j",
-                      "AURA_INSTANCEID": "cce1f84b",
-                      "AURA_INSTANCENAME": "Instance01"
+                      "NEO4J_URI": process.env.NEO4J_URI,
+                      "NEO4J_USERNAME": process.env.NEO4J_USERNAME,
+                      "NEO4J_PASSWORD": process.env.NEO4J_PASSWORD,
+                      "NEO4J_DATABASE": process.env.NEO4J_DATABASE || 'neo4j',
+                      "AURA_INSTANCEID": process.env.AURA_INSTANCEID,
+                      "AURA_INSTANCENAME": process.env.AURA_INSTANCENAME
                     }
                   },
                   "brightData": {
@@ -202,8 +202,8 @@ export async function POST(req: NextRequest) {
                       "@brightdata/mcp"
                     ],
                     "env": {
-                      "API_TOKEN": "bbbc6961d91d724bb6eb0b18bfc91bc11abd3a0d454411230d1f92aea27917f4",
-                      "PRO_MODE": "true"
+                      "API_TOKEN": process.env.BRIGHTDATA_API_TOKEN,
+                      "PRO_MODE": process.env.BRIGHTDATA_PRO_MODE || 'true'
                     }
                   }
                 }
