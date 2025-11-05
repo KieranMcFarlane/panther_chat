@@ -59,6 +59,17 @@ export default function VectorSearch({ className }: VectorSearchProps) {
 			const data = await response.json();
 			setResults(data.results || []);
 			console.log('Vector search results for', searchQuery, ':', data.results);
+			
+			// Log helpful messages if no results
+			if (data.note) {
+				console.warn('⚠️ Vector search note:', data.note);
+				if (data.error) {
+					console.error('❌ Vector search error:', data.error);
+					setError(data.error);
+				} else if (data.help) {
+					console.info('💡 Vector search help:', data.help);
+				}
+			}
 		} catch (err) {
 			console.error('Vector search error:', err);
 			setError('Search failed. Please try again.');
