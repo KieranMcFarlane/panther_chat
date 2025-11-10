@@ -34,6 +34,7 @@ export default function ConventionsPage() {
   const [selectedConvention, setSelectedConvention] = useState<Convention | null>(null)
   const [conventions, setConventions] = useState<Convention[]>([])
   const [loading, setLoading] = useState(true)
+  const [isDetailOpen, setIsDetailOpen] = useState(true)
 
   useEffect(() => {
     // Fetch initial conventions data
@@ -96,14 +97,30 @@ export default function ConventionsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
+      <div className="w-full h-full">
+        <div className="relative min-h-screen overflow-hidden rounded-lg bg-[#242834]">
+          <div className="relative z-10 px-6 py-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="bg-custom-box border border-custom-border p-3 rounded-lg animate-pulse">
+                  <div className="h-6 w-6 bg-white/10 rounded mb-3" />
+                  <div className="h-5 w-16 bg-white/10 rounded mb-2" />
+                  <div className="h-3 w-24 bg-white/10 rounded" />
+                </div>
+              ))}
+            </div>
+            <div className="bg-custom-box border border-custom-border rounded-lg p-4 animate-pulse">
+              <div className="h-6 w-48 bg-white/10 rounded mb-4" />
+              <div className="h-[600px] w-full bg-white/5 rounded" />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
 
-  const upcomingHighValue = getUpcomingHighValueEvents()
-  const federationHotspots = getFederationHotspots()
+  const upcomingHighValue = getUpcomingHighValueEvents();
+  const federationHotspots = getFederationHotspots();
 
   return (
     <div className="space-y-6">
@@ -113,64 +130,112 @@ export default function ConventionsPage() {
           <h1 className="text-3xl font-bold text-white mb-2 page-title">Sports Convention Intelligence</h1>
           <p className="text-fm-light-grey">Track key sports industry events and federation networking opportunities</p>
         </div>
-        <Button className="bg-yellow-500 text-black hover:bg-yellow-400">
+        <div className="flex items-center gap-3">
+          <Button
+            className="bg-yellow-500 text-black hover:bg-yellow-400"
+            onClick={() => {
+              // Confirm for very large exports
+              if (conventions.length > 1000 && !window.confirm('Exporting more than 1,000 rows. Continue?')) return
+              const headers = ['Title','Start','End','Location','Type','Networking Score','Expected Attendees','Federations','URL']
+              const rows = conventions.map(c => [
+                c.title,
+                c.start.toISOString(),
+                c.end.toISOString(),
+                c.location,
+                c.type,
+                c.networkingScore,
+                c.expectedAttendees,
+                c.federations.join('; '),
+                c.webUrl || ''
+              ])
+              const csv = [headers, ...rows].map(r => r.map(x => `"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n')
+              const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = 'conventions.csv'
+              a.click()
+              URL.revokeObjectURL(url)
+            }}
+          >
           <Calendar className="w-4 h-4 mr-2" />
-          Export Calendar
+            Export CSV
+          </Button>
+          <Button
+            variant="outline"
+            className="border-custom-border text-white hover:bg-custom-bg"
+            onClick={() => window.location.reload()}
+          >
+            Reset
         </Button>
+        </div>
       </div>
 
-      {/* Quick Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-custom-box border border-custom-border p-4">
+      {/* Sticky mini filter bar with result count */}
+      <div className="sticky top-0 z-10 -mx-6 px-6 py-2 bg-[#242834]/80 backdrop-blur border-b border-custom-border">
+        <div className="flex items-center justify-between">
+          <div className="text-fm-light-grey text-sm">{conventions.length} events</div>
+          <div className="flex items-center gap-2 text-xs">
+            <span className="text-fm-medium-grey">Quick filters:</span>
+            <span className="px-2 py-1 rounded bg-custom-box border border-custom-border text-white">High value</span>
+            <span className="px-2 py-1 rounded bg-custom-box border border-custom-border text-white">This month</span>
+            <span className="px-2 py-1 rounded bg-custom-box border border-custom-border text-white">UK</span>
+          </div>
+        </div>
+      </div>
+
+      {/* KPI strip */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Card className="bg-custom-box border border-custom-border p-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-blue-500/20 rounded-lg">
               <Calendar className="w-6 h-6 text-blue-400" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-white">{conventions.length}</div>
-              <div className="text-fm-medium-grey text-sm">Total Events</div>
+              <div className="text-xl font-bold text-white">{conventions.length}</div>
+              <div className="text-fm-medium-grey text-xs">Total Events</div>
             </div>
           </div>
         </Card>
 
-        <Card className="bg-custom-box border border-custom-border p-4">
+        <Card className="bg-custom-box border border-custom-border p-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-green-500/20 rounded-lg">
               <TrendingUp className="w-6 h-6 text-green-400" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-xl font-bold text-white">
                 {conventions.filter(c => c.networkingScore >= 8).length}
               </div>
-              <div className="text-fm-medium-grey text-sm">High Value (8+ score)</div>
+              <div className="text-fm-medium-grey text-xs">High Value (8+)</div>
             </div>
           </div>
         </Card>
 
-        <Card className="bg-custom-box border border-custom-border p-4">
+        <Card className="bg-custom-box border border-custom-border p-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-purple-500/20 rounded-lg">
               <Building2 className="w-6 h-6 text-purple-400" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-xl font-bold text-white">
                 {[...new Set(conventions.flatMap(c => c.federations))].length}
               </div>
-              <div className="text-fm-medium-grey text-sm">Federations Tracked</div>
+              <div className="text-fm-medium-grey text-xs">Federations</div>
             </div>
           </div>
         </Card>
 
-        <Card className="bg-custom-box border border-custom-border p-4">
+        <Card className="bg-custom-box border border-custom-border p-3">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-orange-500/20 rounded-lg">
               <Target className="w-6 h-6 text-orange-400" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-white">
+              <div className="text-xl font-bold text-white">
                 {conventions.filter(c => c.location.toLowerCase().includes('london')).length}
               </div>
-              <div className="text-fm-medium-grey text-sm">London Events</div>
+              <div className="text-fm-medium-grey text-xs">London Events</div>
             </div>
           </div>
         </Card>
@@ -258,9 +323,23 @@ export default function ConventionsPage() {
         </div>
       </div>
 
-      {/* Selected Event Detail Modal/Overlay */}
+      {/* Selected Event Detail Panel (collapsible) */}
       {selectedConvention && (
         <Card className="bg-custom-box border border-custom-border p-6 mt-6">
+          <div className="flex items-center justify-between mb-2">
+            <div className="text-fm-medium-grey text-xs">Event detail</div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-custom-border text-white hover:bg-custom-bg"
+              onClick={() => setIsDetailOpen(!isDetailOpen)}
+              aria-expanded={isDetailOpen}
+              aria-label={isDetailOpen ? 'Collapse details' : 'Expand details'}
+            >
+              {isDetailOpen ? 'Hide' : 'Show'}
+            </Button>
+          </div>
+          {isDetailOpen && (
           <div className="flex items-start justify-between mb-4">
             <div>
               <h2 className="text-2xl font-bold text-white mb-2">{selectedConvention.title}</h2>
@@ -389,6 +468,7 @@ export default function ConventionsPage() {
               Generate Lead Strategy
             </Button>
           </div>
+          )}
         </Card>
       )}
     </div>

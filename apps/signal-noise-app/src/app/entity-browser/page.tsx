@@ -22,11 +22,9 @@ import {
   Eye,
   EyeOff,
   Hash,
-  SearchIcon,
   ChevronDown,
   ChevronRight,
   Settings,
-  Image,
   Mail,
   ExternalLink
 } from "lucide-react"
@@ -65,7 +63,6 @@ export default function EntityBrowserPage() {
   const [dataSource, setDataSource] = useState<'cache' | 'neo4j' | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
-  const [showBadgeInfo, setShowBadgeInfo] = useState(false)
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [selectedEntity, setSelectedEntity] = useState<Entity | null>(null)
 
@@ -225,72 +222,10 @@ export default function EntityBrowserPage() {
               <Database className="h-8 w-8 text-primary" />
               <h1 className="text-3xl font-bold">Entity Browser</h1>
             </div>
-            <div className="flex items-center gap-2 ml-auto">
-              {/* Cache Status Indicator */}
-              {dataSource && (
-                <Badge 
-                  variant={dataSource === 'cache' ? 'default' : 'secondary'}
-                  className="flex items-center gap-1"
-                >
-                  <Database className="h-3 w-3" />
-                  {dataSource === 'cache' ? 'Cached' : 'Live'}
-                </Badge>
-              )}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowBadgeInfo(!showBadgeInfo)}
-                className="flex items-center gap-2"
-              >
-                <Image className="h-4 w-4" />
-                {showBadgeInfo ? 'Hide' : 'Show'} Badge Info
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.location.href = '/knowledge-graph'}
-                className="flex items-center gap-2"
-              >
-                <SearchIcon className="h-4 w-4" />
-                Back to Search
-              </Button>
-              <Badge variant="secondary">
-                {data.pagination.total.toLocaleString()} entities
-              </Badge>
-            </div>
           </div>
           <p className="text-muted-foreground">
             Browse all entities in your Neo4j knowledge graph with their complete schemas
           </p>
-          
-          {/* Badge Info Panel */}
-          {showBadgeInfo && (
-            <Card className="mt-4 border-blue-200 bg-blue-50">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Image className="h-5 w-5 text-blue-600" />
-                  <h3 className="font-semibold text-blue-800">Badge System Active</h3>
-                </div>
-                <div className="text-sm text-blue-700 space-y-1">
-                  <p>• Entity badges are automatically displayed for each entity</p>
-                  <p>• Badges are sourced from TheSportsDB and local files</p>
-                  <p>• Fallback initials/icons show when badges aren't available</p>
-                  <p>• Badge colors indicate entity type: <span className="font-medium">Blue=Club, Yellow=League, Green=Event, Gray=Organization</span></p>
-                </div>
-                <div className="flex gap-2 mt-3">
-                  <Badge variant="outline" className="text-xs">
-                    5 Badges Loaded
-                  </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    Auto-mapping Active
-                  </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    Smart Fallbacks
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </div>
       </div>
 

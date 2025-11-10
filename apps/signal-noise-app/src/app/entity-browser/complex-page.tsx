@@ -21,11 +21,9 @@ import {
   Eye,
   EyeOff,
   Hash,
-  SearchIcon,
   ChevronDown,
   ChevronRight,
   Settings,
-  Image,
   FileText,
   BarChart3
 } from "lucide-react"
@@ -67,7 +65,6 @@ function EntityBrowserPageContent() {
   
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
-  const [showBadgeInfo, setShowBadgeInfo] = useState(false)
   const [debugInfo, setDebugInfo] = useState("Initializing...")
 
   // Get page from URL or default to 1
@@ -307,37 +304,6 @@ function EntityBrowserPageContent() {
               <h1 className="text-3xl font-bold page-title">Entity Browser</h1>
             </div>
             <div className="flex items-center gap-2 ml-auto">
-              {/* Cache Status Indicator */}
-              {displayDataSource && (
-                <Badge 
-                  variant={displayDataSource === 'cache' ? 'default' : 'secondary'}
-                  className="flex items-center gap-1"
-                >
-                  <Database className="h-3 w-3" />
-                  {displayDataSource === 'cache' ? 'Cached' : 'Live'}
-                </Badge>
-              )}
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowBadgeInfo(!showBadgeInfo)}
-                className="flex items-center gap-2"
-              >
-                <Image className="h-4 w-4" />
-                {showBadgeInfo ? 'Hide' : 'Show'} Badge Info
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.location.href = '/knowledge-graph'}
-                className="flex items-center gap-2"
-              >
-                <SearchIcon className="h-4 w-4" />
-                Back to Search
-              </Button>
-              <Badge variant="secondary">
-                {displayData.pagination.total.toLocaleString()} entities
-              </Badge>
               <Badge variant="outline" className="text-yellow-400">
                 Debug: {debugInfo}
               </Badge>
@@ -357,35 +323,6 @@ function EntityBrowserPageContent() {
               Click "Generate Intelligence Dossier" on any entity card for comprehensive analysis
             </span>
           </div>
-          
-          {/* Badge Info Panel */}
-          {showBadgeInfo && (
-            <Card className="mt-4 border-blue-200 bg-blue-50">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <Image className="h-5 w-5 text-blue-600" />
-                  <h3 className="font-semibold text-blue-800">Badge System Active</h3>
-                </div>
-                <div className="text-sm text-blue-700 space-y-1">
-                  <p>• Entity badges are automatically displayed for each entity</p>
-                  <p>• Badges are sourced from TheSportsDB and local files</p>
-                  <p>• Fallback initials/icons show when badges aren't available</p>
-                  <p>• Badge colors indicate entity type: <span className="font-medium">Blue=Club, Yellow=League, Green=Event, Gray=Organization</span></p>
-                </div>
-                <div className="flex gap-2 mt-3">
-                  <Badge variant="outline" className="text-xs">
-                    5 Badges Loaded
-                  </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    Auto-mapping Active
-                  </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    Smart Fallbacks
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </div>
       </div>
 
