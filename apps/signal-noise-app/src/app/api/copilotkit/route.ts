@@ -1,21 +1,6 @@
 import { NextRequest } from "next/server";
 import { query } from "@anthropic-ai/claude-agent-sdk";
 
-// AG-UI Event Types
-interface AGUIEvent {
-  type: 'agent-start' | 'agent-step' | 'agent-message' | 'agent-tool-use' | 'agent-tool-result' | 'agent-end' | 'agent-error';
-  data: any;
-  timestamp: string;
-  id: string;
-}
-
-interface AGUIAgentConfig {
-  name: string;
-  description: string;
-  capabilities: string[];
-  tools: string[];
-}
-
 interface Message {
   role: 'user' | 'assistant' | 'system';
   content: string;
@@ -40,33 +25,6 @@ interface ClaudeWebhookResponse {
   result?: any;
   error?: string;
 }
-
-// AG-UI Protocol Functions
-function createAGUIEvent(type: AGUIEvent['type'], data: any): AGUIEvent {
-  return {
-    type,
-    data,
-    timestamp: new Date().toISOString(),
-    id: `event_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-  };
-}
-
-function streamAGUIEvent(controller: any, event: AGUIEvent) {
-  const encoder = new TextEncoder();
-  const chunk = {
-    type: 'agui-event',
-    event
-  };
-  controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
-}
-
-// Define our agent configuration
-const agentConfig: AGUIAgentConfig = {
-  name: 'Sports Intelligence Agent',
-  description: 'AI agent for sports entity analysis, RFP intelligence, and database operations',
-  capabilities: ['database-query', 'web-research', 'data-analysis', 'entity-enrichment'],
-  tools: ['neo4j-mcp', 'brightdata', 'file-operations', 'web-search']
-};
 
 export async function POST(req: NextRequest) {
   try {
@@ -141,44 +99,33 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get the latest user message
+    // Get the latest user message for Claude Agent SDK
     const latestUserMessage = validMessages[validMessages.length - 1];
-    console.log('Processing user message:', latestUserMessage.content);
+    console.log('Sending to Claude Agent SDK:', latestUserMessage.content);
 
-    // Create streaming response
+    // Create streaming response for real-time feedback
+    console.log('Starting streaming response with Claude Agent SDK');
+    
     const encoder = new TextEncoder();
-
+    let fullResponse = '';
+    const toolResults: any[] = [];
+    
     return new Response(
       new ReadableStream({
         async start(controller) {
           try {
-            // Send AG-UI agent start event
-            const agentStartEvent = createAGUIEvent('agent-start', {
-              agent: agentConfig,
-              sessionId: userId,
-              message: latestUserMessage.content
-            });
-            streamAGUIEvent(controller, agentStartEvent);
-
-            // Send initial status
-            const statusChunk = {
+            // Send initial status message
+            const initChunk = {
               type: 'status',
+              status: 'processing',
               message: 'Initializing sports intelligence tools...'
             };
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(statusChunk)}\n\n`));
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(initChunk)}\n\n`));
 
-            // Use Claude Agent SDK with streaming
-            const queryStream = query({
+            // Use Claude Agent SDK with MCP servers
+            for await (const message of query({
               prompt: latestUserMessage.content,
               options: {
-                systemPrompt: "You are a sports intelligence AI assistant with access to Neo4j database containing sports entities. Use tools efficiently and provide detailed, accurate responses. When users ask about entities, use the Neo4j tools to query the database and provide comprehensive information.",
-                model: 'claude-3-sonnet-20241022',
-                maxTokens: 8000, // Taking advantage of 200k context window for comprehensive responses
-                temperature: 0.7,
-                permissionMode: 'bypassPermissions',
-                allowedTools: [
-                  'Task', 'Bash', 'Glob', 'Grep', 'Read', 'Edit', 'Write', 'WebSearch', 'TodoWrite',
-                ],
                 mcpServers: {
                   "neo4j-mcp": {
                     "command": "npx",
@@ -187,12 +134,12 @@ export async function POST(req: NextRequest) {
                       "@alanse/mcp-neo4j-server"
                     ],
                     "env": {
-                      "NEO4J_URI": process.env.NEO4J_URI,
-                      "NEO4J_USERNAME": process.env.NEO4J_USERNAME,
-                      "NEO4J_PASSWORD": process.env.NEO4J_PASSWORD,
-                      "NEO4J_DATABASE": process.env.NEO4J_DATABASE || 'neo4j',
-                      "AURA_INSTANCEID": process.env.AURA_INSTANCEID,
-                      "AURA_INSTANCENAME": process.env.AURA_INSTANCENAME
+                      "NEO4J_URI": process.env.NEO4J_URI || "",
+                      "NEO4J_USERNAME": process.env.NEO4J_USERNAME || "",
+                      "NEO4J_PASSWORD": process.env.NEO4J_PASSWORD || "",
+                      "NEO4J_DATABASE": process.env.NEO4J_DATABASE || "neo4j",
+                      "AURA_INSTANCEID": process.env.AURA_INSTANCEID || "",
+                      "AURA_INSTANCENAME": process.env.AURA_INSTANCENAME || ""
                     }
                   },
                   "brightData": {
@@ -202,109 +149,217 @@ export async function POST(req: NextRequest) {
                       "@brightdata/mcp"
                     ],
                     "env": {
-                      "API_TOKEN": process.env.BRIGHTDATA_API_TOKEN,
-                      "PRO_MODE": process.env.BRIGHTDATA_PRO_MODE || 'true'
+                      "API_TOKEN": process.env.BRIGHTDATA_API_TOKEN || "",
+                      "PRO_MODE": "true"
+                    }
+                  },
+                  "perplexity-mcp": {
+                    "command": "npx",
+                    "args": [
+                      "-y",
+                      "mcp-perplexity-search"
+                    ],
+                    "env": {
+                      "PERPLEXITY_API_KEY": process.env.PERPLEXITY_API_KEY || ""
                     }
                   }
-                }
-              }
-            });
+                },
+                allowedTools: [
+                  // Neo4j tools
+                  "mcp__neo4j-mcp__execute_query",
+                  "mcp__neo4j-mcp__search_nodes", 
+                  "mcp__neo4j-mcp__get_relationships",
+                  "mcp__neo4j-mcp__create_node",
+                  "mcp__neo4j-mcp__create_relationship",
+                  // BrightData tools
+                  "mcp__brightData__search_engine",
+                  "mcp__brightData__scrape_as_markdown",
+                  "mcp__brightData__scrape_batch",
+                  "mcp__brightData__extract",
+                  // Perplexity tools
+                  "mcp__perplexity-mcp__chat_completion"
+                ]
+              },
+              system: `You are a Sports Intelligence AI assistant with access to powerful tools:
+- Neo4j database with 3,325+ sports entities (clubs, players, competitions)
+- BrightData web search for real-time information  
+- Perplexity AI for up-to-date insights
 
-            let fullResponse = '';
-            let hasContent = false;
-            const toolResults: any[] = [];
+Your task is to help users analyze sports clubs, identify business opportunities, find decision makers, and provide comprehensive sports intelligence using both database knowledge and real-time web research.
 
-            // Process the streaming response
-            for await (const message of queryStream) {
-              if (message.type === 'assistant' && message.message.content) {
-                // Extract text content from Claude's response
-                for (const contentBlock of message.message.content) {
-                  if (contentBlock.type === 'text') {
-                    const textChunk = contentBlock.text;
-                    fullResponse += textChunk;
-                    
-                    if (!hasContent) {
-                      hasContent = true;
-                    }
-                    
-                    // Send AG-UI message event
-                    const messageEvent = createAGUIEvent('agent-message', {
-                      content: textChunk,
-                      sessionId: userId,
-                      step: 'response-generation',
-                      isPartial: true
-                    });
-                    streamAGUIEvent(controller, messageEvent);
-                    
-                    // Send text chunk to frontend
-                    const chunk = {
-                      type: 'text',
-                      text: textChunk
-                    };
-                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
-                  }
-                }
-              }
+When users ask about sports entities, use the Neo4j tools to search the database.
+When users need current information, use BrightData or Perplexity search tools.
+Always provide detailed, actionable insights based on the tool results.
+
+Provide your analysis in a conversational, streaming manner as if you're thinking through the problem step by step.`
+            })) {
+              // Enhanced logging for granular tool execution details
+              console.log('Claude Agent SDK message:', {
+                type: message.type,
+                subtype: message.subtype,
+                tool: message.tool,
+                toolArgs: message.tool_args,
+                content: message.text || message.content?.slice(0, 200),
+                fullMessage: JSON.stringify(message, null, 2).slice(0, 500),
+                timestamp: new Date().toISOString()
+              });
               
-              // Log tool usage with AG-UI events
-              if (message.type === 'tool_use') {
-                console.log('Tool used:', message.name);
-                
-                // Send AG-UI tool use event
-                const toolUseEvent = createAGUIEvent('agent-tool-use', {
-                  tool: message.name,
-                  args: message.args,
-                  sessionId: userId,
-                  step: 'tool-execution'
+              if (message.type === 'system' && message.subtype === 'init') {
+                console.log('MCP Servers initialized:', message.mcp_servers);
+                // Send tools ready status
+                const toolsChunk = {
+                  type: 'status',
+                  status: 'tools_ready',
+                  message: 'Sports intelligence tools initialized'
+                };
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify(toolsChunk)}\n\n`));
+              } else if (message.type === 'tool_use') {
+                // Enhanced tool execution notifications with arguments
+                console.log('Tool execution details:', {
+                  tool: message.tool,
+                  args: message.tool_args,
+                  timestamp: new Date().toISOString()
                 });
-                streamAGUIEvent(controller, toolUseEvent);
                 
+                // Stream detailed tool execution to frontend
+                const toolDetails = message.tool_args ? 
+                  `Executing ${message.tool} with: ${JSON.stringify(message.tool_args).slice(0, 150)}...` :
+                  `Using ${message.tool} to gather intelligence...`;
+                  
                 const toolChunk = {
                   type: 'tool_use',
-                  tool: message.name,
-                  message: `Using ${message.name}...`
+                  tool: message.tool,
+                  message: toolDetails,
+                  args: message.tool_args
                 };
                 controller.enqueue(encoder.encode(`data: ${JSON.stringify(toolChunk)}\n\n`));
-              }
-              
-              if (message.type === 'tool_result') {
+              } else if (message.type === 'text') {
+                // Stream text content as it's generated
+                if (message.text && message.text.trim()) {
+                  const textChunk = {
+                    type: 'text',
+                    text: message.text
+                  };
+                  controller.enqueue(encoder.encode(`data: ${JSON.stringify(textChunk)}\n\n`));
+                  fullResponse += message.text;
+                }
+              } else if (message.type === 'result' && message.subtype === 'success') {
+                // Stream tool results
                 toolResults.push({
-                  tool: message.name,
+                  tool: message.tool,
                   result: message.result
                 });
-                
-                // Send AG-UI tool result event
-                const toolResultEvent = createAGUIEvent('agent-tool-result', {
-                  tool: message.name,
-                  result: message.result,
-                  sessionId: userId,
-                  step: 'tool-completion'
-                });
-                streamAGUIEvent(controller, toolResultEvent);
                 
                 const resultChunk = {
                   type: 'tool_result',
-                  tool: message.name || 'unknown',
+                  tool: message.tool,
                   result: message.result
                 };
                 controller.enqueue(encoder.encode(`data: ${JSON.stringify(resultChunk)}\n\n`));
+                console.log('Tool result received:', {
+                  tool: message.tool,
+                  resultLength: message.result ? JSON.stringify(message.result).length : 0,
+                  resultPreview: message.result ? JSON.stringify(message.result).slice(0, 200) : 'No result',
+                  timestamp: new Date().toISOString()
+                });
+                
+                // Don't overwrite fullResponse with tool results - let the assistant response handle it
+                // Tool results are for logging/feedback, not the main response text
+              } else if (message.type === 'assistant') {
+                // Enhanced assistant message handling with tool use detection
+                if (message.message && message.message.content && Array.isArray(message.message.content)) {
+                  for (const contentBlock of message.message.content) {
+                    if (contentBlock.type === 'text' && contentBlock.text) {
+                      const textChunk = {
+                        type: 'text',
+                        text: contentBlock.text
+                      };
+                      controller.enqueue(encoder.encode(`data: ${JSON.stringify(textChunk)}\n\n`));
+                      fullResponse += contentBlock.text;
+                    } else if (contentBlock.type === 'tool_use') {
+                      // Stream tool execution details
+                      console.log('Tool execution detected:', {
+                        tool: contentBlock.name,
+                        toolId: contentBlock.id,
+                        toolInput: contentBlock.input,
+                        timestamp: new Date().toISOString()
+                      });
+                      
+                      const toolExecutionChunk = {
+                        type: 'tool_use',
+                        tool: contentBlock.name,
+                        message: `Executing ${contentBlock.name} with: ${JSON.stringify(contentBlock.input).slice(0, 150)}...`,
+                        args: contentBlock.input
+                      };
+                      controller.enqueue(encoder.encode(`data: ${JSON.stringify(toolExecutionChunk)}\n\n`));
+                    }
+                  }
+                }
+              } else {
+                // Log other message types for debugging
+                console.log('Other message type:', message.type, message.subtype);
               }
             }
 
-            // If no content was generated, provide a fallback response
-            if (!hasContent) {
-              console.log('No content generated, providing fallback response');
-              
-              let fallbackResponse = '';
-              const hasDeletionOperations = toolResults.some((result: any) => 
-                result.result && typeof result.result === 'string' && 
-                (result.result.includes('deleted') || result.result.includes('removed'))
-              );
-              const hasQueryOperations = toolResults.some((result: any) => 
-                result.result && typeof result.result === 'string' && 
-                (result.result.includes('found') || result.result.includes('results') || result.result.includes('entities'))
-              );
+            // Send completion status
+            const completeChunk = {
+              type: 'status',
+              status: 'complete',
+              message: 'Analysis complete',
+              toolResults: toolResults.length
+            };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(completeChunk)}\n\n`));
 
+            // Send final CopilotKit-formatted message
+            if (fullResponse.trim()) {
+              const finalChunk = {
+                type: 'final',
+                data: {
+                  data: {
+                    generateCopilotResponse: {
+                      threadId: userId,
+                      runId: `run_${Date.now()}`,
+                      extensions: {},
+                      messages: [
+                        {
+                          __typename: 'TextMessageOutput',
+                          id: `msg_${Date.now()}`,
+                          createdAt: new Date().toISOString(),
+                          content: [fullResponse],
+                          role: 'assistant',
+                          parentMessageId: null,
+                          status: {
+                            __typename: 'SuccessMessageStatus',
+                            code: 'success'
+                          }
+                        }
+                      ],
+                      metaEvents: [],
+                      status: {
+                        __typename: 'BaseResponseStatus',
+                        code: 'success'
+                      },
+                      __typename: 'CopilotResponse'
+                    }
+                  }
+                }
+              };
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify(finalChunk)}\n\n`));
+            } else {
+              // Enhanced fallback for operations with minimal or no text response
+              let fallbackResponse = `I've analyzed your request about "${latestUserMessage.content}" using ${toolResults.length} sports intelligence tools.`;
+              
+              // Check if tool results indicate successful operations
+              const hasDeletionOperations = toolResults.some(result => 
+                result.tool?.includes('neo4j') && 
+                (result.result?.includes('deleted') || result.result?.includes('removed'))
+              );
+              
+              const hasQueryOperations = toolResults.some(result => 
+                result.tool?.includes('neo4j') && 
+                (result.result?.includes('nodes') || result.result?.includes('relationships'))
+              );
+              
               if (hasDeletionOperations) {
                 fallbackResponse = `✅ Successfully completed the deletion operation in the sports database. The requested contact or entity has been removed.`;
               } else if (hasQueryOperations) {
@@ -350,36 +405,11 @@ export async function POST(req: NextRequest) {
               controller.enqueue(encoder.encode(`data: ${JSON.stringify(fallbackChunk)}\n\n`));
             }
 
-            // Send AG-UI agent end event
-            const agentEndEvent = createAGUIEvent('agent-end', {
-              sessionId: userId,
-              responseLength: fullResponse.length,
-              toolResultsCount: toolResults.length,
-              toolsUsed: toolResults.map(r => r.tool),
-              status: 'completed'
-            });
-            streamAGUIEvent(controller, agentEndEvent);
-
-            // Send final chunk to indicate streaming is complete
-            const finalChunk = {
-              type: 'final'
-            };
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(finalChunk)}\n\n`));
-
             console.log('Streaming complete. Full response length:', fullResponse.length, 'Tool results:', toolResults.length);
             controller.close();
 
           } catch (error) {
             console.error('Streaming error:', error);
-            
-            // Send AG-UI error event
-            const errorEvent = createAGUIEvent('agent-error', {
-              sessionId: userId,
-              error: error instanceof Error ? error.message : 'Unknown error occurred',
-              originalMessage: latestUserMessage.content,
-              step: 'error-occurred'
-            });
-            streamAGUIEvent(controller, errorEvent);
             
             // Send error chunk
             const errorChunk = {

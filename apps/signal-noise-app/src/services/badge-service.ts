@@ -5,9 +5,10 @@ class BadgeService {
   private cache: Map<string, { data: BadgeMapping; timestamp: number }> = new Map()
   private mappings: BadgeMapping[] = []
 
+
   constructor(config: BadgeServiceConfig = {}) {
     this.config = {
-      baseUrl: '/badges',
+      baseUrl: '/badges', // Use local badge files (downloaded from S3)
       fallbackMode: 'initials',
       enableCaching: true,
       cacheTTL: 3600000, // 1 hour
@@ -20,105 +21,23 @@ class BadgeService {
 
   private initializeDefaultMappings() {
     this.mappings = [
-      {
-        entityId: '139',
-        entityName: 'Manchester United',
-        badgePath: '/badges/manchester-united-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: '/api/badges/manchester-united-badge.png',
-        lastUpdated: new Date().toISOString(),
-        source: 'thesportsdb'
-      },
+      // Badges that need manual mapping (non-standard names)
       {
         entityId: 'sao-paulo',
         entityName: 'São Paulo FC',
         badgePath: '/badges/sao-paulo-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/sxpupx1473538135.png',
-        s3Url: '/api/badges/sao-paulo-badge.png',
-        lastUpdated: new Date().toISOString(),
-        source: 'thesportsdb'
-      },
-      {
-        entityId: '4328',
-        entityName: 'Premier League',
-        badgePath: '/badges/premier-league-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/league/badge/gasy9d1737743125.png',
-        s3Url: '/api/badges/premier-league-badge.png',
-        lastUpdated: new Date().toISOString(),
-        source: 'thesportsdb'
-      },
-      {
-        entityId: '4460',
-        entityName: 'Indian Premier League',
-        badgePath: '/badges/indian-premier-league-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/league/badge/gaiti11741709844.png',
-        s3Url: '/api/badges/indian-premier-league-badge.png',
-        lastUpdated: new Date().toISOString(),
-        source: 'thesportsdb'
-      },
-      {
-        entityId: '4456',
-        entityName: 'Australian Football League',
-        badgePath: '/badges/australian-football-league-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/league/badge/wvx4721525519372.png',
-        s3Url: '/api/badges/australian-football-league-badge.png',
-        lastUpdated: new Date().toISOString(),
-        source: 'thesportsdb'
-      },
-      {
-        entityId: '197',
-        entityName: '1. FC Köln',
-        badgePath: '/badges/1-fc-koln-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: '/api/badges/1-fc-koln-badge.png',
+        s3Url: '/badges/sao-paulo-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'local'
       },
       {
-        entityId: '191',
-        entityName: '1. FC Nürnberg',
-        badgePath: '/badges/1-fc-nurnberg-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: '/api/badges/1-fc-nurnberg-badge.png',
+        entityId: 'union-berlin',
+        entityName: '1. FC Union Berlin',
+        badgePath: '/badges/union-berlin-badge.png',
+        s3Url: '/badges/union-berlin-badge.png',
         lastUpdated: new Date().toISOString(),
         source: 'local'
       },
-      {
-        entityId: '201',
-        entityName: 'AC Milan',
-        badgePath: '/badges/ac-milan-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: '/api/badges/ac-milan-badge.png',
-        lastUpdated: new Date().toISOString(),
-        source: 'local'
-      },
-      {
-        entityId: '450',
-        entityName: '2. Bundesliga',
-        badgePath: '/badges/2-bundesliga-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/league/badge/gasy9d1737743125.png',
-        s3Url: '/api/badges/2-bundesliga-badge.png',
-        lastUpdated: new Date().toISOString(),
-        source: 'local'
-      },
-      {
-        entityId: '126',
-        entityName: 'Arsenal',
-        badgePath: '/badges/arsenal-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: '/api/badges/arsenal-badge.png',
-        lastUpdated: new Date().toISOString(),
-        source: 'thesportsdb'
-      },
-      {
-        entityId: '4406',
-        entityName: 'Arsenal Football Club',
-        badgePath: '/badges/arsenal-badge.png',
-        badgeUrl: 'https://r2.thesportsdb.com/images/media/team/badge/xzqdr11517660252.png',
-        s3Url: '/api/badges/arsenal-badge.png',
-        lastUpdated: new Date().toISOString(),
-        source: 'thesportsdb'
-      }
     ]
   }
 
@@ -134,15 +53,54 @@ class BadgeService {
       }
     }
 
-    // Try to find existing mapping
-    let mapping = this.mappings.find(m => 
-      m.entityId === entityId || 
-      m.entityName.toLowerCase() === entityName.toLowerCase()
-    )
+    const normalizedEntityName = entityName.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim()
+
+    // Special case: Union Berlin (override to use correct badge name)
+    if (normalizedEntityName.includes('union') && normalizedEntityName.includes('berlin')) {
+      const mapping: BadgeMapping = {
+        entityId,
+        entityName,
+        badgePath: '/badges/union-berlin-badge.png',
+        s3Url: '/badges/union-berlin-badge.png',
+        lastUpdated: new Date().toISOString(),
+        source: 'local'
+      }
+      this.cache.set(cacheKey, { data: mapping, timestamp: Date.now() })
+      console.log(`✅ Badge override for Union Berlin: union-berlin-badge.png`)
+      return mapping
+    }
+
+    // Special case: 1. FC Köln (umlaut variations)
+    if (normalizedEntityName.includes('fc') && (normalizedEntityName.includes('koln') || normalizedEntityName.includes('kln'))) {
+      const mapping: BadgeMapping = {
+        entityId,
+        entityName,
+        badgePath: '/badges/1-fc-kln-badge.png',
+        s3Url: '/badges/1-fc-kln-badge.png',
+        lastUpdated: new Date().toISOString(),
+        source: 'local'
+      }
+      this.cache.set(cacheKey, { data: mapping, timestamp: Date.now() })
+      console.log(`✅ Badge override for 1. FC Köln: 1-fc-kln-badge.png`)
+      return mapping
+    }
+
+    // Try to find existing mapping - check for partial match on entity name
+    let mapping = this.mappings.find(m => {
+      if (m.entityId === entityId) return true
+      if (!m.entityName) return false
+      const normalizedMappingName = m.entityName.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim()
+      // Exact match
+      if (normalizedMappingName === normalizedEntityName) return true
+      // Substring match for shorter names
+      if (normalizedMappingName.includes(normalizedEntityName) && normalizedEntityName.length > 5) return true
+      if (normalizedEntityName.includes(normalizedMappingName) && normalizedMappingName.length > 5) return true
+      return false
+    })
 
     if (!mapping) {
-      // Try to generate a mapping based on naming conventions
-      mapping = this.generateBadgeMapping(entityId, entityName)
+      // Try to generate a mapping based on naming conventions (async now)
+      mapping = await this.generateBadgeMapping(entityId, entityName)
       if (mapping) {
         this.mappings.push(mapping)
       }
@@ -160,58 +118,72 @@ class BadgeService {
   }
 
   // Generate badge mapping based on naming conventions
-  private generateBadgeMapping(entityId: string | number, entityName: string): BadgeMapping | null {
+  // Returns null if badge doesn't exist (to prevent 404s and show fallback instead)
+  private async generateBadgeMapping(entityId: string | number, entityName: string): Promise<BadgeMapping | null> {
     // Extract the main name by removing common suffixes
     const mainName = entityName
       .replace(/ Football Club$/i, '')
       .replace(/ FC$/i, '')
       .replace(/ AFC$/i, '')
-      .replace(/ FC$/i, '')
       .replace(/ Club$/i, '')
-      .replace(/ United$/i, ' United')
-      .replace(/ City$/i, ' City')
-      .replace(/ Rovers$/i, ' Rovers')
-      .replace(/ Rangers$/i, ' Rangers')
-      .replace(/ Celtic$/i, ' Celtic')
       .trim()
-    
+
     const normalizedName = mainName
       .toLowerCase()
       .replace(/[^a-z0-9\s]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-    
-    // Try simplified naming patterns first, then more complex ones
-    const possiblePaths = [
-      `${this.config.baseUrl}/${normalizedName}-badge.png`,  // Simple name
-      `${this.config.baseUrl}/${normalizedName}.png`,       // Simple name no suffix
-      `${this.config.baseUrl}/${entityId}-badge.png`,      // Fallback to ID
-    ]
-    
-    // Try the original full name as last resort
+
+    // Try the original full name as fallback
     const fullNameNormalized = entityName
       .toLowerCase()
       .replace(/[^a-z0-9\s]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-    
-    if (fullNameNormalized !== normalizedName) {
-      possiblePaths.push(`${this.config.baseUrl}/${fullNameNormalized}-badge.png`)
-      possiblePaths.push(`${this.config.baseUrl}/${fullNameNormalized}.png`)
+
+    // List of possible badge filenames to try (in order of preference)
+    const possibleBadges = [
+      `${normalizedName}-badge.png`,              // Main name
+      `${fullNameNormalized}-badge.png`,          // Full name
+      `${normalizedName}.png`,                    // Without -badge suffix
+      `${fullNameNormalized}.png`,                // Full name without -badge suffix
+    ]
+
+    // Try each badge to see if it exists
+    for (const badgeFilename of possibleBadges) {
+      if (await this.badgeFileExists(badgeFilename)) {
+        console.log(`✅ Found badge for ${entityName}: ${badgeFilename}`)
+        return {
+          entityId,
+          entityName,
+          badgePath: `/badges/${badgeFilename}`,
+          s3Url: `/badges/${badgeFilename}`,
+          lastUpdated: new Date().toISOString(),
+          source: 'local'
+        }
+      }
     }
 
-    // Use API route for S3 proxy (avoids CORS issues)
-    const apiUrl = `/api/badges/${normalizedName}-badge.png`
+    // No badge found - return null to trigger fallback
+    console.log(`⚠️ No badge found for: ${entityName} (tried: ${possibleBadges.join(', ')})`)
+    return null
+  }
 
-    // Return the mapping with multiple path options
-    return {
-      entityId,
-      entityName,
-      badgePath: possiblePaths[0], // Use the simplified name as primary
-      s3Url: apiUrl,
-      lastUpdated: new Date().toISOString(),
-      source: 'local'
+  // Check if badge file exists
+  private async badgeFileExists(badgeFilename: string): Promise<boolean> {
+    // In browser environment, try to fetch the badge
+    if (typeof window !== 'undefined') {
+      try {
+        const response = await fetch(`/badges/${badgeFilename}`, { method: 'HEAD' })
+        return response.ok
+      } catch {
+        return false
+      }
     }
+
+    // In Node.js environment during build time, assume badge exists
+    // (We know we downloaded 272 badges from S3)
+    return true
   }
 
   // Get badge URL with fallback handling
@@ -222,20 +194,20 @@ class BadgeService {
 
     // Generate multiple possible URLs for better fallback handling
     const urls = []
-    
+
     // Always try S3 URL first (most reliable)
     if (mapping.s3Url) {
       urls.push(mapping.s3Url)
     }
-    
+
     // Try the primary badge path
     if (mapping.badgePath) {
-      const localPath = mapping.badgePath.startsWith('/') 
-        ? mapping.badgePath 
+      const localPath = mapping.badgePath.startsWith('/')
+        ? mapping.badgePath
         : `${this.config.baseUrl}/${mapping.badgePath}`
       urls.push(localPath)
     }
-    
+
     // Generate additional fallback URLs based on entity name
     const mainName = mapping.entityName
       .replace(/ Football Club$/i, '')
@@ -243,22 +215,22 @@ class BadgeService {
       .replace(/ AFC$/i, '')
       .replace(/ Club$/i, '')
       .trim()
-    
+
     const normalizedName = mainName
       .toLowerCase()
       .replace(/[^a-z0-9\s]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-    
+
     // Try simplified variations
     urls.push(`${this.config.baseUrl}/${normalizedName}-badge.png`)
     urls.push(`${this.config.baseUrl}/${normalizedName}.png`)
-    
+
     // Try theSportsDB URL if available
     if (mapping.badgeUrl) {
       urls.push(mapping.badgeUrl)
     }
-    
+
     // Final fallback
     urls.push(`${this.config.baseUrl}/placeholder-badge.png`)
 
@@ -286,7 +258,7 @@ class BadgeService {
   // Determine entity type from labels
   getEntityType(labels: string[]): 'club' | 'league' | 'organization' | 'event' {
     const labelStr = labels.join(' ').toLowerCase()
-    
+
     if (labelStr.includes('club') || labelStr.includes('team')) {
       return 'club'
     } else if (labelStr.includes('league')) {
@@ -300,7 +272,7 @@ class BadgeService {
 
   // Add new badge mapping
   addBadgeMapping(mapping: BadgeMapping): void {
-    const existingIndex = this.mappings.findIndex(m => 
+    const existingIndex = this.mappings.findIndex(m =>
       m.entityId === mapping.entityId || m.entityName === mapping.entityName
     )
 
@@ -314,18 +286,18 @@ class BadgeService {
     this.cache.clear()
   }
 
-  // Add S3 badge mapping (using API proxy to avoid CORS)
+  // Add local badge mapping
   addS3BadgeMapping(entityId: string | number, entityName: string, s3Key?: string): BadgeMapping {
     const key = s3Key || `${entityName.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-')}-badge.png`
-    const apiUrl = `/api/badges/${key}`
-    
+    const localPath = `/badges/${key}`
+
     const mapping: BadgeMapping = {
       entityId,
       entityName,
-      badgePath: `/badges/${key}`,
-      s3Url: apiUrl,
+      badgePath: localPath,
+      s3Url: localPath,
       lastUpdated: new Date().toISOString(),
-      source: 'api-proxy'
+      source: 'local'
     }
 
     this.addBadgeMapping(mapping)
@@ -363,7 +335,7 @@ export const badgeService = new BadgeService()
 badgeService.clearCache()
 
 // Export utility functions
-export const getBadgeForEntity = (entityId: string | number, entityName: string) => 
+export const getBadgeForEntity = (entityId: string | number, entityName: string) =>
   badgeService.getBadgeForEntity(entityId, entityName)
 
 export const getBadgeUrl = (mapping: BadgeMapping | null, size?: BadgeSize) =>

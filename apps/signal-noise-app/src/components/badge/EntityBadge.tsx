@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import NextImage from 'next/image'
+import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { BadgeComponentProps, BadgeSize, BadgeSource } from '@/types/badge'
 import { badgeService, getBadgeForEntity, getBadgeUrl, getEntityInitials } from '@/services/badge-service'
@@ -10,317 +11,275 @@ import { Loader2, Shield, Trophy, Users, Building2 } from 'lucide-react'
 const sizeClasses = {
   sm: 'w-8 h-8 text-xs',
   md: 'w-12 h-12 text-sm',
-  lg: 'w-16 h-16 text-base'
+  lg: 'w-16 h-16 text-base',
+  xl: 'w-20 h-20 text-lg'
 }
 
 const iconSize = {
   sm: 16,
   md: 24,
-  lg: 32
+  lg: 32,
+  xl: 40
 }
 
-export function EntityBadge({ entity, size = 'md', className, showFallback = true, onClick }: BadgeComponentProps) {
-  console.log('EntityBadge component mounted for:', entity?.properties?.name || 'null entity', 'neo4j_id:', entity?.neo4j_id || 'null')
-  
-  // Handle null entity case immediately
-  if (!entity) {
-    return (
-      <div className={cn(
-        'flex items-center justify-center rounded-lg bg-gray-600 animate-pulse',
-        sizeClasses[size],
-        className
-      )}>
-        <div className="w-full h-full bg-gray-600 rounded-lg animate-pulse" />
-      </div>
-    )
-  }
-  
+export function EntityBadge({ entity, size = 'md', showFallback = true, className, onClick }: BadgeComponentProps) {
+  const router = useRouter()
   const [badgeUrl, setBadgeUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [badgeSource, setBadgeSource] = useState<BadgeSource>('fallback')
-  const [imageLoading, setImageLoading] = useState(true)
 
   useEffect(() => {
     if (!entity) return
-    
+
     const loadBadge = async () => {
-      setLoading(true)
-      setError(false)
-      
       try {
-        console.log('Loading badge for entity:', entity.properties.name, 'ID:', entity.neo4j_id)
-        const mapping = await getBadgeForEntity(entity.neo4j_id, entity.properties.name)
-        
-        if (mapping) {
-          const url = getBadgeUrl(mapping, size)
-          console.log('Badge mapping found:', mapping)
-          console.log('Badge URL:', url)
-          setBadgeUrl(url)
-          setBadgeSource(mapping.source)
-          
-          // Reset image loading state for new URL
-          setImageLoading(true)
-          
-          // Set loading to false immediately - let the img tag handle its own loading
-          setLoading(false)
+        setLoading(true)
+        setError(false)
+
+        console.log(`🏷️ Loading badge for: ${entity?.properties?.name || entity?.id}`)
+
+        // Get badge mapping from service (now uses local files)
+        const badgeMapping = await getBadgeForEntity(entity?.id?.toString() || 'unknown', entity?.properties?.name || 'Unknown Entity')
+
+        if (badgeMapping?.s3Url) {
+          // Badge found - use the local path
+          console.log(`✅ Badge found: ${badgeMapping.s3Url}`)
+          setBadgeUrl(badgeMapping.s3Url)
+          setBadgeSource('s3')
         } else {
-          console.log('No badge mapping found for entity:', entity.properties.name)
-          setLoading(false)
-          setError(true)
+          // No badge found - will show fallback
+          console.log(`⚠️ No badge found for: ${entity?.properties?.name}`)
+          setBadgeUrl(null)
+          setBadgeSource('fallback')
         }
       } catch (err) {
-        console.error('Failed to load badge:', err)
-        setLoading(false)
+        console.error(`❌ Failed to load badge for ${entity?.properties?.name || entity?.id}:`, err)
         setError(true)
+        setBadgeUrl(null)
+        setBadgeSource('fallback')
+      } finally {
+        setLoading(false)
       }
     }
 
     loadBadge()
-  }, [entity?.neo4j_id, entity?.properties?.name, size])
+  }, [entity?.id])
 
-  const getEntityTypeIcon = () => {
-    const labels = entity.labels || []
-    const entityType = badgeService.getEntityType(labels)
-    
-    switch (entityType) {
-      case 'club':
-        return <Users size={iconSize[size]} className="text-blue-600" />
-      case 'league':
-        return <Trophy size={iconSize[size]} className="text-yellow-600" />
-      case 'event':
-        return <Shield size={iconSize[size]} className="text-green-600" />
-      default:
-        return <Building2 size={iconSize[size]} className="text-gray-600" />
+  const handleClick = () => {
+    if (!entity || !entity?.id) return
+
+    console.log('🔗 Badge click navigation for:', entity?.properties?.name || entity?.id, 'ID:', entity?.id)
+
+    if (onClick) {
+      onClick(entity)
+    } else {
+      // Default navigation to entity page
+      router.push(`/entity/${entity?.id}`)
     }
   }
 
-  const getEntityInitials = () => {
-    const name = entity.properties.name || ''
-    return name
-      .split(' ')
-      .filter(word => word.length > 0)
-      .slice(0, 2)
-      .map(word => word[0].toUpperCase())
-      .join('')
-  }
-
-  const getBadgeColor = () => {
-    const labels = entity.labels || []
-    const entityType = badgeService.getEntityType(labels)
-    
-    switch (entityType) {
-      case 'club':
-        return 'bg-blue-100 text-blue-600 border-blue-200'
-      case 'league':
-        return 'bg-yellow-100 text-yellow-600 border-yellow-200'
-      case 'event':
-        return 'bg-green-100 text-green-600 border-green-200'
-      default:
-        return 'bg-gray-100 text-gray-600 border-gray-200'
-    }
-  }
+  const initials = getEntityInitials(entity?.properties?.name || entity?.id?.toString() || 'Unknown')
 
   if (loading) {
     return (
       <div className={cn(
-        'flex items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50',
+        'flex items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-gray-100 animate-pulse',
         sizeClasses[size],
         className
       )}>
-        <Loader2 className="animate-spin text-gray-400" size={iconSize[size]} />
+        <Loader2 className={`${iconSize[size]} text-gray-400`} />
       </div>
     )
   }
 
-  if (error || !badgeUrl || !showFallback) {
+  if (error || !badgeUrl) {
+    // Show entity initials as fallback instead of shield icon
+    const initials = getEntityInitials(entity?.properties?.name || entity?.id?.toString() || '??')
+
     return (
-      <div 
+      <div
         className={cn(
-          'flex flex-col items-center justify-center rounded-lg border-2 font-semibold',
-          getBadgeColor(),
+          'flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold shadow-lg',
           sizeClasses[size],
-          onClick && 'cursor-pointer hover:opacity-80 transition-opacity',
           className
         )}
-        onClick={onClick}
-        title={entity.properties.name}
+        onClick={handleClick}
+        title={entity?.properties?.name || entity?.id}
       >
-        {getEntityTypeIcon()}
-        <span className="mt-1 leading-none">
-          {getEntityInitials()}
+        <span className={cn(
+          size === 'sm' ? 'text-xs' : size === 'md' ? 'text-sm' : size === 'lg' ? 'text-base' : 'text-lg'
+        )}>
+          {initials}
         </span>
       </div>
     )
   }
 
   return (
-    <div 
+    <div
       className={cn(
-        'relative rounded-lg overflow-hidden',
-        sizeClasses[size],
-        onClick && 'cursor-pointer hover:shadow-md transition-shadow',
+        'relative cursor-pointer transition-all duration-200 hover:scale-105 group',
         className
       )}
-      onClick={onClick}
-      title={entity.properties.name}
+      onClick={handleClick}
+      title={entity?.properties?.name || entity?.id}
     >
-      {/* Show loading skeleton while image is loading */}
-      {imageLoading && (
-        <div className="absolute inset-0 bg-gray-100 animate-pulse flex items-center justify-center">
-          <Loader2 className="animate-spin text-gray-400" size={iconSize[size]} />
-        </div>
-      )}
-      
       <img
         src={badgeUrl}
-        alt={`${entity.properties.name} badge`}
+        alt={`${entity?.properties?.name || entity?.id} badge`}
         className={cn(
-          "w-full h-full object-cover transition-opacity duration-200",
-          imageLoading ? "opacity-0" : "opacity-100"
+          'object-cover rounded-full',
+          sizeClasses[size]
         )}
-        onError={() => {
-          console.error('Image failed to load in img tag:', badgeUrl)
-          setError(true)
-          setImageLoading(false)
-        }}
-        onLoad={() => {
-          console.log('Image loaded successfully in img tag:', badgeUrl)
-          setImageLoading(false)
+        onError={(e) => {
+          console.error(`Badge load error for ${entity?.properties?.name || entity?.id}`)
+          if (showFallback) {
+            // Fallback to initials if image fails
+            const target = e.target as HTMLImageElement
+            target.style.display = 'none'
+            if (target.nextElementSibling) {
+              (target.nextElementSibling as HTMLElement).style.display = 'flex'
+            }
+          }
         }}
       />
+
+      {/* Fallback initials - shown on error */}
+      {showFallback && (
+        <div
+          className={cn(
+            'absolute inset-0 flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold pointer-events-none',
+            sizeClasses[size]
+          )}
+          style={{ display: 'none' }}
+        >
+          <span className={cn('font-bold', size === 'sm' ? 'text-xs' : size === 'md' ? 'text-sm' : size === 'lg' ? 'text-base' : 'text-lg')}>
+            {initials}
+          </span>
+        </div>
+      )}
+
+      {/* Badge source indicator */}
+      <div className="absolute -bottom-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        {badgeSource === 's3' && (
+          <div className="w-3 h-3 bg-green-500 rounded-full flex items-center justify-center" title="S3 Badge">
+            <Trophy className="w-2 h-2 text-white" />
+          </div>
+        )}
+        {badgeSource === 'local' && (
+          <div className="w-3 h-3 bg-orange-500 rounded-full flex items-center justify-center" title="Local Badge">
+            <Shield className="w-2 h-2 text-white" />
+          </div>
+        )}
+        {badgeSource === 'generated' && (
+          <div className="w-3 h-3 bg-purple-500 rounded-full flex items-center justify-center" title="Generated Badge">
+            <Users className="w-2 h-2 text-white" />
+          </div>
+        )}
+      </div>
     </div>
   )
 }
 
 // Compact version for use in lists
-export function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeComponentProps) {
+function CompactEntityBadge({ entity, size = 'sm', className, onClick }: BadgeComponentProps) {
+  const router = useRouter()
   const [badgeUrl, setBadgeUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
+  // Unified navigation handler for compact badge
+  const handleCompactBadgeClick = () => {
+    if (!entity || !entity?.id) return
+
+    console.log('🔗 Compact badge click navigation for:', entity?.properties?.name || entity?.id, 'ID:', entity?.id)
+
+    if (onClick) {
+      onClick(entity)
+    } else {
+      // Default navigation to entity page
+      router.push(`/entity/${entity?.id}`)
+    }
+  }
+
   useEffect(() => {
-    const loadBadge = async () => {
+    if (!entity) return
+
+    const loadCompactBadge = async () => {
       try {
-        const mapping = await getBadgeForEntity(entity.neo4j_id, entity.properties.name)
-        
-        if (mapping) {
-          const url = getBadgeUrl(mapping, size)
-          setBadgeUrl(url)
-          
-          const img = new Image()
-          img.onload = () => setLoading(false)
-          img.onerror = () => {
-            setLoading(false)
-            setError(true)
-          }
-          img.src = url
+        setLoading(true)
+        setError(false)
+
+        // Try to get S3 badge URL first (from Supabase cache)
+        const cachedBadge = await getBadgeForEntity(entity?.id?.toString() || 'unknown', entity?.properties?.name || 'Unknown Entity')
+
+        if (cachedBadge?.s3Url) {
+          // Use cached S3 URL
+          setBadgeUrl(cachedBadge.s3Url)
         } else {
-          setLoading(false)
-          setError(true)
+          // Use local fallback
+          setBadgeUrl(`/badges/default-badge.png`)
         }
       } catch (err) {
-        setLoading(false)
+        console.error(`Failed to load compact badge for ${entity?.properties?.name || entity?.id}:`, err)
         setError(true)
+      } finally {
+        setLoading(false)
       }
     }
 
-    loadBadge()
-  }, [entity?.neo4j_id, entity?.properties?.name, size])
+    loadCompactBadge()
+  }, [entity?.id])
 
-  const getInitials = () => {
-    const name = entity.properties.name || ''
-    return name
-      .split(' ')
-      .filter(word => word.length > 0)
-      .slice(0, 2)
-      .map(word => word[0].toUpperCase())
-      .join('')
-  }
+  const initials = getEntityInitials(entity?.properties?.name || entity?.id?.toString() || 'Unknown')
 
   if (loading) {
     return (
       <div className={cn(
-        'flex items-center justify-center rounded-full border border-gray-300 bg-gray-100 animate-pulse',
+        'flex items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-gray-100 animate-pulse',
         sizeClasses[size],
         className
-      )} />
+      )}>
+        <Loader2 className={`${iconSize[size]} text-gray-400`} />
+      </div>
     )
   }
 
   if (error || !badgeUrl) {
     return (
-      <div 
+      <div
         className={cn(
-          'flex items-center justify-center rounded-full border-2 border-gray-300 bg-gray-100 font-semibold text-gray-600',
+          'flex items-center justify-center rounded-full border-2 border-gray-300 bg-gray-50 font-semibold text-gray-500',
           sizeClasses[size],
-          onClick && 'cursor-pointer hover:bg-gray-200 transition-colors',
           className
         )}
-        onClick={onClick}
-        title={entity.properties.name}
+        onClick={handleCompactBadgeClick}
+        title={entity?.properties?.name || entity?.id}
       >
-        {getInitials()}
+        <Shield className={`${iconSize[size]} text-gray-400`} />
       </div>
     )
   }
 
   return (
-    <div 
+    <div
       className={cn(
-        'relative rounded-full overflow-hidden',
-        sizeClasses[size],
-        onClick && 'cursor-pointer hover:shadow-md transition-shadow',
+        'relative cursor-pointer transition-all duration-200 hover:scale-105',
         className
       )}
-      onClick={onClick}
-      title={entity.properties.name}
+      onClick={handleCompactBadgeClick}
+      title={entity?.properties?.name || entity?.id}
     >
       <NextImage
         src={badgeUrl}
-        alt={`${entity.properties.name} badge`}
+        alt={`${entity?.properties?.name || entity?.id} badge`}
         fill
-        className="object-cover"
+        className="object-cover rounded-full"
         sizes={`${sizeClasses[size].split(' ')[0].replace('w-', '')}px`}
       />
     </div>
   )
 }
 
-// Badge grid component for displaying multiple entities
-export function EntityBadgeGrid({ 
-  entities, 
-  size = 'md', 
-  className,
-  maxItems 
-}: { 
-  entities: any[]
-  size?: BadgeSize
-  className?: string
-  maxItems?: number 
-}) {
-  const displayEntities = maxItems ? entities.slice(0, maxItems) : entities
-
-  return (
-    <div className={cn('grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4', className)}>
-      {displayEntities.map((entity) => (
-        <div key={entity.id} className="flex flex-col items-center space-y-2">
-          <EntityBadge entity={entity} size={size} />
-          <div className="text-xs text-center text-gray-600 font-medium line-clamp-2">
-            {entity.properties.name}
-          </div>
-        </div>
-      ))}
-      {maxItems && entities.length > maxItems && (
-        <div className="flex flex-col items-center justify-center">
-          <div className={cn(
-            'flex items-center justify-center rounded-full border-2 border-dashed border-gray-300 bg-gray-50 font-semibold text-gray-500',
-            sizeClasses[size]
-          )}>
-            +{entities.length - maxItems}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
+export { CompactEntityBadge }
