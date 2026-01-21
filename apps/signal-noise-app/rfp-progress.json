@@ -1,13 +1,14 @@
 {
   "completed_batches": [
-    1,
-    2,
-    3,
-    4,
-    5,
-    "6"
+    "1",
+    "2",
+    "3",
+    "4",
+    "5"
   ],
-  "failed_batches": [
-    6
-  ]
+  "failed_batches": [],
+  "cycle_start_epoch": 1762641354,
+  "last_updated_epoch": 1762642057,
+  "reset_reason": "Force reset requested via --reset flag",
+  "reset_time": "2025-11-08T22:35:54Z"
 }

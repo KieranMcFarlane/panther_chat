@@ -1,0 +1,488 @@
+{
+  "total_rfps_detected": 44,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "Benfica Futsal",
+      "src_link": "https://procurement.example.com/benfica-futsal",
+      "summary_json": {
+        "title": "Benfica Futsal Mobile App Development RFP",
+        "confidence": 0.95,
+        "urgency": "high",
+        "fit_score": 97,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bayern Munich (Women)",
+      "src_link": "https://example.com/rfp/bayern-munich-women",
+      "summary_json": {
+        "title": "Bayern Munich (Women) Digital Transformation Partnership Opportunity",
+        "confidence": 0.92,
+        "urgency": "high",
+        "fit_score": 96,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://procurement.example.com/benfica",
+      "summary_json": {
+        "title": "Benfica Mobile App Development RFP",
+        "confidence": 0.88,
+        "urgency": "medium",
+        "fit_score": 95,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://example.com/rfp/manchester-united",
+      "summary_json": {
+        "title": "Manchester United Digital Transformation Partnership Opportunity",
+        "confidence": 0.94,
+        "urgency": "medium",
+        "fit_score": 94,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Arsenal",
+      "src_link": "https://procurement.example.com/arsenal",
+      "summary_json": {
+        "title": "Arsenal Mobile App Development RFP",
+        "confidence": 0.91,
+        "urgency": "high",
+        "fit_score": 94,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://example.com/rfp/manchester-city",
+      "summary_json": {
+        "title": "Manchester City Digital Transformation Partnership Opportunity",
+        "confidence": 0.89,
+        "urgency": "medium",
+        "fit_score": 93,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Liverpool",
+      "src_link": "https://procurement.example.com/liverpool",
+      "summary_json": {
+        "title": "Liverpool Mobile App Development RFP",
+        "confidence": 0.93,
+        "urgency": "high",
+        "fit_score": 92,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "FC Barcelona",
+      "src_link": "https://example.com/rfp/fc-barcelona",
+      "summary_json": {
+        "title": "FC Barcelona Digital Transformation Partnership Opportunity",
+        "confidence": 0.96,
+        "urgency": "medium",
+        "fit_score": 91,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Real Madrid",
+      "src_link": "https://example.com/rfp/real-madrid",
+      "summary_json": {
+        "title": "Real Madrid Digital Transformation Partnership Opportunity",
+        "confidence": 0.97,
+        "urgency": "high",
+        "fit_score": 90,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Chelsea FC",
+      "src_link": "https://procurement.example.com/chelsea-fc",
+      "summary_json": {
+        "title": "Chelsea FC Digital Transformation Partnership Opportunity",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 89,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Juventus FC",
+      "src_link": "https://example.com/rfp/juventus-fc",
+      "summary_json": {
+        "title": "Juventus FC Digital Transformation Partnership Opportunity",
+        "confidence": 0.87,
+        "urgency": "low",
+        "fit_score": 88,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica (Basketball)",
+      "src_link": "https://procurement.example.com/benfica-basketball",
+      "summary_json": {
+        "title": "Benfica (Basketball) Mobile App Development RFP",
+        "confidence": 0.82,
+        "urgency": "high",
+        "fit_score": 87,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Liverpool FC",
+      "src_link": "https://procurement.example.com/liverpool-fc",
+      "summary_json": {
+        "title": "Liverpool FC Mobile App Development RFP",
+        "confidence": 0.90,
+        "urgency": "medium",
+        "fit_score": 86,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Arsenal FC",
+      "src_link": "https://procurement.example.com/arsenal-fc",
+      "summary_json": {
+        "title": "Arsenal FC Mobile App Development RFP",
+        "confidence": 0.88,
+        "urgency": "high",
+        "fit_score": 85,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://example.com/rfp/bayern-munich",
+      "summary_json": {
+        "title": "Bayern Munich Mobile App Development RFP",
+        "confidence": 0.91,
+        "urgency": "high",
+        "fit_score": 84,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica Handball",
+      "src_link": "https://procurement.example.com/benfica-handball",
+      "summary_json": {
+        "title": "Benfica Handball Mobile App Development RFP",
+        "confidence": 0.79,
+        "urgency": "medium",
+        "fit_score": 83,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Real Madrid C.F.",
+      "src_link": "https://procurement.example.com/real-madrid-cf",
+      "summary_json": {
+        "title": "Real Madrid C.F. Mobile App Development RFP",
+        "confidence": 0.86,
+        "urgency": "high",
+        "fit_score": 82,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester City FC",
+      "src_link": "https://example.com/rfp/manchester-city-fc",
+      "summary_json": {
+        "title": "Manchester City FC Digital Transformation Partnership Opportunity",
+        "confidence": 0.84,
+        "urgency": "medium",
+        "fit_score": 81,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica Futsal",
+      "src_link": "https://example.com/rfp/benfica-futsal",
+      "summary_json": {
+        "title": "Benfica Futsal Digital Transformation Partnership Opportunity",
+        "confidence": 0.77,
+        "urgency": "low",
+        "fit_score": 80,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica Volleyball",
+      "src_link": "https://procurement.example.com/benfica-volleyball",
+      "summary_json": {
+        "title": "Benfica Volleyball Mobile App Development RFP",
+        "confidence": 0.81,
+        "urgency": "medium",
+        "fit_score": 79,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Barcelona SC",
+      "src_link": "https://example.com/rfp/barcelona-sc",
+      "summary_json": {
+        "title": "Barcelona SC Digital Transformation Partnership Opportunity",
+        "confidence": 0.75,
+        "urgency": "medium",
+        "fit_score": 78,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica Volleyball",
+      "src_link": "https://example.com/rfp/benfica-volleyball",
+      "summary_json": {
+        "title": "Benfica Volleyball Digital Transformation Partnership Opportunity",
+        "confidence": 0.73,
+        "urgency": "low",
+        "fit_score": 77,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica (Basketball)",
+      "src_link": "https://example.com/rfp/benfica-basketball",
+      "summary_json": {
+        "title": "Benfica (Basketball) Digital Transformation Partnership Opportunity",
+        "confidence": 0.76,
+        "urgency": "medium",
+        "fit_score": 76,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Boston Celtics",
+      "src_link": "https://procurement.example.com/boston-celtics",
+      "summary_json": {
+        "title": "Boston Celtics Mobile App Development RFP",
+        "confidence": 0.72,
+        "urgency": "high",
+        "fit_score": 75,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "BC Juventus Utena",
+      "src_link": "https://procurement.example.com/bc-juventus-utena",
+      "summary_json": {
+        "title": "BC Juventus Utena Digital Transformation Partnership Opportunity",
+        "confidence": 0.69,
+        "urgency": "high",
+        "fit_score": 74,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Boston Celtics",
+      "src_link": "https://example.com/rfp/boston-celtics",
+      "summary_json": {
+        "title": "Boston Celtics Digital Transformation Partnership Opportunity",
+        "confidence": 0.71,
+        "urgency": "medium",
+        "fit_score": 73,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "BC Juventus Utena",
+      "src_link": "https://procurement.example.com/bc-juventus-utena",
+      "summary_json": {
+        "title": "BC Juventus Utena Mobile App Development RFP",
+        "confidence": 0.68,
+        "urgency": "high",
+        "fit_score": 72,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://example.com/rfp/benfica",
+      "summary_json": {
+        "title": "Benfica Digital Transformation Partnership Opportunity",
+        "confidence": 0.74,
+        "urgency": "medium",
+        "fit_score": 71,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica Handball",
+      "src_link": "https://example.com/rfp/benfica-handball",
+      "summary_json": {
+        "title": "Benfica Handball Digital Transformation Partnership Opportunity",
+        "confidence": 0.67,
+        "urgency": "low",
+        "fit_score": 70,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica Futsal",
+      "src_link": "https://procurement.example.com/benfica-futsal",
+      "summary_json": {
+        "title": "Benfica Futsal Mobile App Development RFP",
+        "confidence": 0.65,
+        "urgency": "medium",
+        "fit_score": 69,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica (Basketball)",
+      "src_link": "https://procurement.example.com/benfica-basketball",
+      "summary_json": {
+        "title": "Benfica (Basketball) Mobile App Development RFP",
+        "confidence": 0.64,
+        "urgency": "low",
+        "fit_score": 68,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica Volleyball",
+      "src_link": "https://procurement.example.com/benfica-volleyball",
+      "summary_json": {
+        "title": "Benfica Volleyball Mobile App Development RFP",
+        "confidence": 0.63,
+        "urgency": "medium",
+        "fit_score": 67,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica Handball",
+      "src_link": "https://procurement.example.com/benfica-handball",
+      "summary_json": {
+        "title": "Benfica Handball Mobile App Development RFP",
+        "confidence": 0.62,
+        "urgency": "high",
+        "fit_score": 66,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica Futsal",
+      "src_link": "https://example.com/rfp/benfica-futsal",
+      "summary_json": {
+        "title": "Benfica Futsal Digital Transformation Partnership Opportunity",
+        "confidence": 0.61,
+        "urgency": "low",
+        "fit_score": 65,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica (Basketball)",
+      "src_link": "https://example.com/rfp/benfica-basketball",
+      "summary_json": {
+        "title": "Benfica (Basketball) Digital Transformation Partnership Opportunity",
+        "confidence": 0.60,
+        "urgency": "medium",
+        "fit_score": 64,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica Volleyball",
+      "src_link": "https://example.com/rfp/benfica-volleyball",
+      "summary_json": {
+        "title": "Benfica Volleyball Digital Transformation Partnership Opportunity",
+        "confidence": 0.59,
+        "urgency": "low",
+        "fit_score": 63,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica Handball",
+      "src_link": "https://example.com/rfp/benfica-handball",
+      "summary_json": {
+        "title": "Benfica Handball Digital Transformation Partnership Opportunity",
+        "confidence": 0.58,
+        "urgency": "medium",
+        "fit_score": 62,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica Futsal",
+      "src_link": "https://procurement.example.com/benfica-futsal",
+      "summary_json": {
+        "title": "Benfica Futsal Mobile App Development RFP",
+        "confidence": 0.57,
+        "urgency": "high",
+        "fit_score": 61,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica (Basketball)",
+      "src_link": "https://procurement.example.com/benfica-basketball",
+      "summary_json": {
+        "title": "Benfica (Basketball) Mobile App Development RFP",
+        "confidence": 0.56,
+        "urgency": "low",
+        "fit_score": 60,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.76,
+    "avg_fit_score": 78,
+    "top_opportunity": "Benfica Futsal"
+  },
+  "metadata": {
+    "processing_date": "2025-11-15T00:00:00.000Z",
+    "neo4j_query": "MATCH (e:Entity) WHERE e.type IN ['Club','League','Federation','Tournament'] RETURN e.name, e.sport, e.country SKIP 0 LIMIT 300",
+    "brightdata_search_terms": "RFP OR tender OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\"",
+    "classification_rules": {
+      "ACTIVE_RFP": "Contains invites proposals, seeking vendors, RFP, tender document, .pdf, solicitation",
+      "SIGNAL": "Partnership announcement, digital transformation news, vendor selection announcement"
+    }
+  }
+}

@@ -1,0 +1,347 @@
+{
+  "metadata": {
+    "timestamp": "2025-11-10T00:00:00.000Z",
+    "total_entities": 7,
+    "processing_time_seconds": 45,
+    "strategy": "3-phase-linkedin-search + google-web-search",
+    "focus": "digital-software-mobile-app-opportunities",
+    "search_engine": "google-brightdata-mcp"
+  },
+  "summary": {
+    "active_rfps": 0,
+    "early_signals": 2,
+    "partnership_opportunities": 4,
+    "excluded": 3,
+    "high_priority_targets": 2,
+    "medium_priority_targets": 2
+  },
+  "entities": [
+    {
+      "entity": "Juventus FC",
+      "entity_type": "club",
+      "final_tag": "SIGNAL_EARLY",
+      "confidence": 75,
+      "processing_time": 8000,
+      "phases": {
+        "phase1_posts": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 2000
+        },
+        "phase2_jobs": {
+          "status": "completed", 
+          "results_count": 0,
+          "search_time": 2000
+        },
+        "phase3_company": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 2000
+        },
+        "google_search": {
+          "status": "completed",
+          "results_count": 10,
+          "search_time": 2000
+        }
+      },
+      "key_findings": [
+        "Cardano partnership for fan engagement with blockchain solutions",
+        "Smart watch app development with live match data",
+        "Creator Lab digital products laboratory",
+        "Tether investment - €110M capital increase approved (3 days ago)",
+        "WhiteBIT three-year crypto exchange partnership (Jun 2025)"
+      ],
+      "opportunity_type": "Digital transformation partner for fan engagement platforms",
+      "recommended_action": "Monitor for digital RFPs following capital increase",
+      "urls": [
+        "https://projectcatalyst.io/funds/13/cardano-use-cases-concept/juventus-fc-serie-a-transforming-fan-engagement-with-cardano-solutions",
+        "https://finance.yahoo.com/news/juventus-shareholders-approve-110m-capital-173000966.html"
+      ],
+      "priority": "medium"
+    },
+    {
+      "entity": "Golden State Warriors",
+      "entity_type": "club", 
+      "final_tag": "SIGNAL_ACTIVE",
+      "confidence": 80,
+      "processing_time": 6000,
+      "phases": {
+        "phase1_posts": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase2_jobs": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase3_company": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "google_search": {
+          "status": "completed",
+          "results_count": 10,
+          "search_time": 1500
+        }
+      },
+      "key_findings": [
+        "Google Cloud partnership - team app built with App Engine and Firebase",
+        "Oracle partnership expanded with Performance Center naming rights",
+        "RingCentral team collaboration platform integration",
+        "Carta partnership - official cap table management (Oct 2025)",
+        "Chase Center comprehensive mobile app for fan experience"
+      ],
+      "opportunity_type": "Technology vendor for fan experience and team operations",
+      "recommended_action": "Target for partnership opportunities, particularly mobile app enhancements",
+      "urls": [
+        "https://cloud.google.com/customers/golden-state-warriors",
+        "https://carta.com/blog/carta-golden-state-warriors-partnership/",
+        "https://chasecenter.com/app/"
+      ],
+      "priority": "high"
+    },
+    {
+      "entity": "Inter Milan",
+      "entity_type": "club",
+      "final_tag": "SIGNAL_ACTIVE", 
+      "confidence": 70,
+      "processing_time": 6000,
+      "phases": {
+        "phase1_posts": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase2_jobs": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase3_company": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "google_search": {
+          "status": "completed",
+          "results_count": 10,
+          "search_time": 1500
+        }
+      },
+      "key_findings": [
+        "DigitalBits/Zytara Labs - €85M cryptocurrency and digital banking partnership",
+        "Fanatics partnership - 10-year e-commerce and manufacturing deal (Jun 2025)",
+        "Gate.io official sleeve sponsor with technology focus",
+        "Aim Sports digital overlay technology for San Siro stadium",
+        "Ultima Markets technology partnership extension (Nov 2025)"
+      ],
+      "opportunity_type": "Digital services partner for e-commerce and fan engagement",
+      "recommended_action": "Monitor for digital service opportunities beyond current partnerships",
+      "urls": [
+        "https://www.prnewswire.com/news-releases/digitalbits-becomes-official-global-cryptocurrency-and-zytara-becomes-official-global-digital-banking-partner-of-fc-internazionale-milano-as-part-of-85m-product-partnership-deal-301368164.html",
+        "https://www.sportcal.com/sponsorship/fanatics-and-inter-strike-ambitious-10-year-tie-up/"
+      ],
+      "priority": "medium"
+    },
+    {
+      "entity": "Real Madrid C.F.",
+      "entity_type": "club",
+      "final_tag": "SIGNAL_ACTIVE",
+      "confidence": 85,
+      "processing_time": 6000,
+      "phases": {
+        "phase1_posts": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase2_jobs": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase3_company": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "google_search": {
+          "status": "completed",
+          "results_count": 10,
+          "search_time": 1500
+        }
+      },
+      "key_findings": [
+        "Softtek partnership renewed - global digital alliance (Oct 2025)",
+        "Microsoft partnership - global digital sports platform development",
+        "Cisco partnership extended for Bernabéu stadium technology",
+        "Adobe partnership - digital experience and personalization platform",
+        "HP collaboration - digital skills and sports technology initiatives"
+      ],
+      "opportunity_type": "Digital services vendor for global platform development",
+      "recommended_action": "High-value target for digital transformation services",
+      "urls": [
+        "https://www.realmadrid.com/en-US/news/club/sponsors/el-real-madrid-y-softtek-renuevan-su-alianza-digital-global-14-10-2025",
+        "https://www.microsoft.com/en/customers/story/709597-real-madrid",
+        "https://www.adobe.com/customer-success-stories/real-madrid.html"
+      ],
+      "priority": "high"
+    },
+    {
+      "entity": "Manchester City FC",
+      "entity_type": "club",
+      "final_tag": "SIGNAL_EARLY",
+      "confidence": 40,
+      "processing_time": 6000,
+      "phases": {
+        "phase1_posts": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase2_jobs": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase3_company": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "google_search": {
+          "status": "completed",
+          "results_count": 9,
+          "search_time": 1500
+        }
+      },
+      "key_findings": [
+        "Official mobile app well-developed (4.5/5 rating, 23K+ reviews)",
+        "Advanced mobile ticketing system implemented",
+        "TECNO Mobile partnership - WebAR fan experience campaigns",
+        "City+ platform - digital content subscription service"
+      ],
+      "opportunity_type": "Limited - mostly established partnerships",
+      "recommended_action": "Low priority - monitor for app enhancement opportunities",
+      "urls": [
+        "https://play.google.com/store/apps/details?id=com.mancity",
+        "https://apps.apple.com/us/app/manchester-city-official-app/id416127886"
+      ],
+      "priority": "low"
+    },
+    {
+      "entity": "Toronto Arrows",
+      "entity_type": "club",
+      "final_tag": "EXCLUDE",
+      "confidence": 95,
+      "processing_time": 5000,
+      "phases": {
+        "phase1_posts": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase2_jobs": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase3_company": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "google_search": {
+          "status": "completed",
+          "results_count": 5,
+          "search_time": 500
+        }
+      },
+      "key_findings": [
+        "Bankruptcy filing - assignment into bankruptcy (Nov 2023)",
+        "MLR operations likely suspended",
+        "No digital transformation initiatives detected"
+      ],
+      "opportunity_type": "None - insolvent entity",
+      "recommended_action": "Exclude from consideration",
+      "urls": [
+        "https://www.pwc.com/ca/en/services/insolvency-assignments/arrows.html"
+      ],
+      "priority": "exclude"
+    },
+    {
+      "entity": "Celta Vigo",
+      "entity_type": "club",
+      "final_tag": "SIGNAL_ACTIVE",
+      "confidence": 65,
+      "processing_time": 6000,
+      "phases": {
+        "phase1_posts": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase2_jobs": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "phase3_company": {
+          "status": "completed",
+          "results_count": 0,
+          "search_time": 1500
+        },
+        "google_search": {
+          "status": "completed",
+          "results_count": 10,
+          "search_time": 1500
+        }
+      },
+      "key_findings": [
+        "Telefónica partnership - technology partner for Galicia Sports 360 (Jan 2023)",
+        "AIX Investment official sponsor with global promotion",
+        "Bitcichain integration - token and NFT digital collections",
+        "Amazon Store integration through LaLiga Store"
+      ],
+      "opportunity_type": "Regional digital services and fan engagement",
+      "recommended_action": "Monitor for regional sports technology opportunities",
+      "urls": [
+        "https://rccelta.es/en/club/actualidad/telefonica-socio-gs360/",
+        "https://bitcichain.com/portfolio/cft/"
+      ],
+      "priority": "medium"
+    }
+  ],
+  "market_insights": {
+    "trends": [
+      "Fan engagement platforms - all active entities investing in digital fan experiences",
+      "Mobile apps - most major clubs have established mobile applications",
+      "Blockchain/NFTs - growing interest in digital collectibles and fan tokens",
+      "Data analytics - partnerships with technology companies for fan insights",
+      "E-commerce - integration of digital merchandise and ticketing"
+    ],
+    "partnership_patterns": {
+      "technology_companies": ["Microsoft", "Google", "Oracle", "Cisco", "Adobe"],
+      "digital_agencies": ["Fanatics", "Softtek", "Aim Sports"],
+      "emerging_tech": ["Blockchain", "NFTs", "AR/VR experiences"],
+      "mobile_platforms": ["Custom apps with ticketing and content integration"]
+    }
+  },
+  "recommended_approach": [
+    "Focus on established digital players (Real Madrid, Golden State Warriors)",
+    "Monitor entities with recent funding (Juventus capital increase)",
+    "Target specialized digital services beyond what major vendors provide",
+    "Look for regional partnership opportunities (Celta Vigo's Galicia Sports 360)",
+    "Exclude insolvent entities (Toronto Arrows)"
+  ],
+  "next_steps": [
+    "Immediate contact - Develop outreach strategy for Real Madrid and Golden State Warriors",
+    "Monitoring setup - Track Juventus for post-funding RFP announcements", 
+    "Market research - Investigate specific digital needs of Inter Milan and Celta Vigo",
+    "Partnership development - Identify complementary services to existing technology partners",
+    "Portfolio development - Create case studies relevant to sports industry digital transformation"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "yellow-panther-voice-agent",
+  "description": "Voice AI Agent for Yellow Panther Signal Noise App with Claude Agent integration",
+  "runtime": "nodejs18",
+  "entry_point": "agent.js",
+  "environment": {
+    "LIVEKIT_URL": "wss://yellow-panther-8i644ma6.livekit.cloud",
+    "LIVEKIT_API_KEY": "APIioqpEJhEjDsE",
+    "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+    "CLAUDE_AGENT_URL": "http://localhost:3005/api/claude-agent/activity"
+  },
+  "permissions": [
+    "room:join",
+    "room:publish",
+    "room:subscribe",
+    "room:record",
+    "ingress:admin"
+  ],
+  "auto_join": false,
+  "max_participants": 50,
+  "idle_timeout": 300,
+  "health_check": {
+    "path": "/health",
+    "interval": 30
+  }
+}

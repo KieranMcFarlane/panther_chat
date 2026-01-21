@@ -66,7 +66,7 @@ export function EnhancedClubDossier({ entity, onEmailEntity, dossier }: Enhanced
   const [isInitialized, setIsInitialized] = useState(false)
   
   const props = entity.properties
-  const priority = getEntityPriority(entity)
+  const priority = parseInt(String(getEntityPriority(entity))) || 0
 
   useEffect(() => {
     if (!entity) return

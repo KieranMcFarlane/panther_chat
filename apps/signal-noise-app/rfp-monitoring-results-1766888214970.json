@@ -1,0 +1,630 @@
+{
+  "total_rfps_detected": 34,
+  "entities_checked": 300,
+  "active_rfps": 34,
+  "signals": 0,
+  "highlights": [
+    {
+      "organization": "Chelsea",
+      "src_link": "https://procurement.example.com/chelsea",
+      "summary_json": {
+        "title": "Chelsea RFP Opportunity",
+        "confidence": 0.8264834278354835,
+        "urgency": "high",
+        "fit_score": 73,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Football",
+        "country": "England",
+        "search_query": "Chelsea Football (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.940Z",
+        "validated": true,
+        "perplexity_adjustment": -0.099666029100682
+      }
+    },
+    {
+      "organization": "Villarreal CF",
+      "src_link": "https://procurement.example.com/villarreal-cf",
+      "summary_json": {
+        "title": "Villarreal CF RFP Opportunity",
+        "confidence": 0.7897936136558539,
+        "urgency": "medium",
+        "fit_score": 90,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Football",
+        "country": "Spain",
+        "search_query": "Villarreal CF Football (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.962Z",
+        "validated": true,
+        "perplexity_adjustment": -0.0809431230966216
+      }
+    },
+    {
+      "organization": "Rangers",
+      "src_link": "https://procurement.example.com/rangers",
+      "summary_json": {
+        "title": "Rangers RFP Opportunity",
+        "confidence": 0.8131495067588076,
+        "urgency": "medium",
+        "fit_score": 94,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Football",
+        "country": "Scotland",
+        "search_query": "Rangers Football (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.962Z",
+        "validated": true,
+        "perplexity_adjustment": -0.061459179840717054
+      }
+    },
+    {
+      "organization": "Melbourne Victory",
+      "src_link": "https://procurement.example.com/melbourne-victory",
+      "summary_json": {
+        "title": "Melbourne Victory RFP Opportunity",
+        "confidence": 0.9423662289351388,
+        "urgency": "medium",
+        "fit_score": 75,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Football",
+        "country": "Australia",
+        "search_query": "Melbourne Victory Football (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.962Z",
+        "validated": true,
+        "perplexity_adjustment": 0.038068928713609645
+      }
+    },
+    {
+      "organization": "Mumbai Indians",
+      "src_link": "https://procurement.example.com/mumbai-indians",
+      "summary_json": {
+        "title": "Mumbai Indians RFP Opportunity",
+        "confidence": 0.9711267850017907,
+        "urgency": "medium",
+        "fit_score": 79,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Cricket",
+        "country": "India",
+        "search_query": "Mumbai Indians Cricket (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.962Z",
+        "validated": true,
+        "perplexity_adjustment": 0.07378800805817179
+      }
+    },
+    {
+      "organization": "Milwaukee Bucks",
+      "src_link": "https://procurement.example.com/milwaukee-bucks",
+      "summary_json": {
+        "title": "Milwaukee Bucks RFP Opportunity",
+        "confidence": 0.8518889272476227,
+        "urgency": "high",
+        "fit_score": 84,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Basketball",
+        "country": "USA",
+        "search_query": "Milwaukee Bucks Basketball (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.962Z",
+        "validated": true,
+        "perplexity_adjustment": -0.008210990232355317
+      }
+    },
+    {
+      "organization": "Entity 73",
+      "src_link": "https://procurement.example.com/entity-73",
+      "summary_json": {
+        "title": "Entity 73 RFP Opportunity",
+        "confidence": 0.9300162423986744,
+        "urgency": "high",
+        "fit_score": 94,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 73 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.963Z",
+        "validated": true,
+        "perplexity_adjustment": -0.04374428064975744
+      }
+    },
+    {
+      "organization": "Entity 78",
+      "src_link": "https://procurement.example.com/entity-78",
+      "summary_json": {
+        "title": "Entity 78 RFP Opportunity",
+        "confidence": 1,
+        "urgency": "medium",
+        "fit_score": 84,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 78 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.963Z",
+        "validated": true,
+        "perplexity_adjustment": 0.06688864015840826
+      }
+    },
+    {
+      "organization": "Entity 82",
+      "src_link": "https://procurement.example.com/entity-82",
+      "summary_json": {
+        "title": "Entity 82 RFP Opportunity",
+        "confidence": 0.8636248713862618,
+        "urgency": "high",
+        "fit_score": 72,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 82 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.963Z",
+        "validated": true,
+        "perplexity_adjustment": -0.007904889388656189
+      }
+    },
+    {
+      "organization": "Entity 83",
+      "src_link": "https://procurement.example.com/entity-83",
+      "summary_json": {
+        "title": "Entity 83 RFP Opportunity",
+        "confidence": 0.8693076846534551,
+        "urgency": "high",
+        "fit_score": 74,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 83 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.963Z",
+        "validated": true,
+        "perplexity_adjustment": 0.0028908047638571688
+      }
+    },
+    {
+      "organization": "Entity 94",
+      "src_link": "https://procurement.example.com/entity-94",
+      "summary_json": {
+        "title": "Entity 94 RFP Opportunity",
+        "confidence": 0.9723703074152216,
+        "urgency": "high",
+        "fit_score": 87,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 94 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.963Z",
+        "validated": true,
+        "perplexity_adjustment": 0.08178572943326776
+      }
+    },
+    {
+      "organization": "Entity 107",
+      "src_link": "https://procurement.example.com/entity-107",
+      "summary_json": {
+        "title": "Entity 107 RFP Opportunity",
+        "confidence": 0.9481707934985613,
+        "urgency": "medium",
+        "fit_score": 79,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 107 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.963Z",
+        "validated": true,
+        "perplexity_adjustment": 0.08359087723218406
+      }
+    },
+    {
+      "organization": "Entity 120",
+      "src_link": "https://procurement.example.com/entity-120",
+      "summary_json": {
+        "title": "Entity 120 RFP Opportunity",
+        "confidence": 0.8116974780128356,
+        "urgency": "high",
+        "fit_score": 95,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 120 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.963Z",
+        "validated": true,
+        "perplexity_adjustment": -0.04137782367403884
+      }
+    },
+    {
+      "organization": "Entity 131",
+      "src_link": "https://procurement.example.com/entity-131",
+      "summary_json": {
+        "title": "Entity 131 RFP Opportunity",
+        "confidence": 0.8437558800764374,
+        "urgency": "high",
+        "fit_score": 86,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 131 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.964Z",
+        "validated": true,
+        "perplexity_adjustment": -0.05356334200830264
+      }
+    },
+    {
+      "organization": "Entity 137",
+      "src_link": "https://procurement.example.com/entity-137",
+      "summary_json": {
+        "title": "Entity 137 RFP Opportunity",
+        "confidence": 1,
+        "urgency": "medium",
+        "fit_score": 89,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 137 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.964Z",
+        "validated": true,
+        "perplexity_adjustment": 0.03674425775586507
+      }
+    },
+    {
+      "organization": "Entity 139",
+      "src_link": "https://procurement.example.com/entity-139",
+      "summary_json": {
+        "title": "Entity 139 RFP Opportunity",
+        "confidence": 0.9537254807058698,
+        "urgency": "medium",
+        "fit_score": 93,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 139 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.964Z",
+        "validated": true,
+        "perplexity_adjustment": 0.06524768546080403
+      }
+    },
+    {
+      "organization": "Entity 140",
+      "src_link": "https://procurement.example.com/entity-140",
+      "summary_json": {
+        "title": "Entity 140 RFP Opportunity",
+        "confidence": 0.9084542218319875,
+        "urgency": "high",
+        "fit_score": 74,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 140 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.964Z",
+        "validated": true,
+        "perplexity_adjustment": -0.008502625527800498
+      }
+    },
+    {
+      "organization": "Entity 143",
+      "src_link": "https://procurement.example.com/entity-143",
+      "summary_json": {
+        "title": "Entity 143 RFP Opportunity",
+        "confidence": 0.9445015924948974,
+        "urgency": "high",
+        "fit_score": 94,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 143 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.964Z",
+        "validated": true,
+        "perplexity_adjustment": 0.01105173013520129
+      }
+    },
+    {
+      "organization": "Entity 146",
+      "src_link": "https://procurement.example.com/entity-146",
+      "summary_json": {
+        "title": "Entity 146 RFP Opportunity",
+        "confidence": 0.7968863961268429,
+        "urgency": "medium",
+        "fit_score": 78,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 146 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.964Z",
+        "validated": true,
+        "perplexity_adjustment": -0.06244042411734312
+      }
+    },
+    {
+      "organization": "Entity 149",
+      "src_link": "https://procurement.example.com/entity-149",
+      "summary_json": {
+        "title": "Entity 149 RFP Opportunity",
+        "confidence": 0.9355402323471436,
+        "urgency": "medium",
+        "fit_score": 88,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 149 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.964Z",
+        "validated": true,
+        "perplexity_adjustment": -0.0041480119782316
+      }
+    },
+    {
+      "organization": "Entity 150",
+      "src_link": "https://procurement.example.com/entity-150",
+      "summary_json": {
+        "title": "Entity 150 RFP Opportunity",
+        "confidence": 0.7780814560666346,
+        "urgency": "high",
+        "fit_score": 88,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 150 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.964Z",
+        "validated": true,
+        "perplexity_adjustment": -0.09071175444370594
+      }
+    },
+    {
+      "organization": "Entity 151",
+      "src_link": "https://procurement.example.com/entity-151",
+      "summary_json": {
+        "title": "Entity 151 RFP Opportunity",
+        "confidence": 1,
+        "urgency": "medium",
+        "fit_score": 95,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 151 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.964Z",
+        "validated": true,
+        "perplexity_adjustment": 0.06611692066739594
+      }
+    },
+    {
+      "organization": "Entity 155",
+      "src_link": "https://procurement.example.com/entity-155",
+      "summary_json": {
+        "title": "Entity 155 RFP Opportunity",
+        "confidence": 1,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 155 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.965Z",
+        "validated": true,
+        "perplexity_adjustment": 0.07265267406913886
+      }
+    },
+    {
+      "organization": "Entity 161",
+      "src_link": "https://procurement.example.com/entity-161",
+      "summary_json": {
+        "title": "Entity 161 RFP Opportunity",
+        "confidence": 0.9266345937189667,
+        "urgency": "high",
+        "fit_score": 91,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 161 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.965Z",
+        "validated": true,
+        "perplexity_adjustment": -0.06188609073040663
+      }
+    },
+    {
+      "organization": "Entity 175",
+      "src_link": "https://procurement.example.com/entity-175",
+      "summary_json": {
+        "title": "Entity 175 RFP Opportunity",
+        "confidence": 0.9990774225159078,
+        "urgency": "medium",
+        "fit_score": 77,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 175 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.965Z",
+        "validated": true,
+        "perplexity_adjustment": 0.08757827544402283
+      }
+    },
+    {
+      "organization": "Entity 180",
+      "src_link": "https://procurement.example.com/entity-180",
+      "summary_json": {
+        "title": "Entity 180 RFP Opportunity",
+        "confidence": 1,
+        "urgency": "medium",
+        "fit_score": 91,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 180 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.965Z",
+        "validated": true,
+        "perplexity_adjustment": 0.040334259293864194
+      }
+    },
+    {
+      "organization": "Entity 189",
+      "src_link": "https://procurement.example.com/entity-189",
+      "summary_json": {
+        "title": "Entity 189 RFP Opportunity",
+        "confidence": 0.9821541722001466,
+        "urgency": "medium",
+        "fit_score": 92,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 189 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.965Z",
+        "validated": true,
+        "perplexity_adjustment": 0.08980819446056257
+      }
+    },
+    {
+      "organization": "Entity 196",
+      "src_link": "https://procurement.example.com/entity-196",
+      "summary_json": {
+        "title": "Entity 196 RFP Opportunity",
+        "confidence": 0.8475389929440369,
+        "urgency": "high",
+        "fit_score": 86,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 196 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.965Z",
+        "validated": true,
+        "perplexity_adjustment": -0.036591361417417284
+      }
+    },
+    {
+      "organization": "Entity 203",
+      "src_link": "https://procurement.example.com/entity-203",
+      "summary_json": {
+        "title": "Entity 203 RFP Opportunity",
+        "confidence": 0.9675646962793334,
+        "urgency": "medium",
+        "fit_score": 93,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 203 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.965Z",
+        "validated": true,
+        "perplexity_adjustment": 0.04730518155893221
+      }
+    },
+    {
+      "organization": "Entity 210",
+      "src_link": "https://procurement.example.com/entity-210",
+      "summary_json": {
+        "title": "Entity 210 RFP Opportunity",
+        "confidence": 0.9249116703736635,
+        "urgency": "high",
+        "fit_score": 75,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 210 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.965Z",
+        "validated": true,
+        "perplexity_adjustment": -0.03028519855830107
+      }
+    },
+    {
+      "organization": "Entity 215",
+      "src_link": "https://procurement.example.com/entity-215",
+      "summary_json": {
+        "title": "Entity 215 RFP Opportunity",
+        "confidence": 0.9139586897717523,
+        "urgency": "medium",
+        "fit_score": 87,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 215 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.966Z",
+        "validated": true,
+        "perplexity_adjustment": 0.0564715428249567
+      }
+    },
+    {
+      "organization": "Entity 257",
+      "src_link": "https://procurement.example.com/entity-257",
+      "summary_json": {
+        "title": "Entity 257 RFP Opportunity",
+        "confidence": 0.9635980525278731,
+        "urgency": "medium",
+        "fit_score": 91,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 257 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.966Z",
+        "validated": true,
+        "perplexity_adjustment": 0.0442319193771708
+      }
+    },
+    {
+      "organization": "Entity 276",
+      "src_link": "https://procurement.example.com/entity-276",
+      "summary_json": {
+        "title": "Entity 276 RFP Opportunity",
+        "confidence": 0.9164118419328946,
+        "urgency": "medium",
+        "fit_score": 94,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 276 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.966Z",
+        "validated": true,
+        "perplexity_adjustment": -0.010761999811517903
+      }
+    },
+    {
+      "organization": "Entity 297",
+      "src_link": "https://procurement.example.com/entity-297",
+      "summary_json": {
+        "title": "Entity 297 RFP Opportunity",
+        "confidence": 0.8889762380480477,
+        "urgency": "medium",
+        "fit_score": 86,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender",
+        "sport": "Multi-sport",
+        "country": "International",
+        "search_query": "Entity 297 Multi-sport (\"RFP\" OR \"tender\" OR \"invites proposals\" OR \"digital transformation\" OR \"mobile app\" OR \"digital partner\")",
+        "detected_date": "2025-12-28T02:16:54.967Z",
+        "validated": true,
+        "perplexity_adjustment": 0.030325089065038557
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.914,
+    "avg_fit_score": 86,
+    "top_opportunity": "Entity 120"
+  },
+  "metadata": {
+    "processing_time_seconds": 0,
+    "timestamp": "2025-12-28T02:16:54.970Z",
+    "system_version": "Production RFP Monitoring System v1.0"
+  }
+}

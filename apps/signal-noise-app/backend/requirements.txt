@@ -10,11 +10,32 @@ redis>=5.0.0
 pydantic>=2.4.0
 pydantic-settings>=2.0.0
 
-# Neo4j driver
+# Neo4j/FalkorDB driver (Neo4j-compatible BOLT protocol)
 neo4j>=5.15.0
+
+# Redis client for FalkorDB Cloud
+redis>=5.0.0
+
+# Supabase Client for data extraction
+supabase>=2.3.0
+
+# Graphiti - Temporal Knowledge Graph
+# Note: Graphiti requires specific LLM integrations
+# Install separately as graphiti-core may have additional dependencies
+# pip install graphiti-core[llms]
 
 # HTTP client for MCP calls
 requests>=2.31.0
+httpx>=0.25.0
+aiohttp>=3.9.0
+
+# Async support
+asyncio>=3.4.3
+
+# Data processing and utilities
+python-dateutil>=2.8.2
+python-dotenv>=1.0.0
+tenacity>=8.2.0
 
 # Database (SQLite for MVP, can be upgraded to PostgreSQL)
 # sqlite3 is included in Python standard library
@@ -23,13 +44,12 @@ requests>=2.31.0
 python-json-logger>=2.0.0
 python-multipart>=0.0.6
 
+# Serialization
+orjson>=3.9.0
+
 # Development and testing
 pytest>=7.4.0
 pytest-asyncio>=0.21.0
-httpx>=0.25.0
-
-# Environment management
-python-dotenv>=1.0.0
 
 # Optional: PostgreSQL support (uncomment if using PostgreSQL)
 # psycopg2-binary>=2.9.9

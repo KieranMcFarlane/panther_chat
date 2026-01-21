@@ -234,8 +234,8 @@ async function generateLinkedInAnalysis(entityName: string, entityType: string) 
   }
 }
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseUrl = 'https://itlcuazbybqlkicsaola.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0bGN1YXpieWJxbGtpY3Nhb2xhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwOTc0MTQsImV4cCI6MjA3NDY3MzQxNH0.UXXSbe1Kk0CH7NkIGnwo3_qmJVV3VUbJz4Dw8lBGcKU'
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 interface Entity {
@@ -361,11 +361,34 @@ export async function GET(
             source = 'cache'
           } else {
             // Fallback to cached_entities for other entity types
-            const { data: cachedEntity, error: cacheError } = await supabase
+            // Try UUID first, then Neo4j ID
+            let { data: cachedEntity, error: cacheError } = await supabase
               .from('cached_entities')
               .select('*')
-              .eq('neo4j_id', entityId)
+              .eq('id', entityId)
               .single()
+
+            // If not found by UUID, try by Neo4j ID
+            if (cacheError) {
+              const result = await supabase
+                .from('cached_entities')
+                .select('*')
+                .eq('neo4j_id', entityId)
+                .single()
+              cachedEntity = result.data
+              cacheError = result.error
+            }
+
+            // If still not found, try Neo4j ID as number
+            if (cacheError) {
+              const result = await supabase
+                .from('cached_entities')
+                .select('*')
+                .eq('neo4j_id', parseInt(entityId))
+                .single()
+              cachedEntity = result.data
+              cacheError = result.error
+            }
 
             if (!cacheError && cachedEntity) {
               entity = {
@@ -439,50 +462,28 @@ export async function GET(
     }
 
     if (!entity) {
+      // Provide more context for missing entities
       return NextResponse.json(
-        { error: 'Entity not found' },
+        { 
+          error: 'Entity not found',
+          entityId: entityId,
+          suggestion: 'This entity may have been removed or the ID is incorrect. Please verify the entity ID or refresh the entity list.',
+          availableSources: ['Supabase cache', 'Neo4j database']
+        },
         { status: 404 }
       )
     }
 
-    // Generate comprehensive dossier automatically
+    // Skip automatic dossier generation for performance
     let comprehensiveDossier = null
     
-    // Check if entity already has dossier_data
+    // Only return existing dossier_data if it exists, don't generate new ones
     if (entity.properties.dossier_data) {
       try {
         comprehensiveDossier = JSON.parse(entity.properties.dossier_data)
+        console.log(`✅ Using existing dossier for ${entity.properties.name}`)
       } catch (error) {
-        console.log('⚠️ Invalid dossier_data, will regenerate')
-      }
-    }
-    
-    // If no dossier_data or invalid, generate it
-    if (!comprehensiveDossier) {
-      comprehensiveDossier = await generateComprehensiveDossier(entity, supabase)
-      
-      // Update Neo4j with the generated dossier
-      if (comprehensiveDossier) {
-        try {
-          const neo4jService = new Neo4jService()
-          await neo4jService.initialize()
-          const session = neo4jService.driver.session()
-          
-          await session.run(`
-            MATCH (n) WHERE n.neo4j_id = $entityId
-            SET n.dossier_data = $dossierData,
-                n.last_enriched = datetime()
-            RETURN n
-          `, {
-            entityId: entityId,
-            dossierData: JSON.stringify(comprehensiveDossier)
-          })
-          
-          await session.close()
-          console.log(`✅ Generated and stored dossier for ${entity.properties.name}`)
-        } catch (error) {
-          console.error('❌ Failed to store dossier:', error)
-        }
+        console.log('⚠️ Invalid dossier_data, skipping dossier generation')
       }
     }
 

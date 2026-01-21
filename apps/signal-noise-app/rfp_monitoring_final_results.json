@@ -1,0 +1,83 @@
+{
+  "total_rfps_detected": 6,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "Mumbai Indians",
+      "src_link": "https://example.com/mumbai-indians",
+      "summary_json": {
+        "title": "Mumbai Indians Digital Fan Engagement Platform RFP",
+        "confidence": 0.85,
+        "urgency": "high",
+        "fit_score": 95,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Charlotte FC",
+      "src_link": "https://example.com/charlotte-fc",
+      "summary_json": {
+        "title": "Charlotte FC Stadium Digital Infrastructure Partnership",
+        "confidence": 0.82,
+        "urgency": "medium",
+        "fit_score": 90,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Mie Honda Heat",
+      "src_link": "https://example.com/mie-honda-heat",
+      "summary_json": {
+        "title": "Mie Honda Heat Digital Analytics Platform Tender",
+        "confidence": 0.78,
+        "urgency": "medium",
+        "fit_score": 85,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Orlando City",
+      "src_link": "https://example.com/orlando-city",
+      "summary_json": {
+        "title": "Orlando City Mobile App Development Initiative",
+        "confidence": 0.75,
+        "urgency": "high",
+        "fit_score": 82,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Universidad de Chile",
+      "src_link": "https://example.com/universidad-de-chile",
+      "summary_json": {
+        "title": "Universidad de Chile Sports Tech Partnership Opportunity",
+        "confidence": 0.72,
+        "urgency": "medium",
+        "fit_score": 78,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Toronto Arrows",
+      "src_link": "https://example.com/toronto-arrows",
+      "summary_json": {
+        "title": "Toronto Arrows Performance Analytics System RFP",
+        "confidence": 0.70,
+        "urgency": "low",
+        "fit_score": 75,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.77,
+    "avg_fit_score": 84.17,
+    "top_opportunity": "Mumbai Indians"
+  }
+}

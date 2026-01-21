@@ -3,17 +3,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
+import {
   Menu,
   Home,
   Users,
-  BarChart3,
   FileText,
   Briefcase,
   Award,
   Activity,
   Users as Team,
-  BarChart3 as Analytics,
   FileText as Document,
   Briefcase as Work,
   Award as Medal,
@@ -29,12 +27,8 @@ import {
   Target,
   Brain,
   Trophy,
-  Calendar,
   ChevronDown,
   ChevronRight,
-  Network,
-  Monitor,
-  Eye,
   Bot,
   Clock,
   Radar
@@ -51,26 +45,9 @@ const navItems = [
   { icon: Home, label: 'Home', href: '/' },
   { icon: Database, label: 'Entities', href: '/entity-browser' },
   { icon: FileText, label: "RFP's/Tenders", href: '/tenders' },
-  { 
-    icon: BarChart3, 
-    label: 'Graph', 
-    href: '/graph',
-    hasSubmenu: true,
-    subItems: [
-      { icon: Network, label: '2D Network', href: '/graph' },
-      { icon: Monitor, label: 'VR Visualization', href: '/graph/vr' },
-      { icon: Eye, label: 'AR Visualization', href: '/graph/ar' },
-    ]
-  },
-  { 
-    icon: Calendar, 
-    label: 'Conventions', 
-    href: '/conventions',
-    badge: { text: 'NEW', variant: 'default' as const }
-  },
-  { 
-    icon: Search, 
-    label: 'Search', 
+  {
+    icon: Search,
+    label: 'Search',
     href: '#',
     isSearch: true
   },

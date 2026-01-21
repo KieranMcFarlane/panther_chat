@@ -1,0 +1,237 @@
+{
+  "total_rfps_detected": 16,
+  "entities_checked": 50,
+  "detection_strategy": "perplexity",
+  "processing_time_seconds": 9.7,
+  "scoring_summary": {
+    "avg_confidence": 0.53,
+    "avg_fit_score": 0.94,
+    "top_opportunity": "Asian Football Confederation"
+  },
+  "highlights": [
+    {
+      "organization": "Asian Football Confederation",
+      "src_link": "https://example.com/rfp/asian-football-confederation",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Asian Football Confederation Sports Technology Partnership Opportunity",
+        "confidence": 0.5566208018607968,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Asian Football Confederation is seeking innovative technology solutions for sports operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Asian Games",
+      "src_link": "https://example.com/rfp/asian-games",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Asian Games Sports Technology Partnership Opportunity",
+        "confidence": 0.42914940744496816,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Asian Games is seeking innovative technology solutions for sports operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Athletics Australia",
+      "src_link": "https://example.com/rfp/athletics-australia",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Athletics Australia Sports Technology Partnership Opportunity",
+        "confidence": 0.4701131445226034,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Athletics Australia is seeking innovative technology solutions for sports operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Copenhagen Suborbital",
+      "src_link": "https://example.com/rfp/copenhagen-suborbital",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Copenhagen Suborbital Sports Technology Partnership Opportunity",
+        "confidence": 0.7144007098576848,
+        "urgency": "LOW",
+        "fit_score": 0.7,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Copenhagen Suborbital is seeking innovative technology solutions for Aerospace operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Baltimore Ravens",
+      "src_link": "https://example.com/rfp/baltimore-ravens",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Baltimore Ravens Sports Technology Partnership Opportunity",
+        "confidence": 0.397803894937837,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Baltimore Ravens is seeking innovative technology solutions for American Football operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "East Kilbride Pirates",
+      "src_link": "https://example.com/rfp/east-kilbride-pirates",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "East Kilbride Pirates Sports Technology Partnership Opportunity",
+        "confidence": 0.6547899678861606,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "East Kilbride Pirates is seeking innovative technology solutions for American Football operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Erlangen Sharks",
+      "src_link": "https://example.com/rfp/erlangen-sharks",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Erlangen Sharks Sports Technology Partnership Opportunity",
+        "confidence": 0.7870461870093866,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Erlangen Sharks is seeking innovative technology solutions for American Football operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "World Athletics",
+      "src_link": "https://example.com/rfp/world-athletics",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "World Athletics Sports Technology Partnership Opportunity",
+        "confidence": 0.6927603294919344,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "World Athletics is seeking innovative technology solutions for Athletics operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Australian Football League",
+      "src_link": "https://example.com/rfp/australian-football-league",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Australian Football League Sports Technology Partnership Opportunity",
+        "confidence": 0.720471981315661,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Australian Football League is seeking innovative technology solutions for Australian Football operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "AFL",
+      "src_link": "https://example.com/rfp/afl",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "AFL Sports Technology Partnership Opportunity",
+        "confidence": 0.3672023320325652,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "AFL is seeking innovative technology solutions for Australian Rules Football operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Badminton World Federation",
+      "src_link": "https://example.com/rfp/badminton-world-federation",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Badminton World Federation Sports Technology Partnership Opportunity",
+        "confidence": 0.6025095999322136,
+        "urgency": "LOW",
+        "fit_score": 0.7,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Badminton World Federation is seeking innovative technology solutions for Badminton operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Badminton World Federation",
+      "src_link": "https://example.com/rfp/badminton-world-federation",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Badminton World Federation Sports Technology Partnership Opportunity",
+        "confidence": 0.40645692752228396,
+        "urgency": "LOW",
+        "fit_score": 0.7,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Badminton World Federation is seeking innovative technology solutions for Badminton operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Aruba Baseball Federation",
+      "src_link": "https://example.com/rfp/aruba-baseball-federation",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Aruba Baseball Federation Sports Technology Partnership Opportunity",
+        "confidence": 0.5316642015432365,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Aruba Baseball Federation is seeking innovative technology solutions for Baseball operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Baseball Australia",
+      "src_link": "https://example.com/rfp/baseball-australia",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Baseball Australia Sports Technology Partnership Opportunity",
+        "confidence": 0.34494273944925874,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Baseball Australia is seeking innovative technology solutions for Baseball operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "British Virgin Islands Baseball Federation",
+      "src_link": "https://example.com/rfp/british-virgin-islands-baseball-federation",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "British Virgin Islands Baseball Federation Sports Technology Partnership Opportunity",
+        "confidence": 0.5602388349894178,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "British Virgin Islands Baseball Federation is seeking innovative technology solutions for Baseball operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    },
+    {
+      "organization": "Canadian Baseball Federation",
+      "src_link": "https://example.com/rfp/canadian-baseball-federation",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Canadian Baseball Federation Sports Technology Partnership Opportunity",
+        "confidence": 0.3157793988729733,
+        "urgency": "LOW",
+        "fit_score": 1,
+        "rfp_type": "PARTNERSHIP",
+        "tag": "ACTIVE_RFP",
+        "content_summary": "Canadian Baseball Federation is seeking innovative technology solutions for Baseball operations. This includes digital transformation, data analytics, and fan engagement platforms. Partnership proposals are being accepted through their procurement portal...."
+      }
+    }
+  ]
+}

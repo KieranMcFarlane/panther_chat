@@ -1,0 +1,137 @@
+{
+  "timestamp": "2025-11-14T13:25:11.271Z",
+  "league": "League One",
+  "total": 25,
+  "successful": 0,
+  "failed": 25,
+  "successRate": "0.0",
+  "brightDataSuccess": 0,
+  "fallbackSuccess": 0,
+  "results": [
+    {
+      "success": false,
+      "team": "Barnsley FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Birmingham City FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Blackpool FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Bolton Wanderers FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Bristol Rovers FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Burton Albion FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Cambridge United FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Charlton Athletic FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Crawley Town FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Exeter City FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Huddersfield Town FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Leyton Orient FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Lincoln City FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Mansfield Town FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Northampton Town FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Peterborough United FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Portsmouth FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Reading FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Rotherham United FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Shrewsbury Town FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Stevenage FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Stockport County FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Wigan Athletic FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Wrexham FC",
+      "error": "All badge generation methods failed"
+    },
+    {
+      "success": false,
+      "team": "Wycombe Wanderers FC",
+      "error": "All badge generation methods failed"
+    }
+  ]
+}

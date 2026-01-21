@@ -1,0 +1,432 @@
+{
+  "total_rfps_detected": 35,
+  "entities_checked": 50,
+  "detection_strategy": "perplexity",
+  "highlights": [
+    {
+      "organization": "Brazilian Football Confederation",
+      "src_link": "https://example.com/digital-tenders/football-transformation-2024",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Platform Development for Brazilian Football Confederation",
+        "confidence": 85,
+        "urgency": "high",
+        "fit_score": 55,
+        "rfp_type": "ACTIVE_RFP"
+      }
+    },
+    {
+      "organization": "Russian Football Union",
+      "src_link": "https://example.com/digital-tenders/football-transformation-2024",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Platform Development for Russian Football Union",
+        "confidence": 85,
+        "urgency": "high",
+        "fit_score": 55,
+        "rfp_type": "ACTIVE_RFP"
+      }
+    },
+    {
+      "organization": "Ethiopian Handball Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Ethiopian Handball Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Ice Hockey Federation",
+      "src_link": "https://procurement.example.com/ice-hockey-tech-rfp-2024",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Technology Modernization - International Ice Hockey Federation",
+        "confidence": 80,
+        "urgency": "high",
+        "fit_score": 65,
+        "rfp_type": "ACTIVE_RFP"
+      }
+    },
+    {
+      "organization": "International Biathlon Union",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Biathlon Union",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Skating Union",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Skating Union",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Luge Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Luge Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Bobsleigh and Skeleton Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Bobsleigh and Skeleton Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "World Curling Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - World Curling Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Table Tennis Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Table Tennis Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "World Triathlon",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - World Triathlon",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Modern Pentathlon Union",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Modern Pentathlon Union",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Archery Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Archery Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Boxing Association",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Boxing Association",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Judo Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Judo Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Wrestling Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Wrestling Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "International Taekwondo Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - International Taekwondo Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Peruvian Rugby Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Peruvian Rugby Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Costa Rican Handball Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Costa Rican Handball Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Israel Ice Hockey Federation",
+      "src_link": "https://procurement.example.com/ice-hockey-tech-rfp-2024",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Technology Modernization - Israel Ice Hockey Federation",
+        "confidence": 80,
+        "urgency": "high",
+        "fit_score": 55,
+        "rfp_type": "ACTIVE_RFP"
+      }
+    },
+    {
+      "organization": "US Virgin Islands Baseball Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - US Virgin Islands Baseball Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Colombian Volleyball Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Colombian Volleyball Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Canadian Ice Hockey Federation",
+      "src_link": "https://procurement.example.com/ice-hockey-tech-rfp-2024",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Technology Modernization - Canadian Ice Hockey Federation",
+        "confidence": 80,
+        "urgency": "high",
+        "fit_score": 55,
+        "rfp_type": "ACTIVE_RFP"
+      }
+    },
+    {
+      "organization": "Kenya Basketball Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Kenya Basketball Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Indonesian Volleyball Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Indonesian Volleyball Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Polish Ice Hockey Federation",
+      "src_link": "https://procurement.example.com/ice-hockey-tech-rfp-2024",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Technology Modernization - Polish Ice Hockey Federation",
+        "confidence": 80,
+        "urgency": "high",
+        "fit_score": 65,
+        "rfp_type": "ACTIVE_RFP"
+      }
+    },
+    {
+      "organization": "Kenya Rugby Union",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Kenya Rugby Union",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Thai Baseball Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Thai Baseball Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Niue Rugby Football Union",
+      "src_link": "https://example.com/digital-tenders/football-transformation-2024",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Platform Development for Niue Rugby Football Union",
+        "confidence": 85,
+        "urgency": "high",
+        "fit_score": 55,
+        "rfp_type": "ACTIVE_RFP"
+      }
+    },
+    {
+      "organization": "Central African Football Federation",
+      "src_link": "https://example.com/digital-tenders/football-transformation-2024",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Platform Development for Central African Football Federation",
+        "confidence": 85,
+        "urgency": "high",
+        "fit_score": 55,
+        "rfp_type": "ACTIVE_RFP"
+      }
+    },
+    {
+      "organization": "Qatar Ice Hockey Federation",
+      "src_link": "https://procurement.example.com/ice-hockey-tech-rfp-2024",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Technology Modernization - Qatar Ice Hockey Federation",
+        "confidence": 80,
+        "urgency": "high",
+        "fit_score": 55,
+        "rfp_type": "ACTIVE_RFP"
+      }
+    },
+    {
+      "organization": "Armenian Football Federation",
+      "src_link": "https://example.com/digital-tenders/football-transformation-2024",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Platform Development for Armenian Football Federation",
+        "confidence": 85,
+        "urgency": "high",
+        "fit_score": 55,
+        "rfp_type": "ACTIVE_RFP"
+      }
+    },
+    {
+      "organization": "Malaysian Rugby Union",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Malaysian Rugby Union",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Polish Rugby Union",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Polish Rugby Union",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL"
+      }
+    },
+    {
+      "organization": "Mauritanian Basketball Federation",
+      "src_link": "https://tenders.example.com/sports-digital-partnership",
+      "detection_strategy": "perplexity",
+      "summary_json": {
+        "title": "Digital Transformation Partnership - Mauritanian Basketball Federation",
+        "confidence": 70,
+        "urgency": "medium",
+        "fit_score": 40,
+        "rfp_type": "SIGNAL"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 74,
+    "avg_fit_score": 48,
+    "top_opportunity": "International Ice Hockey Federation"
+  }
+}

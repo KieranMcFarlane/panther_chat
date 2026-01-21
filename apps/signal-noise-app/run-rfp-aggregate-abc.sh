@@ -97,6 +97,57 @@ jq -s '
   }
 ' "${CLEAN_FILES[@]}" > "$MASTER_JSON"
 
+# --- PHASE 1: URL AND DIGITAL FILTERING ---
+echo "🔍 Filtering placeholder URLs and non-digital RFPs..." | tee -a "$LOG_DIR/test-cron.log"
+
+FILTERED_MASTER="${MASTER_JSON%.json}_filtered.json"
+
+# Filter placeholder URLs and non-digital RFPs
+FILTERED_JSON=$(jq '
+  . as $root |
+  .all_highlights = (
+    .all_highlights // [] |
+    # Step 1: Filter placeholder URLs
+    map(select(.src_link != null and .src_link != "")) |
+    map(select(
+      (.src_link | test("example\\.com|placeholder|test\\.com|dummy|fake"; "i")) | not
+    )) |
+    # Step 2: Filter non-digital RFPs by rfp_type
+    map(select(
+      (.summary_json.rfp_type // .rfp_type // "") | 
+      test("Stadium Infrastructure|Hospitality Services|Construction|Apparel|Equipment|F&B|Event Production|Stadium Technology"; "i") | 
+      not
+    )) |
+    # Step 3: Filter non-digital RFPs by title keywords
+    map(select(
+      ((.summary_json.title // .title // "") | ascii_downcase | 
+       test("stadium|construction|hospitality|hotel|apparel|equipment|f&b|catering|physical|infrastructure"; "i")) | 
+      not
+    ))
+  ) |
+  .total_rfps_detected = (.all_highlights | length)
+' "$MASTER_JSON" 2> "$LOG_DIR/aggregation_filter_error_${STAMP}.log")
+
+FILTER_EXIT_CODE=$?
+if [ $FILTER_EXIT_CODE -eq 0 ] && [ -n "$FILTERED_JSON" ]; then
+  ORIGINAL_COUNT=$(jq '.all_highlights | length' "$MASTER_JSON" 2>/dev/null || echo 0)
+  FILTERED_COUNT=$(echo "$FILTERED_JSON" | jq '.all_highlights | length' 2>/dev/null || echo 0)
+  REMOVED=$((ORIGINAL_COUNT - FILTERED_COUNT))
+  
+  if [ "$REMOVED" -gt 0 ]; then
+    echo "   ⚠️  Removed $REMOVED invalid/non-digital RFP(s) (placeholder URLs or non-digital projects)" | tee -a "$LOG_DIR/test-cron.log"
+    echo "$FILTERED_JSON" > "$FILTERED_MASTER"
+    mv "$FILTERED_MASTER" "$MASTER_JSON"
+  else
+    echo "   ✅ All RFPs passed filtering ($ORIGINAL_COUNT RFPs checked)" | tee -a "$LOG_DIR/test-cron.log"
+  fi
+else
+  echo "   ⚠️  Filtering failed (exit code: $FILTER_EXIT_CODE), using original JSON" | tee -a "$LOG_DIR/test-cron.log"
+  if [ -s "$LOG_DIR/aggregation_filter_error_${STAMP}.log" ]; then
+    echo "   jq error: $(cat "$LOG_DIR/aggregation_filter_error_${STAMP}.log")" | tee -a "$LOG_DIR/test-cron.log"
+  fi
+fi
+
 TOTAL_RFPS=$(jq -r '.total_rfps_detected' "$MASTER_JSON")
 ENTITIES_CHECKED=$(jq -r '.entities_checked' "$MASTER_JSON")
 TOTAL_BATCHES=$(jq -r '.total_batches' "$MASTER_JSON")
@@ -196,43 +247,64 @@ echo "🧩 Aggregating by strategy..." | tee -a "$LOG_DIR/test-cron.log"
 
 # Aggregate Perplexity results
 if [ ${#PERPLEXITY_FILES[@]} -gt 0 ]; then
-  jq -s '{
-    strategy: "perplexity",
-    total_batches: length,
-    total_rfps: (map(.total_rfps_detected // 0) | add),
-    total_entities_checked: (map(.entities_checked // 0) | add),
-    all_highlights: (map(.highlights // []) | add),
-    avg_confidence: (map(.scoring_summary.avg_confidence // 0) | add / length),
-    avg_fit_score: (map(.scoring_summary.avg_fit_score // 0) | add / length)
-  }' "${PERPLEXITY_FILES[@]}" > "$PERP_MASTER"
+  jq -s '
+    (map(.highlights // []) | add |
+     map(select(.src_link != null and .src_link != "")) |
+     map(select((.src_link | test("example\\.com|placeholder|test\\.com|dummy|fake"; "i")) | not)) |
+     map(select((.summary_json.rfp_type // .rfp_type // "") | test("Stadium Infrastructure|Hospitality Services|Construction|Apparel|Equipment|F&B|Event Production|Stadium Technology"; "i") | not)) |
+     map(select(((.summary_json.title // .title // "") | ascii_downcase | test("stadium|construction|hospitality|hotel|apparel|equipment|f&b|catering|physical|infrastructure"; "i")) | not))) as $filtered_highlights |
+    {
+      strategy: "perplexity",
+      total_batches: length,
+      total_rfps: ($filtered_highlights | length),
+      total_entities_checked: (map(.entities_checked // 0) | add),
+      all_highlights: $filtered_highlights,
+      avg_confidence: (map(.scoring_summary.avg_confidence // 0) | add / length),
+      avg_fit_score: (map(.scoring_summary.avg_fit_score // 0) | add / length)
+    }
+  ' "${PERPLEXITY_FILES[@]}" > "$PERP_MASTER"
   echo "   ✅ Perplexity: $(jq '.total_rfps' "$PERP_MASTER") RFPs from $(jq '.total_entities_checked' "$PERP_MASTER") entities" | tee -a "$LOG_DIR/test-cron.log"
 fi
 
 # Aggregate LinkedIn results
 if [ ${#LINKEDIN_FILES[@]} -gt 0 ]; then
-  jq -s '{
-    strategy: "linkedin",
-    total_batches: length,
-    total_rfps: (map(.total_rfps_detected // 0) | add),
-    total_entities_checked: (map(.entities_checked // 0) | add),
-    all_highlights: (map(.highlights // []) | add),
-    avg_confidence: (map(.scoring_summary.avg_confidence // 0) | add / length),
-    avg_fit_score: (map(.scoring_summary.avg_fit_score // 0) | add / length)
-  }' "${LINKEDIN_FILES[@]}" > "$LINK_MASTER"
+  jq -s '
+    (map(.highlights // []) | add |
+     map(select(.src_link != null and .src_link != "")) |
+     map(select((.src_link | test("example\\.com|placeholder|test\\.com|dummy|fake"; "i")) | not)) |
+     map(select((.summary_json.rfp_type // .rfp_type // "") | test("Stadium Infrastructure|Hospitality Services|Construction|Apparel|Equipment|F&B|Event Production|Stadium Technology"; "i") | not)) |
+     map(select(((.summary_json.title // .title // "") | ascii_downcase | test("stadium|construction|hospitality|hotel|apparel|equipment|f&b|catering|physical|infrastructure"; "i")) | not))) as $filtered_highlights |
+    {
+      strategy: "linkedin",
+      total_batches: length,
+      total_rfps: ($filtered_highlights | length),
+      total_entities_checked: (map(.entities_checked // 0) | add),
+      all_highlights: $filtered_highlights,
+      avg_confidence: (map(.scoring_summary.avg_confidence // 0) | add / length),
+      avg_fit_score: (map(.scoring_summary.avg_fit_score // 0) | add / length)
+    }
+  ' "${LINKEDIN_FILES[@]}" > "$LINK_MASTER"
   echo "   ✅ LinkedIn: $(jq '.total_rfps' "$LINK_MASTER") RFPs from $(jq '.total_entities_checked' "$LINK_MASTER") entities" | tee -a "$LOG_DIR/test-cron.log"
 fi
 
 # Aggregate BrightData results
 if [ ${#BRIGHTDATA_FILES[@]} -gt 0 ]; then
-  jq -s '{
-    strategy: "brightdata",
-    total_batches: length,
-    total_rfps: (map(.total_rfps_detected // 0) | add),
-    total_entities_checked: (map(.entities_checked // 0) | add),
-    all_highlights: (map(.highlights // []) | add),
-    avg_confidence: (map(.scoring_summary.avg_confidence // 0) | add / length),
-    avg_fit_score: (map(.scoring_summary.avg_fit_score // 0) | add / length)
-  }' "${BRIGHTDATA_FILES[@]}" > "$BRIGHT_MASTER"
+  jq -s '
+    (map(.highlights // []) | add |
+     map(select(.src_link != null and .src_link != "")) |
+     map(select((.src_link | test("example\\.com|placeholder|test\\.com|dummy|fake"; "i")) | not)) |
+     map(select((.summary_json.rfp_type // .rfp_type // "") | test("Stadium Infrastructure|Hospitality Services|Construction|Apparel|Equipment|F&B|Event Production|Stadium Technology"; "i") | not)) |
+     map(select(((.summary_json.title // .title // "") | ascii_downcase | test("stadium|construction|hospitality|hotel|apparel|equipment|f&b|catering|physical|infrastructure"; "i")) | not))) as $filtered_highlights |
+    {
+      strategy: "brightdata",
+      total_batches: length,
+      total_rfps: ($filtered_highlights | length),
+      total_entities_checked: (map(.entities_checked // 0) | add),
+      all_highlights: $filtered_highlights,
+      avg_confidence: (map(.scoring_summary.avg_confidence // 0) | add / length),
+      avg_fit_score: (map(.scoring_summary.avg_fit_score // 0) | add / length)
+    }
+  ' "${BRIGHTDATA_FILES[@]}" > "$BRIGHT_MASTER"
   echo "   ✅ BrightData: $(jq '.total_rfps' "$BRIGHT_MASTER") RFPs from $(jq '.total_entities_checked' "$BRIGHT_MASTER") entities" | tee -a "$LOG_DIR/test-cron.log"
 fi
 
@@ -245,47 +317,65 @@ echo "🔍 Analyzing overlap and deduplicating..." | tee -a "$LOG_DIR/test-cron.
 # Combine all RFPs and deduplicate by organization + title similarity
 DEDUP_MASTER="$RUN_DIR/rfp_deduplicated_master.json"
 
-jq -s '
-  # Combine all highlights from all strategies
-  map(.all_highlights // []) | add |
-  
-  # Group by organization name (case-insensitive)
-  group_by(.organization | ascii_downcase) |
-  
-  # For each group, deduplicate by title similarity
-  map(
-    group_by(
-      (.summary_json.title // .title // "untitled") | 
-      ascii_downcase | 
-      gsub("[^a-z0-9]"; "")  # Remove special chars for fuzzy matching
-    ) |
+# Fix: Check if files exist before running jq, and handle null titles
+if [ -f "$PERP_MASTER" ] && [ -f "$LINK_MASTER" ] && [ -f "$BRIGHT_MASTER" ]; then
+  jq -s '
+    # Combine all highlights from all strategies
+    map(.all_highlights // []) | add |
+    
+    # Filter out null/empty titles before deduplication
+    map(select((.summary_json.title // .title // "") != "")) |
+    
+    # Group by organization name (case-insensitive)
+    group_by(.organization | ascii_downcase) |
+    
+    # For each group, deduplicate by title similarity
     map(
-      # Sort by fit_score and take highest
-      sort_by(-(.summary_json.fit_score // .fit_score // 0)) |
-      .[0] |
-      # Add found_by_strategies array
-      . + {
-        found_by_strategies: [
-          (if .detection_strategy == "perplexity" then "perplexity" else empty end),
-          (if .detection_strategy == "linkedin" then "linkedin" else empty end),
-          (if .detection_strategy == "brightdata" then "brightdata" else empty end)
-        ]
+      group_by(
+        ((.summary_json.title // .title // "untitled") | tostring | ascii_downcase | gsub("[^a-z0-9]"; ""))
+      ) |
+      map(
+        # Sort by fit_score and take highest
+        sort_by(-(.summary_json.fit_score // .fit_score // 0)) |
+        .[0] |
+        # Add found_by_strategies array
+        . + {
+          found_by_strategies: [
+            (if .detection_strategy == "perplexity" then "perplexity" else empty end),
+            (if .detection_strategy == "linkedin" then "linkedin" else empty end),
+            (if .detection_strategy == "brightdata" then "brightdata" else empty end)
+          ]
+        }
+      )
+    ) |
+    add |
+    
+    # Final deduplication summary
+    {
+      total_unique_rfps: length,
+      rfps: .,
+      overlap_analysis: {
+        perplexity_only: [.[] | select(.detection_strategy == "perplexity")] | length,
+        linkedin_only: [.[] | select(.detection_strategy == "linkedin")] | length,
+        brightdata_only: [.[] | select(.detection_strategy == "brightdata")] | length
       }
-    )
-  ) |
-  add |
-  
-  # Final deduplication summary
-  {
-    total_unique_rfps: length,
-    rfps: .,
-    overlap_analysis: {
-      perplexity_only: [.[] | select(.detection_strategy == "perplexity")] | length,
-      linkedin_only: [.[] | select(.detection_strategy == "linkedin")] | length,
-      brightdata_only: [.[] | select(.detection_strategy == "brightdata")] | length
     }
-  }
-' "$PERP_MASTER" "$LINK_MASTER" "$BRIGHT_MASTER" 2>/dev/null > "$DEDUP_MASTER" || echo '{"total_unique_rfps": 0, "rfps": [], "overlap_analysis": {}}' > "$DEDUP_MASTER"
+  ' "$PERP_MASTER" "$LINK_MASTER" "$BRIGHT_MASTER" > "$DEDUP_MASTER" 2> "$LOG_DIR/deduplication_error_${STAMP}.log"
+  
+  if [ $? -ne 0 ]; then
+    echo "⚠️  Deduplication jq command failed, check $LOG_DIR/deduplication_error_${STAMP}.log" | tee -a "$LOG_DIR/test-cron.log"
+    if [ -s "$LOG_DIR/deduplication_error_${STAMP}.log" ]; then
+      echo "   Error: $(cat "$LOG_DIR/deduplication_error_${STAMP}.log")" | tee -a "$LOG_DIR/test-cron.log"
+    fi
+    echo '{"total_unique_rfps": 0, "rfps": [], "overlap_analysis": {}}' > "$DEDUP_MASTER"
+  fi
+else
+  echo "⚠️  Missing aggregated files for deduplication:" | tee -a "$LOG_DIR/test-cron.log"
+  [ ! -f "$PERP_MASTER" ] && echo "   Missing: $PERP_MASTER" | tee -a "$LOG_DIR/test-cron.log"
+  [ ! -f "$LINK_MASTER" ] && echo "   Missing: $LINK_MASTER" | tee -a "$LOG_DIR/test-cron.log"
+  [ ! -f "$BRIGHT_MASTER" ] && echo "   Missing: $BRIGHT_MASTER" | tee -a "$LOG_DIR/test-cron.log"
+  echo '{"total_unique_rfps": 0, "rfps": [], "overlap_analysis": {}}' > "$DEDUP_MASTER"
+fi
 
 UNIQUE_RFPS=$(jq '.total_unique_rfps' "$DEDUP_MASTER" 2>/dev/null || echo 0)
 echo "   📊 Deduplicated to $UNIQUE_RFPS unique RFPs" | tee -a "$LOG_DIR/test-cron.log"

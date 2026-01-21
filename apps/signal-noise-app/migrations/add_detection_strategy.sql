@@ -25,3 +25,13 @@ COMMENT ON COLUMN rfp_opportunities.found_by_strategies IS
 CREATE INDEX IF NOT EXISTS idx_found_by_strategies 
 ON rfp_opportunities USING GIN (found_by_strategies);
 
+
+
+
+
+
+
+
+
+
+

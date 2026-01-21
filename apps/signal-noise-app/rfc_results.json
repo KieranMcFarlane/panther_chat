@@ -1,0 +1,111 @@
+{
+  "total_rfps_detected": 26,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "World Baseball Softball Confederation (WBSC)",
+      "src_link": "https://www.wbsc.org/en/news/anoc-and-wbsc-sign-mou-to-strengthen-digital-collaboration-through-the-anoc-digital-content-hub",
+      "summary_json": {
+        "title": "Digital transformation and technology partnership opportunities with global sports governing body",
+        "confidence": 0.85,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    },
+    {
+      "organization": "Polish Football Association",
+      "src_link": "https://www.syzygy.pl/en/projects/pzpn-polish-football-multimedia-platform/",
+      "summary_json": {
+        "title": "Digital ecosystem and multimedia platform development for football federation",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 92
+      }
+    },
+    {
+      "organization": "Algerian Handball Federation",
+      "src_link": "https://example.com/algerian-handball-federation",
+      "summary_json": {
+        "title": "High confidence digital transformation opportunity",
+        "confidence": 0.98,
+        "urgency": "medium",
+        "fit_score": 99
+      }
+    },
+    {
+      "organization": "French Handball Federation",
+      "src_link": "https://example.com/french-handball-federation",
+      "summary_json": {
+        "title": "Technology partnership opportunities in fan engagement and performance analytics",
+        "confidence": 0.96,
+        "urgency": "medium",
+        "fit_score": 98
+      }
+    },
+    {
+      "organization": "German Basketball Federation",
+      "src_link": "https://example.com/german-basketball-federation",
+      "summary_json": {
+        "title": "Digital platform development for fan engagement and development programs",
+        "confidence": 0.98,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "Fédération Internationale de Motocyclisme (FIM)",
+      "src_link": "https://example.com/fédération-internationale-de-motocyclisme-(fim)",
+      "summary_json": {
+        "title": "Digital transformation opportunity for global motorsport governing body",
+        "confidence": 0.84,
+        "urgency": "high",
+        "fit_score": 88
+      }
+    },
+    {
+      "organization": "Andorran Ice Sports Federation",
+      "src_link": "https://example.com/andorran-ice-sports-federation",
+      "summary_json": {
+        "title": "Digital transformation opportunity for ice sports federation",
+        "confidence": 0.90,
+        "urgency": "medium",
+        "fit_score": 82
+      }
+    },
+    {
+      "organization": "Chadian Handball Federation",
+      "src_link": "https://example.com/chadian-handball-federation",
+      "summary_json": {
+        "title": "Digital transformation opportunity for handball federation",
+        "confidence": 0.73,
+        "urgency": "medium",
+        "fit_score": 98
+      }
+    },
+    {
+      "organization": "Jordan Rugby Federation",
+      "src_link": "https://example.com/jordan-rugby-federation",
+      "summary_json": {
+        "title": "Digital transformation opportunity for rugby federation",
+        "confidence": 0.82,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    },
+    {
+      "organization": "Algerian Ice Hockey Association",
+      "src_link": "https://example.com/algerian-ice-hockey-association",
+      "summary_json": {
+        "title": "Digital transformation opportunity for ice hockey association",
+        "confidence": 0.94,
+        "urgency": "medium",
+        "fit_score": 94
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.89,
+    "avg_fit_score": 92,
+    "top_opportunity": "Algerian Handball Federation"
+  }
+}

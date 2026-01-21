@@ -28,7 +28,7 @@ import {
   BarChart3
 } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { usePaginatedEntities, usePaginatedPrefetch } from "@/lib/swr-config"
+import { useEntities, prefetchEntity } from "@/lib/swr-config"
 import { useDossierCopilotActions } from "@/lib/dossier-copilot-actions"
 import { Entity as BaseEntity } from "@/lib/neo4j"
 
@@ -58,8 +58,6 @@ function EntityBrowserPageContent() {
   
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { prefetchPage } = usePaginatedPrefetch()
-  
   // Initialize CopilotKit actions for dossier generation
   useDossierCopilotActions()
   
@@ -90,21 +88,28 @@ function EntityBrowserPageContent() {
     debouncedSearchTerm
   })
   
-  const { data, error, isLoading, isValidating } = usePaginatedEntities(
-    currentPage, 
-    memoizedFilters, 
-    debouncedSearchTerm
-  )
-  
-  console.log("🔍 SWR result:", {
-    data: data ? `Found ${data.entities?.length || 0} entities` : 'No data',
-    error: error ? error.message : 'No error',
-    isLoading,
-    isValidating
+  // Build URL for entities API
+  const params = new URLSearchParams({
+    page: currentPage.toString(),
+    limit: filters.limit,
+    entityType: filters.entityType,
+    sortBy: filters.sortBy,
+    sortOrder: filters.sortOrder
   })
   
-  const entities = data?.entities || []
-  const dataSource = data?.source || null
+  if (debouncedSearchTerm.trim()) {
+    params.append('search', debouncedSearchTerm.trim())
+  }
+  
+  const url = `/api/entities?${params}`
+  
+  const { entities, pagination, error, isLoading } = useEntities(url)
+  
+  console.log("🔍 SWR result:", {
+    entities: entities ? `Found ${entities.length} entities` : 'No data',
+    error: error ? error.message : 'No error',
+    isLoading
+  })
   
   // Update debug info
   useEffect(() => {
@@ -112,12 +117,12 @@ function EntityBrowserPageContent() {
       setDebugInfo(`Loading... (Page ${currentPage})`)
     } else if (error) {
       setDebugInfo(`Error: ${error.message}`)
-    } else if (data) {
-      setDebugInfo(`Loaded ${entities.length} entities (Page ${currentPage} of ${displayData.pagination.totalPages})`)
+    } else if (entities.length > 0) {
+      setDebugInfo(`Loaded ${entities.length} entities (Page ${currentPage} of ${pagination?.totalPages || 1})`)
     } else {
       setDebugInfo("Ready to load data")
     }
-  }, [data, error, isLoading, entities.length, currentPage])
+  }, [entities, pagination, error, isLoading, currentPage])
 
   // Temporary direct fetch test to bypass SWR issues
   const [directData, setDirectData] = useState<any>(null)
@@ -189,30 +194,16 @@ function EntityBrowserPageContent() {
     updatePageInUrl(1)
   }, [updatePageInUrl])
 
-  // Prefetch next page when hovering or after a delay
-  const prefetchNextPage = useCallback(() => {
-    if (displayData?.pagination?.hasNext) {
-      prefetchPage(currentPage + 1, memoizedFilters, debouncedSearchTerm)
-    }
-  }, [currentPage, displayData?.pagination?.hasNext, memoizedFilters, debouncedSearchTerm, prefetchPage])
-
-  // Auto-prefetch next page after 2 seconds of inactivity
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      prefetchNextPage()
-    }, 2000)
-
-    return () => clearTimeout(timer)
-  }, [prefetchNextPage])
-
+  
+  
   const exportToJSON = () => {
-    if (!data) return
+    if (displayEntities.length === 0) return
     
     const exportData = {
       entities: entities,
       metadata: {
-        total: displayData.pagination.total,
-        page: displayData.pagination.page,
+        total: displayPagination.total,
+        page: displayPagination.page,
         filters: data.filters,
         exportedAt: new Date().toISOString()
       }
@@ -230,11 +221,11 @@ function EntityBrowserPageContent() {
   }
 
   // Use direct fetch data as fallback if SWR is not working
-  const displayData = data || directData
-  const displayEntities = displayData?.entities || []
-  const displayLoading = (isLoading && !data) || (directLoading && !directData)
+  const displayEntities = entities.length > 0 ? entities : (directData?.entities || [])
+  const displayPagination = pagination || directData?.pagination
+  const displayLoading = isLoading || directLoading
   const displayError = error || directError
-  const displayDataSource = displayData?.source || null
+  const displayDataSource = directData?.source || 'SWR'
 
   // Update debug info with direct fetch info
   useEffect(() => {
@@ -246,6 +237,23 @@ function EntityBrowserPageContent() {
       setDebugInfo(`Direct loaded ${directData.entities?.length || 0} entities (Page ${currentPage})`)
     }
   }, [directData, directError, directLoading, currentPage])
+
+  // Prefetch entity detail data for current page and next page
+  useEffect(() => {
+    if (displayEntities.length > 0 && !displayLoading && !isLoading) {
+      // Prefetch current page (first 10) and next page (next 10)
+      const entitiesToPrefetch = displayEntities.slice(0, 20)
+
+      // Batch prefetch to avoid overwhelming the server
+      const batchSize = 5
+      entitiesToPrefetch.forEach((entity, index) => {
+        const batchIndex = Math.floor(index / batchSize)
+        setTimeout(() => {
+          prefetchEntity(entity.neo4j_id.toString())
+        }, batchIndex * 50) // Small delay between batches (50ms)
+      })
+    }
+  }, [displayEntities, displayLoading, isLoading])
 
   if (displayLoading && !displayData) {
     return (
@@ -483,8 +491,7 @@ function EntityBrowserPageContent() {
                 <p><strong>Entities Count:</strong> {displayEntities.length}</p>
                 <p><strong>SWR Loading:</strong> {isLoading ? 'Yes' : 'No'}</p>
                 <p><strong>Direct Loading:</strong> {directLoading ? 'Yes' : 'No'}</p>
-                <p><strong>SWR Validating:</strong> {isValidating ? 'Yes' : 'No'}</p>
-                <p><strong>SWR Error:</strong> {error ? error.message : 'No'}</p>
+                                <p><strong>SWR Error:</strong> {error ? error.message : 'No'}</p>
                 <p><strong>Direct Error:</strong> {directError || 'No'}</p>
                 <p><strong>Data Source:</strong> {displayDataSource || 'None'}</p>
                 <p><strong>Current Page:</strong> {currentPage}</p>
@@ -497,12 +504,12 @@ function EntityBrowserPageContent() {
 
           {/* Entity Grid - Scrollable if needed */}
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 flex-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 280px)' }}>
-          {isValidating && displayData ? (
+          {isLoading && displayEntities.length > 0 ? (
             // Show loading overlay while keeping existing data
             displayEntities.map((entity) => (
               <div key={`${entity.id}-${entity.neo4j_id}`} className="relative">
                 <EntityCard entity={entity} />
-                {isValidating && (
+                {isLoading && (
                   <div className="absolute inset-0 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
                     <Database className="h-6 w-6 animate-spin text-primary" />
                   </div>
@@ -530,30 +537,29 @@ function EntityBrowserPageContent() {
 
           {/* Pagination - Fixed Bottom */}
           <div className="flex-shrink-0 border-t pt-6 mt-6">
-            {displayData && (
+            {displayPagination && (
               <>
                 {/* Quick Page Navigation */}
-                {displayData.pagination.totalPages > 1 && (
+                {displayPagination.totalPages > 1 && (
                   <div className="flex items-center justify-center gap-2 mb-4">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => updatePageInUrl(1)}
                   disabled={currentPage === 1 || isLoading}
-                  onMouseEnter={() => currentPage !== 1 && prefetchPage(1, memoizedFilters, debouncedSearchTerm)}
-                >
+                                  >
                   First
                 </Button>
                 
                 {/* Page numbers */}
-                {Array.from({ length: Math.min(5, displayData.pagination.totalPages) }, (_, i) => {
+                {Array.from({ length: Math.min(5, displayPagination.totalPages) }, (_, i) => {
                   let pageNum
-                  if (displayData.pagination.totalPages <= 5) {
+                  if (displayPagination.totalPages <= 5) {
                     pageNum = i + 1
                   } else if (currentPage <= 3) {
                     pageNum = i + 1
-                  } else if (currentPage >= displayData.pagination.totalPages - 2) {
-                    pageNum = displayData.pagination.totalPages - 4 + i
+                  } else if (currentPage >= displayPagination.totalPages - 2) {
+                    pageNum = displayPagination.totalPages - 4 + i
                   } else {
                     pageNum = currentPage - 2 + i
                   }
@@ -565,8 +571,7 @@ function EntityBrowserPageContent() {
                       size="sm"
                       onClick={() => updatePageInUrl(pageNum)}
                       disabled={isLoading}
-                      onMouseEnter={() => currentPage !== pageNum && prefetchPage(pageNum, memoizedFilters, debouncedSearchTerm)}
-                    >
+                                          >
                       {pageNum}
                     </Button>
                   )
@@ -575,10 +580,9 @@ function EntityBrowserPageContent() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => updatePageInUrl(displayData.pagination.totalPages)}
-                  disabled={currentPage === displayData.pagination.totalPages || isLoading}
-                  onMouseEnter={() => currentPage !== displayData.pagination.totalPages && prefetchPage(displayData.pagination.totalPages, memoizedFilters, debouncedSearchTerm)}
-                >
+                  onClick={() => updatePageInUrl(displayPagination.totalPages)}
+                  disabled={currentPage === displayPagination.totalPages || isLoading}
+                                  >
                   Last
                 </Button>
               </div>
@@ -589,9 +593,8 @@ function EntityBrowserPageContent() {
               <Button
                 variant="outline"
                 onClick={() => updatePageInUrl(Math.max(1, currentPage - 1))}
-                disabled={!displayData.pagination.hasPrev || isLoading}
-                onMouseEnter={() => displayData.pagination.hasPrev && prefetchPage(currentPage - 1, memoizedFilters, debouncedSearchTerm)}
-              >
+                disabled={!displayPagination.hasPrev || isLoading}
+                              >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Previous
                 {isLoading && currentPage === currentPage - 1 && (
@@ -600,11 +603,11 @@ function EntityBrowserPageContent() {
               </Button>
 
               <div className="text-sm text-muted-foreground">
-                Page {displayData.pagination.page} of {displayData.pagination.totalPages}
+                Page {displayPagination.page} of {displayPagination.totalPages}
                 <span className="ml-2">
-                  ({((displayData.pagination.page - 1) * displayData.pagination.limit + 1)} - {Math.min(displayData.pagination.page * displayData.pagination.limit, displayData.pagination.total)} of {displayData.pagination.total})
+                  ({((displayPagination.page - 1) * displayPagination.limit + 1)} - {Math.min(displayPagination.page * displayPagination.limit, displayPagination.total)} of {displayPagination.total})
                 </span>
-                {isValidating && (
+                {isLoading && (
                   <span className="ml-2 text-blue-600">
                     <Database className="h-3 w-3 inline animate-spin" />
                     Updating...
@@ -614,10 +617,9 @@ function EntityBrowserPageContent() {
 
               <Button
                 variant="outline"
-                onClick={() => updatePageInUrl(Math.min(displayData.pagination.totalPages, currentPage + 1))}
-                disabled={!displayData.pagination.hasNext || isLoading}
-                onMouseEnter={() => displayData.pagination.hasNext && prefetchPage(currentPage + 1, memoizedFilters, debouncedSearchTerm)}
-              >
+                onClick={() => updatePageInUrl(Math.min(displayPagination.totalPages, currentPage + 1))}
+                disabled={!displayPagination.hasNext || isLoading}
+                              >
                 Next
                 {isLoading && currentPage === currentPage + 1 && (
                   <Database className="h-4 w-4 ml-2 animate-spin" />

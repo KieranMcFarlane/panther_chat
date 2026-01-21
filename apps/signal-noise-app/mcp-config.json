@@ -15,6 +15,18 @@
         "AURA_INSTANCENAME": "${AURA_INSTANCENAME}"
       }
     },
+    "falkordb-mcp": {
+      "command": "python",
+      "args": [
+        "backend/falkordb_mcp_server_fastmcp.py"
+      ],
+      "env": {
+        "FALKORDB_URI": "${FALKORDB_URI}",
+        "FALKORDB_USER": "${FALKORDB_USER}",
+        "FALKORDB_PASSWORD": "${FALKORDB_PASSWORD}",
+        "FALKORDB_DATABASE": "${FALKORDB_DATABASE}"
+      }
+    },
     "brightData": {
       "type": "stdio",
       "command": "npx",
@@ -46,6 +58,45 @@
       ],
       "env": {
         "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}"
+      }
+    },
+    "glm-4.5v": {
+      "command": "node",
+      "args": [
+        "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/mcp-glm4v-server.js"
+      ],
+      "env": {
+        "ZAI_API_KEY": "${ZAI_API_KEY}"
+      }
+    },
+    "headless-verifier": {
+      "command": "node",
+      "args": [
+        "/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app/mcp-headless-verifier-server.js"
+      ],
+      "env": {
+        "PUPPETEER_SKIP_DOWNLOAD": "true"
+      }
+    },
+    "byterover-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "byterover-mcp"
+      ],
+      "env": {
+        "BYTEROVER_API_KEY": "${BYTEROVER_API_KEY}"
+      }
+    },
+    "temporal-intelligence": {
+      "command": "python",
+      "args": [
+        "backend/temporal_mcp_server.py"
+      ],
+      "env": {
+        "FASTAPI_URL": "${FASTAPI_URL}",
+        "SUPABASE_URL": "${SUPABASE_URL}",
+        "SUPABASE_ANON_KEY": "${SUPABASE_ANON_KEY}"
       }
     }
   }

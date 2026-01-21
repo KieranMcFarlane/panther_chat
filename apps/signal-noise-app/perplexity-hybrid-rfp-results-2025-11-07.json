@@ -1,0 +1,60 @@
+{
+  "total_rfps_detected": 1,
+  "verified_rfps": 1,
+  "rejected_rfps": 7,
+  "entities_checked": 1,
+  "highlights": [
+    {
+      "organization": "Brighton & Hove Albion FC",
+      "src_link": "https://brighton-&-hove-albion-fc.com/tenders",
+      "source_type": "linkedin_post",
+      "discovery_source": "perplexity_signal",
+      "discovery_method": "perplexity_priority_1",
+      "validation_status": "EARLY_SIGNAL",
+      "validation_method": "perplexity_self_validated",
+      "date_published": "2025-11-07",
+      "deadline": null,
+      "deadline_days_remaining": null,
+      "estimated_rfp_date": "2025-12-01",
+      "budget": "Not specified",
+      "summary_json": {
+        "title": "Brighton & Hove Albion FC Digital Partnership Initiative",
+        "confidence": 0.7,
+        "urgency": "medium",
+        "fit_score": 50,
+        "source_quality": 0.9
+      },
+      "perplexity_validation": {
+        "verified_by_perplexity": true,
+        "deadline_confirmed": false,
+        "url_verified": false,
+        "budget_estimated": false,
+        "verification_sources": []
+      },
+      "competitive_intel": null
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": "0.70",
+    "avg_fit_score": "50.00",
+    "top_opportunity": "Brighton & Hove Albion FC"
+  },
+  "discovery_metrics": {
+    "perplexity_primary_success": 1,
+    "perplexity_primary_rate": "100.0%",
+    "brightdata_fallback_used": 49,
+    "brightdata_fallback_rate": "4900.0%",
+    "perplexity_validations": 7,
+    "total_perplexity_queries": 57,
+    "total_brightdata_queries": 49,
+    "estimated_cost": 1.6300000000000001,
+    "cost_savings_vs_old_system": 1.71
+  },
+  "quality_metrics": {
+    "placeholder_urls_rejected": 0,
+    "expired_rfps_rejected": 0,
+    "job_postings_rejected": 0,
+    "non_digital_rejected": 0,
+    "competitive_intel_gathered": 0
+  }
+}

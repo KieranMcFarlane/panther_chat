@@ -1,0 +1,804 @@
+{
+  "timestamp": "2025-12-01T13:00:46.883Z",
+  "analysis": {
+    "total": 50,
+    "categories": {
+      "Football Clubs": [
+        {
+          "name": "Suntory Sunbirds",
+          "id": "2926",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Al Shabab",
+          "id": "3119",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": [
+              "Try \"Al\" without space"
+            ]
+          }
+        },
+        {
+          "name": "Crystal Palace",
+          "id": "488",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.9,
+            "suggestions": [
+              "Try \"Al\" without space",
+              "Should be available in TheSportsDB"
+            ]
+          }
+        },
+        {
+          "name": "Austrian Rugby Federation",
+          "id": "1319",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Corinthians",
+          "id": "584",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.9,
+            "suggestions": [
+              "Should be available in TheSportsDB"
+            ]
+          }
+        },
+        {
+          "name": "Laos",
+          "id": "2386",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Cuba Baseball Federation",
+          "id": "852",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Trackhouse Racing",
+          "id": "4103",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Cuba Basketball Federation",
+          "id": "853",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Latvia",
+          "id": "2387",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Argentine Primera División (Liga Profesional de Fútbol) (json_seed)",
+          "id": "55",
+          "issues": [
+            "Very long name",
+            "Parenthetical content",
+            "System suffix",
+            "Special characters",
+            "Non-English characters"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.20000000000000012,
+            "suggestions": [
+              "Try \"Al\" without space"
+            ]
+          }
+        },
+        {
+          "name": "Ukrainian Premier League",
+          "id": "2857",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Cycling Canada",
+          "id": "321",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Toyota Gazoo Racing",
+          "id": "112",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Las Vegas Aviators",
+          "id": "4315",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Cook Islands Rugby Union",
+          "id": "339",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Karate",
+          "id": "732",
+          "issues": [
+            "Sport not well covered by TheSportsDB"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Samoa Basketball Federation",
+          "id": "744",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Lazio",
+          "id": "1519",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Umbro",
+          "id": "265",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Algerian Volleyball Federation",
+          "id": "3128",
+          "issues": [
+            "Sport not well covered by TheSportsDB"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "American Samoa Volleyball Association",
+          "id": "3141",
+          "issues": [
+            "Sport not well covered by TheSportsDB"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Andorran Ice Sports Federation",
+          "id": "1958",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Chris Murray",
+          "id": "729",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Islamabad United",
+          "id": "1809",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "League",
+          "id": "2230",
+          "issues": [
+            "Generic league name"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "United Kingdom",
+          "id": "2491",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Lebanese Handball Federation",
+          "id": "1510",
+          "issues": [
+            "Sport not well covered by TheSportsDB"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Athletico Paranaense",
+          "id": "798",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Comoros Volleyball Federation",
+          "id": "1569",
+          "issues": [
+            "Sport not well covered by TheSportsDB"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Uzbekistan Ice Hockey Federation",
+          "id": "1657",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Voreas Hokkaido",
+          "id": "3224",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.8,
+            "suggestions": []
+          }
+        }
+      ],
+      "Other": [
+        {
+          "name": "La Vuelta Ciclista a España",
+          "id": "870",
+          "issues": [
+            "Special characters",
+            "Non-English characters"
+          ],
+          "theSportsDBPotential": {
+            "score": 0,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "OK Merkur Maribor",
+          "id": "1917",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "FIBA",
+          "id": "2590",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "FIBA Africa",
+          "id": "2061",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Germany/UK",
+          "id": "746",
+          "issues": [
+            "Special characters"
+          ],
+          "theSportsDBPotential": {
+            "score": 0,
+            "suggestions": []
+          }
+        }
+      ],
+      "Individuals": [
+        {
+          "name": "Entity 8839 (Hockey, Germany)",
+          "id": "2799",
+          "issues": [
+            "Parenthetical content",
+            "Numbers in name",
+            "Special characters",
+            "Generic entity name"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.19999999999999998,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "LeBron James",
+          "id": "677",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.5,
+            "suggestions": [
+              "Famous athletes might be available"
+            ]
+          }
+        },
+        {
+          "name": "Lars H Jorgensen",
+          "id": "2193",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.3,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Newell's Old Boys",
+          "id": "2720",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.3,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Volta ao Algarve",
+          "id": "447",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.3,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Lease a Bike Women",
+          "id": "2232",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.3,
+            "suggestions": []
+          }
+        }
+      ],
+      "Federations": [
+        {
+          "name": "Baseball Confederation of Asia (BCA)",
+          "id": "1367",
+          "issues": [
+            "Parenthetical content"
+          ],
+          "theSportsDBPotential": {
+            "score": 0,
+            "suggestions": []
+          }
+        }
+      ],
+      "Leagues": [
+        {
+          "name": "UCI Road World Championships",
+          "id": "2935",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.6,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "EFL Championship",
+          "id": "3389",
+          "issues": [],
+          "theSportsDBPotential": {
+            "score": 0.6,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "FIA Formula 3 Championship",
+          "id": "2843",
+          "issues": [
+            "Numbers in name"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.6,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "Major League Cricket Ticketing System RFP",
+          "id": "225",
+          "issues": [
+            "Generic league name"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.5,
+            "suggestions": []
+          }
+        },
+        {
+          "name": "FIA World Rally Championship (WRC)",
+          "id": "2845",
+          "issues": [
+            "Parenthetical content"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.5,
+            "suggestions": []
+          }
+        }
+      ],
+      "Other Sports": [
+        {
+          "name": "UTS Handball Club",
+          "id": "353",
+          "issues": [
+            "Sport not well covered by TheSportsDB"
+          ],
+          "theSportsDBPotential": {
+            "score": 0.1,
+            "suggestions": []
+          }
+        }
+      ]
+    },
+    "issues": {
+      "Special characters": [
+        "La Vuelta Ciclista a España",
+        "Entity 8839 (Hockey, Germany)",
+        "Argentine Primera División (Liga Profesional de Fútbol) (json_seed)",
+        "Germany/UK"
+      ],
+      "Non-English characters": [
+        "La Vuelta Ciclista a España",
+        "Argentine Primera División (Liga Profesional de Fútbol) (json_seed)"
+      ],
+      "Parenthetical content": [
+        "Entity 8839 (Hockey, Germany)",
+        "Argentine Primera División (Liga Profesional de Fútbol) (json_seed)",
+        "Baseball Confederation of Asia (BCA)",
+        "FIA World Rally Championship (WRC)"
+      ],
+      "Numbers in name": [
+        "Entity 8839 (Hockey, Germany)",
+        "FIA Formula 3 Championship"
+      ],
+      "Generic entity name": [
+        "Entity 8839 (Hockey, Germany)"
+      ],
+      "Very long name": [
+        "Argentine Primera División (Liga Profesional de Fútbol) (json_seed)"
+      ],
+      "System suffix": [
+        "Argentine Primera División (Liga Profesional de Fútbol) (json_seed)"
+      ],
+      "Sport not well covered by TheSportsDB": [
+        "Karate",
+        "Algerian Volleyball Federation",
+        "American Samoa Volleyball Association",
+        "Lebanese Handball Federation",
+        "Comoros Volleyball Federation",
+        "UTS Handball Club"
+      ],
+      "Generic league name": [
+        "Major League Cricket Ticketing System RFP",
+        "League"
+      ]
+    },
+    "theSportsDBPotential": [
+      {
+        "name": "Crystal Palace",
+        "category": "Football Clubs",
+        "score": 0.9,
+        "suggestions": [
+          "Try \"Al\" without space",
+          "Should be available in TheSportsDB"
+        ]
+      },
+      {
+        "name": "Corinthians",
+        "category": "Football Clubs",
+        "score": 0.9,
+        "suggestions": [
+          "Should be available in TheSportsDB"
+        ]
+      },
+      {
+        "name": "Suntory Sunbirds",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Al Shabab",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": [
+          "Try \"Al\" without space"
+        ]
+      },
+      {
+        "name": "Austrian Rugby Federation",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Laos",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Cuba Baseball Federation",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Trackhouse Racing",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Cuba Basketball Federation",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Latvia",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Ukrainian Premier League",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Cycling Canada",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Toyota Gazoo Racing",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Las Vegas Aviators",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Cook Islands Rugby Union",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Karate",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Samoa Basketball Federation",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Lazio",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Umbro",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Algerian Volleyball Federation",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "American Samoa Volleyball Association",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Andorran Ice Sports Federation",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Chris Murray",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Islamabad United",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "League",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "United Kingdom",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Lebanese Handball Federation",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Athletico Paranaense",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Comoros Volleyball Federation",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Uzbekistan Ice Hockey Federation",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "Voreas Hokkaido",
+        "category": "Football Clubs",
+        "score": 0.8,
+        "suggestions": []
+      },
+      {
+        "name": "UCI Road World Championships",
+        "category": "Leagues",
+        "score": 0.6,
+        "suggestions": []
+      },
+      {
+        "name": "EFL Championship",
+        "category": "Leagues",
+        "score": 0.6,
+        "suggestions": []
+      },
+      {
+        "name": "FIA Formula 3 Championship",
+        "category": "Leagues",
+        "score": 0.6,
+        "suggestions": []
+      },
+      {
+        "name": "LeBron James",
+        "category": "Individuals",
+        "score": 0.5,
+        "suggestions": [
+          "Famous athletes might be available"
+        ]
+      },
+      {
+        "name": "Major League Cricket Ticketing System RFP",
+        "category": "Leagues",
+        "score": 0.5,
+        "suggestions": []
+      },
+      {
+        "name": "FIA World Rally Championship (WRC)",
+        "category": "Leagues",
+        "score": 0.5,
+        "suggestions": []
+      }
+    ]
+  },
+  "recommendations": [
+    "Focus on mainstream football clubs - highest TheSportsDB coverage",
+    "Implement name normalization for common patterns (FC, Al, etc.)",
+    "Create manual badge upload for federations and non-football entities",
+    "Use country names instead of full federation names",
+    "Remove parenthetical content and system suffixes before searching",
+    "Consider alternative badge sources for non-football sports",
+    "Implement entity name mapping table for known mismatches"
+  ]
+}

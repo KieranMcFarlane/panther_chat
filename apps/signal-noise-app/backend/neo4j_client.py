@@ -10,20 +10,34 @@ from neo4j.exceptions import ServiceUnavailable, AuthError
 logger = logging.getLogger(__name__)
 
 class Neo4jMCPClient:
-    """Client for Neo4j MCP server integration with direct driver fallback"""
-    
+    """Client for Neo4j/FalkorDB MCP server integration with direct driver fallback"""
+
     def __init__(self):
         # MCP server configuration
         self.mcp_base_url = os.getenv("NEO4J_MCP_URL", "http://localhost:3004")
         self.mcp_api_key = os.getenv("NEO4J_MCP_API_KEY")
         self.mcp_timeout = int(os.getenv("NEO4J_MCP_TIMEOUT", "30"))
-        
-        # Direct Neo4j connection configuration - Use AuraDB by default
-        self.neo4j_uri = os.getenv("NEO4J_URI", "neo4j+s://cce1f84b.databases.neo4j.io")
-        self.neo4j_user = os.getenv("NEO4J_USER", "neo4j")
-        self.neo4j_password = os.getenv("NEO4J_PASSWORD", "llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0")
-        self.neo4j_database = os.getenv("NEO4J_DATABASE", "neo4j")
-        
+
+        # Direct Neo4j/FalkorDB connection configuration
+        # Priority: FALKORDB_* > NEO4J_* > defaults
+        self.neo4j_uri = (
+            os.getenv("FALKORDB_URI") or
+            os.getenv("NEO4J_URI", "bolt://localhost:7687")
+        )
+        self.neo4j_user = (
+            os.getenv("FALKORDB_USER") or
+            os.getenv("NEO4J_USER") or
+            os.getenv("NEO4J_USERNAME", "neo4j")
+        )
+        self.neo4j_password = (
+            os.getenv("FALKORDB_PASSWORD") or
+            os.getenv("NEO4J_PASSWORD", "")
+        )
+        self.neo4j_database = (
+            os.getenv("FALKORDB_DATABASE") or
+            os.getenv("NEO4J_DATABASE", "neo4j")
+        )
+
         # Initialize direct driver as fallback
         self.driver = None
         try:
@@ -31,9 +45,11 @@ class Neo4jMCPClient:
                 self.neo4j_uri,
                 auth=(self.neo4j_user, self.neo4j_password)
             )
-            logger.info("Neo4j direct driver initialized successfully")
+            # Detect FalkorDB from URI
+            db_type = "FalkorDB" if "localhost" in self.neo4j_uri or "falkordb" in self.neo4j_uri.lower() else "Neo4j"
+            logger.info(f"{db_type} direct driver initialized successfully")
         except Exception as e:
-            logger.warning(f"Failed to initialize Neo4j direct driver: {str(e)}")
+            logger.warning(f"Failed to initialize Neo4j/FalkorDB direct driver: {str(e)}")
     
     def upsert_signals(self, entity_name: str, entity_type: str, cypher_updates: List[Dict[str, Any]]) -> Dict[str, Any]:
         """

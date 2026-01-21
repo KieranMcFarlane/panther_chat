@@ -15,7 +15,8 @@ import {
   Eye,
   Menu,
   X,
-  ArrowLeft
+  ArrowLeft,
+  Mail
 } from 'lucide-react';
 import { 
   Sidebar,
@@ -39,7 +40,6 @@ import {
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { useNavigationPrefetch } from '@/lib/swr-config';
 
 // Enhanced navigation items with graph submenu
 const navItems = [
@@ -47,6 +47,7 @@ const navItems = [
   { icon: Search, label: 'Entities', href: '/entity-browser' },
   { icon: FileText, label: 'Tenders', href: '/tenders' },
   { icon: Brain, label: 'RFP Intelligence', href: '/rfp-intelligence' },
+  { icon: Mail, label: 'Mailbox', href: '/mailbox' },
   { 
     icon: BarChart3, 
     label: 'Graph', 
@@ -69,8 +70,7 @@ export function AppSidebar({ className }: AppSidebarProps) {
   const [graphOpen, setGraphOpen] = useState(pathname?.startsWith('/graph') || false);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { prefetchPage } = useNavigationPrefetch();
-
+  
   // Detect mobile screen size
   useEffect(() => {
     const checkMobile = () => {

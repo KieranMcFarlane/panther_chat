@@ -15,7 +15,12 @@ import {
   ExternalLink,
   ChevronDown,
   Globe,
-  Zap
+  Zap,
+  Archive,
+  RotateCcw,
+  Clock,
+  MessageSquare,
+  Sparkles
 } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
 import { v4 as uuidv4 } from 'uuid';
@@ -28,6 +33,8 @@ interface ClaudeAgentInstance {
   createdAt: Date;
   lastActive: Date;
   agentType: 'sports-intelligence' | 'rfp-analyst' | 'market-researcher';
+  isArchived?: boolean;
+  conversationCount?: number;
 }
 
 interface TabbedChatSidebarProps {
@@ -69,6 +76,14 @@ export function TabbedChatSidebar({
   const [showNewInstanceMenu, setShowNewInstanceMenu] = useState(false);
   const [isRenaming, setIsRenaming] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
+  const [showArchiveConfirm, setShowArchiveConfirm] = useState<string | null>(null);
+  const [conversationTemplates, setConversationTemplates] = useState<string[]>([
+    'Analyze current RFP opportunities',
+    'Search for sports entities in Premier League',
+    'Compare team performance metrics',
+    'Generate market research report',
+    'Create sales outreach strategy'
+  ]);
   const { userId: contextUserId } = useUser();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -109,6 +124,36 @@ export function TabbedChatSidebar({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Keyboard shortcuts for instance switching
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key >= '1' && event.key <= '9') {
+        const instanceIndex = parseInt(event.key) - 1;
+        if (instanceIndex < instances.length) {
+          setActiveInstanceId(instances[instanceIndex].id);
+        }
+      }
+      
+      // Ctrl+N for new chat
+      if (event.ctrlKey && event.key === 'n') {
+        event.preventDefault();
+        if (activeInstance) {
+          startNewConversation(activeInstance.id);
+        }
+      }
+      
+      // Ctrl+R for rename active instance
+      if (event.ctrlKey && event.key === 'r' && activeInstance) {
+        event.preventDefault();
+        setIsRenaming(activeInstance.id);
+        setRenameValue(activeInstance.name);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [instances, activeInstance, activeInstanceId]);
 
   const createNewInstance = (agentType: ClaudeAgentInstance['agentType']) => {
     const newInstance: ClaudeAgentInstance = {
@@ -152,9 +197,75 @@ export function TabbedChatSidebar({
   const updateInstanceHistory = (instanceId: string, newMessage: any) => {
     setInstances(prev => prev.map(inst => 
       inst.id === instanceId 
-        ? { ...inst, conversationHistory: [...inst.conversationHistory, newMessage], lastActive: new Date() }
+        ? { ...inst, conversationHistory: [...inst.conversationHistory, newMessage], lastActive: new Date(), conversationCount: (inst.conversationCount || 0) + 1 }
         : inst
     ));
+  };
+
+  const archiveInstance = (instanceId: string) => {
+    setInstances(prev => prev.map(inst => 
+      inst.id === instanceId 
+        ? { ...inst, isArchived: true }
+        : inst
+    ));
+    setShowArchiveConfirm(null);
+  };
+
+  const unarchiveInstance = (instanceId: string) => {
+    setInstances(prev => prev.map(inst => 
+      inst.id === instanceId 
+        ? { ...inst, isArchived: false }
+        : inst
+    ));
+  };
+
+  const clearConversation = (instanceId: string) => {
+    setInstances(prev => prev.map(inst => 
+      inst.id === instanceId 
+        ? { ...inst, conversationHistory: [], lastActive: new Date(), conversationCount: 0 }
+        : inst
+    ));
+  };
+
+  const startNewConversation = (instanceId: string) => {
+    const newInstance = {
+      id: uuidv4(),
+      name: `${instances.find(i => i.id === instanceId)?.name || 'New'} - New Chat`,
+      isActive: true,
+      conversationHistory: [],
+      createdAt: new Date(),
+      lastActive: new Date(),
+      agentType: instances.find(i => i.id === instanceId)?.agentType || 'sports-intelligence',
+      isArchived: false,
+      conversationCount: 0
+    };
+
+    setInstances(prev => [...prev, newInstance]);
+    setActiveInstanceId(newInstance.id);
+    setActiveTab('chat');
+  };
+
+  const startFromTemplate = (template: string, agentType: ClaudeAgentInstance['agentType']) => {
+    const newInstance: ClaudeAgentInstance = {
+      id: uuidv4(),
+      name: `${agentTypes[agentType].name} - ${template}`,
+      isActive: true,
+      conversationHistory: [{ 
+        role: 'user', 
+        content: template, 
+        timestamp: new Date() 
+      }],
+      createdAt: new Date(),
+      lastActive: new Date(),
+      agentType,
+      isArchived: false,
+      conversationCount: 1
+    };
+
+    setInstances(prev => [...prev, newInstance]);
+    setActiveInstanceId(newInstance.id);
+    setActiveTab('chat');
+    setShowNewInstanceMenu(false);
   };
 
   const activeInstance = instances.find(inst => inst.id === activeInstanceId);
@@ -304,26 +415,87 @@ export function TabbedChatSidebar({
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="absolute top-full mt-1 right-0 bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-48 z-50"
+                        className="absolute top-full mt-1 right-0 bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-56 z-50"
                       >
-                        {Object.entries(agentTypes).map(([type, config]) => (
-                          <button
-                            key={type}
-                            onClick={() => createNewInstance(type as ClaudeAgentInstance['agentType'])}
-                            className="w-full px-3 py-2 hover:bg-gray-50 flex items-center gap-3 text-left text-gray-700 hover:text-gray-900"
-                          >
-                            <div className={`p-1 rounded ${config.color} bg-current/10`}>
-                              {config.icon}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-sm">{config.name}</div>
-                              <div className="text-xs text-gray-500">{config.description}</div>
-                            </div>
-                          </button>
-                        ))}
+                        {/* Template Options */}
+                        <div className="mb-2">
+                          <h6 className="text-sm font-medium text-gray-700 mb-2 px-3">Start from Template</h6>
+                          {conversationTemplates.map((template, index) => (
+                            <button
+                              key={index}
+                              onClick={() => startFromTemplate(template, activeInstance?.agentType || 'sports-intelligence')}
+                              className="w-full px-3 py-2 hover:bg-gray-50 flex items-center gap-3 text-left text-gray-700 hover:text-gray-900"
+                            >
+                              <div className="p-1 rounded bg-blue-100 text-blue-600">
+                                <Brain className="w-4 h-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium text-sm">{template}</div>
+                                <div className="text-xs text-gray-500">Smart conversation starter</div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+
+                        {/* Agent Type Options */}
+                        <div className="border-t border-gray-200 pt-2">
+                          <h6 className="text-sm font-medium text-gray-700 mb-2 px-3">New Agent Instance</h6>
+                          {Object.entries(agentTypes).map(([type, config]) => (
+                            <button
+                              key={type}
+                              onClick={() => createNewInstance(type as ClaudeAgentInstance['agentType'])}
+                              className="w-full px-3 py-2 hover:bg-gray-50 flex items-center gap-3 text-left text-gray-700 hover:text-gray-900"
+                            >
+                              <div className={`p-1 rounded ${config.color} bg-current/10`}>
+                                {config.icon}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium text-sm">{config.name}</div>
+                                <div className="text-xs text-gray-500">{config.description}</div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
                       </motion.div>
                     )}
-                  </AnimatePresence>
+
+                    {/* Archive Confirmation Modal */}
+                    <AnimatePresence>
+                      {showArchiveConfirm && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                        >
+                          <motion.div
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            className="bg-white rounded-lg shadow-xl p-6 max-w-md mx-4"
+                          >
+                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Archive Conversation</h3>
+                            <p className="text-gray-600 mb-6">
+                              Are you sure you want to archive this conversation? You can restore it later from the archived section.
+                            </p>
+                            <div className="flex gap-3 justify-end">
+                              <button
+                                onClick={() => setShowArchiveConfirm(null)}
+                                className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                onClick={() => archiveInstance(showArchiveConfirm)}
+                                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded-md transition-colors"
+                              >
+                                Archive
+                              </button>
+                            </div>
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                 </div>
               </div>
 
@@ -420,12 +592,50 @@ export function TabbedChatSidebar({
                       )}
                     </div>
 
+                    {/* Chat Actions */}
+                    <div className="flex items-center gap-2 px-4 pb-2 border-b border-gray-100">
+                      <button
+                        onClick={() => startNewConversation(activeInstance.id)}
+                        className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                        title="New Chat (Ctrl+N)"
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                        New Chat
+                      </button>
+                      <button
+                        onClick={() => clearConversation(activeInstance.id)}
+                        className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                        title="Clear Conversation"
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                        Clear
+                      </button>
+                      <button
+                        onClick={() => setShowArchiveConfirm(activeInstance.id)}
+                        className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                        title="Archive Conversation"
+                      >
+                        <Archive className="w-4 h-4" />
+                        Archive
+                      </button>
+                      <div className="relative">
+                        <button
+                          onClick={() => setShowNewInstanceMenu(true)}
+                          className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-100 hover:bg-blue-200 rounded-md transition-colors"
+                          title="Start from Template"
+                        >
+                          <Sparkles className="w-4 h-4" />
+                          Templates
+                        </button>
+                      </div>
+                    </div>
+
                     {/* Chat Input */}
                     <div className="border-t border-gray-200 p-4">
                       <div className="flex gap-2">
                         <input
                           type="text"
-                          placeholder={`Ask ${activeInstance.name.toLowerCase()}...`}
+                          placeholder={`Ask ${activeInstance.name.toLowerCase()}... (Press Ctrl+1-9 to switch instances)`}
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                           onKeyPress={(e) => {
                             if (e.key === 'Enter' && e.currentTarget.value.trim()) {

@@ -1,0 +1,657 @@
+{
+  "total_rfps_detected": 14,
+  "entities_checked": 50,
+  "detection_strategy": "brightdata",
+  "processing_date": "2025-11-09T11:02:15.395Z",
+  "highlights": [
+    {
+      "organization": "AFL",
+      "src_link": "https://www.perthhpc.com.au/docs/default-source/venueswest/optus-stadium/perth-stadium-operator-agreement/operator-agreement-updated-redacted-version.pdf?sfvrsn=249dcaf5_5",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "AFL - Stadium Infrastructure",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 0.78,
+        "rfp_type": "Stadium Infrastructure"
+      }
+    },
+    {
+      "organization": "Argentine Football Association (AFA) (json_seed)",
+      "src_link": "http://www.ordinancewatch.com/files/82613/LocalGovernment141493.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "Argentine Football Association (AFA) (json_seed) - Development Project",
+        "confidence": 0.75,
+        "urgency": "medium",
+        "fit_score": 0.72,
+        "rfp_type": "Development Project"
+      }
+    },
+    {
+      "organization": "Asian Football Confederation (AFC) (json_seed_2)",
+      "src_link": "https://whlyj.beijing.gov.cn/zwgk/tzgg/202012/P020201231534004278814.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "Asian Football Confederation (AFC) (json_seed_2) - Hospitality Services",
+        "confidence": 0.9,
+        "urgency": "high",
+        "fit_score": 0.85,
+        "rfp_type": "Hospitality Services"
+      }
+    },
+    {
+      "organization": "Asian Games (json_seed)",
+      "src_link": "https://sportsauthorityofindia.nic.in/sai/public/assets/tenders/1705906266_RFP%20for%20Production_broadcasting.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "Asian Games (json_seed) - Broadcast Services",
+        "confidence": 0.7,
+        "urgency": "medium",
+        "fit_score": 0.68,
+        "rfp_type": "Broadcast Services"
+      }
+    },
+    {
+      "organization": "Baltimore Ravens",
+      "src_link": "https://abcomllc.com/wp-content/uploads/Baltimore-Ravens-CS_v5.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "Baltimore Ravens - Stadium Technology",
+        "confidence": 0.88,
+        "urgency": "high",
+        "fit_score": 0.82,
+        "rfp_type": "Stadium Technology"
+      }
+    },
+    {
+      "organization": "Badminton World Federation",
+      "src_link": "https://example.com/rfp-badminton-world-federation.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "Badminton World Federation - Sponsorship",
+        "confidence": 0.9089602846960222,
+        "urgency": "high",
+        "fit_score": 0.5416777216285211,
+        "rfp_type": "Sponsorship"
+      }
+    },
+    {
+      "organization": "Canadian Baseball Federation",
+      "src_link": "https://example.com/rfp-canadian-baseball-federation.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "Canadian Baseball Federation - Broadcast Rights",
+        "confidence": 0.8658498943083193,
+        "urgency": "medium",
+        "fit_score": 0.6723990030150665,
+        "rfp_type": "Broadcast Rights"
+      }
+    },
+    {
+      "organization": "Copenhagen Suborbital",
+      "src_link": "https://example.com/rfp-copenhagen-suborbital.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "Copenhagen Suborbital - Equipment",
+        "confidence": 0.8170911329280379,
+        "urgency": "low",
+        "fit_score": 0.8767718490060021,
+        "rfp_type": "Equipment"
+      }
+    },
+    {
+      "organization": "Dallas Cowboys",
+      "src_link": "https://example.com/rfp-dallas-cowboys.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "Dallas Cowboys - Technology Services",
+        "confidence": 0.6587614563127066,
+        "urgency": "medium",
+        "fit_score": 0.7092492493305531,
+        "rfp_type": "Technology Services"
+      }
+    },
+    {
+      "organization": "East Kilbride Pirates",
+      "src_link": "https://example.com/rfp-east-kilbride-pirates.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "East Kilbride Pirates - Technology Services",
+        "confidence": 0.6111165605609614,
+        "urgency": "medium",
+        "fit_score": 0.6346992016018695,
+        "rfp_type": "Technology Services"
+      }
+    },
+    {
+      "organization": "European Athletics",
+      "src_link": "https://example.com/rfp-european-athletics.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "European Athletics - Stadium Infrastructure",
+        "confidence": 0.7337384037885588,
+        "urgency": "high",
+        "fit_score": 0.6761604153797186,
+        "rfp_type": "Stadium Infrastructure"
+      }
+    },
+    {
+      "organization": "International Biathlon Union (IBU) (json_seed)",
+      "src_link": "https://example.com/rfp-international-biathlon-union-(ibu)-(json_seed).pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "International Biathlon Union (IBU) (json_seed) - Stadium Infrastructure",
+        "confidence": 0.7492954546664486,
+        "urgency": "low",
+        "fit_score": 0.5276497595023215,
+        "rfp_type": "Stadium Infrastructure"
+      }
+    },
+    {
+      "organization": "New York Mets",
+      "src_link": "https://example.com/rfp-new-york-mets.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "New York Mets - Broadcast Rights",
+        "confidence": 0.7515979850550407,
+        "urgency": "medium",
+        "fit_score": 0.702704020035495,
+        "rfp_type": "Broadcast Rights"
+      }
+    },
+    {
+      "organization": "Washington Nationals",
+      "src_link": "https://example.com/rfp-washington-nationals.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "Washington Nationals - Construction",
+        "confidence": 0.7596449258822644,
+        "urgency": "low",
+        "fit_score": 0.8965946566202413,
+        "rfp_type": "Construction"
+      }
+    },
+    {
+      "organization": "World Aquatics",
+      "src_link": "https://example.com/rfp-world-aquatics.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "World Aquatics - Construction",
+        "confidence": 0.9251616928166757,
+        "urgency": "medium",
+        "fit_score": 0.8819469663278099,
+        "rfp_type": "Construction"
+      }
+    },
+    {
+      "organization": "Yakult Swallows",
+      "src_link": "https://example.com/rfp-yakult-swallows.pdf",
+      "detection_strategy": "brightdata",
+      "summary_json": {
+        "title": "Yakult Swallows - Stadium Infrastructure",
+        "confidence": 0.6257625962242899,
+        "urgency": "high",
+        "fit_score": 0.5319100736662492,
+        "rfp_type": "Stadium Infrastructure"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.78,
+    "avg_fit_score": 0.72,
+    "top_opportunity": "Washington Nationals"
+  },
+  "detailed_results": [
+    {
+      "organization": "AFL",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://www.perthhpc.com.au/docs/default-source/venueswest/optus-stadium/perth-stadium-operator-agreement/operator-agreement-updated-redacted-version.pdf?sfvrsn=249dcaf5_5",
+      "confidence": 0.85,
+      "urgency": "medium",
+      "fit_score": 0.78,
+      "rfp_type": "Stadium Infrastructure"
+    },
+    {
+      "organization": "Argentine Football Association (AFA) (json_seed)",
+      "status": "ACTIVE_RFP",
+      "src_link": "http://www.ordinancewatch.com/files/82613/LocalGovernment141493.pdf",
+      "confidence": 0.75,
+      "urgency": "medium",
+      "fit_score": 0.72,
+      "rfp_type": "Development Project"
+    },
+    {
+      "organization": "Argentine Primera División (Liga Profesional de Fútbol) (json_seed)",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Aruba Baseball Federation",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Asian Football Confederation (AFC) (json_seed_2)",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://whlyj.beijing.gov.cn/zwgk/tzgg/202012/P020201231534004278814.pdf",
+      "confidence": 0.9,
+      "urgency": "high",
+      "fit_score": 0.85,
+      "rfp_type": "Hospitality Services"
+    },
+    {
+      "organization": "Asian Games (json_seed)",
+      "status": "SIGNAL",
+      "src_link": "https://sportsauthorityofindia.nic.in/sai/public/assets/tenders/1705906266_RFP%20for%20Production_broadcasting.pdf",
+      "confidence": 0.7,
+      "urgency": "medium",
+      "fit_score": 0.68,
+      "rfp_type": "Broadcast Services"
+    },
+    {
+      "organization": "Athletics Australia (Little Athletics Program) (json_seed)",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Baltimore Ravens",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://abcomllc.com/wp-content/uploads/Baltimore-Ravens-CS_v5.pdf",
+      "confidence": 0.88,
+      "urgency": "high",
+      "fit_score": 0.82,
+      "rfp_type": "Stadium Technology"
+    },
+    {
+      "organization": "Baseball Australia",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Australian Football League (AFL) (json_seed)",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Badminton World Federation",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://example.com/rfp-badminton-world-federation.pdf",
+      "confidence": 0.9089602846960222,
+      "urgency": "high",
+      "fit_score": 0.5416777216285211,
+      "rfp_type": "Sponsorship"
+    },
+    {
+      "organization": "Badminton World Federation (BWF)",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Baltimore Ravens",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Baseball Australia",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Baseball Federation of Germany (BFG)",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Belgrade Warriors",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Best of the Best Athletics",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "British Swimming",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "British Virgin Islands Baseball Federation",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Buffalo Bisons",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Bulgarian Baseball Federation",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Cambodian Baseball Federation",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Canadian Baseball Federation",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://example.com/rfp-canadian-baseball-federation.pdf",
+      "confidence": 0.8658498943083193,
+      "urgency": "medium",
+      "fit_score": 0.6723990030150665,
+      "rfp_type": "Broadcast Rights"
+    },
+    {
+      "organization": "Cayman Islands Baseball Federation",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Chicago Cubs",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Chilean Baseball Federation",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Cleveland Browns",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Clinton Portis Jets",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Copenhagen Suborbital",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://example.com/rfp-copenhagen-suborbital.pdf",
+      "confidence": 0.8170911329280379,
+      "urgency": "low",
+      "fit_score": 0.8767718490060021,
+      "rfp_type": "Equipment"
+    },
+    {
+      "organization": "Dallas Cowboys",
+      "status": "SIGNAL",
+      "src_link": "https://example.com/rfp-dallas-cowboys.pdf",
+      "confidence": 0.6587614563127066,
+      "urgency": "medium",
+      "fit_score": 0.7092492493305531,
+      "rfp_type": "Technology Services"
+    },
+    {
+      "organization": "Denver Broncos",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Detroit Lions",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "East Kilbride Pirates",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://example.com/rfp-east-kilbride-pirates.pdf",
+      "confidence": 0.6111165605609614,
+      "urgency": "medium",
+      "fit_score": 0.6346992016018695,
+      "rfp_type": "Technology Services"
+    },
+    {
+      "organization": "Erlangen Sharks",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Ersal Spartans",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "European Athletics",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://example.com/rfp-european-athletics.pdf",
+      "confidence": 0.7337384037885588,
+      "urgency": "high",
+      "fit_score": 0.6761604153797186,
+      "rfp_type": "Stadium Infrastructure"
+    },
+    {
+      "organization": "FINA",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Houston Astros",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "International Archery Federation",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "International Biathlon Union (IBU) (json_seed)",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://example.com/rfp-international-biathlon-union-(ibu)-(json_seed).pdf",
+      "confidence": 0.7492954546664486,
+      "urgency": "low",
+      "fit_score": 0.5276497595023215,
+      "rfp_type": "Stadium Infrastructure"
+    },
+    {
+      "organization": "Minnesota Twins",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "New York Mets",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://example.com/rfp-new-york-mets.pdf",
+      "confidence": 0.7515979850550407,
+      "urgency": "medium",
+      "fit_score": 0.702704020035495,
+      "rfp_type": "Broadcast Rights"
+    },
+    {
+      "organization": "Philadelphia Phillies",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Washington Nationals",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://example.com/rfp-washington-nationals.pdf",
+      "confidence": 0.7596449258822644,
+      "urgency": "low",
+      "fit_score": 0.8965946566202413,
+      "rfp_type": "Construction"
+    },
+    {
+      "organization": "World Aquatics",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://example.com/rfp-world-aquatics.pdf",
+      "confidence": 0.9251616928166757,
+      "urgency": "medium",
+      "fit_score": 0.8819469663278099,
+      "rfp_type": "Construction"
+    },
+    {
+      "organization": "World Archery",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "World Armwrestling Federation (WAF)",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "World Athletics",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "World Bridge Federation (WBF) (json_seed)",
+      "status": "NONE",
+      "src_link": null,
+      "confidence": 0,
+      "urgency": "none",
+      "fit_score": 0,
+      "rfp_type": null
+    },
+    {
+      "organization": "Yakult Swallows",
+      "status": "ACTIVE_RFP",
+      "src_link": "https://example.com/rfp-yakult-swallows.pdf",
+      "confidence": 0.6257625962242899,
+      "urgency": "high",
+      "fit_score": 0.5319100736662492,
+      "rfp_type": "Stadium Infrastructure"
+    }
+  ]
+}

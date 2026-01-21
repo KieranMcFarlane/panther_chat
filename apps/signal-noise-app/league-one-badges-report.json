@@ -1,0 +1,110 @@
+{
+  "timestamp": "2025-11-14T13:22:50.928Z",
+  "league": "League One",
+  "total": 25,
+  "successful": 0,
+  "failed": 25,
+  "successRate": "0.0",
+  "results": [
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    }
+  ]
+}

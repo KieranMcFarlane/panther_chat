@@ -1,0 +1,149 @@
+{
+  "processed_at": "2025-11-10T13:12:28.323Z",
+  "total_entities": 10,
+  "entities_processed": 10,
+  "strategy": "3-phase LinkedIn RFP detection",
+  "phases": [
+    "Phase 1: LinkedIn posts search for RFP keywords",
+    "Phase 2: LinkedIn jobs search for PM/digital roles",
+    "Phase 3: LinkedIn company search for partnerships"
+  ],
+  "results": [
+    {
+      "entity": "Universitario de Deportes",
+      "processed_at": "2025-11-10T13:12:18.259Z",
+      "phase1_posts": [],
+      "phase2_jobs": [],
+      "phase3_partnerships": [],
+      "summary": {
+        "active_rfps": 0,
+        "signals": 0,
+        "excluded": 0,
+        "total_searches": 0
+      }
+    },
+    {
+      "entity": "Cienciano",
+      "processed_at": "2025-11-10T13:12:19.289Z",
+      "phase1_posts": [],
+      "phase2_jobs": [],
+      "phase3_partnerships": [],
+      "summary": {
+        "active_rfps": 0,
+        "signals": 0,
+        "excluded": 0,
+        "total_searches": 0
+      }
+    },
+    {
+      "entity": "Melgar",
+      "processed_at": "2025-11-10T13:12:20.295Z",
+      "phase1_posts": [],
+      "phase2_jobs": [],
+      "phase3_partnerships": [],
+      "summary": {
+        "active_rfps": 0,
+        "signals": 0,
+        "excluded": 0,
+        "total_searches": 0
+      }
+    },
+    {
+      "entity": "Alianza Atlético",
+      "processed_at": "2025-11-10T13:12:21.299Z",
+      "phase1_posts": [],
+      "phase2_jobs": [],
+      "phase3_partnerships": [],
+      "summary": {
+        "active_rfps": 0,
+        "signals": 0,
+        "excluded": 0,
+        "total_searches": 0
+      }
+    },
+    {
+      "entity": "Binational",
+      "processed_at": "2025-11-10T13:12:22.301Z",
+      "phase1_posts": [],
+      "phase2_jobs": [],
+      "phase3_partnerships": [],
+      "summary": {
+        "active_rfps": 0,
+        "signals": 0,
+        "excluded": 0,
+        "total_searches": 0
+      }
+    },
+    {
+      "entity": "Barcelona SC",
+      "processed_at": "2025-11-10T13:12:23.304Z",
+      "phase1_posts": [],
+      "phase2_jobs": [],
+      "phase3_partnerships": [],
+      "summary": {
+        "active_rfps": 0,
+        "signals": 0,
+        "excluded": 0,
+        "total_searches": 0
+      }
+    },
+    {
+      "entity": "Liga Deportiva Universitaria",
+      "processed_at": "2025-11-10T13:12:24.306Z",
+      "phase1_posts": [],
+      "phase2_jobs": [],
+      "phase3_partnerships": [],
+      "summary": {
+        "active_rfps": 0,
+        "signals": 0,
+        "excluded": 0,
+        "total_searches": 0
+      }
+    },
+    {
+      "entity": "Emelec",
+      "processed_at": "2025-11-10T13:12:25.312Z",
+      "phase1_posts": [],
+      "phase2_jobs": [],
+      "phase3_partnerships": [],
+      "summary": {
+        "active_rfps": 0,
+        "signals": 0,
+        "excluded": 0,
+        "total_searches": 0
+      }
+    },
+    {
+      "entity": "CSD Macara",
+      "processed_at": "2025-11-10T13:12:26.317Z",
+      "phase1_posts": [],
+      "phase2_jobs": [],
+      "phase3_partnerships": [],
+      "summary": {
+        "active_rfps": 0,
+        "signals": 0,
+        "excluded": 0,
+        "total_searches": 0
+      }
+    },
+    {
+      "entity": "Universidad San Martín",
+      "processed_at": "2025-11-10T13:12:27.321Z",
+      "phase1_posts": [],
+      "phase2_jobs": [],
+      "phase3_partnerships": [],
+      "summary": {
+        "active_rfps": 0,
+        "signals": 0,
+        "excluded": 0,
+        "total_searches": 0
+      }
+    }
+  ],
+  "global_summary": {
+    "total_active_rfps": 0,
+    "total_signals": 0,
+    "total_excluded": 0,
+    "total_searches": 0
+  }
+}

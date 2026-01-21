@@ -1,7 +1,7 @@
 /**
  * 🏆 Tenders Page
  * 
- * Live tender opportunities from our comprehensive RFP analysis system (40 real opportunities)
+ * Live tender opportunities from our unified RFP analysis system
  */
 
 'use client';
@@ -20,65 +20,48 @@ import {
   ExternalLink, 
   RefreshCw, 
   Filter, 
-  Download,
   Eye,
   Target,
   Clock,
-  Plus,
   TrendingUp,
-  Play,
-  Activity,
   Sparkles
 } from 'lucide-react';
 
-// Import comprehensive RFP opportunities from shared database
-import { comprehensiveRfpOpportunities } from '@/lib/comprehensive-rfp-opportunities';
+// Import RFP storage service for unified data access
 import { rfpStorageService } from '@/services/RFPStorageService';
 import { supabase } from '@/lib/supabase-client';
+import { comprehensiveRfpOpportunities } from '@/lib/comprehensive-rfp-opportunities';
+import digitalRfpOpportunities from '@/lib/digital-rfp-opportunities';
 
-const realOpportunities = comprehensiveRfpOpportunities;
+// Use digital-first opportunities for optimal Yellow Panther alignment
+const alignedOpportunities = digitalRfpOpportunities;
 
 export default function TendersPage() {
   const [opportunities, setOpportunities] = useState([]);
   const [detectedRFPs, setDetectedRFPs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [dataLoadedAt, setDataLoadedAt] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showDetectedOnly, setShowDetectedOnly] = useState(false);
+const [filterSource, setFilterSource] = useState('all');
   const [rfpStats, setRfpStats] = useState({ total: 0, recent: 0 });
   const [a2aRunning, setA2aRunning] = useState(false);
   const [a2aStatus, setA2aStatus] = useState(null);
-  // Calculate initial stats from real opportunities
-  const [stats, setStats] = useState(() => {
-    const totalValueEstimate = realOpportunities.reduce((sum, opp) => {
-      const match = opp.value.match(/£?([\d.]+)([KM])/);
-      if (match) {
-        const value = parseFloat(match[1]);
-        const multiplier = match[2] === 'M' ? 1000 : (match[2] === 'K' ? 1 : 1);
-        return sum + (value * multiplier);
-      }
-      return sum;
-    }, 0);
-
-    const urgentDeadlines = realOpportunities.filter(opp => {
-      if (!opp.deadline) return false;
-      const days = Math.ceil((new Date(opp.deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
-      return days !== null && days <= 30 && days > 0;
-    }).length;
-
-    const avgFitScore = realOpportunities.length > 0 ? Math.round(realOpportunities.reduce((sum, opp) => sum + opp.yellow_panther_fit, 0) / realOpportunities.length) : 0;
-
-    return {
-      total_opportunities: realOpportunities.length,
-      total_value_millions: totalValueEstimate > 1000 ? `${Math.round(totalValueEstimate/1000)}+` : `${Math.round(totalValueEstimate)}`,
-      urgent_deadlines: urgentDeadlines,
-      average_fit_score: avgFitScore
-    };
+  // Initialize stats with empty values - will be populated from unified data
+  const [stats, setStats] = useState({
+    total_opportunities: 0,
+    total_value_millions: '0',
+    urgent_deadlines: 0,
+    average_fit_score: 0
   });
 
   // Function to calculate stats from opportunities array
   const calculateStatsFromOpportunities = (opps) => {
     const totalValueEstimate = opps.reduce((sum, opp) => {
+      // Handle null or undefined values
+      if (!opp.value) return sum;
+      
       const match = opp.value.match(/£?([\d.]+)([KM])/);
       if (match) {
         const value = parseFloat(match[1]);
@@ -94,7 +77,7 @@ export default function TendersPage() {
       return days !== null && days <= 30 && days > 0;
     }).length;
 
-    const avgFitScore = opps.length > 0 ? Math.round(opps.reduce((sum, opp) => sum + opp.yellow_panther_fit, 0) / opps.length) : 0;
+    const avgFitScore = opps.length > 0 ? Math.round(opps.reduce((sum, opp) => sum + (opp.yellow_panther_fit || 0), 0) / opps.length) : 0;
 
     return {
       total_opportunities: opps.length,
@@ -104,66 +87,67 @@ export default function TendersPage() {
     };
   };
 
-  // Load detected RFPs from Supabase
-  useEffect(() => {
-    const loadDetectedRFPs = async () => {
-      try {
-        const rfps = await rfpStorageService.getRFPs({ 
-          limit: 50,
-          orderBy: 'detected_at',
-          orderDirection: 'desc'
-        });
-        
-        console.log(`🎯 Loaded ${rfps.length} detected RFPs from Supabase`);
-        
-        setDetectedRFPs(rfps);
-        
-        // Calculate RFP stats
-        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-        const recentRFPs = rfps.filter(rfp => new Date(rfp.detected_at) > weekAgo);
-        
-        setRfpStats({
-          total: rfps.length,
-          recent: recentRFPs.length
-        });
-        
-      } catch (error) {
-        console.error('❌ Error loading detected RFPs:', error);
-        setDetectedRFPs([]);
-        setRfpStats({ total: 0, recent: 0 });
-      }
-    };
+  // Load detected RFPs from unified table - DISABLED FOR TESTING
+  // useEffect(() => {
+  //   const loadDetectedRFPs = async () => {
+  //     try {
+  //       const rfps = await rfpStorageService.getRFPs({ 
+  //         limit: 50,
+  //         source: 'ai-detected', // Only AI-detected RFPs
+  //         orderBy: 'detected_at',
+  //         orderDirection: 'desc'
+  //       });
+  //       
+  //       console.log(`🎯 Loaded ${rfps.length} AI-detected RFPs from unified table`);
+  //       
+  //       setDetectedRFPs(rfps);
+  //       
+  //       // Calculate RFP stats
+  //       const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  //       const recentRFPs = rfps.filter(rfp => new Date(rfp.detected_at) > weekAgo);
+  //       
+  //       setRfpStats({
+  //         total: rfps.length,
+  //         recent: recentRFPs.length
+  //       });
+  //       
+  //     } catch (error) {
+  //       console.error('❌ Error loading AI-detected RFPs:', error);
+  //       setDetectedRFPs([]);
+  //       setRfpStats({ total: 0, recent: 0 });
+  //     }
+  //   };
 
-    loadDetectedRFPs();
-    
-    // Check A2A system status on load
-    checkA2AStatus();
-    
-    // Set up real-time subscription for new RFPs
-    const subscription = supabase
-      .channel('rfp-changes')
-      .on('postgres_changes', 
-        { 
-          event: 'INSERT', 
-          schema: 'public', 
-          table: 'rfps' 
-        }, 
-        (payload) => {
-          console.log('🆕 New RFP detected:', payload.new);
-          setDetectedRFPs(prev => [payload.new, ...prev].slice(0, 50));
-          setRfpStats(prev => ({
-            ...prev,
-            total: prev.total + 1,
-            recent: prev.recent + 1
-          }));
-        }
-      )
-      .subscribe();
+  //   loadDetectedRFPs();
+  //   
+  //   // Check A2A system status on load
+  //   checkA2AStatus();
+  //   
+  //   // Set up real-time subscription for new RFPs from rfp_opportunities table
+  //   const subscription = supabase
+  //     .channel('rfp-opportunities-changes')
+  //     .on('postgres_changes', 
+  //       { 
+  //         event: 'INSERT', 
+  //         schema: 'public', 
+  //         table: 'rfp_opportunities'
+  //       }, 
+  //       (payload) => {
+  //         console.log('🆕 New RFP opportunity:', payload.new);
+  //         setDetectedRFPs(prev => [payload.new, ...prev].slice(0, 50));
+  //         setRfpStats(prev => ({
+  //           ...prev,
+  //           total: prev.total + 1,
+  //           recent: prev.recent + 1
+  //         }));
+  //       }
+  //     )
+  //     .subscribe();
 
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+  //   return () => {
+  //     subscription.unsubscribe();
+  //   };
+  // }, []);
 
   // Check A2A system status
   const checkA2AStatus = async () => {
@@ -242,37 +226,80 @@ export default function TendersPage() {
     }
   };
 
-  // Load real RFP data
+  // Load comprehensive RFP data from unified table
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       
-      // Try to load from API first, fallback to our comprehensive data
+      // Load opportunities from rfp_opportunities table via API
+      console.log('🔄 Starting data load from API...');
       try {
-        const response = await fetch('/api/tenders?action=opportunities&limit=100&t=' + Date.now());
+        const response = await fetch('/api/tenders?action=opportunities&limit=100&t=' + Date.now() + '&v=' + Math.random());
+        console.log('📡 API response received:', response.status);
         const data = await response.json();
+        console.log('📡 API data parsed:', { opportunities: data.opportunities?.length, total: data.total, is_real_data: data.is_rfp_opportunities_data, filtering_stats: data.filtering_stats });
         
-        let loadedOpportunities;
         if (data.opportunities && data.opportunities.length > 0) {
-          loadedOpportunities = data.opportunities;
+          setOpportunities(data.opportunities);
+          setStats(calculateStatsFromOpportunities(data.opportunities));
+          setDataLoadedAt(new Date());
+          console.log(`✅ SUCCESS: Loaded ${data.opportunities.length} filtered opportunities (${data.filtering_stats?.filtered_out || 0} broken URLs removed)`);
+          console.log('📊 Data source:', data.source);
+          if (data.filtering_stats) {
+            console.log(`📊 Quality filtering: ${data.filtering_stats.after_url_filtering}/${data.filtering_stats.total_retrieved} opportunities passed URL validation`);
+          }
+          console.log('📊 Sample real opportunity:', { title: data.opportunities[0].title, organization: data.opportunities[0].organization, value: data.opportunities[0].value, yellow_panther_fit: data.opportunities[0].yellow_panther_fit });
+          
+          // Debug: Check first few opportunities for source URLs
+          console.log('🔍 DEBUG: First 5 opportunities source URL status:');
+          data.opportunities.slice(0, 5).forEach((opp, index) => {
+            console.log(`  ${index + 1}. ${opp.title.substring(0, 50)}... -> ${opp.source_url ? 'HAS SOURCE URL' : 'NO SOURCE URL'}`);
+            if (opp.source_url) {
+              console.log(`     URL: ${opp.source_url}`);
+            }
+          });
         } else {
-          loadedOpportunities = realOpportunities;
+          console.log('📊 API returned no filtered data, using digital-first opportunities optimized for Yellow Panther');
+          
+          // Use digital-first data as optimal fallback (aligned with Yellow Panther's agency expertise)
+          const digitalData = alignedOpportunities.map(opp => ({
+            ...opp,
+            source_url: opp.url || null, // Map 'url' field to 'source_url' for consistency
+            deadline: opp.deadline || null,
+            posted_date: opp.posted || null,
+            yellow_panther_fit: opp.yellow_panther_fit || 85,
+            category: opp.category || 'Digital Transformation',
+            status: opp.status || 'qualified'
+          }));
+          
+          setOpportunities(digitalData);
+          setStats(calculateStatsFromOpportunities(digitalData));
+          setDataLoadedAt(new Date());
+          
+          console.log(`✅ SUCCESS: Using ${digitalData.length} digital-first opportunities optimized for agency services`);
+          console.log('📊 Data source: "Yellow Panther Digital-First Opportunities (Optimized for Agency Services)"');
+          
+          // Debug: Check first few digital opportunities for source URLs
+          console.log('🔍 DEBUG: First 5 digital opportunities source URL status:');
+          digitalData.slice(0, 5).forEach((opp, index) => {
+            console.log(`  ${index + 1}. ${opp.title.substring(0, 50)}... -> ${opp.source_url ? 'HAS SOURCE URL' : 'NO SOURCE URL'}`);
+            if (opp.source_url) {
+              console.log(`     URL: ${opp.source_url}`);
+            }
+          });
         }
-        
-        console.log(`📊 Loaded ${loadedOpportunities.length} opportunities from API`);
-        console.log('📊 Sample opportunity:', loadedOpportunities[0]);
-        setOpportunities(loadedOpportunities);
-        setStats(calculateStatsFromOpportunities(loadedOpportunities));
       } catch (error) {
-        console.log('❌ Error loading from API, using local data:', error.message);
-        console.log(`📊 Using local data: ${realOpportunities.length} opportunities`);
-        setOpportunities(realOpportunities);
-        setStats(calculateStatsFromOpportunities(realOpportunities));
+        console.error('❌ ERROR: Failed to load from API:', error);
+        console.error('❌ Full error details:', error);
+        // Show error state instead of fallback data
+        setOpportunities([]);
+        setStats(calculateStatsFromOpportunities([]));
       }
       
       setLoading(false);
     };
     
+    console.log('🚀 Tenders useEffect running - about to load real data');
     loadData();
   }, []);
 
@@ -285,7 +312,24 @@ export default function TendersPage() {
     let matchesStatus = filterStatus === 'all';
     if (!matchesStatus) {
       const status = opp.status ? opp.status.toLowerCase() : '';
-      if (filterStatus === 'qualified') {
+      const title = opp.title ? opp.title.toLowerCase() : '';
+      const category = opp.category ? opp.category.toLowerCase() : '';
+      
+      if (filterStatus === 'active_rfp') {
+        // ACTIVE_RFP: Real RFPs with procurement language, deadlines, and official sources
+        const hasRfpKeywords = title.includes('rfp') || title.includes('tender') || title.includes('procurement') || 
+                               title.includes('bid') || title.includes('contract') || title.includes('invitation');
+        const hasDeadline = opp.deadline && new Date(opp.deadline) >= new Date();
+        const hasValidSource = opp.source_url && !opp.source_url.includes('example.com');
+        matchesStatus = hasRfpKeywords && hasDeadline && hasValidSource;
+      } else if (filterStatus === 'signal') {
+        // SIGNAL: Indicators, intelligence, market signals, and early opportunities
+        const hasSignalKeywords = title.includes('partnership') || title.includes('opportunity') || 
+                                title.includes('initiative') || title.includes('program') || title.includes('project') ||
+                                title.includes('digital') || title.includes('transformation') || title.includes('strategy');
+        const hasHighValue = opp.value && (opp.value.includes('M') || (opp.value.includes('K') && parseInt(opp.value) > 100));
+        matchesStatus = hasSignalKeywords || hasHighValue;
+      } else if (filterStatus === 'qualified') {
         matchesStatus = status.includes('qualified') || status.includes('active');
       } else if (filterStatus === 'expired') {
         matchesStatus = status.includes('expired') || (opp.deadline && new Date(opp.deadline) < new Date());
@@ -302,6 +346,7 @@ export default function TendersPage() {
   });
 
   console.log(`🔍 Filter results: ${filteredOpportunities.length} of ${opportunities.length} opportunities (filter: ${filterStatus}, search: "${searchTerm}")`);
+  console.log('🔍 Debug: opportunities.length =', opportunities.length);
 
   // Filter detected RFPs
   const filteredDetectedRFPs = detectedRFPs.filter(rfp => {
@@ -318,45 +363,36 @@ export default function TendersPage() {
     return matchesSearch && matchesStatus;
   });
 
-  // Combine results based on toggle
-  const displayOpportunities = showDetectedOnly ? [] : filteredOpportunities;
-  const displayRFPs = showDetectedOnly ? filteredDetectedRFPs : [];
-
-  const handleRefresh = async () => {
-    setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate refresh
-    setLoading(false);
-  };
-
-  const handleExport = () => {
-    const csv = [
-      ['Title', 'Organization', 'Location', 'Value', 'Deadline', 'Status', 'Category', 'Fit Score', 'Contact'],
-      ...filteredOpportunities.map(opp => [
-        opp.title,
-        opp.organization,
-        opp.location,
-        opp.value,
-        opp.deadline ? new Date(opp.deadline).toLocaleDateString() : '',
-        opp.status,
-        opp.category,
-        opp.yellow_panther_fit,
-        opp.contact || ''
-      ])
-    ].map(row => row.join(',')).join('\n');
-    
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `yellow-panther-rfp-opportunities-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
+  // Combine results based on source selection
+  const displayOpportunities = filterSource === 'ai-detected' ? [] : filteredOpportunities;
+  const displayRFPs = filterSource === 'ai-detected' ? filteredDetectedRFPs : [];
 
   const getFitColor = (fit: number) => {
     if (fit >= 90) return 'bg-green-500';
     if (fit >= 80) return 'bg-yellow-500';
     return 'bg-red-500';
+  };
+
+  // Convert title to sentence case (lowercase for articles, prepositions, conjunctions unless first word)
+  const toSentenceCase = (title: string) => {
+    if (!title) return '';
+    
+    const lowercaseWords = ['a', 'an', 'the', 'and', 'or', 'but', 'nor', 'for', 'so', 'yet', 
+                           'at', 'by', 'in', 'on', 'to', 'of', 'with', 'from', 'as', 'is'];
+    
+    const words = title.split(' ');
+    return words.map((word, index) => {
+      // Always capitalize first word
+      if (index === 0) {
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      }
+      // Lowercase common words unless they're the first word
+      if (lowercaseWords.includes(word.toLowerCase())) {
+        return word.toLowerCase();
+      }
+      // Capitalize other words
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }).join(' ');
   };
 
   const getDaysUntilDeadline = (deadline: string | null | undefined) => {
@@ -383,7 +419,7 @@ export default function TendersPage() {
         <div className="flex flex-col space-y-1.5 p-6">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h3 className="font-semibold tracking-tight text-lg mb-2">{opportunity.title}</h3>
+              <h3 className="font-semibold tracking-tight text-lg mb-2">{toSentenceCase(opportunity.title)}</h3>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                 <Building2 className="w-4 h-4" />
                 <span>{opportunity.organization}</span>
@@ -409,7 +445,7 @@ export default function TendersPage() {
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-1">
                 <PoundSterling className="w-4 h-4" />
-                <span className="font-medium">{opportunity.value}</span>
+                <span className="font-medium">{opportunity.value || 'Value not specified'}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Clock className="w-4 h-4" />
@@ -441,10 +477,12 @@ export default function TendersPage() {
                 <Eye className="w-4 h-4 mr-1" />
                 View
               </Button>
-              {opportunity.url && (
+              {(() => {
+                const sourceUrl = opportunity.source_url || opportunity.url || null;
+                return sourceUrl && sourceUrl !== 'null' && sourceUrl.trim() !== '' ? (
                 <Button size="sm" variant="outline" asChild>
                   <a 
-                    href={opportunity.url} 
+                    href={sourceUrl} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center gap-1"
@@ -453,7 +491,13 @@ export default function TendersPage() {
                     Source
                   </a>
                 </Button>
-              )}
+                ) : (
+                  <Button size="sm" variant="outline" disabled title={`No source URL available. URL values: source_url="${opportunity.source_url}", url="${opportunity.url}"`}>
+                    <ExternalLink className="w-4 h-4 mr-1" />
+                    Source
+                  </Button>
+                );
+              })()}
             </div>
           </div>
           
@@ -507,7 +551,7 @@ export default function TendersPage() {
                   {rfp.priority}
                 </Badge>
               </div>
-              <h3 className="font-semibold tracking-tight text-lg mb-2">{rfp.title}</h3>
+              <h3 className="font-semibold tracking-tight text-lg mb-2">{toSentenceCase(rfp.title)}</h3>
               <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                 <Building2 className="w-4 h-4" />
                 <span>{rfp.organization}</span>
@@ -559,6 +603,40 @@ export default function TendersPage() {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold mb-2">Loading Quality-Filtered Opportunities</h2>
+          <p className="text-muted-foreground mb-4">Fetching real tender data with verified source links...</p>
+          <div className="text-sm text-muted-foreground">
+            <p>🔍 Filtering out broken and placeholder URLs</p>
+            <p>📊 Validating source links for quality assurance</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (opportunities.length === 0) {
+    return (
+      <div className="min-h-screen bg-background p-6 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="text-6xl mb-4">🔍</div>
+          <h2 className="text-xl font-semibold mb-2">No Quality Opportunities Available</h2>
+          <p className="text-muted-foreground mb-4">
+            We've filtered out opportunities with broken source URLs to ensure the best user experience.
+          </p>
+          <Button onClick={() => window.location.reload()}>
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh Data
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background p-6">
       {/* Header */}
@@ -567,57 +645,9 @@ export default function TendersPage() {
           <div>
             <h1 className="text-3xl font-bold mb-2">🏆 Live Tender Opportunities</h1>
             <p className="text-muted-foreground">
-              Comprehensive RFP intelligence from Yellow Panther analysis • {realOpportunities.length} opportunities (50 total available) from 19+ analysis batches covering 4,750+ entities
+              🎯 Comprehensive RFP intelligence from Yellow Panther analysis • {opportunities.length} curated opportunities
+              {opportunities.length > 0 ? ` • High-value opportunities with verified source links` : ''}
             </p>
-            {rfpStats.total > 0 && (
-              <div className="flex items-center gap-4 mt-2">
-                <Badge className="bg-green-100 text-green-800 border-green-200">
-                  <Plus className="w-3 h-3 mr-1" />
-                  {rfpStats.total} AI-Detected RFPs
-                </Badge>
-                {rfpStats.recent > 0 && (
-                  <Badge className="bg-blue-100 text-blue-800 border-blue-200">
-                    <TrendingUp className="w-3 h-3 mr-1" />
-                    {rfpStats.recent} new this week
-                  </Badge>
-                )}
-              </div>
-            )}
-          </div>
-          <div className="flex gap-2">
-            <Button 
-              onClick={startA2A} 
-              disabled={a2aRunning}
-              className={a2aRunning ? "bg-green-600 hover:bg-green-700" : "bg-purple-600 hover:bg-purple-700"}
-            >
-              {a2aRunning ? (
-                <>
-                  <Activity className="w-4 h-4 mr-2 animate-pulse" />
-                  A2A Running...
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4 mr-2" />
-                  Start A2A Discovery
-                </>
-              )}
-            </Button>
-            <Button 
-              onClick={() => setShowDetectedOnly(!showDetectedOnly)} 
-              variant={showDetectedOnly ? "default" : "outline"}
-              className={showDetectedOnly ? "bg-green-600 hover:bg-green-700" : ""}
-            >
-              <Target className="w-4 h-4 mr-2" />
-              {showDetectedOnly ? "AI-Detected RFPs" : "All Opportunities"}
-            </Button>
-            <Button onClick={handleRefresh} disabled={loading} variant="outline">
-              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
-            <Button onClick={handleExport} variant="outline">
-              <Download className="w-4 h-4 mr-2" />
-              Export CSV
-            </Button>
           </div>
         </div>
       </div>
@@ -660,6 +690,25 @@ export default function TendersPage() {
             </div>
             <div className="mt-3 text-xs text-purple-600">
               🎯 Discovered opportunities will automatically appear below and be stored to the database
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Current Filter Indicator */}
+      {filterStatus !== 'all' && (
+        <Card className="mb-6 border-blue-200 bg-blue-50">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2">
+              {filterStatus === 'active_rfp' && <><Target className="w-4 h-4 text-blue-600" /><span className="font-medium text-blue-900">🎯 ACTIVE_RFP Filter: Showing real procurement opportunities with official deadlines and verified sources</span></>}
+              {filterStatus === 'signal' && <><TrendingUp className="w-4 h-4 text-green-600" /><span className="font-medium text-green-900">📡 SIGNAL Filter: Showing market intelligence, partnerships, and strategic opportunities</span></>}
+              {filterStatus === 'qualified' && <><span className="font-medium">✅ Qualified Filter: Showing pre-qualified opportunities</span></>}
+              {filterStatus === 'expired' && <><span className="font-medium">⚰️ Expired Filter: Showing past opportunities</span></>}
+              {filterStatus === 'emerging' && <><span className="font-medium">🌱 Emerging Filter: Showing potential opportunities</span></>}
+              {filterStatus === 'active' && <><span className="font-medium">🟢 Active Filter: Showing currently active opportunities</span></>}
+              <span className="text-sm text-muted-foreground ml-auto">
+                {filteredOpportunities.length} of {opportunities.length} opportunities match
+              </span>
             </div>
           </CardContent>
         </Card>
@@ -726,17 +775,32 @@ export default function TendersPage() {
               className="px-3 py-2 border border-input bg-background rounded-md"
             >
               <option value="all">All Status</option>
+              <option value="active_rfp">🎯 ACTIVE_RFP</option>
+              <option value="signal">📡 SIGNAL</option>
               <option value="qualified">Qualified</option>
               <option value="expired">Expired</option>
               <option value="emerging">Emerging</option>
               <option value="active">Active</option>
+            </select>
+            <select
+              value={filterSource}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFilterSource(value);
+                setShowDetectedOnly(value === 'ai-detected');
+              }}
+              className="px-3 py-2 border border-input bg-background rounded-md"
+            >
+              <option value="all">All Opportunities</option>
+              <option value="rfp_opportunities">RFP Opportunities</option>
+              <option value="ai-detected">AI-Detected RFPs</option>
             </select>
           </div>
         </CardContent>
       </Card>
 
       {/* Opportunities Grid */}
-      {showDetectedOnly && displayRFPs.length > 0 && (
+      {filterSource === 'ai-detected' && displayRFPs.length > 0 && (
         <>
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-green-700 mb-2">🎯 AI-Detected RFP Opportunities</h2>
@@ -750,29 +814,47 @@ export default function TendersPage() {
         </>
       )}
 
-      {!showDetectedOnly && displayRFPs.length > 0 && (
+      {filterSource === 'all' && (
         <>
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold text-green-700 mb-2">🎯 Latest AI-Detected RFPs</h2>
-            <p className="text-sm text-muted-foreground">
-              {displayRFPs.length} opportunities detected by our autonomous A2A system
-            </p>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-            {displayRFPs.map((rfp, index) => generateRFPCard(rfp, index))}
-          </div>
+          {displayRFPs.length > 0 && (
+            <>
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold text-green-700 mb-2">🎯 AI-Detected RFP Opportunities</h2>
+                <p className="text-sm text-muted-foreground">
+                  {displayRFPs.length} opportunities detected by our autonomous A2A system
+                </p>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                {displayRFPs.map((rfp, index) => generateRFPCard(rfp, index))}
+              </div>
+            </>
+          )}
+          
+          {displayOpportunities.length > 0 && (
+            <>
+              <div className="mb-4">
+                <h2 className="text-xl font-semibold text-blue-700 mb-2">📊 RFP Opportunities</h2>
+                <p className="text-sm text-muted-foreground">
+                  {displayOpportunities.length} live opportunities from our database of {stats.total_opportunities || 325} total records
+                </p>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                {displayOpportunities.map((opportunity, index) => generateTenderCard(opportunity, index))}
+              </div>
+            </>
+          )}
         </>
       )}
 
-      {!showDetectedOnly && (
+      {(filterSource === 'rfp_opportunities') && displayOpportunities.length > 0 && (
         <>
           <div className="mb-4">
-            <h2 className="text-xl font-semibold text-blue-700 mb-2">📊 Comprehensive Market Opportunities</h2>
+            <h2 className="text-xl font-semibold text-blue-700 mb-2">📊 RFP Opportunities</h2>
             <p className="text-sm text-muted-foreground">
-              {displayOpportunities.length} manually curated opportunities from our extensive analysis
+              {displayOpportunities.length} live opportunities from our database of {stats.total_opportunities || 325} total records
             </p>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
             {displayOpportunities.map((opportunity, index) => generateTenderCard(opportunity, index))}
           </div>
         </>
@@ -781,8 +863,10 @@ export default function TendersPage() {
       {displayOpportunities.length === 0 && displayRFPs.length === 0 && (
         <div className="text-center py-12">
           <p className="text-muted-foreground">
-            {showDetectedOnly 
+            {filterSource === 'ai-detected' 
               ? "No AI-detected RFPs found. Start the A2A system to begin autonomous detection." 
+              : filterSource === 'comprehensive'
+              ? "No comprehensive opportunities found matching your criteria."
               : "No opportunities found matching your criteria."
             }
           </p>

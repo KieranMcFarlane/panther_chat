@@ -7,6 +7,8 @@ import { ExternalLink, Mail, Linkedin, ArrowRight, FileText, Target } from "luci
 import { Entity, Connection } from "@/lib/neo4j"
 import { EntityBadge } from "@/components/badge/EntityBadge"
 import { useRouter } from "next/navigation"
+import { prefetchEntity } from "@/lib/swr-config"
+import { useEffect } from "react"
 
 interface EntityCardProps {
   entity: Entity
@@ -18,7 +20,19 @@ interface EntityCardProps {
 
 export function EntityCard({ entity, similarity, connections, rank, onEmailEntity }: EntityCardProps) {
   const router = useRouter()
-  
+
+  // Prefetch entity detail data when card mounts
+  useEffect(() => {
+    if (entity?.neo4j_id) {
+      // Add small delay to avoid thundering herd
+      const timer = setTimeout(() => {
+        prefetchEntity(entity.neo4j_id.toString())
+      }, Math.random() * 500) // Stagger prefetches 0-500ms
+
+      return () => clearTimeout(timer)
+    }
+  }, [entity?.neo4j_id])
+
   const getSimilarityColor = (score: number) => {
     if (score >= 0.9) return "bg-green-500"
     if (score >= 0.8) return "bg-blue-500"

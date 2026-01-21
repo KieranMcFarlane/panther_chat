@@ -11,13 +11,17 @@ set -euo pipefail
 
 BASE_DIR="/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app"
 LOG_DIR="$BASE_DIR/logs"
+# Accept RUN_DIR as first parameter, or default to LOG_DIR for backward compatibility
+RUN_DIR="${1:-$LOG_DIR}"
 STAMP=$(date +"%Y%m%d_%H%M%S")
-MASTER_JSON="$LOG_DIR/rfp_master_report_${STAMP}.json"
-MASTER_MD="$LOG_DIR/rfp_master_summary_${STAMP}.md"
+MASTER_JSON="$RUN_DIR/rfp_master_report_${STAMP}.json"
+MASTER_MD="$RUN_DIR/rfp_master_summary_${STAMP}.md"
 
 mkdir -p "$LOG_DIR"
+mkdir -p "$RUN_DIR"
 
 echo "🧩 Aggregating batch results into master report..." | tee -a "$LOG_DIR/test-cron.log"
+echo "📁 Using run directory: $RUN_DIR" | tee -a "$LOG_DIR/test-cron.log"
 
 # --- Load .env (for keys) ---
 if [ -f "$BASE_DIR/.env" ]; then
@@ -37,7 +41,45 @@ export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-https://api.z.ai/api/anthropic}
 
 CLAUDE_BIN="$(command -v claude || echo "$HOME/.nvm/versions/node/v20.18.3/bin/claude")"
 
-# --- Merge all rfp_results_batch*.json files ---
+# --- Determine MCP config path (prefer runtime, fallback to regular) ---
+MCP_CONFIG="${BASE_DIR}/mcp-config-runtime.json"
+if [ ! -f "$MCP_CONFIG" ]; then
+  MCP_CONFIG="${BASE_DIR}/mcp-config.json"
+fi
+
+# --- Merge all rfp_results_batch*_clean.json files (only clean/valid results) ---
+# Find all clean result files in LOG_DIR (where run-rfp-monitor.sh writes them), sorted by modification time (newest first)
+ALL_CLEAN_FILES=($(ls -t "$LOG_DIR"/rfp_results_batch*_clean.json 2>/dev/null || true))
+
+if [ ${#ALL_CLEAN_FILES[@]} -eq 0 ]; then
+  echo "❌ No clean result files found in $LOG_DIR" | tee -a "$LOG_DIR/test-cron.log"
+  exit 1
+fi
+
+# Validate JSON files and build list of valid ones
+CLEAN_FILES=()
+INVALID_COUNT=0
+for file in "${ALL_CLEAN_FILES[@]}"; do
+  if jq empty "$file" 2>/dev/null; then
+    CLEAN_FILES+=("$file")
+  else
+    ((INVALID_COUNT++)) || true
+    echo "⚠️  Skipping invalid JSON: $(basename "$file")" | tee -a "$LOG_DIR/test-cron.log"
+  fi
+done
+
+if [ ${#CLEAN_FILES[@]} -eq 0 ]; then
+  echo "❌ No valid clean result files found after validation" | tee -a "$LOG_DIR/test-cron.log"
+  exit 1
+fi
+
+if [ $INVALID_COUNT -gt 0 ]; then
+  echo "⚠️  Skipped $INVALID_COUNT invalid file(s)" | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+echo "📁 Found ${#CLEAN_FILES[@]} valid clean result file(s) to aggregate" | tee -a "$LOG_DIR/test-cron.log"
+
+# Aggregate only valid clean files
 jq -s '
   {
     total_batches: length,
@@ -45,18 +87,19 @@ jq -s '
     entities_checked: (map(.entities_checked // 0) | add),
     all_highlights: (map(.highlights // []) | add)
   }
-' "$LOG_DIR"/rfp_results_batch*.json > "$MASTER_JSON"
+' "${CLEAN_FILES[@]}" > "$MASTER_JSON"
 
-TOTAL_RFPS=$(jq '.total_rfps_detected' "$MASTER_JSON")
-ENTITIES_CHECKED=$(jq '.entities_checked' "$MASTER_JSON")
+TOTAL_RFPS=$(jq -r '.total_rfps_detected' "$MASTER_JSON")
+ENTITIES_CHECKED=$(jq -r '.entities_checked' "$MASTER_JSON")
+TOTAL_BATCHES=$(jq -r '.total_batches' "$MASTER_JSON")
 
-echo "📊 Aggregated $TOTAL_RFPS RFPs across $ENTITIES_CHECKED entities." | tee -a "$LOG_DIR/test-cron.log"
+echo "📊 Aggregated $TOTAL_RFPS RFPs across $ENTITIES_CHECKED entities from $TOTAL_BATCHES batches." | tee -a "$LOG_DIR/test-cron.log"
 
 # --- Generate Markdown summary via Claude ---
 echo "🧠 Generating master summary..." | tee -a "$LOG_DIR/test-cron.log"
 if ! gtimeout 10m "$CLAUDE_BIN" -p "
-You are Yellow Panther’s data analyst.
-Summarize ./logs/rfp_master_report_${STAMP}.json in Markdown for the executive team.
+You are Yellow Panther's data analyst.
+Summarize $MASTER_JSON in Markdown for the executive team.
 Include:
 
 - Total RFPs detected and total entities checked
@@ -64,9 +107,9 @@ Include:
 - Key sports sectors and regions (count and share)
 - Average confidence if available
 - Weekly trends and recommended focus areas
-- Mention that data comes from all 15 batch scans
+- Mention that data comes from ${TOTAL_BATCHES} batch scans
 " \
---mcp-config "$BASE_DIR/mcp-config.json" \
+--mcp-config "$MCP_CONFIG" \
 --allowedTools "Read,Write" \
 --permission-mode bypassPermissions \
 --output-format text > "$MASTER_MD" 2>> "$LOG_DIR/test-cron.log"; then
@@ -121,11 +164,13 @@ else
   echo "⚠️  TEAMS_WEBHOOK_URL missing — skipping Teams summary." | tee -a "$LOG_DIR/test-cron.log"
 fi
 
-# --- Archive old logs ---
+# --- Archive old logs (archive files from this run directory) ---
 echo "📦 Archiving logs..." | tee -a "$LOG_DIR/test-cron.log"
-tar -czf "$LOG_DIR/archive_${STAMP}.tar.gz" "$LOG_DIR"/rfp_results_batch*.json "$LOG_DIR"/rfp_summary_batch*.md "$MASTER_JSON" "$MASTER_MD" >/dev/null 2>&1
-find "$LOG_DIR" -type f -mtime +7 -name "rfp_results_batch*.json" -delete
-find "$LOG_DIR" -type f -mtime +7 -name "rfp_summary_batch*.md" -delete
-find "$LOG_DIR" -type f -mtime +30 -name "*.log" -delete
+tar -czf "$RUN_DIR/archive_${STAMP}.tar.gz" "${CLEAN_FILES[@]}" "$RUN_DIR"/rfp_summary_batch*.md "$MASTER_JSON" "$MASTER_MD" >/dev/null 2>&1 || true
+# Cleanup old files in run directory (but keep the archive)
+find "$RUN_DIR" -type f -mtime +7 -name "rfp_results_batch*_clean.json" -delete
+find "$RUN_DIR" -type f -mtime +7 -name "rfp_summary_batch*.md" -delete
+find "$RUN_DIR" -type f -mtime +7 -name "*.log" ! -name "batch_summary.log" -delete
 
 echo "✅ Aggregation complete. Master report ready: $MASTER_JSON" | tee -a "$LOG_DIR/test-cron.log"
+echo "📁 All run files saved to: $RUN_DIR" | tee -a "$LOG_DIR/test-cron.log"

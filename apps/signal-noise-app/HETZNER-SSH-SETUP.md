@@ -130,3 +130,17 @@ cat ~/.ssh/id_ed25519.pub
 - [ ] Use web console OR add SSH key via dashboard
 - [ ] Test SSH connection: `ssh ubuntu@46.62.243.243`
 - [ ] Run deployment script
+
+
+
+
+
+
+
+
+
+
+
+
+
+

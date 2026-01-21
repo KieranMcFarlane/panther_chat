@@ -1,0 +1,22 @@
+📊 HIGH-PRIORITY DOSSIER TEST RESULTS - Mon  1 Dec 2025 10:33:18 GMT
+==================================================
+
+SUCCESS:126:Barbados Cricket Association:0:2
+SUCCESS:139:VC Nagano Tridents:0:1
+SUCCESS:283:New York Knicks:0:2
+SUCCESS:181:Baseball Federation of Germany (BFG):0:1
+SUCCESS:201:British Olympic Association (Team GB):0:2
+SUCCESS:184:Bundesliga:0:2
+SUCCESS:205:British Swimming:0:2
+SUCCESS:167:Berlin Six Day Race:0:1
+SUCCESS:127:Cofidis Women Team:0:2
+SUCCESS:182:Betting and Gaming Council of Zambia:0:22
+SUCCESS:284:Vicky Johnson:0:2
+SUCCESS:206:British Virgin Islands Volleyball Association:0:1
+SUCCESS:188:Rhein-Neckar Löwen:0:2
+SUCCESS:197:1. FC Köln:0:4
+SUCCESS:287:Vincent Kompany:0:1
+SUCCESS:291:Wael Al-Qadi:0:2
+SUCCESS:208:Tucson Roadrunners:0:2
+SUCCESS:210:Arsenal:0:1
+SUCCESS:214:Tottenham Hotspur:0:2

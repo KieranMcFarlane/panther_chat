@@ -297,8 +297,20 @@ export const MCP_SERVERS: MCPServerConfig[] = [
     env: {
       PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY || ''
     }
+  },
+  {
+    name: 'headless-verifier',
+    command: 'node',
+    args: ['mcp-headless-verifier-server.js'],
+    env: {
+      PUPPETEER_SKIP_DOWNLOAD: 'true',
+      ZAI_API_KEY: process.env.ZAI_API_KEY || ''
+    }
   }
 ];
 
 // Create singleton instance
 export const mcpBus = new MCPClientBus(MCP_SERVERS);
+
+// Initialize MCP bus on module import
+mcpBus.initialize().catch(console.error);

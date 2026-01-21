@@ -21,6 +21,7 @@ export interface BadgeComponentProps {
   entity: {
     id: string | number
     neo4j_id: string | number
+    badge_s3_url?: string
     labels: string[]
     properties: Record<string, any>
   }
@@ -38,4 +39,4 @@ export interface BadgeServiceConfig {
 }
 
 export type BadgeSize = 'sm' | 'md' | 'lg'
-export type BadgeSource = 'thesportsdb' | 'local' | 'custom' | 'fallback'
+export type BadgeSource = 'thesportsdb' | 'local' | 'custom' | 'fallback' | 's3' | 'generated'

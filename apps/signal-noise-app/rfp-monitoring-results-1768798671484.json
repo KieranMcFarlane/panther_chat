@@ -1,0 +1,47 @@
+{
+  "total_rfps_detected": 3,
+  "entities_checked": 10,
+  "highlights": [
+    {
+      "organization": "Premier League",
+      "src_link": "https://procurement.example.com/premier-league-rfp-1768798667417.pdf",
+      "summary_json": {
+        "title": "Premier League RFP: Technology Partnership and Digital Services",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://news.example.com/manchester-united/manchester-united-partnership-1768798650988",
+      "summary_json": {
+        "title": "Manchester United launches digital partnership program",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://news.example.com/bayern-munich/bayern-munich-partnership-1768798659202",
+      "summary_json": {
+        "title": "Bayern Munich launches digital partnership program",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.78,
+    "avg_fit_score": 96,
+    "top_opportunity": "Premier League"
+  }
+}

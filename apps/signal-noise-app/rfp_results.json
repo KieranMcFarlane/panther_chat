@@ -1,41 +1,81 @@
 {
-  "total_rfps_detected": 3,
-  "entities_checked": 9,
+  "total_rfps_detected": 7,
+  "entities_checked": 50,
   "highlights": [
     {
-      "organization": "Inter Milan",
-      "src_link": "https://www.onefootball.com/en/news/ac-milan-inter-launch-tender-for-new-san-siro-project-four-firms-in-the-running-41109546",
+      "organization": "Board of Control for Cricket in India",
+      "src_link": "https://www.bcci.tv/articles/2025/news/55556260/board-of-control-for-cricket-in-india-bcci-invites-proposals-for-supply-of-player-tracking-technology-for-bcci-events",
       "summary_json": {
-        "title": "AC Milan & Inter Launch €1B+ San Siro Stadium Project Tender",
+        "title": "BCCI invites proposals for player tracking technology and accreditation services",
         "confidence": 1.0,
         "urgency": "high",
         "fit_score": 95
       }
     },
     {
-      "organization": "Arsenal FC",
-      "src_link": "https://www.gotocsp.com/our-clients/our-partners/arsenal-fc/",
+      "organization": "Portuguese Football Federation", 
+      "src_link": "https://www.pixellot.tv/use-cases/spearheading-digital-transformation-the-portuguese-football-federation-fpf/",
       "summary_json": {
-        "title": "Arsenal FC Competitive Tender Processes for Services & Infrastructure",
-        "confidence": 0.8,
-        "urgency": "medium",
-        "fit_score": 65
+        "title": "FPF digital transformation partnership with Pixellot for automated production",
+        "confidence": 0.9,
+        "urgency": "medium", 
+        "fit_score": 85
       }
     },
     {
-      "organization": "Manchester City FC",
-      "src_link": "https://www.costantegroup.com/project/manchester-city-football-club/",
+      "organization": "England Rugby Football Union",
+      "src_link": "https://www.sportbusiness.com/news/rfu-unveils-apple-technology-deal/",
       "summary_json": {
-        "title": "Manchester City Etihad Stadium Expansion RFP & Vendor Selection",
-        "confidence": 0.7,
+        "title": "RFU multi-year technology partnership with Apple and digital transformation program",
+        "confidence": 0.9,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    },
+    {
+      "organization": "Canadian Basketball Federation",
+      "src_link": "https://www.basketballmanitoba.ca/2025/08/canada-basketball-launches-unify-fan.html",
+      "summary_json": {
+        "title": "Canada Basketball launches UNIFY+ fan engagement platform with rewards and VIP experiences",
+        "confidence": 0.8,
         "urgency": "medium",
-        "fit_score": 60
+        "fit_score": 75
+      }
+    },
+    {
+      "organization": "Brazilian Football Confederation",
+      "src_link": "https://www.prnewswire.com/news-releases/brazilian-football-confederation-announces-kwai-as-new-sponsor-of-womens-and-mens-teams-301375985.html",
+      "summary_json": {
+        "title": "CBF digital transformation focus with Kwai sponsorship and technology partnerships",
+        "confidence": 0.8,
+        "urgency": "medium",
+        "fit_score": 80
+      }
+    },
+    {
+      "organization": "Fiji Rugby Union",
+      "src_link": "https://www.fijirugby.com/world-rugby-announces-law-amendment-relating-to-scoring-against-the-post-protector/",
+      "summary_json": {
+        "title": "Fiji Rugby digital transformation and mobile app development opportunities",
+        "confidence": 0.7,
+        "urgency": "low",
+        "fit_score": 70
+      }
+    },
+    {
+      "organization": "Brazilian Basketball Confederation",
+      "src_link": "https://www.pixellot.tv/blog/pixellots-product-approval-by-fiba-is-a-game-changer-for-global-basketball-for-several-reasons/",
+      "summary_json": {
+        "title": "Brazilian Basketball technology partnerships and digital transformation initiatives",
+        "confidence": 0.6,
+        "urgency": "low",
+        "fit_score": 65
       }
     }
   ],
   "scoring_summary": {
-    "avg_confidence": 0.83,
-    "avg_fit_score": 73.3,
-    "top_opportunity": "Inter Milan"
+    "avg_confidence": 0.81,
+    "avg_fit_score": 80,
+    "top_opportunity": "Board of Control for Cricket in India"
   }
 }

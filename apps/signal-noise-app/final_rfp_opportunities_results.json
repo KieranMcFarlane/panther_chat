@@ -1,0 +1,61 @@
+{
+  "total_rfps_detected": 186,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "PSG Handball",
+      "src_link": "https://www.psg.fr/en/content/paris-saint-germain-handball-welcomes-blue-soft-as-its-new-official-supporter",
+      "summary_json": {
+        "title": "PSG Handball digital transformation partnership with Blue Soft",
+        "confidence": 0.95,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://www.sas.com/en_us/customers/newsport-lisboa-e-benfica-eng.html",
+      "summary_json": {
+        "title": "Benfica digital transformation with new website and mobile app",
+        "confidence": 0.95,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    },
+    {
+      "organization": "Baltimore Ravens",
+      "src_link": "https://imaginear.com/press-release/imaginear-otcqb-ipnff-signs-first-nfl-team-baltimore-ravens-two-year-agreement",
+      "summary_json": {
+        "title": "Baltimore Ravens AR mobile app integration with ImagineAR",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    },
+    {
+      "organization": "Bayer Leverkusen",
+      "src_link": "https://www.momentslab.com/blog/bayer-leverkusen",
+      "summary_json": {
+        "title": "Bayer Leverkusen Moments Lab mobile app for fan engagement",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    },
+    {
+      "organization": "Bayern Munich Women",
+      "src_link": "https://fcbayern.com/en/news/2022/08/cooperation-until-2025-fc-bayern-and-sap-extend-partnership",
+      "summary_json": {
+        "title": "Bayern Munich Women digital transformation and SAP partnership",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.85,
+    "avg_fit_score": 85,
+    "top_opportunity": "PSG Handball"
+  }
+}

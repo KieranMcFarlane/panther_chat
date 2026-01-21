@@ -1,0 +1,144 @@
+{
+  "total_entities_processed": 10,
+  "total_rfps_detected": 0,
+  "total_signals_detected": 0,
+  "total_excluded": 0,
+  "total_errors": 10,
+  "entities": [
+    {
+      "entity_name": "Olmedo",
+      "searches": {},
+      "urls": [],
+      "scores": {
+        "confidence": 0,
+        "fitScore": 0,
+        "signals": []
+      },
+      "tag": "ERROR",
+      "processed_at": "2025-11-10T13:26:40.337Z",
+      "error": "Cannot read properties of undefined (reading 'digital_only')"
+    },
+    {
+      "entity_name": "Aucas",
+      "searches": {},
+      "urls": [],
+      "scores": {
+        "confidence": 0,
+        "fitScore": 0,
+        "signals": []
+      },
+      "tag": "ERROR",
+      "processed_at": "2025-11-10T13:26:43.197Z",
+      "error": "Cannot read properties of undefined (reading 'digital_only')"
+    },
+    {
+      "entity_name": "El Nacional",
+      "searches": {},
+      "urls": [],
+      "scores": {
+        "confidence": 0,
+        "fitScore": 0,
+        "signals": []
+      },
+      "tag": "ERROR",
+      "processed_at": "2025-11-10T13:26:45.824Z",
+      "error": "Cannot read properties of undefined (reading 'digital_only')"
+    },
+    {
+      "entity_name": "Deportivo Cuenca",
+      "searches": {},
+      "urls": [],
+      "scores": {
+        "confidence": 0,
+        "fitScore": 0,
+        "signals": []
+      },
+      "tag": "ERROR",
+      "processed_at": "2025-11-10T13:26:48.158Z",
+      "error": "Cannot read properties of undefined (reading 'digital_only')"
+    },
+    {
+      "entity_name": "Guaraní",
+      "searches": {},
+      "urls": [],
+      "scores": {
+        "confidence": 0,
+        "fitScore": 0,
+        "signals": []
+      },
+      "tag": "ERROR",
+      "processed_at": "2025-11-10T13:26:50.494Z",
+      "error": "Cannot read properties of undefined (reading 'digital_only')"
+    },
+    {
+      "entity_name": "Club Aurora",
+      "searches": {},
+      "urls": [],
+      "scores": {
+        "confidence": 0,
+        "fitScore": 0,
+        "signals": []
+      },
+      "tag": "ERROR",
+      "processed_at": "2025-11-10T13:26:52.836Z",
+      "error": "Cannot read properties of undefined (reading 'digital_only')"
+    },
+    {
+      "entity_name": "Bolívar",
+      "searches": {},
+      "urls": [],
+      "scores": {
+        "confidence": 0,
+        "fitScore": 0,
+        "signals": []
+      },
+      "tag": "ERROR",
+      "processed_at": "2025-11-10T13:26:55.189Z",
+      "error": "Cannot read properties of undefined (reading 'digital_only')"
+    },
+    {
+      "entity_name": "The Strongest",
+      "searches": {},
+      "urls": [],
+      "scores": {
+        "confidence": 0,
+        "fitScore": 0,
+        "signals": []
+      },
+      "tag": "ERROR",
+      "processed_at": "2025-11-10T13:26:57.519Z",
+      "error": "Cannot read properties of undefined (reading 'digital_only')"
+    },
+    {
+      "entity_name": "Jorge Wilstermann",
+      "searches": {},
+      "urls": [],
+      "scores": {
+        "confidence": 0,
+        "fitScore": 0,
+        "signals": []
+      },
+      "tag": "ERROR",
+      "processed_at": "2025-11-10T13:26:59.879Z",
+      "error": "Cannot read properties of undefined (reading 'digital_only')"
+    },
+    {
+      "entity_name": "Blooming",
+      "searches": {},
+      "urls": [],
+      "scores": {
+        "confidence": 0,
+        "fitScore": 0,
+        "signals": []
+      },
+      "tag": "ERROR",
+      "processed_at": "2025-11-10T13:27:02.213Z",
+      "error": "Cannot read properties of undefined (reading 'digital_only')"
+    }
+  ],
+  "processing_summary": {
+    "digital_opportunities_found": 0,
+    "rfp_opportunities_found": 0,
+    "partnership_opportunities_found": 0
+  }
+}

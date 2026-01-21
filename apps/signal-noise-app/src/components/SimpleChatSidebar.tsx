@@ -14,7 +14,7 @@ export function SimpleChatSidebar({
   className
 }: SimpleChatSidebarProps) {
   return (
-    <EnhancedSimpleChatSidebar
+    <SimpleStreamingChat
       userId={userId}
       context={context}
       className={className}

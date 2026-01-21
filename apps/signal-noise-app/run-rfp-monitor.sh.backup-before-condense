@@ -1,0 +1,1023 @@
+#!/bin/bash
+set -euo pipefail
+
+# ==========================================================
+# 🟡 Yellow Panther | Daily RFP Detection System (v5)
+# ----------------------------------------------------------
+# Batch-aware version with SKIP/LIMIT for scalable iteration
+# through 4k+ entities, Resend + Teams notifications, and
+# Supabase persistence.
+# ==========================================================
+
+# --- BASIC PATHS ---
+BASE_DIR="/Users/kieranmcfarlane/Downloads/panther_chat/apps/signal-noise-app"
+LOG_DIR="$BASE_DIR/logs"
+# Accept RUN_DIR as second parameter, or default to LOG_DIR for backward compatibility
+RUN_DIR="${2:-$LOG_DIR}"
+STAMP=$(date +"%Y%m%d_%H%M%S")
+mkdir -p "$LOG_DIR"
+mkdir -p "$LOG_DIR"
+
+# Log all Claude MCP interactions for transparency
+export CLAUDE_LOG_LEVEL=debug
+export CLAUDE_LOG_FILE="$LOG_DIR/claude_mcp_trace_${STAMP}.log"
+export MCP_LOG_LEVEL=debug
+
+# Enable detailed MCP server logging
+export NODE_OPTIONS="--trace-warnings"
+
+# --- LOAD ENV (.env or local .txt fallback) ---
+if [ -f "$BASE_DIR/.env" ]; then
+  echo "📦 Loading environment variables from .env" | tee -a "$LOG_DIR/test-cron.log"
+  while IFS='=' read -r key value; do
+    if [[ -z "$key" || "$key" =~ ^# ]]; then continue; fi
+    value="${value%\"}"
+    value="${value#\"}"
+    export "$key"="$value"
+  done < "$BASE_DIR/.env"
+else
+  echo "⚠️  .env file not found — falling back to local key files" | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+# --- FALLBACK LOCAL KEYS ---
+export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-https://api.z.ai/api/anthropic}"
+export ANTHROPIC_AUTH_TOKEN="${ANTHROPIC_AUTH_TOKEN:-$(cat $BASE_DIR/zai_key.txt 2>/dev/null || echo '')}"
+export RESEND_API_KEY="${RESEND_API_KEY:-$(cat $BASE_DIR/resend_key.txt 2>/dev/null || echo '')}"
+export TEAMS_WEBHOOK_URL="${TEAMS_WEBHOOK_URL:-$(cat $BASE_DIR/teams_webhook.txt 2>/dev/null || echo '')}"
+
+# --- LOG HEADER ---
+{
+  echo "=== RFP RUN @ $(date -u) (UTC) ==="
+  echo "whoami: $(whoami)"
+  echo "PATH: $PATH"
+  echo "CLAUDE_AUTH: ${ANTHROPIC_AUTH_TOKEN:0:8}****"
+  echo "RESEND_KEY: ${RESEND_API_KEY:0:6}****"
+  echo "TEAMS_WEBHOOK: ${TEAMS_WEBHOOK_URL:+set}"
+} >> "$LOG_DIR/test-cron.log" 2>&1
+
+# --- LOAD NVM & PATHS ---
+export NVM_DIR="$HOME/.nvm"
+source "$NVM_DIR/nvm.sh" >/dev/null 2>&1 || true
+export PATH="$HOME/.nvm/versions/node/v20.18.3/bin:/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin"
+
+CLAUDE_BIN="$(command -v claude || echo "$HOME/.nvm/versions/node/v20.18.3/bin/claude")"
+
+# --- BATCH MODE HANDLING ---
+MODE=${1:-batch1}
+DEBUG=${2:-false}
+BATCH_NUM=$(echo "$MODE" | grep -oE '[0-9]+')
+BATCH_NUM=${BATCH_NUM:-1}  # fallback if grep returns empty
+RANGE_START=$(( (BATCH_NUM - 1) * 300 ))
+RANGE_END=$(( RANGE_START + 299 ))
+
+# --- LOCK FILE (batch-specific to allow parallel execution) ---
+LOCK="/tmp/rfp-monitor-${MODE}.lock"
+LOCK_TIMEOUT_HOURS=${LOCK_TIMEOUT_HOURS:-3}  # Consider lock stale after 3 hours
+
+if [ -e "$LOCK" ]; then
+  # Check if lock file is stale (cross-platform stat command)
+  if [[ "$(uname)" == "Darwin" ]]; then
+    # macOS stat command
+    LOCK_MOD_TIME=$(stat -f %m "$LOCK" 2>/dev/null || echo "0")
+  else
+    # Linux stat command
+    LOCK_MOD_TIME=$(stat -c %Y "$LOCK" 2>/dev/null || echo "0")
+  fi
+  
+  if [ "$LOCK_MOD_TIME" != "0" ]; then
+    CURRENT_TIME=$(date +%s)
+    LOCK_AGE=$((CURRENT_TIME - LOCK_MOD_TIME))
+    LOCK_AGE_HOURS=$((LOCK_AGE / 3600))
+    LOCK_AGE_MINS=$(((LOCK_AGE % 3600) / 60))
+    
+    if [ "$LOCK_AGE_HOURS" -ge "$LOCK_TIMEOUT_HOURS" ]; then
+      echo "🧹 Stale lock file detected (${LOCK_AGE_HOURS}h ${LOCK_AGE_MINS}m old) — removing and continuing..." | tee -a "$LOG_DIR/test-cron.log"
+      rm -f "$LOCK"
+    else
+      echo "⚠️  Another RFP run for ${MODE} already in progress (lock ${LOCK_AGE_HOURS}h ${LOCK_AGE_MINS}m old) — skipping." | tee -a "$LOG_DIR/test-cron.log"
+      echo "   To force run, remove: $LOCK" | tee -a "$LOG_DIR/test-cron.log"
+      exit 0
+    fi
+  else
+    # Could not read lock file age - assume stale and remove
+    echo "⚠️  Could not determine lock file age — removing and continuing..." | tee -a "$LOG_DIR/test-cron.log"
+    rm -f "$LOCK"
+  fi
+fi
+
+trap 'rm -f "$LOCK" "$BASE_DIR/mcp-config-runtime.json"' EXIT
+: > "$LOCK"
+
+# --- NORMALIZE NEO4J USER VARIABLE BEFORE MCP CONFIG ---
+# Some .env files use NEO4J_USER, others use NEO4J_USERNAME - normalize to NEO4J_USERNAME
+if [[ -n "${NEO4J_USER:-}" && -z "${NEO4J_USERNAME:-}" ]]; then
+  export NEO4J_USERNAME="$NEO4J_USER"
+  echo "📝 Normalized NEO4J_USER → NEO4J_USERNAME" | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+# --- MCP CONFIG PATH ---
+# Create a temporary MCP config with expanded environment variables
+# Claude CLI doesn't expand ${VAR} syntax, so we need to do it ourselves
+MCP_TEMPLATE="$BASE_DIR/mcp-config.json"
+MCP_PATH="$BASE_DIR/mcp-config-runtime.json"
+
+# Expand environment variables in mcp-config.json
+if [ -f "$MCP_TEMPLATE" ]; then
+  # Use envsubst if available, otherwise use sed
+  if command -v envsubst >/dev/null 2>&1; then
+    envsubst < "$MCP_TEMPLATE" > "$MCP_PATH"
+  else
+    # Manual substitution for common variables
+    sed -e "s|\${NEO4J_URI}|${NEO4J_URI}|g" \
+        -e "s|\${NEO4J_USERNAME}|${NEO4J_USERNAME}|g" \
+        -e "s|\${NEO4J_PASSWORD}|${NEO4J_PASSWORD}|g" \
+        -e "s|\${NEO4J_DATABASE}|${NEO4J_DATABASE:-neo4j}|g" \
+        -e "s|\${AURA_INSTANCEID}|${AURA_INSTANCEID:-}|g" \
+        -e "s|\${AURA_INSTANCENAME}|${AURA_INSTANCENAME:-}|g" \
+        -e "s|\${BRIGHTDATA_API_TOKEN}|${BRIGHTDATA_API_TOKEN}|g" \
+        -e "s|\${SUPABASE_ACCESS_TOKEN}|${SUPABASE_ACCESS_TOKEN}|g" \
+        -e "s|\${PERPLEXITY_API_KEY}|${PERPLEXITY_API_KEY}|g" \
+        "$MCP_TEMPLATE" > "$MCP_PATH"
+  fi
+  echo "✅ Generated runtime MCP config with expanded variables" | tee -a "$LOG_DIR/test-cron.log"
+else
+  echo "⚠️  MCP template not found: $MCP_TEMPLATE" | tee -a "$LOG_DIR/test-cron.log"
+  MCP_PATH="$MCP_TEMPLATE"
+fi
+
+if [[ "$DEBUG" == "--debug" ]]; then
+  echo "🧩 DEBUG MODE ENABLED" | tee -a "$LOG_DIR/test-cron.log"
+  set -x  # enable bash trace
+fi
+
+echo "🧮 Running batch mode: ${MODE} (entities ${RANGE_START}-${RANGE_END})" | tee -a "$LOG_DIR/test-cron.log"
+
+# --- SEARCH MODE TOGGLE (Clustered vs Granular) ---
+#############################################
+# 🔍 RFP Search Mode
+# Options:
+#   SEARCH_MODE=clustered  → few wide BrightData + 1 Perplexity pass (fast)
+#   SEARCH_MODE=granular   → one BrightData query per entity + Perplexity scoring (deep)
+#############################################
+
+export SEARCH_MODE="${SEARCH_MODE:-granular}"
+echo "🧭 SEARCH_MODE=$SEARCH_MODE" | tee -a "$LOG_DIR/test-cron.log"
+
+
+if [[ "$SEARCH_MODE" == "granular" ]]; then
+  echo "⚙️ Running in GRANULAR mode — BrightData will query each entity individually." | tee -a "$LOG_DIR/test-cron.log"
+  export MAX_BRIGHTDATA_CALLS=300
+  export PERPLEXITY_SCORING="true"
+else
+  echo "⚙️ Running in CLUSTERED mode — grouped entity searches for efficiency." | tee -a "$LOG_DIR/test-cron.log"
+  export MAX_BRIGHTDATA_CALLS=5
+  export PERPLEXITY_SCORING="false"
+fi
+
+echo "🧭 SEARCH_MODE=$SEARCH_MODE | BrightData limit=$MAX_BRIGHTDATA_CALLS | Perplexity scoring=$PERPLEXITY_SCORING" | tee -a "$LOG_DIR/test-cron.log"
+echo ""
+
+# --- LOAD NEO4J ENV VARIABLES (from mcp-config.json) ---
+MCP_CFG="$BASE_DIR/mcp-config.json"
+if [ -f "$MCP_CFG" ]; then
+  # Extract values from JSON (may contain ${VAR} template strings)
+  NEO4J_URI_TEMPLATE=$(jq -r '.mcpServers["neo4j-mcp"].env.NEO4J_URI' "$MCP_CFG")
+  NEO4J_USERNAME_TEMPLATE=$(jq -r '.mcpServers["neo4j-mcp"].env.NEO4J_USERNAME' "$MCP_CFG")
+  NEO4J_PASSWORD_TEMPLATE=$(jq -r '.mcpServers["neo4j-mcp"].env.NEO4J_PASSWORD' "$MCP_CFG")
+  
+  # Expand template variables using eval (safe since we control the template)
+  # If template contains ${VAR}, expand it; otherwise use the template as-is
+  if [[ "$NEO4J_URI_TEMPLATE" == *"\${"* ]]; then
+    export NEO4J_URI=$(eval echo "$NEO4J_URI_TEMPLATE")
+  else
+    export NEO4J_URI="$NEO4J_URI_TEMPLATE"
+  fi
+  
+  if [[ "$NEO4J_USERNAME_TEMPLATE" == *"\${"* ]]; then
+    export NEO4J_USERNAME=$(eval echo "$NEO4J_USERNAME_TEMPLATE")
+    # If expansion failed (still contains ${} or empty), use already-normalized NEO4J_USERNAME
+    if [[ "$NEO4J_USERNAME" == *"\${"* || -z "$NEO4J_USERNAME" ]]; then
+      # Use the already-normalized value from .env (NEO4J_USER -> NEO4J_USERNAME)
+      export NEO4J_USERNAME="${NEO4J_USERNAME:-${NEO4J_USER:-}}"
+    fi
+  else
+    export NEO4J_USERNAME="$NEO4J_USERNAME_TEMPLATE"
+  fi
+  
+  if [[ "$NEO4J_PASSWORD_TEMPLATE" == *"\${"* ]]; then
+    export NEO4J_PASSWORD=$(eval echo "$NEO4J_PASSWORD_TEMPLATE")
+  else
+    export NEO4J_PASSWORD="$NEO4J_PASSWORD_TEMPLATE"
+  fi
+else
+  echo "⚠️  mcp-config.json not found — skipping Neo4j env setup." | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+# --- VALIDATE NEO4J VARIABLES ---
+if [[ -z "${NEO4J_URI:-}" || -z "${NEO4J_USERNAME:-}" || -z "${NEO4J_PASSWORD:-}" ]]; then
+  echo "⚠️  Missing one or more Neo4j credentials — check mcp-config.json" | tee -a "$LOG_DIR/test-cron.log"
+else
+  echo "✅ Neo4j credentials loaded from mcp-config.json" | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+# ==========================================================
+# 🌐 LOAD BRIGHTDATA ENV VARIABLES
+# ==========================================================
+if [ -f "$MCP_CFG" ]; then
+  export BRIGHTDATA_API_TOKEN=$(jq -r '.mcpServers["brightData"].env.API_TOKEN // empty' "$MCP_CFG" 2>/dev/null || echo "")
+  export BRIGHTDATA_PRO_MODE=$(jq -r '.mcpServers["brightData"].env.PRO_MODE // empty' "$MCP_CFG" 2>/dev/null || echo "")
+else
+  echo "⚠️  mcp-config.json not found — skipping BrightData env setup." | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+if [[ -z "${BRIGHTDATA_API_TOKEN:-}" ]]; then
+  echo "⚠️  Missing BrightData API token — BrightData MCP will not return live URLs." | tee -a "$LOG_DIR/test-cron.log"
+else
+  echo "✅ BrightData credentials loaded from mcp-config.json" | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+
+# ==========================================================
+# 💾 LOAD SUPABASE ENV VARIABLES
+# ==========================================================
+if [ -f "$MCP_CFG" ]; then
+  export SUPABASE_ACCESS_TOKEN=$(jq -r '.mcpServers["supabase"].env.SUPABASE_ACCESS_TOKEN // empty' "$MCP_CFG" 2>/dev/null || echo "")
+else
+  echo "⚠️  mcp-config.json not found — skipping Supabase env setup." | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+if [[ -z "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
+  echo "⚠️  Missing Supabase access token — Supabase MCP writes will fail." | tee -a "$LOG_DIR/test-cron.log"
+else
+  echo "✅ Supabase token loaded from mcp-config.json" | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+
+# ==========================================================
+# 🧠 LOAD PERPLEXITY ENV VARIABLES
+# ==========================================================
+if [ -f "$MCP_CFG" ]; then
+  export PERPLEXITY_API_KEY=$(jq -r '.mcpServers["perplexity-mcp"].env.PERPLEXITY_API_KEY // empty' "$MCP_CFG" 2>/dev/null || echo "")
+else
+  echo "⚠️  mcp-config.json not found — skipping Perplexity env setup." | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+if [[ -z "${PERPLEXITY_API_KEY:-}" ]]; then
+  echo "⚠️  Missing Perplexity API key — Perplexity MCP validation will be skipped." | tee -a "$LOG_DIR/test-cron.log"
+else
+  echo "✅ Perplexity key loaded from mcp-config.json" | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+
+# --- DEBUG: Check Neo4j Connection + Entity Fetch (randomized for verification) ---
+echo "🔍 Testing Neo4j query before Claude run..." | tee -a "$LOG_DIR/test-cron.log"
+
+if command -v cypher-shell >/dev/null 2>&1; then
+  # Random query to verify each run is unique - shows different entities each time
+  TEST_QUERY="MATCH (e:Entity) RETURN e.name, e.type ORDER BY rand() LIMIT 10;"
+  echo "Running randomized test query: $TEST_QUERY" >> "$LOG_DIR/test-cron.log"
+  echo "🎲 Random sample entities (verify each run shows different results):" | tee -a "$LOG_DIR/test-cron.log"
+  cypher-shell -a "$NEO4J_URI" -u "$NEO4J_USERNAME" -p "$NEO4J_PASSWORD" "$TEST_QUERY" >> "$LOG_DIR/test-cron.log" 2>&1 || \
+    echo "⚠️  Neo4j connection failed or no results." | tee -a "$LOG_DIR/test-cron.log"
+else
+  echo "⚠️  cypher-shell not installed or not in PATH — skipping direct Neo4j test." | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+# --- Helper: ASCII Progress Bar ---
+print_progress_bar() {
+  local current=$1
+  local total=$2
+  local width=60
+  local percentage=$((current * 100 / total))
+  local filled=$((current * width / total))
+  local empty=$((width - filled))
+  
+  printf "\r\033[1;37m%-20s\033[0m \033[38;5;208m" "RFP DETECTION"
+  printf "%0.s:" $(seq 1 $filled)
+  printf "%0.s " $(seq 1 $empty)
+  printf "\033[0m %3d%% (%d/%d)" "$percentage" "$current" "$total"
+}
+
+# --- STEP 1: Run Claude (Batch Query + RFP Detection) ---
+echo "" | tee -a "$LOG_DIR/test-cron.log"
+echo "╔════════════════════════════════════════════════════════════════╗" | tee -a "$LOG_DIR/test-cron.log"
+echo "║  🟡 YELLOW PANTHER RFP MONITOR                                 ║" | tee -a "$LOG_DIR/test-cron.log"
+echo "║  Batch: ${MODE} | Mode: $SEARCH_MODE                              ║" | tee -a "$LOG_DIR/test-cron.log"
+echo "╚════════════════════════════════════════════════════════════════╝" | tee -a "$LOG_DIR/test-cron.log"
+echo "" | tee -a "$LOG_DIR/test-cron.log"
+
+# Temporarily disable exit-on-error for Claude execution and JSON processing
+# This ensures the script continues even if Claude fails or JSON parsing has issues
+set +e
+
+if [[ "$SEARCH_MODE" == "granular" ]]; then
+  CLAUDE_TASK="
+🎯 PERPLEXITY-FIRST HYBRID RFP DETECTION SYSTEM
+Intelligent discovery with BrightData fallback for maximum quality & cost efficiency
+
+═══════════════════════════════════════════════════════════════
+PHASE 1: PERPLEXITY DISCOVERY (Intelligent, Validated Detection)
+═══════════════════════════════════════════════════════════════
+
+1. Query 300 entities from Neo4j MCP (neo4j-mcp):
+   MATCH (e:Entity)
+   WHERE e.type IN ['Club','League','Federation','Tournament']
+   RETURN e.name, e.sport, e.country
+   SKIP ${RANGE_START} LIMIT 300
+
+2. For each entity:
+   a. Print progress: [ENTITY-START] <index> <organization_name>
+   
+   b. Perplexity MCP (perplexity-mcp) LINKEDIN-FIRST Intelligent Discovery Query:
+      \"Research \${organization} (\${sport}) for active procurement opportunities:
+
+      🎯 PRIORITY 1 - LinkedIn Official Posts (CHECK FIRST - HIGHEST SUCCESS RATE):
+      Search: site:linkedin.com/posts + \${organization}
+      Look for OFFICIAL account posts ONLY (verified/blue checkmark preferred)
+      Keywords to match:
+      - \"invites proposals from\"
+      - \"soliciting proposals from\"
+      - \"request for expression of interest\"
+      - \"invitation to tender\"
+      - \"call for proposals\"
+      - \"vendor selection process\"
+      - \"We're looking for\" + (\"digital\" OR \"technology\" OR \"partner\")
+      - \"Seeking partners for\"
+      Time filter: Last 6 months (not 30 days!)
+      Engagement: Posts with >5 likes/comments (indicates legitimacy)
+      Extract: Post URL, date, project title, deadline if mentioned, contact info
+      Success rate: ~35% (7x better than generic search!)
+      
+      🎯 PRIORITY 2 - LinkedIn Job Postings (EARLY WARNING SIGNALS):
+      Search: site:linkedin.com/jobs company:\${organization}
+      Look for NEW job postings (last 3 months):
+      - \"Project Manager\" + (\"Digital\" OR \"Transformation\" OR \"Implementation\")
+      - \"Program Manager\" + (\"Technology\" OR \"Digital\" OR \"Platform\")
+      - \"Transformation Lead\"
+      - \"Implementation Manager\"
+      Rationale: Organizations hire project managers 1-2 months BEFORE releasing RFPs
+      Extract: Job title, posting date, project hints from description
+      If found: Mark as \"EARLY_SIGNAL\" with estimated RFP timeline
+      Success rate: ~25% (predictive signal!)
+      
+      🎯 PRIORITY 3 - Known Tender Platforms (TARGETED SEARCH):
+      Check these specific URLs in order:
+      1. https://www.isportconnect.com/marketplace_categorie/tenders/ (search: \${organization})
+      2. \${organization_website}/procurement
+      3. \${organization_website}/tenders
+      4. \${organization_website}/rfp
+      5. https://ted.europa.eu (if European organization)
+      6. https://sam.gov (if US organization)
+      7. https://www.find-tender.service.gov.uk (if UK organization)
+      Look for: Active tenders with submission deadlines
+      Extract: Tender reference, title, deadline, budget, requirements
+      Success rate: ~30%
+      
+      🎯 PRIORITY 4 - Sports Industry News Sites (PARTNERSHIP SIGNALS):
+      Search these domains specifically:
+      - site:sportspro.com + \${organization} + (\"RFP\" OR \"tender\" OR \"partnership announced\" OR \"selected as\")
+      - site:sportbusiness.com + \${organization} + (\"digital transformation\" OR \"technology partner\")
+      - site:insideworldfootball.com + \${organization} + procurement
+      Time filter: Last 3 months
+      Extract: Partnership announcements, vendor selections, project launches
+      Rationale: Recent partnerships indicate digital maturity and future opportunities
+      Success rate: ~20%
+      
+      🎯 PRIORITY 5 - LinkedIn Articles & Company Pages:
+      Search: site:linkedin.com/pulse + \${organization} + (\"digital transformation\" OR \"RFP\" OR \"partnership\")
+      Also check: linkedin.com/company/\${organization_slug}/posts
+      Time filter: Last 6 months
+      Extract: Detailed RFP descriptions, procurement strategies, technology roadmaps
+      Success rate: ~15%
+      
+      ❌ EXCLUSIONS:
+      - Expired/closed RFPs (deadline passed)
+      - Awarded contracts (vendor already selected)
+      - Non-digital opportunities (facilities, catering, merchandise)
+      - Placeholder/example URLs
+      
+      📊 VALIDATION REQUIREMENTS:
+      - All URLs must be real, accessible sources (not example.com)
+      - Deadlines must be in future (if provided)
+      - Sources must be from last 6 months
+      - Provide source URLs for verification
+      
+      📋 RETURN STRUCTURED DATA:
+      {
+        \"status\": \"ACTIVE_RFP|PARTNERSHIP|INITIATIVE|NONE\",
+        \"confidence\": <0.0-1.0>,
+        \"opportunities\": [{
+          \"title\": \"<project title>\",
+          \"type\": \"rfp|tender|partnership|initiative\",
+          \"deadline\": \"<YYYY-MM-DD or null>\",
+          \"days_remaining\": <int or null>,
+          \"url\": \"<official source URL>\",
+          \"budget\": \"<estimated value or 'Not specified'>\",
+          \"source_type\": \"tender_portal|linkedin|news|official_website\",
+          \"source_date\": \"<YYYY-MM-DD>\",
+          \"verification_url\": \"<source URL>\"
+        }],
+        \"discovery_method\": \"perplexity_primary|perplexity_secondary|perplexity_tertiary\",
+        \"sources_checked\": [\"<url1>\", \"<url2>\"]
+      }
+      
+      If NO opportunities found, return: {\"status\": \"NONE\", \"confidence\": 1.0, \"opportunities\": [], \"sources_checked\": [...]}\"
+   
+   c. Process Perplexity Results:
+      
+      IF status == \"ACTIVE_RFP\":
+        - Print: [ENTITY-PERPLEXITY-RFP] <organization> (Title: <title>, Deadline: <date>, Budget: <amount>)
+        - Mark as: \"VERIFIED\" (Perplexity already validated)
+        - Set detection_source: \"perplexity_discovery\"
+        - Set confidence from Perplexity response
+        - SKIP Phase 1B (no BrightData needed)
+      
+      ELSE IF status == \"PARTNERSHIP\" or \"INITIATIVE\":
+        - Print: [ENTITY-PERPLEXITY-SIGNAL] <organization> (Type: <type>, Date: <date>)
+        - Mark as: \"VERIFIED-INDIRECT\" (not active RFP but valuable signal)
+        - Set detection_source: \"perplexity_discovery\"
+        - SKIP Phase 1B
+      
+      ELSE IF status == \"NONE\":
+        - Print: [ENTITY-PERPLEXITY-NONE] <organization>
+        - PROCEED to Phase 1B (BrightData fallback)
+
+═══════════════════════════════════════════════════════════════
+PHASE 1B: BRIGHTDATA FALLBACK (For Perplexity NONE Results Only)
+═══════════════════════════════════════════════════════════════
+
+   d. BrightData MCP (brightData) TARGETED Fallback Search (ONLY if Perplexity found NONE):
+      
+      TIER 1 - Known Tender Domains (HIGHEST EFFICIENCY):
+      Target specific domains instead of broad web search:
+      - Domain: isportconnect.com/marketplace_categorie/tenders/
+        Query: <organization>
+        Cost: $0.002 (5x cheaper than broad search!)
+      
+      - Domain: \${organization_website}
+        Paths to check: /procurement, /tenders, /rfp, /opportunities
+        Query: RFP OR tender OR proposal
+        Cost: $0.001
+      
+      - Domain: ted.europa.eu (if European org)
+        Query: <organization> + digital
+        Cost: $0.002
+      
+      - Domain: sam.gov (if US org)
+        Query: <organization> + technology
+        Cost: $0.002
+      
+      TIER 2 - Sports Industry News Domains:
+      Target specific trusted sources:
+      - Domains: sportspro.com, sportbusiness.com, insideworldfootball.com
+        Query: <organization> + (\"RFP\" OR \"tender\" OR \"partnership announced\" OR \"digital transformation\")
+        Time: Last 6 months
+        Cost: $0.003
+      
+      TIER 3 - LinkedIn Targeted Search (if still nothing):
+      - Domain: linkedin.com
+        Paths: /posts/\${organization}, /jobs/company/\${organization}, /company/\${organization}/posts
+        Query: (\"invites proposals\" OR \"RFP\" OR \"soliciting\" OR \"Project Manager\")
+        Time: Last 6 months
+        Cost: $0.003
+      
+      TIER 4 - General Web Search (LAST RESORT ONLY):
+      Only use if Tiers 1-3 return ZERO results
+      - Query: <organization> + <sport> + \"RFP\" + (\"digital transformation\" OR \"mobile app\" OR \"technology\")
+        Time: Last 6 months
+        Cost: $0.01 (expensive, use sparingly!)
+   
+   e. Process BrightData Results:
+      
+      IF BrightData finds results:
+        - Print: [ENTITY-BRIGHTDATA-DETECTED] <organization> (Hits: <n>, Tier: <tier>)
+        - Mark as: \"UNVERIFIED-BRIGHTDATA\" (needs Perplexity validation)
+        - Set detection_source: \"brightdata_fallback\"
+        - PROCEED to Phase 2 for validation
+      
+      ELSE:
+        - Print: [ENTITY-NONE] <organization>
+        - No opportunity found
+        - Continue to next entity
+
+═══════════════════════════════════════════════════════════════
+PHASE 2: PERPLEXITY VALIDATION (For BrightData Detections Only)
+═══════════════════════════════════════════════════════════════
+
+3. For EACH \"UNVERIFIED-BRIGHTDATA\" detection from Phase 1B:
+   
+   a. Perplexity MCP Validation Query:
+      \"Verify this RFP/opportunity from \${organization}:
+       Found: \${project_title} at \${url}
+       
+       Validate:
+       1. Is this URL real and accessible (not example.com)?
+       2. Is this opportunity currently OPEN (not closed/awarded)?
+       3. What is the exact submission deadline (YYYY-MM-DD)?
+       4. What is the estimated budget/contract value?
+       5. When was this posted/announced?
+       
+       Requirements:
+       - Only confirm if opportunity is active and open
+       - Reject if deadline passed or opportunity closed
+       - Provide alternative sources if primary URL invalid
+       
+       Return JSON:
+       {
+         \"validation_status\": \"VERIFIED|REJECTED-CLOSED|REJECTED-EXPIRED|REJECTED-INVALID-URL|UNVERIFIABLE\",
+         \"rejection_reason\": \"<reason if rejected>\",
+         \"deadline\": \"<YYYY-MM-DD or null>\",
+         \"budget\": \"<amount or 'Not specified'>\",
+         \"verified_url\": \"<real URL or null>\",
+         \"verification_sources\": [\"<url1>\", \"<url2>\"]
+       }\"
+   
+   b. Process Validation:
+      
+      IF validation_status == \"VERIFIED\":
+        - Print: [ENTITY-VERIFIED] <organization> (Deadline: <date>, Budget: <amount>)
+        - Update status: \"VERIFIED\"
+        - Update with validated data from Perplexity
+      
+      ELSE:
+        - Print: [ENTITY-REJECTED] <organization> (Reason: <rejection_reason>)
+        - Update status: \"REJECTED-<reason>\"
+        - Track rejection reason
+
+═══════════════════════════════════════════════════════════════
+PHASE 3: COMPETITIVE INTELLIGENCE (Perplexity - High-Value Only)
+═══════════════════════════════════════════════════════════════
+
+4. For ALL VERIFIED opportunities (from Perplexity OR BrightData) with estimated fit_score >= 80:
+   
+   a. Perplexity MCP Competitive Intelligence Query:
+      \"Analyze \${organization}'s digital technology landscape:
+       
+       1. Current Technology Partners: Who provides their digital services?
+       2. Recent Digital Projects: Projects in last 2 years (vendor, scope, outcome)
+       3. Decision Makers: Technology/procurement leaders (names, titles, LinkedIn)
+       4. Competitors: Known vendors bidding on similar opportunities
+       5. Yellow Panther Edge: Competitive advantages (sports focus, awards, ISO certs)
+       6. Strategic Context: Budget trends, digital maturity, leadership changes
+       
+       Return JSON with source URLs.\"
+   
+   b. Extract & Store Intelligence
+   
+   c. Print: [ENTITY-INTEL] <organization> (Maturity: <level>, Competitors: <n>)
+
+═══════════════════════════════════════════════════════════════
+PHASE 4: FIT SCORING (Enhanced Multi-Factor Algorithm)
+═══════════════════════════════════════════════════════════════
+
+5. Calculate fit_score using Yellow Panther Fit Matrix:
+   
+   Base Score = 0
+   
+   A. Service Alignment (50% weight):
+      - Mobile app development: +50 points
+      - Digital transformation project: +50 points
+      - Web platform development: +40 points
+      - Fan engagement platform: +45 points
+      - Ticketing system integration: +35 points
+      - Analytics/data platform: +30 points
+      - Streaming/OTT platform: +40 points
+   
+   B. Project Scope Match (30% weight):
+      - End-to-end development: +30 points
+      - Strategic partnership (multi-year): +25 points
+      - Implementation + ongoing support: +25 points
+      - Integration with existing systems: +20 points
+      - Consulting only: +10 points
+   
+   C. Yellow Panther Differentiators (20% weight):
+      - Sports industry specific: +10 points
+      - International federation: +8 points
+      - Premier league/top-tier club: +8 points
+      - ISO certification mentioned in requirements: +5 points
+      - Award-winning team preference: +5 points
+      - UK/Europe location: +4 points
+   
+   Final Fit Score = Min(Base Score, 100)
+   
+   Classification:
+   - 90-100: PERFECT FIT (immediate outreach priority)
+   - 75-89: STRONG FIT (strategic opportunity)
+   - 60-74: GOOD FIT (evaluate based on capacity)
+   - Below 60: MODERATE FIT (monitor for changes)
+
+═══════════════════════════════════════════════════════════════
+PHASE 5: STRUCTURED OUTPUT
+═══════════════════════════════════════════════════════════════
+
+6. Construct enhanced JSON output:
+   {
+     \"total_rfps_detected\": <int (all detections from Phase 1)>,
+     \"verified_rfps\": <int (passed Phase 2 validation)>,
+     \"rejected_rfps\": <int (failed validation)>,
+     \"entities_checked\": <int>,
+     \"highlights\": [
+       {
+         \"organization\": \"<name>\",
+         \"src_link\": \"<REAL URL - NOT example.com>\",
+         \"source_type\": \"<linkedin_post|linkedin_job|tender_portal|news|partnership|official_website>\",
+         \"discovery_source\": \"<perplexity_priority_1|perplexity_priority_2|perplexity_priority_3|perplexity_priority_4|perplexity_priority_5|brightdata_tier_1|brightdata_tier_2|brightdata_tier_3|brightdata_tier_4>\",
+         \"discovery_method\": \"<perplexity_primary|brightdata_fallback>\",
+         \"validation_status\": \"VERIFIED|EARLY_SIGNAL\",
+         \"date_published\": \"<YYYY-MM-DD>\",
+         \"deadline\": \"<YYYY-MM-DD or null>\",
+         \"deadline_days_remaining\": <int or null>,
+         \"estimated_rfp_date\": \"<YYYY-MM-DD or null (for EARLY_SIGNAL only)>\",
+         \"budget\": \"<£X-Y or 'Not specified'>\",
+         \"summary_json\": {
+           \"title\": \"<project summary>\",
+           \"confidence\": <float 0.0-1.0>,
+           \"urgency\": \"<low|medium|high>\",
+           \"fit_score\": <int 0-100>,
+           \"source_quality\": <float 0.0-1.0>
+         },
+         \"perplexity_validation\": {
+           \"verified_by_perplexity\": <true|false>,
+           \"deadline_confirmed\": <true|false>,
+           \"url_verified\": <true|false>,
+           \"budget_estimated\": <true|false>,
+           \"verification_sources\": [\"<url1>\", \"<url2>\"]
+         },
+         \"competitive_intel\": {
+           \"digital_maturity\": \"<LOW|MEDIUM|HIGH>\",
+           \"current_partners\": [\"<partner1>\", \"<partner2>\"],
+           \"recent_projects\": [{\"vendor\": \"<name>\", \"project\": \"<desc>\", \"year\": <yyyy>}],
+           \"competitors\": [\"<competitor1>\", \"<competitor2>\"],
+           \"yp_advantages\": [\"<advantage1>\", \"<advantage2>\"],
+           \"decision_makers\": [{\"name\": \"<name>\", \"title\": \"<title>\"}]
+         }
+       }
+     ],
+     \"scoring_summary\": {
+       \"avg_confidence\": <float>,
+       \"avg_fit_score\": <float>,
+       \"top_opportunity\": \"<organization>\"
+     },
+     \"quality_metrics\": {
+       \"brightdata_detections\": <int>,
+       \"perplexity_verifications\": <int>,
+       \"verified_rate\": <float>,
+       \"placeholder_urls_rejected\": <int>,
+       \"expired_rfps_rejected\": <int>,
+       \"competitive_intel_gathered\": <int>
+     },
+     \"discovery_breakdown\": {
+       \"linkedin_posts\": <int>,
+       \"linkedin_jobs\": <int>,
+       \"tender_platforms\": <int>,
+       \"sports_news_sites\": <int>,
+       \"official_websites\": <int>,
+       \"linkedin_success_rate\": <float>,
+       \"tender_platform_success_rate\": <float>
+     },
+     \"perplexity_usage\": {
+       \"discovery_queries\": <int>,
+       \"validation_queries\": <int>,
+       \"competitive_intel_queries\": <int>,
+       \"total_queries\": <int>,
+       \"estimated_cost\": <float>
+     },
+     \"brightdata_usage\": {
+       \"targeted_domain_queries\": <int>,
+       \"broad_web_queries\": <int>,
+       \"total_queries\": <int>,
+       \"estimated_cost\": <float>
+     },
+     \"cost_comparison\": {
+       \"total_cost\": <float>,
+       \"cost_per_verified_rfp\": <float>,
+       \"estimated_old_system_cost\": <float>,
+       \"savings_vs_old_system\": <float>
+     }
+   }
+
+7. Write VERIFIED results to Supabase MCP (supabase) table 'rfp_opportunities'.
+
+8. CRITICAL: Return ONLY valid JSON (no markdown, no explanations, ONLY JSON).
+"
+else
+  CLAUDE_TASK="
+Follow COMPLETE-RFP-MONITORING-SYSTEM.md to:
+1. Query 300 entities from Neo4j.
+2. Group them into 4–6 clusters by sport or region.
+3. Perform one BrightData MCP search per cluster with DIGITAL-FIRST focus:
+   - query: <cluster_name> + sport + (\"digital transformation\" OR \"mobile app\" OR \"website development\" OR \"fan engagement\" OR \"digital platform\")
+4. Perform one Perplexity MCP cross-check for validation.
+5. Write all structured results to Supabase with digital-first filtering.
+6. Return ONLY valid JSON (no markdown, no explanations, ONLY JSON) in the format specified above.
+"
+fi
+
+if ! gtimeout 25m "$CLAUDE_BIN" \
+  -p "$CLAUDE_TASK" \
+  --mcp-config "$MCP_PATH" \
+  --permission-mode bypassPermissions \
+  --output-format json \
+  | tee >(awk '
+      BEGIN {entity_count=0; perp_rfp=0; perp_signal=0; perp_none=0; bd_detected=0; verified_count=0; rejected_count=0; intel_count=0}
+      /\[ENTITY-START\]/ {
+        entity_count++
+        printf "\r\033[K🔍 \033[1;36m%-40s\033[0m [%3d/300]", $3, entity_count
+        print "" >> "'$LOG_DIR/test-cron.log'"
+        print "🔍 [" entity_count "/300] Starting: " $3 >> "'$LOG_DIR/test-cron.log'"
+        next
+      }
+      /\[ENTITY-PERPLEXITY-RFP\]/ {
+        perp_rfp++
+        verified_count++
+        printf "\r\033[K🧠 \033[1;35m%-40s\033[0m [%3d/300] \033[38;5;165m🎯 Perplexity RFP #%d\033[0m\n", $2, entity_count, perp_rfp
+        print "🧠 [" entity_count "/300] " $2 " — Perplexity found VERIFIED RFP! Total: " perp_rfp >> "'$LOG_DIR/test-cron.log'"
+        next
+      }
+      /\[ENTITY-PERPLEXITY-SIGNAL\]/ {
+        perp_signal++
+        verified_count++
+        printf "\r\033[K💡 \033[1;33m%-40s\033[0m [%3d/300] \033[38;5;220m📡 Signal #%d\033[0m\n", $2, entity_count, perp_signal
+        print "💡 [" entity_count "/300] " $2 " — Perplexity found indirect signal. Total: " perp_signal >> "'$LOG_DIR/test-cron.log'"
+        next
+      }
+      /\[ENTITY-PERPLEXITY-NONE\]/ {
+        perp_none++
+        printf "\r\033[K⚪ %-40s [%3d/300] (Trying BrightData...)\r", substr($2, 1, 40), entity_count
+        print "⚪ [" entity_count "/300] " $2 " — Perplexity found nothing, trying BrightData..." >> "'$LOG_DIR/test-cron.log'"
+        next
+      }
+      /\[ENTITY-BRIGHTDATA-DETECTED\]/ {
+        bd_detected++
+        printf "\r\033[K🔶 \033[1;33m%-40s\033[0m [%3d/300] \033[38;5;214m📍 BrightData #%d\033[0m\r", $2, entity_count, bd_detected
+        print "🔶 [" entity_count "/300] " $2 " — BrightData detected (validating...). Total: " bd_detected >> "'$LOG_DIR/test-cron.log'"
+        next
+      }
+      /\[ENTITY-VERIFIED\]/ {
+        verified_count++
+        printf "\r\033[K✅ \033[1;32m%-40s\033[0m [%3d/300] \033[38;5;46m⚡ VERIFIED #%d\033[0m\n", $2, entity_count, verified_count
+        print "✅ [" entity_count "/300] " $2 " — VERIFIED! Total: " verified_count >> "'$LOG_DIR/test-cron.log'"
+        next
+      }
+      /\[ENTITY-REJECTED\]/ {
+        rejected_count++
+        printf "\r\033[K❌ \033[1;31m%-40s\033[0m [%3d/300]\r", $2, entity_count
+        print "❌ [" entity_count "/300] " $2 " — REJECTED. Total: " rejected_count >> "'$LOG_DIR/test-cron.log'"
+        next
+      }
+      /\[ENTITY-INTEL\]/ {
+        intel_count++
+        printf "\r\033[K🧠 \033[1;35m%-40s\033[0m [%3d/300] \033[38;5;165m📊 Intel #%d\033[0m\n", $2, entity_count, intel_count
+        print "🧠 [" entity_count "/300] " $2 " — Competitive intel gathered. Total: " intel_count >> "'$LOG_DIR/test-cron.log'"
+        next
+      }
+      /\[ENTITY-NONE\]/  {
+        printf "\r\033[K⚪ %-40s [%3d/300]\r", substr($2, 1, 40), entity_count
+        next
+      }
+      /mcp__neo4j/ {print "\033[38;5;33m[MCP:Neo4j]\033[0m " $0 >> "'$LOG_DIR/test-cron.log'"; next}
+      /mcp__brightData/ {print "\033[38;5;214m[MCP:BrightData]\033[0m " $0 >> "'$LOG_DIR/test-cron.log'"; next}
+      /mcp__perplexity/ {print "\033[38;5;165m[MCP:Perplexity]\033[0m " $0 >> "'$LOG_DIR/test-cron.log'"; next}
+      /mcp__supabase/ {print "\033[38;5;42m[MCP:Supabase]\033[0m " $0 >> "'$LOG_DIR/test-cron.log'"; next}
+      {print $0 >> "'$LOG_DIR/test-cron.log'"}
+      END {
+        printf "\r\033[K"
+        print ""
+        print "╔════════════════════════════════════════════════════════════════╗" >> "'$LOG_DIR/test-cron.log'"
+        print "║  🎯 PERPLEXITY-FIRST HYBRID DETECTION COMPLETE                 ║" >> "'$LOG_DIR/test-cron.log'"
+        print "║  Entities Processed: " entity_count "/300                                ║" >> "'$LOG_DIR/test-cron.log'"
+        print "║  🧠 Perplexity RFPs: " perp_rfp "                                       ║" >> "'$LOG_DIR/test-cron.log'"
+        print "║  💡 Perplexity Signals: " perp_signal "                                 ║" >> "'$LOG_DIR/test-cron.log'"
+        print "║  🔶 BrightData Detections: " bd_detected "                              ║" >> "'$LOG_DIR/test-cron.log'"
+        print "║  ✅ Total Verified: " verified_count "                                  ║" >> "'$LOG_DIR/test-cron.log'"
+        print "║  ❌ Rejected: " rejected_count "                                        ║" >> "'$LOG_DIR/test-cron.log'"
+        print "║  🧠 Competitive Intel: " intel_count "                                  ║" >> "'$LOG_DIR/test-cron.log'"
+        print "║                                                                ║" >> "'$LOG_DIR/test-cron.log'"
+        perp_success_rate = (entity_count > 0) ? int((perp_rfp + perp_signal) * 100 / entity_count) : 0
+        print "║  📊 Perplexity Success Rate: " perp_success_rate "%                           ║" >> "'$LOG_DIR/test-cron.log'"
+        print "╚════════════════════════════════════════════════════════════════╝" >> "'$LOG_DIR/test-cron.log'"
+      }
+    ') \
+  > "$LOG_DIR/rfp_results_${MODE}_${STAMP}.json" 2>> "$LOG_DIR/test-cron.log"; then
+  echo "❌ Claude RFP detection failed or timed out - creating minimal result file" | tee -a "$LOG_DIR/test-cron.log"
+  # Create minimal valid JSON result to allow script to continue
+  echo '{"type":"result","subtype":"error","result":"Claude execution failed or timed out"}' > "$LOG_DIR/rfp_results_${MODE}_${STAMP}.json"
+fi
+
+
+# --- CLEAN JSON EXTRACTION (new step) ---
+RAW_FILE="$LOG_DIR/rfp_results_${MODE}_${STAMP}.json"
+CLEAN_FILE="$LOG_DIR/rfp_results_${MODE}_${STAMP}_clean.json"
+
+# Try multiple extraction strategies
+if jq -e '.result' "$RAW_FILE" >/dev/null 2>&1; then
+  # Extract result field and try to find JSON in it
+  RESULT_TEXT=$(jq -r '.result' "$RAW_FILE")
+  
+  # Strategy 1: Try to extract JSON from markdown code blocks
+  if printf '%s\n' "$RESULT_TEXT" | grep -q '```json'; then
+    printf '%s\n' "$RESULT_TEXT" | sed -n '/```json/,/```/p' | sed '1d;$d' > "$CLEAN_FILE"
+    echo "✅ Extracted JSON from markdown code block → $CLEAN_FILE" | tee -a "$LOG_DIR/test-cron.log"
+  # Strategy 2: Check if result itself is valid JSON with expected fields
+  elif printf '%s\n' "$RESULT_TEXT" | jq -e '.total_rfps_detected' >/dev/null 2>&1; then
+    printf '%s\n' "$RESULT_TEXT" > "$CLEAN_FILE"
+    echo "✅ Result field is valid JSON → $CLEAN_FILE" | tee -a "$LOG_DIR/test-cron.log"
+  # Strategy 3: Try to extract JSON object from text (look for complete object)
+  elif printf '%s\n' "$RESULT_TEXT" | grep -q '{"total_rfps_detected"'; then
+    # Extract from first { to last } for complete JSON object
+    printf '%s\n' "$RESULT_TEXT" | sed -n '/{/,/^}$/p' | jq -s '.[0]' > "$CLEAN_FILE" 2>/dev/null
+    if [ $? -eq 0 ] && [ -s "$CLEAN_FILE" ]; then
+      echo "✅ Extracted JSON object from result text → $CLEAN_FILE" | tee -a "$LOG_DIR/test-cron.log"
+    else
+      # Fallback: create minimal valid JSON
+      echo "{\"total_rfps_detected\": 0, \"entities_checked\": 0, \"highlights\": [], \"scoring_summary\": {\"avg_confidence\": 0, \"avg_fit_score\": 0, \"top_opportunity\": \"none\"}}" > "$CLEAN_FILE"
+      echo "⚠️  JSON extraction failed — created minimal placeholder JSON" | tee -a "$LOG_DIR/test-cron.log"
+      echo "⚠️  Claude may have returned markdown instead of JSON. Check raw file:" | tee -a "$LOG_DIR/test-cron.log"
+      echo "   $RAW_FILE" | tee -a "$LOG_DIR/test-cron.log"
+    fi
+  else
+    # Fallback: create minimal valid JSON and warn
+    echo "{\"total_rfps_detected\": 0, \"entities_checked\": 0, \"highlights\": [], \"scoring_summary\": {\"avg_confidence\": 0, \"avg_fit_score\": 0, \"top_opportunity\": \"none\"}}" > "$CLEAN_FILE"
+    echo "⚠️  Could not find JSON in result field — created minimal placeholder JSON" | tee -a "$LOG_DIR/test-cron.log"
+    echo "   Raw file: $RAW_FILE" | tee -a "$LOG_DIR/test-cron.log"
+  fi
+else
+  # No .result field - check if raw file is valid JSON with expected structure
+  if jq -e '.total_rfps_detected' "$RAW_FILE" >/dev/null 2>&1; then
+    cp "$RAW_FILE" "$CLEAN_FILE"
+    echo "✅ Raw file is valid JSON with expected structure → $CLEAN_FILE" | tee -a "$LOG_DIR/test-cron.log"
+  elif jq . "$RAW_FILE" >/dev/null 2>&1; then
+    cp "$RAW_FILE" "$CLEAN_FILE"
+    echo "⚠️  Raw file is valid JSON but missing expected fields → $CLEAN_FILE" | tee -a "$LOG_DIR/test-cron.log"
+  else
+    echo "{\"total_rfps_detected\": 0, \"entities_checked\": 0, \"highlights\": [], \"scoring_summary\": {\"avg_confidence\": 0, \"avg_fit_score\": 0, \"top_opportunity\": \"none\"}}" > "$CLEAN_FILE"
+    echo "⚠️  Raw file is not valid JSON — created minimal placeholder JSON" | tee -a "$LOG_DIR/test-cron.log"
+  fi
+fi
+
+# Validate that we have valid JSON in clean file
+if ! jq . "$CLEAN_FILE" >/dev/null 2>&1; then
+  echo "❌ ERROR: Clean JSON file is not valid JSON. Creating emergency fallback..." | tee -a "$LOG_DIR/test-cron.log"
+  echo "   Raw file content preview:" | tee -a "$LOG_DIR/test-cron.log"
+  head -20 "$RAW_FILE" | tee -a "$LOG_DIR/test-cron.log"
+  # Create emergency fallback JSON to allow script to continue
+  echo '{"total_rfps_detected": 0, "entities_checked": 0, "highlights": [], "scoring_summary": {"avg_confidence": 0, "avg_fit_score": 0, "top_opportunity": "none"}, "error": "JSON extraction failed"}' > "$CLEAN_FILE"
+  echo "⚠️  Created emergency fallback JSON - batch will continue with 0 results" | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+# --- STEP 2: Entity Coverage Check & Quality Metrics (use clean file) ---
+ENTITIES_CHECKED=$(jq '.entities_checked // 0' "$CLEAN_FILE" 2>/dev/null || echo 0)
+RFPS_FOUND=$(jq '.total_rfps_detected // 0' "$CLEAN_FILE" 2>/dev/null || echo 0)
+VERIFIED_RFPS=$(jq '.verified_rfps // 0' "$CLEAN_FILE" 2>/dev/null || echo 0)
+REJECTED_RFPS=$(jq '.rejected_rfps // 0' "$CLEAN_FILE" 2>/dev/null || echo 0)
+
+# Quality metrics
+VERIFICATION_RATE=$(jq -r 'if .total_rfps_detected > 0 then (.verified_rfps / .total_rfps_detected * 100 | floor) else 0 end' "$CLEAN_FILE" 2>/dev/null || echo 0)
+
+# GROK-style progress bar with quality metrics
+echo "" | tee -a "$LOG_DIR/test-cron.log"
+printf "\033[1;37m%-20s\033[0m " "RFP DETECTION" | tee -a "$LOG_DIR/test-cron.log"
+printf "\033[38;5;208m" | tee -a "$LOG_DIR/test-cron.log"
+# Calculate bar length (60 chars max)
+BAR_LENGTH=$((ENTITIES_CHECKED * 60 / 300))
+for ((i=1; i<=BAR_LENGTH; i++)); do printf ":"; done | tee -a "$LOG_DIR/test-cron.log"
+printf "\033[0m %3d%% (%d/300)\n" "$((ENTITIES_CHECKED * 100 / 300))" "$ENTITIES_CHECKED" | tee -a "$LOG_DIR/test-cron.log"
+echo "" | tee -a "$LOG_DIR/test-cron.log"
+
+# Quality summary
+echo "📊 Quality Metrics:" | tee -a "$LOG_DIR/test-cron.log"
+echo "   🟡 Detected: $RFPS_FOUND" | tee -a "$LOG_DIR/test-cron.log"
+echo "   ✅ Verified: $VERIFIED_RFPS ($VERIFICATION_RATE%)" | tee -a "$LOG_DIR/test-cron.log"
+echo "   ❌ Rejected: $REJECTED_RFPS" | tee -a "$LOG_DIR/test-cron.log"
+echo "" | tee -a "$LOG_DIR/test-cron.log"
+
+if [ "$ENTITIES_CHECKED" -lt 300 ]; then
+  echo "⚠️  Warning: less than expected entities processed (should be ~300 per batch)." | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+# --- PRIORITY ALERT SYSTEM ---
+PRIORITY_RFPS=$(jq -r '[.highlights[] | select((.summary_json.fit_score // 0) >= 90 and .summary_json.urgency == "high")] | length' "$CLEAN_FILE" 2>/dev/null || echo 0)
+
+if [ "$PRIORITY_RFPS" -gt 0 ]; then
+  echo "" | tee -a "$LOG_DIR/test-cron.log"
+  echo "╔════════════════════════════════════════════════════════════════╗" | tee -a "$LOG_DIR/test-cron.log"
+  echo "║  🚨 PRIORITY ALERT: $PRIORITY_RFPS HIGH-PRIORITY RFPs DETECTED          ║" | tee -a "$LOG_DIR/test-cron.log"
+  echo "╚════════════════════════════════════════════════════════════════╝" | tee -a "$LOG_DIR/test-cron.log"
+  echo "" | tee -a "$LOG_DIR/test-cron.log"
+  
+  # Extract priority opportunities
+  jq -r '.highlights[] | select((.summary_json.fit_score // 0) >= 90 and .summary_json.urgency == "high") | 
+    "🚨 \(.organization): \(.summary_json.title) (Fit: \(.summary_json.fit_score)%, Deadline: \(.deadline // "TBD"))"' \
+    "$CLEAN_FILE" | tee -a "$LOG_DIR/test-cron.log"
+  
+  echo "" | tee -a "$LOG_DIR/test-cron.log"
+  
+  # Send immediate Teams notification for priority RFPs
+  if [ -n "$TEAMS_WEBHOOK_URL" ]; then
+    ALERT_MSG=$(jq -r '.highlights[] | select((.summary_json.fit_score // 0) >= 90 and .summary_json.urgency == "high") | 
+      "**\(.organization)** - \(.summary_json.title)\n- Fit Score: \(.summary_json.fit_score)%\n- Deadline: \(.deadline // "TBD")\n- Budget: \(.budget // "Not specified")\n- [View Opportunity](\(.src_link))\n\n"' \
+      "$CLEAN_FILE" | head -c 3000)
+    
+    curl -s -H "Content-Type: application/json" -d "{
+      \"@type\": \"MessageCard\",
+      \"@context\": \"https://schema.org/extensions\",
+      \"summary\": \"🚨 PRIORITY RFP ALERT\",
+      \"themeColor\": \"FF0000\",
+      \"title\": \"🚨 $PRIORITY_RFPS High-Priority RFPs Detected (Batch $MODE)\",
+      \"text\": \"$ALERT_MSG\",
+      \"potentialAction\": [{
+        \"@type\": \"OpenUri\",
+        \"name\": \"View Full Results\",
+        \"targets\": [{\"os\": \"default\", \"uri\": \"file://$CLEAN_FILE\"}]
+      }]
+    }" "$TEAMS_WEBHOOK_URL" >/dev/null 2>&1
+    
+    if [ $? -eq 0 ]; then
+      echo "✅ Priority alert sent to Teams" | tee -a "$LOG_DIR/test-cron.log"
+    else
+      echo "⚠️  Failed to send Teams alert" | tee -a "$LOG_DIR/test-cron.log"
+    fi
+  else
+    echo "⚠️  TEAMS_WEBHOOK_URL not set - skipping Teams alert" | tee -a "$LOG_DIR/test-cron.log"
+  fi
+  
+  echo "" | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+# Keep exit-on-error disabled for markdown/notifications - these are non-critical
+# Script will complete successfully even if these steps fail
+
+# --- STEP 3: Markdown Summary (uses clean JSON) ---
+echo "🧠 Generating Markdown Summary..." | tee -a "$LOG_DIR/test-cron.log"
+
+if ! gtimeout 10m "$CLAUDE_BIN" -p "
+Summarize this JSON RFP detection file into a professional Markdown report for stakeholders.
+Input: $LOG_DIR/rfp_results_${MODE}_${STAMP}_clean.json
+Include:
+- Total RFPs detected
+- Top 5 opportunities with title, org, confidence, deadline, budget if available
+- Geographic coverage
+- Recommended actions for Immediate, Short-term, Medium-term
+- System performance and integrations
+Format elegantly with emojis for readability.
+" \
+--mcp-config "$MCP_PATH" \
+--permission-mode bypassPermissions \
+--output-format text > "$LOG_DIR/rfp_summary_${MODE}_${STAMP}.md" 2>> "$LOG_DIR/test-cron.log"; then
+  echo "⚠️  Markdown summary generation failed." | tee -a "$LOG_DIR/test-cron.log"
+else
+  echo "✅ Markdown summary written → $LOG_DIR/rfp_summary_${MODE}_${STAMP}.md" | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+# --- STEP 4: Notifications (use clean file) ---
+NEW_RFPS=$(jq '.total_rfps_detected // 0' "$CLEAN_FILE" 2>/dev/null || echo 0)
+
+if [ "$NEW_RFPS" -gt 0 ]; then
+  echo "📢 Sending notifications for $NEW_RFPS new RFP(s)..." | tee -a "$LOG_DIR/test-cron.log"
+
+  SUMMARY=$(jq -r '
+    .highlights? // [] |
+    map("*" + (.organization // "Unknown Org") + "* - " + (.summary_json.title // "Untitled") + "\n<" + (.src_link // "no link") + ">") |
+    join("\n\n")
+  ' "$CLEAN_FILE" 2>/dev/null || echo "No highlights found")
+
+  # --- EMAIL via Resend ---
+  if [ -n "$RESEND_API_KEY" ]; then
+    curl -s -X POST "https://api.resend.com/emails" \
+      -H "Authorization: Bearer $RESEND_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d "{
+        \"from\": \"Yellow Panther <alerts@yellowpanther.ai>\",
+        \"to\": [\"team@yellowpanther.ai\"],
+        \"subject\": \"🟡 ${NEW_RFPS} New RFP(s) Detected (${MODE})\",
+        \"html\": \"<h3>New RFP Opportunities (${MODE})</h3><pre>${SUMMARY}</pre><p>See $LOG_DIR/rfp_summary_${MODE}_${STAMP}.md for details.</p>\"
+      }" >/dev/null 2>&1 && echo "✅ Email sent via Resend" >> "$LOG_DIR/test-cron.log" || echo "⚠️  Email send failed" >> "$LOG_DIR/test-cron.log"
+  else
+    echo "⚠️  RESEND_API_KEY missing — skipping email" >> "$LOG_DIR/test-cron.log"
+  fi
+
+  # --- TEAMS WEBHOOK ---
+  if [ -n "$TEAMS_WEBHOOK_URL" ]; then
+    curl -s -H "Content-Type: application/json" -d "{
+      \"@type\": \"MessageCard\",
+      \"@context\": \"https://schema.org/extensions\",
+      \"summary\": \"Yellow Panther RFP Alert (${MODE})\",
+      \"themeColor\": \"0078D7\",
+      \"title\": \"🟡 ${NEW_RFPS} New RFP(s) Detected (${MODE})\",
+      \"text\": \"${SUMMARY}\"
+    }" "$TEAMS_WEBHOOK_URL" >/dev/null 2>&1 && echo "✅ Teams alert sent" >> "$LOG_DIR/test-cron.log" || echo "⚠️  Teams webhook failed" >> "$LOG_DIR/test-cron.log"
+  else
+    echo "⚠️  TEAMS_WEBHOOK_URL missing — skipping Teams alert" >> "$LOG_DIR/test-cron.log"
+  fi
+
+else
+  echo "ℹ️  No new RFPs detected — skipping notifications." | tee -a "$LOG_DIR/test-cron.log"
+fi
+
+# --- STEP 5: Cleanup Old Logs (only in RUN_DIR, not main LOG_DIR) ---
+find "$LOG_DIR" -type f -mtime +7 -name "*.md" -delete
+find "$LOG_DIR" -type f -mtime +7 -name "*.json" -delete
+
+echo "✅ Completed RFP Monitor Run @ $STAMP (${MODE})" | tee -a "$LOG_DIR/test-cron.log"
+jq -r '{timestamp: "'$STAMP'", mode: "'$MODE'", total_rfps_detected, avg_confidence: .scoring_summary.avg_confidence, top_opportunity: .scoring_summary.top_opportunity}' \
+  "$CLEAN_FILE" >> "$LOG_DIR/batch_summary.log" 2>/dev/null || true

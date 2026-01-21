@@ -1,0 +1,1209 @@
+{
+  "total_rfps_detected": 92,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "Arsenal",
+      "src_link": "https://example.com/news/arsenal-partnership",
+      "summary_json": {
+        "title": "Arsenal announces digital partnership initiative",
+        "description": "Arsenal is seeking technology partners for digital transformation projects",
+        "confidence": 0.6714374796502132,
+        "urgency": "low",
+        "fit_score": 65,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Juventus",
+      "src_link": "https://example.com/news/juventus-partnership",
+      "summary_json": {
+        "title": "Juventus announces digital partnership initiative",
+        "description": "Juventus is seeking technology partners for digital transformation projects",
+        "confidence": 0.8033360831042926,
+        "urgency": "low",
+        "fit_score": 68,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Inter Milan",
+      "src_link": "https://example.com/rfp/inter-milan",
+      "summary_json": {
+        "title": "Inter Milan Digital Transformation RFP 2039",
+        "description": "Request for proposals for digital platform development and mobile application services for Inter Milan",
+        "confidence": 0.9301670394009066,
+        "urgency": "medium",
+        "fit_score": 81,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Rangers",
+      "src_link": "https://example.com/news/rangers-partnership",
+      "summary_json": {
+        "title": "Rangers announces digital partnership initiative",
+        "description": "Rangers is seeking technology partners for digital transformation projects",
+        "confidence": 0.7885429575154658,
+        "urgency": "low",
+        "fit_score": 75,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://example.com/rfp/manchester-united",
+      "summary_json": {
+        "title": "Manchester United Digital Transformation RFP 2123",
+        "description": "Request for proposals for digital platform development and mobile application services for Manchester United",
+        "confidence": 0.8486780697404174,
+        "urgency": "high",
+        "fit_score": 85,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://example.com/rfp/bayern-munich",
+      "summary_json": {
+        "title": "Bayern Munich Digital Transformation RFP 2109",
+        "description": "Request for proposals for digital platform development and mobile application services for Bayern Munich",
+        "confidence": 0.8503918981295973,
+        "urgency": "high",
+        "fit_score": 78,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://example.com/news/benfica-partnership",
+      "summary_json": {
+        "title": "Benfica announces digital partnership initiative",
+        "description": "Benfica is seeking technology partners for digital transformation projects",
+        "confidence": 0.896505332352463,
+        "urgency": "low",
+        "fit_score": 71,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Sporting CP",
+      "src_link": "https://example.com/rfp/sporting-cp",
+      "summary_json": {
+        "title": "Sporting CP Digital Transformation RFP 2108",
+        "description": "Request for proposals for digital platform development and mobile application services for Sporting CP",
+        "confidence": 0.8507971633023175,
+        "urgency": "low",
+        "fit_score": 90,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Fenerbahçe",
+      "src_link": "https://example.com/news/fenerbahçe-partnership",
+      "summary_json": {
+        "title": "Fenerbahçe announces digital partnership initiative",
+        "description": "Fenerbahçe is seeking technology partners for digital transformation projects",
+        "confidence": 0.8983217060128743,
+        "urgency": "low",
+        "fit_score": 67,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Rangers",
+      "src_link": "https://example.com/rfp/rangers",
+      "summary_json": {
+        "title": "Rangers Digital Transformation RFP 2039",
+        "description": "Request for proposals for digital platform development and mobile application services for Rangers",
+        "confidence": 0.8405743358049466,
+        "urgency": "high",
+        "fit_score": 66,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Barcelona",
+      "src_link": "https://example.com/rfp/barcelona",
+      "summary_json": {
+        "title": "Barcelona Digital Transformation RFP 2103",
+        "description": "Request for proposals for digital platform development and mobile application services for Barcelona",
+        "confidence": 0.9990981293296886,
+        "urgency": "low",
+        "fit_score": 93,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://example.com/rfp/manchester-city",
+      "summary_json": {
+        "title": "Manchester City Digital Transformation RFP 2058",
+        "description": "Request for proposals for digital platform development and mobile application services for Manchester City",
+        "confidence": 0.800290195239761,
+        "urgency": "high",
+        "fit_score": 62,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Juventus",
+      "src_link": "https://example.com/rfp/juventus",
+      "summary_json": {
+        "title": "Juventus Digital Transformation RFP 2024",
+        "description": "Request for proposals for digital platform development and mobile application services for Juventus",
+        "confidence": 0.903349433716938,
+        "urgency": "high",
+        "fit_score": 68,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Galatasaray",
+      "src_link": "https://example.com/rfp/galatasaray",
+      "summary_json": {
+        "title": "Galatasaray Digital Transformation RFP 2065",
+        "description": "Request for proposals for digital platform development and mobile application services for Galatasaray",
+        "confidence": 0.9718622071835681,
+        "urgency": "high",
+        "fit_score": 90,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Rangers",
+      "src_link": "https://example.com/rfp/rangers",
+      "summary_json": {
+        "title": "Rangers Digital Transformation RFP 2089",
+        "description": "Request for proposals for digital platform development and mobile application services for Rangers",
+        "confidence": 0.8485115860512982,
+        "urgency": "high",
+        "fit_score": 75,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Real Madrid",
+      "src_link": "https://example.com/rfp/real-madrid",
+      "summary_json": {
+        "title": "Real Madrid Digital Transformation RFP 2054",
+        "description": "Request for proposals for digital platform development and mobile application services for Real Madrid",
+        "confidence": 0.9960094049126929,
+        "urgency": "high",
+        "fit_score": 62,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Arsenal",
+      "src_link": "https://example.com/news/arsenal-partnership",
+      "summary_json": {
+        "title": "Arsenal announces digital partnership initiative",
+        "description": "Arsenal is seeking technology partners for digital transformation projects",
+        "confidence": 0.8907552724408796,
+        "urgency": "low",
+        "fit_score": 78,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://example.com/rfp/manchester-city",
+      "summary_json": {
+        "title": "Manchester City Digital Transformation RFP 2064",
+        "description": "Request for proposals for digital platform development and mobile application services for Manchester City",
+        "confidence": 0.9950668913411328,
+        "urgency": "medium",
+        "fit_score": 78,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Borussia Dortmund",
+      "src_link": "https://example.com/rfp/borussia-dortmund",
+      "summary_json": {
+        "title": "Borussia Dortmund Digital Transformation RFP 2111",
+        "description": "Request for proposals for digital platform development and mobile application services for Borussia Dortmund",
+        "confidence": 0.8365749870971465,
+        "urgency": "high",
+        "fit_score": 84,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://example.com/rfp/manchester-united",
+      "summary_json": {
+        "title": "Manchester United Digital Transformation RFP 2063",
+        "description": "Request for proposals for digital platform development and mobile application services for Manchester United",
+        "confidence": 0.9152387624391833,
+        "urgency": "high",
+        "fit_score": 99,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Real Madrid",
+      "src_link": "https://example.com/news/real-madrid-partnership",
+      "summary_json": {
+        "title": "Real Madrid announces digital partnership initiative",
+        "description": "Real Madrid is seeking technology partners for digital transformation projects",
+        "confidence": 0.7538724938464505,
+        "urgency": "low",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Paris Saint-Germain",
+      "src_link": "https://example.com/rfp/paris-saint-germain",
+      "summary_json": {
+        "title": "Paris Saint-Germain Digital Transformation RFP 2086",
+        "description": "Request for proposals for digital platform development and mobile application services for Paris Saint-Germain",
+        "confidence": 0.8151819817374125,
+        "urgency": "low",
+        "fit_score": 64,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Fenerbahçe",
+      "src_link": "https://example.com/rfp/fenerbahçe",
+      "summary_json": {
+        "title": "Fenerbahçe Digital Transformation RFP 2120",
+        "description": "Request for proposals for digital platform development and mobile application services for Fenerbahçe",
+        "confidence": 0.9628526647947366,
+        "urgency": "high",
+        "fit_score": 93,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Rangers",
+      "src_link": "https://example.com/news/rangers-partnership",
+      "summary_json": {
+        "title": "Rangers announces digital partnership initiative",
+        "description": "Rangers is seeking technology partners for digital transformation projects",
+        "confidence": 0.8412147647011087,
+        "urgency": "low",
+        "fit_score": 68,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://example.com/news/manchester-united-partnership",
+      "summary_json": {
+        "title": "Manchester United announces digital partnership initiative",
+        "description": "Manchester United is seeking technology partners for digital transformation projects",
+        "confidence": 0.7486602967694139,
+        "urgency": "low",
+        "fit_score": 56,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://example.com/rfp/bayern-munich",
+      "summary_json": {
+        "title": "Bayern Munich Digital Transformation RFP 2122",
+        "description": "Request for proposals for digital platform development and mobile application services for Bayern Munich",
+        "confidence": 0.9235267521765421,
+        "urgency": "high",
+        "fit_score": 60,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Arsenal",
+      "src_link": "https://example.com/rfp/arsenal",
+      "summary_json": {
+        "title": "Arsenal Digital Transformation RFP 2063",
+        "description": "Request for proposals for digital platform development and mobile application services for Arsenal",
+        "confidence": 0.9600974092489307,
+        "urgency": "low",
+        "fit_score": 84,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Ajax",
+      "src_link": "https://example.com/rfp/ajax",
+      "summary_json": {
+        "title": "Ajax Digital Transformation RFP 2065",
+        "description": "Request for proposals for digital platform development and mobile application services for Ajax",
+        "confidence": 0.8403026976515127,
+        "urgency": "high",
+        "fit_score": 93,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://example.com/news/benfica-partnership",
+      "summary_json": {
+        "title": "Benfica announces digital partnership initiative",
+        "description": "Benfica is seeking technology partners for digital transformation projects",
+        "confidence": 0.707368134433277,
+        "urgency": "low",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Sporting CP",
+      "src_link": "https://example.com/rfp/sporting-cp",
+      "summary_json": {
+        "title": "Sporting CP Digital Transformation RFP 2030",
+        "description": "Request for proposals for digital platform development and mobile application services for Sporting CP",
+        "confidence": 0.8772774141436381,
+        "urgency": "low",
+        "fit_score": 75,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Galatasaray",
+      "src_link": "https://example.com/rfp/galatasaray",
+      "summary_json": {
+        "title": "Galatasaray Digital Transformation RFP 2046",
+        "description": "Request for proposals for digital platform development and mobile application services for Galatasaray",
+        "confidence": 0.8308176515706138,
+        "urgency": "high",
+        "fit_score": 70,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Barcelona",
+      "src_link": "https://example.com/rfp/barcelona",
+      "summary_json": {
+        "title": "Barcelona Digital Transformation RFP 2064",
+        "description": "Request for proposals for digital platform development and mobile application services for Barcelona",
+        "confidence": 0.9846950625725557,
+        "urgency": "low",
+        "fit_score": 66,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://example.com/rfp/bayern-munich",
+      "summary_json": {
+        "title": "Bayern Munich Digital Transformation RFP 2068",
+        "description": "Request for proposals for digital platform development and mobile application services for Bayern Munich",
+        "confidence": 0.866621203752518,
+        "urgency": "low",
+        "fit_score": 61,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Liverpool",
+      "src_link": "https://example.com/rfp/liverpool",
+      "summary_json": {
+        "title": "Liverpool Digital Transformation RFP 2115",
+        "description": "Request for proposals for digital platform development and mobile application services for Liverpool",
+        "confidence": 0.900053681902688,
+        "urgency": "medium",
+        "fit_score": 85,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Chelsea",
+      "src_link": "https://example.com/rfp/chelsea",
+      "summary_json": {
+        "title": "Chelsea Digital Transformation RFP 2091",
+        "description": "Request for proposals for digital platform development and mobile application services for Chelsea",
+        "confidence": 0.8562620192286428,
+        "urgency": "low",
+        "fit_score": 63,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://example.com/news/manchester-city-partnership",
+      "summary_json": {
+        "title": "Manchester City announces digital partnership initiative",
+        "description": "Manchester City is seeking technology partners for digital transformation projects",
+        "confidence": 0.8490493464805452,
+        "urgency": "low",
+        "fit_score": 65,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Inter Milan",
+      "src_link": "https://example.com/news/inter-milan-partnership",
+      "summary_json": {
+        "title": "Inter Milan announces digital partnership initiative",
+        "description": "Inter Milan is seeking technology partners for digital transformation projects",
+        "confidence": 0.7586331054048556,
+        "urgency": "low",
+        "fit_score": 55,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Paris Saint-Germain",
+      "src_link": "https://example.com/news/paris-saint-germain-partnership",
+      "summary_json": {
+        "title": "Paris Saint-Germain announces digital partnership initiative",
+        "description": "Paris Saint-Germain is seeking technology partners for digital transformation projects",
+        "confidence": 0.6022258346213661,
+        "urgency": "low",
+        "fit_score": 62,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Ajax",
+      "src_link": "https://example.com/rfp/ajax",
+      "summary_json": {
+        "title": "Ajax Digital Transformation RFP 2092",
+        "description": "Request for proposals for digital platform development and mobile application services for Ajax",
+        "confidence": 0.9087303347716135,
+        "urgency": "medium",
+        "fit_score": 98,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://example.com/rfp/benfica",
+      "summary_json": {
+        "title": "Benfica Digital Transformation RFP 2113",
+        "description": "Request for proposals for digital platform development and mobile application services for Benfica",
+        "confidence": 0.8810641614885218,
+        "urgency": "low",
+        "fit_score": 81,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Galatasaray",
+      "src_link": "https://example.com/rfp/galatasaray",
+      "summary_json": {
+        "title": "Galatasaray Digital Transformation RFP 2044",
+        "description": "Request for proposals for digital platform development and mobile application services for Galatasaray",
+        "confidence": 0.8579917810412874,
+        "urgency": "low",
+        "fit_score": 82,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Rangers",
+      "src_link": "https://example.com/rfp/rangers",
+      "summary_json": {
+        "title": "Rangers Digital Transformation RFP 2106",
+        "description": "Request for proposals for digital platform development and mobile application services for Rangers",
+        "confidence": 0.8356158985853793,
+        "urgency": "high",
+        "fit_score": 60,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Barcelona",
+      "src_link": "https://example.com/news/barcelona-partnership",
+      "summary_json": {
+        "title": "Barcelona announces digital partnership initiative",
+        "description": "Barcelona is seeking technology partners for digital transformation projects",
+        "confidence": 0.6196368752695826,
+        "urgency": "low",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://example.com/news/bayern-munich-partnership",
+      "summary_json": {
+        "title": "Bayern Munich announces digital partnership initiative",
+        "description": "Bayern Munich is seeking technology partners for digital transformation projects",
+        "confidence": 0.8751717616963672,
+        "urgency": "low",
+        "fit_score": 78,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Liverpool",
+      "src_link": "https://example.com/news/liverpool-partnership",
+      "summary_json": {
+        "title": "Liverpool announces digital partnership initiative",
+        "description": "Liverpool is seeking technology partners for digital transformation projects",
+        "confidence": 0.8399193018788556,
+        "urgency": "low",
+        "fit_score": 76,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Arsenal",
+      "src_link": "https://example.com/rfp/arsenal",
+      "summary_json": {
+        "title": "Arsenal Digital Transformation RFP 2028",
+        "description": "Request for proposals for digital platform development and mobile application services for Arsenal",
+        "confidence": 0.9188388437349935,
+        "urgency": "medium",
+        "fit_score": 90,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Chelsea",
+      "src_link": "https://example.com/rfp/chelsea",
+      "summary_json": {
+        "title": "Chelsea Digital Transformation RFP 2110",
+        "description": "Request for proposals for digital platform development and mobile application services for Chelsea",
+        "confidence": 0.8574808213467711,
+        "urgency": "high",
+        "fit_score": 82,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Inter Milan",
+      "src_link": "https://example.com/news/inter-milan-partnership",
+      "summary_json": {
+        "title": "Inter Milan announces digital partnership initiative",
+        "description": "Inter Milan is seeking technology partners for digital transformation projects",
+        "confidence": 0.7595093056638405,
+        "urgency": "low",
+        "fit_score": 69,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Porto",
+      "src_link": "https://example.com/news/porto-partnership",
+      "summary_json": {
+        "title": "Porto announces digital partnership initiative",
+        "description": "Porto is seeking technology partners for digital transformation projects",
+        "confidence": 0.8070989739821088,
+        "urgency": "low",
+        "fit_score": 58,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://example.com/news/benfica-partnership",
+      "summary_json": {
+        "title": "Benfica announces digital partnership initiative",
+        "description": "Benfica is seeking technology partners for digital transformation projects",
+        "confidence": 0.6327145774987236,
+        "urgency": "low",
+        "fit_score": 57,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Sporting CP",
+      "src_link": "https://example.com/news/sporting-cp-partnership",
+      "summary_json": {
+        "title": "Sporting CP announces digital partnership initiative",
+        "description": "Sporting CP is seeking technology partners for digital transformation projects",
+        "confidence": 0.7916095838631708,
+        "urgency": "low",
+        "fit_score": 74,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Real Madrid",
+      "src_link": "https://example.com/news/real-madrid-partnership",
+      "summary_json": {
+        "title": "Real Madrid announces digital partnership initiative",
+        "description": "Real Madrid is seeking technology partners for digital transformation projects",
+        "confidence": 0.8578395203329459,
+        "urgency": "low",
+        "fit_score": 70,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Arsenal",
+      "src_link": "https://example.com/rfp/arsenal",
+      "summary_json": {
+        "title": "Arsenal Digital Transformation RFP 2070",
+        "description": "Request for proposals for digital platform development and mobile application services for Arsenal",
+        "confidence": 0.8326992447086909,
+        "urgency": "medium",
+        "fit_score": 69,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Inter Milan",
+      "src_link": "https://example.com/news/inter-milan-partnership",
+      "summary_json": {
+        "title": "Inter Milan announces digital partnership initiative",
+        "description": "Inter Milan is seeking technology partners for digital transformation projects",
+        "confidence": 0.8612980611904244,
+        "urgency": "low",
+        "fit_score": 51,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Paris Saint-Germain",
+      "src_link": "https://example.com/rfp/paris-saint-germain",
+      "summary_json": {
+        "title": "Paris Saint-Germain Digital Transformation RFP 2064",
+        "description": "Request for proposals for digital platform development and mobile application services for Paris Saint-Germain",
+        "confidence": 0.9687858437353571,
+        "urgency": "medium",
+        "fit_score": 70,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://example.com/rfp/benfica",
+      "summary_json": {
+        "title": "Benfica Digital Transformation RFP 2068",
+        "description": "Request for proposals for digital platform development and mobile application services for Benfica",
+        "confidence": 0.8064441110792901,
+        "urgency": "medium",
+        "fit_score": 81,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Sporting CP",
+      "src_link": "https://example.com/rfp/sporting-cp",
+      "summary_json": {
+        "title": "Sporting CP Digital Transformation RFP 2096",
+        "description": "Request for proposals for digital platform development and mobile application services for Sporting CP",
+        "confidence": 0.9859941611163416,
+        "urgency": "medium",
+        "fit_score": 96,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Galatasaray",
+      "src_link": "https://example.com/news/galatasaray-partnership",
+      "summary_json": {
+        "title": "Galatasaray announces digital partnership initiative",
+        "description": "Galatasaray is seeking technology partners for digital transformation projects",
+        "confidence": 0.6068571631204535,
+        "urgency": "low",
+        "fit_score": 61,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Rangers",
+      "src_link": "https://example.com/news/rangers-partnership",
+      "summary_json": {
+        "title": "Rangers announces digital partnership initiative",
+        "description": "Rangers is seeking technology partners for digital transformation projects",
+        "confidence": 0.6968210167430804,
+        "urgency": "low",
+        "fit_score": 69,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Real Madrid",
+      "src_link": "https://example.com/rfp/real-madrid",
+      "summary_json": {
+        "title": "Real Madrid Digital Transformation RFP 2071",
+        "description": "Request for proposals for digital platform development and mobile application services for Real Madrid",
+        "confidence": 0.8777634135917003,
+        "urgency": "low",
+        "fit_score": 96,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Chelsea",
+      "src_link": "https://example.com/rfp/chelsea",
+      "summary_json": {
+        "title": "Chelsea Digital Transformation RFP 2039",
+        "description": "Request for proposals for digital platform development and mobile application services for Chelsea",
+        "confidence": 0.8349527085487586,
+        "urgency": "low",
+        "fit_score": 93,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Juventus",
+      "src_link": "https://example.com/rfp/juventus",
+      "summary_json": {
+        "title": "Juventus Digital Transformation RFP 2033",
+        "description": "Request for proposals for digital platform development and mobile application services for Juventus",
+        "confidence": 0.8923816808505391,
+        "urgency": "medium",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Inter Milan",
+      "src_link": "https://example.com/rfp/inter-milan",
+      "summary_json": {
+        "title": "Inter Milan Digital Transformation RFP 2115",
+        "description": "Request for proposals for digital platform development and mobile application services for Inter Milan",
+        "confidence": 0.8184726490634749,
+        "urgency": "medium",
+        "fit_score": 84,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Ajax",
+      "src_link": "https://example.com/news/ajax-partnership",
+      "summary_json": {
+        "title": "Ajax announces digital partnership initiative",
+        "description": "Ajax is seeking technology partners for digital transformation projects",
+        "confidence": 0.6588623921146579,
+        "urgency": "low",
+        "fit_score": 69,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Galatasaray",
+      "src_link": "https://example.com/rfp/galatasaray",
+      "summary_json": {
+        "title": "Galatasaray Digital Transformation RFP 2094",
+        "description": "Request for proposals for digital platform development and mobile application services for Galatasaray",
+        "confidence": 0.9529202120474466,
+        "urgency": "high",
+        "fit_score": 86,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Real Madrid",
+      "src_link": "https://example.com/rfp/real-madrid",
+      "summary_json": {
+        "title": "Real Madrid Digital Transformation RFP 2057",
+        "description": "Request for proposals for digital platform development and mobile application services for Real Madrid",
+        "confidence": 0.8250087162637837,
+        "urgency": "high",
+        "fit_score": 63,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://example.com/rfp/manchester-city",
+      "summary_json": {
+        "title": "Manchester City Digital Transformation RFP 2102",
+        "description": "Request for proposals for digital platform development and mobile application services for Manchester City",
+        "confidence": 0.972376317811289,
+        "urgency": "high",
+        "fit_score": 97,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "AC Milan",
+      "src_link": "https://example.com/rfp/ac-milan",
+      "summary_json": {
+        "title": "AC Milan Digital Transformation RFP 2088",
+        "description": "Request for proposals for digital platform development and mobile application services for AC Milan",
+        "confidence": 0.8293593749551669,
+        "urgency": "high",
+        "fit_score": 62,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Borussia Dortmund",
+      "src_link": "https://example.com/news/borussia-dortmund-partnership",
+      "summary_json": {
+        "title": "Borussia Dortmund announces digital partnership initiative",
+        "description": "Borussia Dortmund is seeking technology partners for digital transformation projects",
+        "confidence": 0.7201544291486758,
+        "urgency": "low",
+        "fit_score": 61,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://example.com/news/benfica-partnership",
+      "summary_json": {
+        "title": "Benfica announces digital partnership initiative",
+        "description": "Benfica is seeking technology partners for digital transformation projects",
+        "confidence": 0.7981409457160404,
+        "urgency": "low",
+        "fit_score": 58,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Rangers",
+      "src_link": "https://example.com/rfp/rangers",
+      "summary_json": {
+        "title": "Rangers Digital Transformation RFP 2036",
+        "description": "Request for proposals for digital platform development and mobile application services for Rangers",
+        "confidence": 0.8016360252824373,
+        "urgency": "medium",
+        "fit_score": 63,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://example.com/rfp/manchester-united",
+      "summary_json": {
+        "title": "Manchester United Digital Transformation RFP 2061",
+        "description": "Request for proposals for digital platform development and mobile application services for Manchester United",
+        "confidence": 0.948290757683768,
+        "urgency": "low",
+        "fit_score": 98,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Barcelona",
+      "src_link": "https://example.com/news/barcelona-partnership",
+      "summary_json": {
+        "title": "Barcelona announces digital partnership initiative",
+        "description": "Barcelona is seeking technology partners for digital transformation projects",
+        "confidence": 0.7083717529669373,
+        "urgency": "low",
+        "fit_score": 75,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://example.com/news/bayern-munich-partnership",
+      "summary_json": {
+        "title": "Bayern Munich announces digital partnership initiative",
+        "description": "Bayern Munich is seeking technology partners for digital transformation projects",
+        "confidence": 0.7963754184990798,
+        "urgency": "low",
+        "fit_score": 52,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Arsenal",
+      "src_link": "https://example.com/news/arsenal-partnership",
+      "summary_json": {
+        "title": "Arsenal announces digital partnership initiative",
+        "description": "Arsenal is seeking technology partners for digital transformation projects",
+        "confidence": 0.8613208000641936,
+        "urgency": "low",
+        "fit_score": 68,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Chelsea",
+      "src_link": "https://example.com/rfp/chelsea",
+      "summary_json": {
+        "title": "Chelsea Digital Transformation RFP 2046",
+        "description": "Request for proposals for digital platform development and mobile application services for Chelsea",
+        "confidence": 0.8290967205824809,
+        "urgency": "low",
+        "fit_score": 69,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://example.com/news/manchester-city-partnership",
+      "summary_json": {
+        "title": "Manchester City announces digital partnership initiative",
+        "description": "Manchester City is seeking technology partners for digital transformation projects",
+        "confidence": 0.6075198758741688,
+        "urgency": "low",
+        "fit_score": 64,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Borussia Dortmund",
+      "src_link": "https://example.com/rfp/borussia-dortmund",
+      "summary_json": {
+        "title": "Borussia Dortmund Digital Transformation RFP 2044",
+        "description": "Request for proposals for digital platform development and mobile application services for Borussia Dortmund",
+        "confidence": 0.9531767632889163,
+        "urgency": "high",
+        "fit_score": 82,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://example.com/news/bayern-munich-partnership",
+      "summary_json": {
+        "title": "Bayern Munich announces digital partnership initiative",
+        "description": "Bayern Munich is seeking technology partners for digital transformation projects",
+        "confidence": 0.7755456509455712,
+        "urgency": "low",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Liverpool",
+      "src_link": "https://example.com/rfp/liverpool",
+      "summary_json": {
+        "title": "Liverpool Digital Transformation RFP 2035",
+        "description": "Request for proposals for digital platform development and mobile application services for Liverpool",
+        "confidence": 0.8667932172469308,
+        "urgency": "low",
+        "fit_score": 69,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Paris Saint-Germain",
+      "src_link": "https://example.com/rfp/paris-saint-germain",
+      "summary_json": {
+        "title": "Paris Saint-Germain Digital Transformation RFP 2052",
+        "description": "Request for proposals for digital platform development and mobile application services for Paris Saint-Germain",
+        "confidence": 0.8005617052437901,
+        "urgency": "high",
+        "fit_score": 92,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://example.com/rfp/bayern-munich",
+      "summary_json": {
+        "title": "Bayern Munich Digital Transformation RFP 2062",
+        "description": "Request for proposals for digital platform development and mobile application services for Bayern Munich",
+        "confidence": 0.8864502888662174,
+        "urgency": "low",
+        "fit_score": 85,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Arsenal",
+      "src_link": "https://example.com/news/arsenal-partnership",
+      "summary_json": {
+        "title": "Arsenal announces digital partnership initiative",
+        "description": "Arsenal is seeking technology partners for digital transformation projects",
+        "confidence": 0.7985390443715992,
+        "urgency": "low",
+        "fit_score": 65,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "AC Milan",
+      "src_link": "https://example.com/rfp/ac-milan",
+      "summary_json": {
+        "title": "AC Milan Digital Transformation RFP 2042",
+        "description": "Request for proposals for digital platform development and mobile application services for AC Milan",
+        "confidence": 0.8910949394977469,
+        "urgency": "low",
+        "fit_score": 82,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Paris Saint-Germain",
+      "src_link": "https://example.com/news/paris-saint-germain-partnership",
+      "summary_json": {
+        "title": "Paris Saint-Germain announces digital partnership initiative",
+        "description": "Paris Saint-Germain is seeking technology partners for digital transformation projects",
+        "confidence": 0.6404864403421909,
+        "urgency": "low",
+        "fit_score": 69,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Borussia Dortmund",
+      "src_link": "https://example.com/news/borussia-dortmund-partnership",
+      "summary_json": {
+        "title": "Borussia Dortmund announces digital partnership initiative",
+        "description": "Borussia Dortmund is seeking technology partners for digital transformation projects",
+        "confidence": 0.8460749676048676,
+        "urgency": "low",
+        "fit_score": 58,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://example.com/rfp/benfica",
+      "summary_json": {
+        "title": "Benfica Digital Transformation RFP 2064",
+        "description": "Request for proposals for digital platform development and mobile application services for Benfica",
+        "confidence": 0.8751460048177353,
+        "urgency": "high",
+        "fit_score": 75,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Sporting CP",
+      "src_link": "https://example.com/news/sporting-cp-partnership",
+      "summary_json": {
+        "title": "Sporting CP announces digital partnership initiative",
+        "description": "Sporting CP is seeking technology partners for digital transformation projects",
+        "confidence": 0.653246854301108,
+        "urgency": "low",
+        "fit_score": 50,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Real Madrid",
+      "src_link": "https://example.com/news/real-madrid-partnership",
+      "summary_json": {
+        "title": "Real Madrid announces digital partnership initiative",
+        "description": "Real Madrid is seeking technology partners for digital transformation projects",
+        "confidence": 0.7296908478426246,
+        "urgency": "low",
+        "fit_score": 79,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Juventus",
+      "src_link": "https://example.com/news/juventus-partnership",
+      "summary_json": {
+        "title": "Juventus announces digital partnership initiative",
+        "description": "Juventus is seeking technology partners for digital transformation projects",
+        "confidence": 0.8324548338047051,
+        "urgency": "low",
+        "fit_score": 64,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "AC Milan",
+      "src_link": "https://example.com/rfp/ac-milan",
+      "summary_json": {
+        "title": "AC Milan Digital Transformation RFP 2113",
+        "description": "Request for proposals for digital platform development and mobile application services for AC Milan",
+        "confidence": 0.8628749950287466,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Porto",
+      "src_link": "https://example.com/rfp/porto",
+      "summary_json": {
+        "title": "Porto Digital Transformation RFP 2076",
+        "description": "Request for proposals for digital platform development and mobile application services for Porto",
+        "confidence": 0.8763741021407572,
+        "urgency": "low",
+        "fit_score": 67,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.835,
+    "avg_fit_score": 73,
+    "top_opportunity": "Manchester United",
+    "active_rfp_count": 54,
+    "signal_count": 38
+  }
+}

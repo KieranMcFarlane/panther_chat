@@ -1,0 +1,235 @@
+{
+  "timestamp": "2025-11-14T13:29:08.443Z",
+  "league": "League One",
+  "total": 25,
+  "successful": 0,
+  "failed": 25,
+  "successRate": "0.0",
+  "results": [
+    {
+      "success": false,
+      "team": "Barnsley",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/barnsley-badge.png",
+      "thesportsdbId": "133630",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/xvxsuv1447437855.png"
+    },
+    {
+      "success": false,
+      "team": "Birmingham City",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/birmingham-city-badge.png",
+      "thesportsdbId": "133597",
+      "league": "English League Championship",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/wufs551672950865.png"
+    },
+    {
+      "success": false,
+      "team": "Blackpool",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/blackpool-badge.png",
+      "thesportsdbId": "133618",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/utywru1448754934.png"
+    },
+    {
+      "success": false,
+      "team": "Bolton Wanderers",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/bolton-wanderers-badge.png",
+      "thesportsdbId": "133606",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/yvxxrv1448808301.png"
+    },
+    {
+      "success": false,
+      "team": "Bristol Rovers",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/bristol-rovers-badge.png",
+      "thesportsdbId": "134358",
+      "league": "English League 2",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/kkmj4o1689317429.png"
+    },
+    {
+      "success": false,
+      "team": "Burton Albion",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/burton-albion-badge.png",
+      "thesportsdbId": "134376",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/uvpqpw1423804499.png"
+    },
+    {
+      "success": false,
+      "team": "Cambridge United",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/cambridge-united-badge.png",
+      "thesportsdbId": "134586",
+      "league": "English League 2",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/ggihm61750279411.png"
+    },
+    {
+      "success": false,
+      "team": "Charlton Athletic",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/charlton-athletic-badge.png",
+      "thesportsdbId": "133851",
+      "league": "English League Championship",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/o08wvi1635872307.png"
+    },
+    {
+      "success": false,
+      "team": "Crawley Town",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/crawley-town-badge.png",
+      "thesportsdbId": "134363",
+      "league": "English League 2",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/a9hv3n1689632800.png"
+    },
+    {
+      "success": false,
+      "team": "Exeter City",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/exeter-city-badge.png",
+      "thesportsdbId": "134365",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/98wt4h1521144923.png"
+    },
+    {
+      "success": false,
+      "team": "Huddersfield Town",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/huddersfield-town-badge.png",
+      "thesportsdbId": "133932",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/y11fin1677527513.png"
+    },
+    {
+      "success": false,
+      "team": "Leyton Orient",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/leyton-orient-badge.png",
+      "thesportsdbId": "134367",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/g4d9bi1688678797.png"
+    },
+    {
+      "success": false,
+      "team": "Lincoln City",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/lincoln-city-badge.png",
+      "thesportsdbId": "135900",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/x46tji1719860130.png"
+    },
+    {
+      "success": false,
+      "team": "Mansfield Town",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/mansfield-town-badge.png",
+      "thesportsdbId": "134381",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://www.thesportsdb.com/images/media/team/badge/c1fpes1761709071.png"
+    },
+    {
+      "success": false,
+      "team": "Northampton Town",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/northampton-town-badge.png",
+      "thesportsdbId": "134370",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/aa42641684131255.png"
+    },
+    {
+      "success": false,
+      "team": "Peterborough United",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/peterborough-united-badge.png",
+      "thesportsdbId": "133631",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://www.thesportsdb.com/images/media/team/badge/63gt4u1761710001.png"
+    },
+    {
+      "success": false,
+      "team": "Portsmouth",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/portsmouth-badge.png",
+      "thesportsdbId": "133629",
+      "league": "English League Championship",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/j13pfe1601726274.png"
+    },
+    {
+      "success": false,
+      "team": "Reading",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/reading-badge.png",
+      "thesportsdbId": "133633",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/tprvtu1448811527.png"
+    },
+    {
+      "success": false,
+      "team": "Rotherham United",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/rotherham-united-badge.png",
+      "thesportsdbId": "134231",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/sewy0z1752149213.png"
+    },
+    {
+      "success": false,
+      "team": "Shrewsbury Town",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/shrewsbury-town-badge.png",
+      "thesportsdbId": "134377",
+      "league": "English League 2",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/9zqhpw1546434997.png"
+    },
+    {
+      "success": false,
+      "team": "Stevenage",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/stevenage-badge.png",
+      "thesportsdbId": "134378",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/o4m2ci1596480474.png"
+    },
+    {
+      "success": false,
+      "team": "Stockport County",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/stockport-county-badge.png",
+      "thesportsdbId": "134258",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/jcsz9k1594450753.png"
+    },
+    {
+      "success": false,
+      "team": "Wigan Athletic",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/wigan-athletic-badge.png",
+      "thesportsdbId": "133607",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/wtxwyw1448759640.png"
+    },
+    {
+      "success": false,
+      "team": "Wrexham",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/wrexham-badge.png",
+      "thesportsdbId": "134775",
+      "league": "English League Championship",
+      "country": "Wales",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/ezpymt1675092551.png"
+    },
+    {
+      "success": false,
+      "team": "Wycombe Wanderers",
+      "badgeUrl": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/wycombe-wanderers-badge.png",
+      "thesportsdbId": "134382",
+      "league": "English League 1",
+      "country": "England",
+      "originalBadgeUrl": "https://r2.thesportsdb.com/images/media/team/badge/avi3bu1688678934.png"
+    }
+  ]
+}

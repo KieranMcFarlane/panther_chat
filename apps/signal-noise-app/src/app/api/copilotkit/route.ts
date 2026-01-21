@@ -26,6 +26,138 @@ interface ClaudeWebhookResponse {
   error?: string;
 }
 
+// FastAPI backend URL for temporal intelligence
+const FASTAPI_URL = process.env.FASTAPI_URL || 'http://localhost:8000';
+
+// =============================================================================
+// Temporal Intelligence Tools
+// =============================================================================
+
+const temporalTools = {
+  'get_entity_timeline': {
+    description: "Get temporal history of an entity including RFPs, partnerships, changes, and other events over time",
+    parameters: {
+      entity_id: { type: "string", description: "Entity identifier (name or neo4j_id)" },
+      limit: { type: "number", description: "Number of events to return (default: 50)" }
+    },
+    handler: async (args: { entity_id: string; limit?: number }) => {
+      try {
+        const response = await fetch(
+          `${FASTAPI_URL}/api/temporal/entity/${encodeURIComponent(args.entity_id)}/timeline?limit=${args.limit || 50}`
+        );
+        if (!response.ok) {
+          throw new Error(`Temporal API error: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('Timeline fetch error:', error);
+        return { error: 'Failed to fetch entity timeline', entity_id: args.entity_id };
+      }
+    }
+  },
+
+  'analyze_temporal_fit': {
+    description: "Analyze how well an entity fits an RFP opportunity based on their temporal patterns, past RFP history, and trends",
+    parameters: {
+      entity_id: { type: "string", description: "Entity to analyze (name or neo4j_id)" },
+      rfp_id: { type: "string", description: "RFP identifier" },
+      rfp_category: { type: "string", description: "RFP category (optional)" },
+      rfp_value: { type: "number", description: "Estimated RFP value (optional)" },
+      time_horizon: { type: "number", description: "Days to look back for analysis (default: 90)" }
+    },
+    handler: async (args: { entity_id: string; rfp_id: string; rfp_category?: string; rfp_value?: number; time_horizon?: number }) => {
+      try {
+        const response = await fetch(`${FASTAPI_URL}/api/temporal/analyze-fit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            entity_id: args.entity_id,
+            rfp_id: args.rfp_id,
+            rfp_category: args.rfp_category,
+            rfp_value: args.rfp_value,
+            time_horizon: args.time_horizon || 90
+          })
+        });
+        if (!response.ok) {
+          throw new Error(`Temporal API error: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('Fit analysis error:', error);
+        return {
+          error: 'Failed to analyze temporal fit',
+          entity_id: args.entity_id,
+          fit_score: 0.5,
+          confidence: 0.3,
+          recommendations: ['Temporal service unavailable - using default scores']
+        };
+      }
+    }
+  },
+
+  'get_temporal_patterns': {
+    description: "Get aggregate temporal patterns across all entities including top active entities, RFP trends, and episode statistics",
+    parameters: {
+      entity_type: { type: "string", description: "Filter by entity type (optional)" },
+      time_horizon: { type: "number", description: "Days to look back (default: 365)" }
+    },
+    handler: async (args: { entity_type?: string; time_horizon?: number }) => {
+      try {
+        const params = new URLSearchParams();
+        if (args.entity_type) params.append('entity_type', args.entity_type);
+        params.append('time_horizon', String(args.time_horizon || 365));
+
+        const response = await fetch(
+          `${FASTAPI_URL}/api/temporal/patterns?${params.toString()}`
+        );
+        if (!response.ok) {
+          throw new Error(`Temporal API error: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('Patterns fetch error:', error);
+        return {
+          error: 'Failed to fetch temporal patterns',
+          time_horizon_days: args.time_horizon || 365,
+          episode_types: {},
+          top_entities: []
+        };
+      }
+    }
+  },
+
+  'create_rfp_episode': {
+    description: "Record an RFP detection as a temporal episode for tracking and future analysis",
+    parameters: {
+      rfp_id: { type: "string", description: "Unique RFP identifier" },
+      organization: { type: "string", description: "Organization name" },
+      entity_type: { type: "string", description: "Entity type (Club, League, etc.)" },
+      title: { type: "string", description: "RFP title" },
+      description: { type: "string", description: "RFP description" },
+      source: { type: "string", description: "Detection source (LinkedIn, Perplexity, etc.)" },
+      url: { type: "string", description: "RFP URL" },
+      category: { type: "string", description: "RFP category" },
+      confidence_score: { type: "number", description: "Detection confidence (0-1)" }
+    },
+    handler: async (args: any) => {
+      try {
+        const response = await fetch(`${FASTAPI_URL}/api/temporal/rfp-episode`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(args)
+        });
+        if (!response.ok) {
+          throw new Error(`Temporal API error: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('Episode creation error:', error);
+        return { error: 'Failed to create RFP episode', rfp_id: args.rfp_id };
+      }
+    }
+  }
+};
+
 export async function POST(req: NextRequest) {
   try {
     // Parse the incoming CopilotKit request
@@ -127,19 +259,16 @@ export async function POST(req: NextRequest) {
               prompt: latestUserMessage.content,
               options: {
                 mcpServers: {
-                  "neo4j-mcp": {
-                    "command": "npx",
+                  "falkordb-mcp": {
+                    "command": "python",
                     "args": [
-                      "-y",
-                      "@alanse/mcp-neo4j-server"
+                      "backend/falkordb_mcp_server_fastmcp.py"
                     ],
                     "env": {
-                      "NEO4J_URI": process.env.NEO4J_URI || "",
-                      "NEO4J_USERNAME": process.env.NEO4J_USERNAME || "",
-                      "NEO4J_PASSWORD": process.env.NEO4J_PASSWORD || "",
-                      "NEO4J_DATABASE": process.env.NEO4J_DATABASE || "neo4j",
-                      "AURA_INSTANCEID": process.env.AURA_INSTANCEID || "",
-                      "AURA_INSTANCENAME": process.env.AURA_INSTANCENAME || ""
+                      "FALKORDB_URI": process.env.FALKORDB_URI,
+                      "FALKORDB_USER": process.env.FALKORDB_USER,
+                      "FALKORDB_PASSWORD": process.env.FALKORDB_PASSWORD,
+                      "FALKORDB_DATABASE": process.env.FALKORDB_DATABASE || "sports_intelligence"
                     }
                   },
                   "brightData": {
@@ -165,12 +294,14 @@ export async function POST(req: NextRequest) {
                   }
                 },
                 allowedTools: [
-                  // Neo4j tools
-                  "mcp__neo4j-mcp__execute_query",
-                  "mcp__neo4j-mcp__search_nodes", 
-                  "mcp__neo4j-mcp__get_relationships",
-                  "mcp__neo4j-mcp__create_node",
-                  "mcp__neo4j-mcp__create_relationship",
+                  // FalkorDB tools
+                  "mcp__falkordb-mcp__search_rfps",
+                  "mcp__falkordb-mcp__get_entity_timeline",
+                  "mcp__falkordb-mcp__search_entities",
+                  "mcp__falkordb-mcp__add_rfp_episode",
+                  "mcp__falkordb-mcp__query_graph",
+                  "mcp__falkordb-mcp__get_graph_stats",
+                  "mcp__falkordb-mcp__list_graphs",
                   // BrightData tools
                   "mcp__brightData__search_engine",
                   "mcp__brightData__scrape_as_markdown",
@@ -181,13 +312,34 @@ export async function POST(req: NextRequest) {
                 ]
               },
               system: `You are a Sports Intelligence AI assistant with access to powerful tools:
-- Neo4j database with 3,325+ sports entities (clubs, players, competitions)
-- BrightData web search for real-time information  
+- FalkorDB knowledge graph with 3,400+ sports entities and 30+ RFPs (clubs, players, competitions)
+- BrightData web search for real-time information
 - Perplexity AI for up-to-date insights
+- Temporal Intelligence for RFP analysis and entity history
 
 Your task is to help users analyze sports clubs, identify business opportunities, find decision makers, and provide comprehensive sports intelligence using both database knowledge and real-time web research.
 
-When users ask about sports entities, use the Neo4j tools to search the database.
+FALKORDB TOOLS:
+- search_rfps: Search for RFP opportunities by sport, category, or keywords
+- get_entity_timeline: Get an organization's complete RFP history
+- search_entities: Find sports entities (clubs, players, tournaments)
+- add_rfp_episode: Add new RFP discoveries to the knowledge graph
+- query_graph: Run custom Cypher queries on the knowledge graph
+- get_graph_stats: View database statistics
+
+TEMPORAL INTELLIGENCE TOOLS:
+- get_entity_timeline: Get an entity's complete history (RFPs, partnerships, changes)
+- analyze_temporal_fit: Analyze if an entity fits an RFP based on their patterns
+- get_temporal_patterns: Get aggregate trends across all entities
+- create_rfp_episode: Record RFP detections for future analysis
+
+When users ask about:
+- "Show me Tennis RFPs" → Use search_rfps with sport="Tennis"
+- "What's PGA's RFP history?" → Use get_entity_timeline with "PGA"
+- "Find golf organizations" → Use search_entities with query="golf"
+- "Add a new RFP" → Use add_rfp_episode
+
+When users ask about sports entities, use the FalkorDB tools to search the knowledge graph.
 When users need current information, use BrightData or Perplexity search tools.
 Always provide detailed, actionable insights based on the tool results.
 
@@ -350,14 +502,14 @@ Provide your analysis in a conversational, streaming manner as if you're thinkin
               let fallbackResponse = `I've analyzed your request about "${latestUserMessage.content}" using ${toolResults.length} sports intelligence tools.`;
               
               // Check if tool results indicate successful operations
-              const hasDeletionOperations = toolResults.some(result => 
-                result.tool?.includes('neo4j') && 
+              const hasDeletionOperations = toolResults.some(result =>
+                result.tool?.includes('falkordb') &&
                 (result.result?.includes('deleted') || result.result?.includes('removed'))
               );
-              
-              const hasQueryOperations = toolResults.some(result => 
-                result.tool?.includes('neo4j') && 
-                (result.result?.includes('nodes') || result.result?.includes('relationships'))
+
+              const hasQueryOperations = toolResults.some(result =>
+                result.tool?.includes('falkordb') &&
+                (result.result?.includes('nodes') || result.result?.includes('relationships') || result.result?.includes('RFPs'))
               );
               
               if (hasDeletionOperations) {

@@ -1,0 +1,1148 @@
+{
+  "summary": {
+    "total_entities": 50,
+    "active_rfps": 0,
+    "signals": 0,
+    "excluded": 50,
+    "errors": 0,
+    "processing_time_seconds": 55,
+    "timestamp": "2025-11-10T17:44:23.839Z"
+  },
+  "results": [
+    {
+      "entity_name": "MKS Będzin",
+      "sport": "Volleyball",
+      "country": "Poland",
+      "search_term": "MKS Będzin Volleyball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "MKS Będzin Volleyball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a333f1cd094',t:'MTc2Mjc5NjYwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:28.623Z",
+      "entity_index": 1
+    },
+    {
+      "entity_name": "Eastern Province",
+      "sport": "Cricket",
+      "country": "South Africa",
+      "search_term": "Eastern Province Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Eastern Province Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a3a4f6bd094',t:'MTc2Mjc5NjYwOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:29.747Z",
+      "entity_index": 2
+    },
+    {
+      "entity_name": "Aguada",
+      "sport": "Basketball",
+      "country": "Uruguay",
+      "search_term": "Aguada Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Aguada Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a414f60d094',t:'MTc2Mjc5NjYxMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:30.870Z",
+      "entity_index": 3
+    },
+    {
+      "entity_name": "Marcq-en-Baroeul",
+      "sport": "Rugby",
+      "country": "France",
+      "search_term": "Marcq-en-Baroeul Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Marcq-en-Baroeul Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a484849d094',t:'MTc2Mjc5NjYxMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:31.994Z",
+      "entity_index": 4
+    },
+    {
+      "entity_name": "Parma Perm",
+      "sport": "Basketball",
+      "country": "Russia",
+      "search_term": "Parma Perm Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Parma Perm Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a4f492cd094',t:'MTc2Mjc5NjYxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:33.186Z",
+      "entity_index": 5
+    },
+    {
+      "entity_name": "Handebol Londrina",
+      "sport": "Handball",
+      "country": "Brazil",
+      "search_term": "Handebol Londrina Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Handebol Londrina Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a56ca6bd094',t:'MTc2Mjc5NjYxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:34.319Z",
+      "entity_index": 6
+    },
+    {
+      "entity_name": "Bahçeşehir Koleji",
+      "sport": "Basketball",
+      "country": "Türkiye",
+      "search_term": "Bahçeşehir Koleji Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Bahçeşehir Koleji Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a5ddc3bd094',t:'MTc2Mjc5NjYxNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:35.438Z",
+      "entity_index": 7
+    },
+    {
+      "entity_name": "Wolfdogs Nagoya",
+      "sport": "Volleyball",
+      "country": "Japan",
+      "search_term": "Wolfdogs Nagoya Volleyball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Wolfdogs Nagoya Volleyball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a64dcfad094',t:'MTc2Mjc5NjYxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:36.560Z",
+      "entity_index": 8
+    },
+    {
+      "entity_name": "Al Ahli",
+      "sport": "Football",
+      "country": "Saudi Arabia",
+      "search_term": "Al Ahli Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Al Ahli Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a6bedfed094',t:'MTc2Mjc5NjYxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:37.691Z",
+      "entity_index": 9
+    },
+    {
+      "entity_name": "Indianapolis Indians",
+      "sport": "Baseball",
+      "country": "United States",
+      "search_term": "Indianapolis Indians Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Indianapolis Indians Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a72ee2cd094',t:'MTc2Mjc5NjYxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:38.808Z",
+      "entity_index": 10
+    },
+    {
+      "entity_name": "Mitteldeutscher BC",
+      "sport": "Basketball",
+      "country": "Germany",
+      "search_term": "Mitteldeutscher BC Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Mitteldeutscher BC Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a79ee9bd094',t:'MTc2Mjc5NjYxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:39.934Z",
+      "entity_index": 11
+    },
+    {
+      "entity_name": "Montpellier Hérault Rugby",
+      "sport": "Rugby",
+      "country": "France",
+      "search_term": "Montpellier Hérault Rugby Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Montpellier Hérault Rugby Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a80f84cd094',t:'MTc2Mjc5NjYyMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:41.056Z",
+      "entity_index": 12
+    },
+    {
+      "entity_name": "Idaho Steelheads",
+      "sport": "Ice Hockey",
+      "country": "United States",
+      "search_term": "Idaho Steelheads Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Idaho Steelheads Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a87f995d094',t:'MTc2Mjc5NjYyMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:42.180Z",
+      "entity_index": 13
+    },
+    {
+      "entity_name": "FC Porto Handball",
+      "sport": "Handball",
+      "country": "Portugal",
+      "search_term": "FC Porto Handball Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "FC Porto Handball Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a8efd0bd094',t:'MTc2Mjc5NjYyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:43.307Z",
+      "entity_index": 14
+    },
+    {
+      "entity_name": "Halkbank Ankara",
+      "sport": "Volleyball",
+      "country": "Turkey",
+      "search_term": "Halkbank Ankara Volleyball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Halkbank Ankara Volleyball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a960e01d094',t:'MTc2Mjc5NjYyNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:44.434Z",
+      "entity_index": 15
+    },
+    {
+      "entity_name": "Esperance de Tunis",
+      "sport": "Football",
+      "country": "Tunisia",
+      "search_term": "Esperance de Tunis Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Esperance de Tunis Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75a9d1815d094',t:'MTc2Mjc5NjYyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:45.565Z",
+      "entity_index": 16
+    },
+    {
+      "entity_name": "RK Vojvodina",
+      "sport": "Handball",
+      "country": "Serbia",
+      "search_term": "RK Vojvodina Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "RK Vojvodina Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75aa4284fd094',t:'MTc2Mjc5NjYyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:46.691Z",
+      "entity_index": 17
+    },
+    {
+      "entity_name": "New Jersey Devils",
+      "sport": "Ice Hockey",
+      "country": "United States",
+      "search_term": "New Jersey Devils Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "New Jersey Devils Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75aab28a3d094',t:'MTc2Mjc5NjYyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:47.808Z",
+      "entity_index": 18
+    },
+    {
+      "entity_name": "Club Atlético Goes",
+      "sport": "Basketball",
+      "country": "Uruguay",
+      "search_term": "Club Atlético Goes Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Club Atlético Goes Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75ab229add094',t:'MTc2Mjc5NjYyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:48.935Z",
+      "entity_index": 19
+    },
+    {
+      "entity_name": "Al Ettifaq",
+      "sport": "Football",
+      "country": "Saudi Arabia",
+      "search_term": "Al Ettifaq Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Al Ettifaq Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75ab93a1bd094',t:'MTc2Mjc5NjYzMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:50.068Z",
+      "entity_index": 20
+    },
+    {
+      "entity_name": "Ottawa Senators",
+      "sport": "Ice Hockey",
+      "country": "Canada",
+      "search_term": "Ottawa Senators Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Ottawa Senators Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75ac04a35d094',t:'MTc2Mjc5NjYzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:51.198Z",
+      "entity_index": 21
+    },
+    {
+      "entity_name": "Miami Marlins",
+      "sport": "Baseball",
+      "country": "United States",
+      "search_term": "Miami Marlins Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Miami Marlins Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75ac75ca3d094',t:'MTc2Mjc5NjYzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:52.330Z",
+      "entity_index": 22
+    },
+    {
+      "entity_name": "VfB Stuttgart",
+      "sport": "Football",
+      "country": "Germany",
+      "search_term": "VfB Stuttgart Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "VfB Stuttgart Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75ace6cd1d094',t:'MTc2Mjc5NjYzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:53.451Z",
+      "entity_index": 23
+    },
+    {
+      "entity_name": "Estoril Praia",
+      "sport": "Football",
+      "country": "Portugal",
+      "search_term": "Estoril Praia Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Estoril Praia Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75ad56da5d094',t:'MTc2Mjc5NjYzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:54.572Z",
+      "entity_index": 24
+    },
+    {
+      "entity_name": "Old Glory DC",
+      "sport": "Rugby",
+      "country": "United States",
+      "search_term": "Old Glory DC Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Old Glory DC Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75adc6e44d094',t:'MTc2Mjc5NjYzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:55.704Z",
+      "entity_index": 25
+    },
+    {
+      "entity_name": "GOG Håndbold",
+      "sport": "Handball",
+      "country": "Denmark",
+      "search_term": "GOG Håndbold Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "GOG Håndbold Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75ae3886dd094',t:'MTc2Mjc5NjYzNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:56.825Z",
+      "entity_index": 26
+    },
+    {
+      "entity_name": "Nizhny Novgorod",
+      "sport": "Basketball",
+      "country": "Russia",
+      "search_term": "Nizhny Novgorod Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Nizhny Novgorod Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75aea88ffd094',t:'MTc2Mjc5NjYzNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:57.950Z",
+      "entity_index": 27
+    },
+    {
+      "entity_name": "Galle Cricket Club",
+      "sport": "Cricket",
+      "country": "Sri Lanka",
+      "search_term": "Galle Cricket Club Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Galle Cricket Club Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75af189c5d094',t:'MTc2Mjc5NjYzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:43:59.067Z",
+      "entity_index": 28
+    },
+    {
+      "entity_name": "Lavrio BC",
+      "sport": "Basketball",
+      "country": "Greece",
+      "search_term": "Lavrio BC Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Lavrio BC Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75af8898cd094',t:'MTc2Mjc5NjY0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:00.187Z",
+      "entity_index": 29
+    },
+    {
+      "entity_name": "Jersey Reds",
+      "sport": "Rugby",
+      "country": "Jersey",
+      "search_term": "Jersey Reds Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Jersey Reds Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75aff89d2d094',t:'MTc2Mjc5NjY0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:01.312Z",
+      "entity_index": 30
+    },
+    {
+      "entity_name": "Connacht",
+      "sport": "Rugby",
+      "country": "Ireland",
+      "search_term": "Connacht Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Connacht Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b0689d4d094',t:'MTc2Mjc5NjY0Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:02.427Z",
+      "entity_index": 31
+    },
+    {
+      "entity_name": "RK Celje Pivovarna Laško",
+      "sport": "Handball",
+      "country": "Slovenia",
+      "search_term": "RK Celje Pivovarna Laško Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "RK Celje Pivovarna Laško Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b0d9ab3d094',t:'MTc2Mjc5NjY0My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:03.552Z",
+      "entity_index": 32
+    },
+    {
+      "entity_name": "PEC Zwolle",
+      "sport": "Football",
+      "country": "Netherlands",
+      "search_term": "PEC Zwolle Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "PEC Zwolle Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b148a38d094',t:'MTc2Mjc5NjY0NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:04.677Z",
+      "entity_index": 33
+    },
+    {
+      "entity_name": "Internacional",
+      "sport": "Football",
+      "country": "Brazil",
+      "search_term": "Internacional Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Internacional Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b1b9a1ed094',t:'MTc2Mjc5NjY0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:05.807Z",
+      "entity_index": 34
+    },
+    {
+      "entity_name": "Toshiba Brave Lupus",
+      "sport": "Rugby",
+      "country": "Japan",
+      "search_term": "Toshiba Brave Lupus Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Toshiba Brave Lupus Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b22aa7ed094',t:'MTc2Mjc5NjY0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:06.927Z",
+      "entity_index": 35
+    },
+    {
+      "entity_name": "Al Wahda Damascus",
+      "sport": "Basketball",
+      "country": "Syria",
+      "search_term": "Al Wahda Damascus Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Al Wahda Damascus Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b29aa93d094',t:'MTc2Mjc5NjY0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:08.072Z",
+      "entity_index": 36
+    },
+    {
+      "entity_name": "Antalyaspor",
+      "sport": "Football",
+      "country": "Türkiye",
+      "search_term": "Antalyaspor Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Antalyaspor Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b30cbb1d094',t:'MTc2Mjc5NjY0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:09.195Z",
+      "entity_index": 37
+    },
+    {
+      "entity_name": "Los Angeles Angels",
+      "sport": "Baseball",
+      "country": "United States",
+      "search_term": "Los Angeles Angels Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Los Angeles Angels Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b37dc97d094',t:'MTc2Mjc5NjY1MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:10.319Z",
+      "entity_index": 38
+    },
+    {
+      "entity_name": "Tatabánya KC",
+      "sport": "Handball",
+      "country": "Hungary",
+      "search_term": "Tatabánya KC Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Tatabánya KC Handball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b3eebf2d094',t:'MTc2Mjc5NjY1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:11.454Z",
+      "entity_index": 39
+    },
+    {
+      "entity_name": "Nottingham Rugby",
+      "sport": "Rugby",
+      "country": "England",
+      "search_term": "Nottingham Rugby Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Nottingham Rugby Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b45fb64d094',t:'MTc2Mjc5NjY1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:12.577Z",
+      "entity_index": 40
+    },
+    {
+      "entity_name": "Real Sociedad",
+      "sport": "Football",
+      "country": "Spain",
+      "search_term": "Real Sociedad Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Real Sociedad Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b4cfac9d094',t:'MTc2Mjc5NjY1My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:13.698Z",
+      "entity_index": 41
+    },
+    {
+      "entity_name": "Dragons RFC",
+      "sport": "Rugby",
+      "country": "Wales",
+      "search_term": "Dragons RFC Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Dragons RFC Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b53fc6ed094',t:'MTc2Mjc5NjY1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:14.821Z",
+      "entity_index": 42
+    },
+    {
+      "entity_name": "Jiangsu Dragons",
+      "sport": "Basketball",
+      "country": "China",
+      "search_term": "Jiangsu Dragons Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Jiangsu Dragons Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b5afce5d094',t:'MTc2Mjc5NjY1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:15.948Z",
+      "entity_index": 43
+    },
+    {
+      "entity_name": "Ricoh Black Rams",
+      "sport": "Rugby",
+      "country": "Japan",
+      "search_term": "Ricoh Black Rams Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Ricoh Black Rams Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b620c70d094',t:'MTc2Mjc5NjY1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:17.066Z",
+      "entity_index": 44
+    },
+    {
+      "entity_name": "FC Copenhagen",
+      "sport": "Football",
+      "country": "Denmark",
+      "search_term": "FC Copenhagen Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "FC Copenhagen Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b690f20d094',t:'MTc2Mjc5NjY1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:18.187Z",
+      "entity_index": 45
+    },
+    {
+      "entity_name": "Yokohama DeNA BayStars",
+      "sport": "Baseball",
+      "country": "Japan",
+      "search_term": "Yokohama DeNA BayStars Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Yokohama DeNA BayStars Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b700ffed094',t:'MTc2Mjc5NjY1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:19.313Z",
+      "entity_index": 46
+    },
+    {
+      "entity_name": "Islamabad United",
+      "sport": "Cricket",
+      "country": "Pakistan",
+      "search_term": "Islamabad United Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Islamabad United Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b771854d094',t:'MTc2Mjc5NjY2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:20.456Z",
+      "entity_index": 47
+    },
+    {
+      "entity_name": "Indy Fuel",
+      "sport": "Ice Hockey",
+      "country": "United States",
+      "search_term": "Indy Fuel Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Indy Fuel Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b7e3918d094',t:'MTc2Mjc5NjY2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:21.587Z",
+      "entity_index": 48
+    },
+    {
+      "entity_name": "Harlequins",
+      "sport": "Rugby",
+      "country": "England",
+      "search_term": "Harlequins Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Harlequins Rugby (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b854a39d094',t:'MTc2Mjc5NjY2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:22.711Z",
+      "entity_index": 49
+    },
+    {
+      "entity_name": "Unics Kazan",
+      "sport": "Basketball",
+      "country": "Russia",
+      "search_term": "Unics Kazan Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "EXCLUDE",
+      "fit_score": 0,
+      "fit_score_reasons": [
+        "Non-digital project excluded"
+      ],
+      "perplexity_response": {
+        "status": "parse_error",
+        "error": "Failed to parse API response: Unexpected token '<', \"<html>\r\n<h\"... is not valid JSON",
+        "search_query": "Unics Kazan Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+        "raw_response": "<html>\r\n<head><title>401 Authorization Required</title></head>\r\n<body>\r\n<center><h1>401 Authorization Required</h1></center>\r\n<hr><center>openresty/1.27.4</center>\r\n<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'99c75b8c5aabd094',t:'MTc2Mjc5NjY2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\r\n</html>\r\n"
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T17:44:23.839Z",
+      "entity_index": 50
+    }
+  ],
+  "metadata": {
+    "detection_strategy": "perplexity",
+    "api_model": "llama-3.1-sonar-small-128k-online",
+    "query_template": "entity + sport + digital RFP keywords",
+    "scoring_criteria": {
+      "active_rfp_digital": 40,
+      "signal_digital": 20,
+      "valid_urls": 10,
+      "uk_eu_location": 10,
+      "content_quality": 5,
+      "successful_response": 5,
+      "non_digital_penalty": -50
+    }
+  }
+}

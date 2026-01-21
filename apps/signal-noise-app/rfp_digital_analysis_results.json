@@ -1,0 +1,17 @@
+{
+  "total_rfps_detected": 0,
+  "verified_rfps": 0,
+  "rejected_rfps": 0,
+  "entities_checked": 5,
+  "highlights": [],
+  "scoring_summary": {
+    "avg_confidence": 0,
+    "avg_fit_score": 0,
+    "top_opportunity": "None found"
+  },
+  "quality_metrics": {
+    "digital_projects_only": true,
+    "job_postings_rejected": 0,
+    "construction_rejected": 0
+  }
+}

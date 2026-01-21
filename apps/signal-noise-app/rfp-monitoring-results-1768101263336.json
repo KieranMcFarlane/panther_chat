@@ -1,0 +1,791 @@
+{
+  "total_rfps_detected": 65,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "Benfica",
+      "src_link": "https://procurement.example.com/benfica-rfp-1768101243895.pdf",
+      "summary_json": {
+        "title": "Benfica tender document: Stadium Technology Upgrade",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Benfica (Basketball)",
+      "src_link": "https://procurement.example.com/benfica-basketball-rfp-1768101243960.pdf",
+      "summary_json": {
+        "title": "Benfica (Basketball) seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Brooklyn Nets",
+      "src_link": "https://procurement.example.com/brooklyn-nets-rfp-1768101244465.pdf",
+      "summary_json": {
+        "title": "Brooklyn Nets tender document: Stadium Technology Upgrade",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Liverpool",
+      "src_link": "https://procurement.example.com/liverpool-rfp-1768101244722.pdf",
+      "summary_json": {
+        "title": "Liverpool RFP: Technology Partnership and Digital Services",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "West Ham United",
+      "src_link": "https://procurement.example.com/west-ham-united-rfp-1768101244975.pdf",
+      "summary_json": {
+        "title": "West Ham United RFP: Technology Partnership and Digital Services",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Birmingham City",
+      "src_link": "https://procurement.example.com/birmingham-city-rfp-1768101245230.pdf",
+      "summary_json": {
+        "title": "Birmingham City solicitation: Fan Engagement Platform",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Cardiff City",
+      "src_link": "https://procurement.example.com/cardiff-city-rfp-1768101245614.pdf",
+      "summary_json": {
+        "title": "Cardiff City seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Chicago Bulls",
+      "src_link": "https://procurement.example.com/chicago-bulls-rfp-1768101246118.pdf",
+      "summary_json": {
+        "title": "Chicago Bulls invites proposals for Digital Transformation Initiative",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Burnley",
+      "src_link": "https://procurement.example.com/burnley-rfp-1768101246502.pdf",
+      "summary_json": {
+        "title": "Burnley tender document: Stadium Technology Upgrade",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "1. FC Nürnberg",
+      "src_link": "https://procurement.example.com/1-fc-nrnberg-rfp-1768101247203.pdf",
+      "summary_json": {
+        "title": "1. FC Nürnberg seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Wydad AC",
+      "src_link": "https://procurement.example.com/wydad-ac-rfp-1768101247718.pdf",
+      "summary_json": {
+        "title": "Wydad AC solicitation: Fan Engagement Platform",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Millonarios FC",
+      "src_link": "https://procurement.example.com/millonarios-fc-rfp-1768101248926.pdf",
+      "summary_json": {
+        "title": "Millonarios FC tender document: Stadium Technology Upgrade",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Arsenal FC",
+      "src_link": "https://procurement.example.com/arsenal-fc-rfp-1768101249176.pdf",
+      "summary_json": {
+        "title": "Arsenal FC solicitation: Fan Engagement Platform",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Inter Milan",
+      "src_link": "https://procurement.example.com/inter-milan-rfp-1768101249430.pdf",
+      "summary_json": {
+        "title": "Inter Milan invites proposals for Digital Transformation Initiative",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Toronto Arrows",
+      "src_link": "https://procurement.example.com/toronto-arrows-rfp-1768101249622.pdf",
+      "summary_json": {
+        "title": "Toronto Arrows invites proposals for Digital Transformation Initiative",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Universidad Católica",
+      "src_link": "https://procurement.example.com/universidad-catlica-rfp-1768101249944.pdf",
+      "summary_json": {
+        "title": "Universidad Católica RFP: Technology Partnership and Digital Services",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "O'Higgins",
+      "src_link": "https://procurement.example.com/ohiggins-rfp-1768101250262.pdf",
+      "summary_json": {
+        "title": "O'Higgins invites proposals for Digital Transformation Initiative",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Universitario de Deportes",
+      "src_link": "https://procurement.example.com/universitario-de-deportes-rfp-1768101250389.pdf",
+      "summary_json": {
+        "title": "Universitario de Deportes tender document: Stadium Technology Upgrade",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Barcelona SC",
+      "src_link": "https://procurement.example.com/barcelona-sc-rfp-1768101250709.pdf",
+      "summary_json": {
+        "title": "Barcelona SC seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Always Ready",
+      "src_link": "https://procurement.example.com/always-ready-rfp-1768101251738.pdf",
+      "summary_json": {
+        "title": "Always Ready tender document: Stadium Technology Upgrade",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Vasco da Gama",
+      "src_link": "https://procurement.example.com/vasco-da-gama-rfp-1768101252120.pdf",
+      "summary_json": {
+        "title": "Vasco da Gama seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Tigres UANL",
+      "src_link": "https://procurement.example.com/tigres-uanl-rfp-1768101252753.pdf",
+      "summary_json": {
+        "title": "Tigres UANL RFP: Technology Partnership and Digital Services",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Pachuca",
+      "src_link": "https://procurement.example.com/pachuca-rfp-1768101253263.pdf",
+      "summary_json": {
+        "title": "Pachuca invites proposals for Digital Transformation Initiative",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Inter Miami",
+      "src_link": "https://procurement.example.com/inter-miami-rfp-1768101253713.pdf",
+      "summary_json": {
+        "title": "Inter Miami seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Orlando City",
+      "src_link": "https://procurement.example.com/orlando-city-rfp-1768101253840.pdf",
+      "summary_json": {
+        "title": "Orlando City seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "ÖIF Arendal",
+      "src_link": "https://procurement.example.com/if-arendal-rfp-1768101256012.pdf",
+      "summary_json": {
+        "title": "ÖIF Arendal RFP: Technology Partnership and Digital Services",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Philadelphia 76ers",
+      "src_link": "https://procurement.example.com/philadelphia-76ers-rfp-1768101256139.pdf",
+      "summary_json": {
+        "title": "Philadelphia 76ers seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Göztepe",
+      "src_link": "https://procurement.example.com/gztepe-rfp-1768101256522.pdf",
+      "summary_json": {
+        "title": "Göztepe seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Vitesse Arnhem",
+      "src_link": "https://procurement.example.com/vitesse-arnhem-rfp-1768101256584.pdf",
+      "summary_json": {
+        "title": "Vitesse Arnhem seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "OK Hože",
+      "src_link": "https://procurement.example.com/ok-hoe-rfp-1768101256841.pdf",
+      "summary_json": {
+        "title": "OK Hože seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Atlético de Madrid",
+      "src_link": "https://procurement.example.com/atltico-de-madrid-rfp-1768101257611.pdf",
+      "summary_json": {
+        "title": "Atlético de Madrid RFP: Technology Partnership and Digital Services",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Basket Zaragoza",
+      "src_link": "https://procurement.example.com/basket-zaragoza-rfp-1768101258943.pdf",
+      "summary_json": {
+        "title": "Basket Zaragoza invites proposals for Digital Transformation Initiative",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bay of Plenty Steamers",
+      "src_link": "https://procurement.example.com/bay-of-plenty-steamers-rfp-1768101259262.pdf",
+      "summary_json": {
+        "title": "Bay of Plenty Steamers RFP: Technology Partnership and Digital Services",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "BC Šiauliai",
+      "src_link": "https://procurement.example.com/bc-iauliai-rfp-1768101259452.pdf",
+      "summary_json": {
+        "title": "BC Šiauliai tender document: Stadium Technology Upgrade",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "BC Neptūnas",
+      "src_link": "https://procurement.example.com/bc-neptnas-rfp-1768101259582.pdf",
+      "summary_json": {
+        "title": "BC Neptūnas solicitation: Fan Engagement Platform",
+        "confidence": 0.85,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Beijing Guoan",
+      "src_link": "https://procurement.example.com/beijing-guoan-rfp-1768101260154.pdf",
+      "summary_json": {
+        "title": "Beijing Guoan tender document: Stadium Technology Upgrade",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Blue Bulls",
+      "src_link": "https://procurement.example.com/blue-bulls-rfp-1768101261104.pdf",
+      "summary_json": {
+        "title": "Blue Bulls seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Avaí FC",
+      "src_link": "https://news.example.com/avaí-fc/ava-fc-partnership-1768101243066",
+      "summary_json": {
+        "title": "Avaí FC strengthens digital capabilities with new collaboration",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Betis",
+      "src_link": "https://news.example.com/betis/betis-partnership-1768101244024",
+      "summary_json": {
+        "title": "Betis announces strategic digital transformation partnership",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://news.example.com/manchester-united/manchester-united-partnership-1768101244403",
+      "summary_json": {
+        "title": "Manchester United strengthens digital capabilities with new collaboration",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Arsenal",
+      "src_link": "https://news.example.com/arsenal/arsenal-partnership-1768101244593",
+      "summary_json": {
+        "title": "Arsenal launches digital partnership program",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Fulham",
+      "src_link": "https://news.example.com/fulham/fulham-partnership-1768101245039",
+      "summary_json": {
+        "title": "Fulham selects technology vendor for innovation initiative",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Accrington Stanley",
+      "src_link": "https://news.example.com/accrington-stanley/accrington-stanley-partnership-1768101246820",
+      "summary_json": {
+        "title": "Accrington Stanley announces strategic digital transformation partnership",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Everton de Viña del Mar",
+      "src_link": "https://news.example.com/everton-de-viña-del-mar/everton-de-via-del-mar-partnership-1768101250199",
+      "summary_json": {
+        "title": "Everton de Viña del Mar launches digital partnership program",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Aucas",
+      "src_link": "https://news.example.com/aucas/aucas-partnership-1768101251098",
+      "summary_json": {
+        "title": "Aucas strengthens digital capabilities with new collaboration",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Club América",
+      "src_link": "https://news.example.com/club-américa/club-amrica-partnership-1768101252817",
+      "summary_json": {
+        "title": "Club América announces strategic digital transformation partnership",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Philadelphia Union",
+      "src_link": "https://news.example.com/philadelphia-union/philadelphia-union-partnership-1768101253649",
+      "summary_json": {
+        "title": "Philadelphia Union announces strategic digital transformation partnership",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "FC Cincinnati",
+      "src_link": "https://news.example.com/fc-cincinnati/fc-cincinnati-partnership-1768101253776",
+      "summary_json": {
+        "title": "FC Cincinnati launches digital partnership program",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Nashville SC",
+      "src_link": "https://news.example.com/nashville-sc/nashville-sc-partnership-1768101253905",
+      "summary_json": {
+        "title": "Nashville SC selects technology vendor for innovation initiative",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Charlotte FC",
+      "src_link": "https://news.example.com/charlotte-fc/charlotte-fc-partnership-1768101253969",
+      "summary_json": {
+        "title": "Charlotte FC strengthens digital capabilities with new collaboration",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Vancouver Whitecaps",
+      "src_link": "https://news.example.com/vancouver-whitecaps/vancouver-whitecaps-partnership-1768101254033",
+      "summary_json": {
+        "title": "Vancouver Whitecaps selects technology vendor for innovation initiative",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "CF Montréal",
+      "src_link": "https://news.example.com/cf-montréal/cf-montral-partnership-1768101254163",
+      "summary_json": {
+        "title": "CF Montréal announces strategic digital transformation partnership",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Colorado Rapids",
+      "src_link": "https://news.example.com/colorado-rapids/colorado-rapids-partnership-1768101254290",
+      "summary_json": {
+        "title": "Colorado Rapids selects technology vendor for innovation initiative",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "United Autosports",
+      "src_link": "https://news.example.com/united-autosports/united-autosports-partnership-1768101254858",
+      "summary_json": {
+        "title": "United Autosports strengthens digital capabilities with new collaboration",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Al-Khaleej Club",
+      "src_link": "https://news.example.com/al-khaleej-club/al-khaleej-club-partnership-1768101254921",
+      "summary_json": {
+        "title": "Al-Khaleej Club strengthens digital capabilities with new collaboration",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Peristeri BC",
+      "src_link": "https://news.example.com/peristeri-bc/peristeri-bc-partnership-1768101255368",
+      "summary_json": {
+        "title": "Peristeri BC announces strategic digital transformation partnership",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Primeiro de Agosto",
+      "src_link": "https://news.example.com/primeiro-de-agosto/primeiro-de-agosto-partnership-1768101256711",
+      "summary_json": {
+        "title": "Primeiro de Agosto launches digital partnership program",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Bloomington Bison",
+      "src_link": "https://news.example.com/bloomington-bison/bloomington-bison-partnership-1768101256970",
+      "summary_json": {
+        "title": "Bloomington Bison launches digital partnership program",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Atalanta",
+      "src_link": "https://news.example.com/atalanta/atalanta-partnership-1768101257164",
+      "summary_json": {
+        "title": "Atalanta selects technology vendor for innovation initiative",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Atlanta Vibe",
+      "src_link": "https://news.example.com/atlanta-vibe/atlanta-vibe-partnership-1768101257483",
+      "summary_json": {
+        "title": "Atlanta Vibe selects technology vendor for innovation initiative",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Basketball Löwen Braunschweig",
+      "src_link": "https://news.example.com/basketball-löwen-braunschweig/basketball-lwen-braunschweig-partnership-1768101259006",
+      "summary_json": {
+        "title": "Basketball Löwen Braunschweig strengthens digital capabilities with new collaboration",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Biarritz Olympique",
+      "src_link": "https://news.example.com/biarritz-olympique/biarritz-olympique-partnership-1768101260471",
+      "summary_json": {
+        "title": "Biarritz Olympique selects technology vendor for innovation initiative",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Bologna",
+      "src_link": "https://news.example.com/bologna/bologna-partnership-1768101261486",
+      "summary_json": {
+        "title": "Bologna strengthens digital capabilities with new collaboration",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Bordeaux Bègles",
+      "src_link": "https://news.example.com/bordeaux-bègles/bordeaux-bgles-partnership-1768101261551",
+      "summary_json": {
+        "title": "Bordeaux Bègles announces strategic digital transformation partnership",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Avtodor Volgograd",
+      "src_link": "https://news.example.com/avtodor-volgograd/avtodor-volgograd-partnership-1768101246439",
+      "summary_json": {
+        "title": "Avtodor Volgograd launches digital partnership program",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 80,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.83,
+    "avg_fit_score": 97,
+    "top_opportunity": "Benfica"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "total_rfps_detected": 4,
+  "entities_checked": 10,
+  "highlights": [
+    {
+      "organization": "Liverpool",
+      "src_link": "https://procurement.example.com/liverpool-rfp-1768798690494.pdf",
+      "summary_json": {
+        "title": "Liverpool seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Premier League",
+      "src_link": "https://procurement.example.com/premier-league-rfp-1768798704879.pdf",
+      "summary_json": {
+        "title": "Premier League seeking vendors for Mobile App Development",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 100,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://news.example.com/manchester-united/manchester-united-partnership-1768798688441",
+      "summary_json": {
+        "title": "Manchester United launches digital partnership program",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Major League Cricket",
+      "src_link": "https://news.example.com/major-league-cricket/major-league-cricket-partnership-1768798700757",
+      "summary_json": {
+        "title": "Major League Cricket announces strategic digital transformation partnership",
+        "confidence": 0.75,
+        "urgency": "low",
+        "fit_score": 95,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.8,
+    "avg_fit_score": 97,
+    "top_opportunity": "Liverpool"
+  }
+}

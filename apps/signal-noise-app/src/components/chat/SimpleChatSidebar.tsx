@@ -1,6 +1,6 @@
 'use client';
 
-import EnhancedSimpleChatSidebar from './EnhancedSimpleChatSidebar';
+import SimpleStreamingChat from './SimpleStreamingChat';
 
 interface SimpleChatSidebarProps {
   userId?: string;
@@ -9,7 +9,7 @@ interface SimpleChatSidebarProps {
 }
 
 export function SimpleChatSidebar(props: SimpleChatSidebarProps) {
-  return <EnhancedSimpleChatSidebar {...props} />;
+  return <SimpleStreamingChat {...props} />;
 }
 
 export default SimpleChatSidebar;

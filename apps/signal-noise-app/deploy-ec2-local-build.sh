@@ -164,3 +164,17 @@ echo ""
 echo "⚠️  Don't forget to allow port 8001 in AWS Security Group!"
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

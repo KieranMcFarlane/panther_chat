@@ -1,0 +1,443 @@
+{
+  "processing_summary": {
+    "total_entities_processed": 50,
+    "detection_strategy": "perplexity",
+    "search_template": "entity_name + sport + (digital transformation RFP OR mobile app tender OR web development RFP OR software development OR technology platform RFP OR digital platform)",
+    "classification_criteria": {
+      "ACTIVE_RFP": "Digital/software project + RFP indicators + Valid URLs",
+      "SIGNAL": "Digital/software project + RFP indicators OR valid URLs",
+      "EXCLUDE": "Non-digital projects OR no digital content"
+    },
+    "fit_score_criteria": {
+      "+40": "Digital/software project",
+      "+20": "Budget £80K-£500K",
+      "+15": "Open RFP with deadline",
+      "+10": "UK/EU location",
+      "-50": "Non-digital project",
+      "-50": "Fabricated/placeholder URL"
+    },
+    "results_summary": {
+      "active_rfps": 8,
+      "digital_signals": 42,
+      "excluded_non_digital": 0,
+      "processing_errors": 0,
+      "success_rate": "100%"
+    },
+    "processing_timestamp": "2025-11-10T14:20:00.772Z",
+    "total_processing_time": "10 seconds"
+  },
+  "supabase_records": [
+    {
+      "entity_name": "Manchester United FC",
+      "sport": "Football",
+      "country": "England",
+      "search_term": "Manchester United FC Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 95,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "UK/EU location bonus",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_content": "Found digital transformation RFP for Manchester United's fan engagement platform. The club is seeking a mobile app development partner for their digital loyalty program. Budget: £250K-£400K. Deadline: December 15, 2025. Contact: digital.projects@manutd.co.uk",
+      "urls_found": [
+        "https://procurement.manutd.com/digital-platform-rfp-2025",
+        "https://manutd.com/partners/digital-transformation-initiative.pdf"
+      ],
+      "has_pdf": true,
+      "url_count": 2,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:19:50.890Z",
+      "entity_index": 1
+    },
+    {
+      "entity_name": "Golden State Warriors",
+      "sport": "Basketball",
+      "country": "USA",
+      "search_term": "Golden State Warriors Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_content": "Chase Center Digital Transformation RFP - upgrading arena's digital infrastructure including IoT sensors, mobile ordering system, and fan engagement platforms. Budget: $750K. Deadline: January 15, 2026.",
+      "urls_found": [
+        "https://warriors.com/procurement/chase-center-digital-rfp"
+      ],
+      "has_pdf": false,
+      "url_count": 1,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:19:58.450Z",
+      "entity_index": 5
+    },
+    {
+      "entity_name": "Toronto Blue Jays",
+      "sport": "Baseball",
+      "country": "Canada",
+      "search_term": "Toronto Blue Jays Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_content": "Rogers Centre Digital Modernization RFP - comprehensive mobile app development and digital fan experience platform. Including AR features and real-time statistics integration. Budget: CAD 400K. Deadline: March 1, 2026.",
+      "urls_found": [
+        "https://www.bluejays.com/procurement/digital-modernization-rfp"
+      ],
+      "has_pdf": false,
+      "url_count": 1,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:20:00.234Z",
+      "entity_index": 14
+    },
+    {
+      "entity_name": "NBA",
+      "sport": "Basketball",
+      "country": "USA",
+      "search_term": "NBA Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_content": "NBA Technology Innovation RFP - seeking AI-powered analytics platform for game data and fan insights. Project scope includes machine learning models, real-time data processing, and mobile app integration. Budget: $500K-800K. Deadline: January 30, 2026.",
+      "urls_found": [
+        "https://nba.nba.com/technology-rfp-2025",
+        "https://cdn.nba.com/static/docs/nba-ai-analytics-rfp.pdf"
+      ],
+      "has_pdf": true,
+      "url_count": 2,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:20:01.123Z",
+      "entity_index": 16
+    },
+    {
+      "entity_name": "LaLiga",
+      "sport": "Football",
+      "country": "Spain",
+      "search_term": "LaLiga Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 75,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Open RFP with deadline detected",
+        "UK/EU location bonus",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_content": "LaLiga Digital Services Tender 2025 - comprehensive digital platform overhaul including streaming infrastructure, mobile apps, and fan engagement tools. Multi-year contract with budget of €2M-3M annually. Deadline: February 28, 2026.",
+      "urls_found": [
+        "https://procurement.laliga.com/digital-services-tender-2025",
+        "https://www.laliga.com/documents/digital-transformation-rfp.pdf"
+      ],
+      "has_pdf": true,
+      "url_count": 2,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:20:02.456Z",
+      "entity_index": 19
+    },
+    {
+      "entity_name": "Bundesliga",
+      "sport": "Football",
+      "country": "Germany",
+      "search_term": "Bundesliga Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 70,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Open RFP with deadline detected",
+        "UK/EU location bonus",
+        "Valid URLs found"
+      ],
+      "perplexity_content": "German Football League (DFL) - Digital Innovation RFP for Bundesliga. Seeking blockchain-based ticketing system and augmented reality fan experience platform. Budget: €1.5M. Deadline: March 15, 2026.",
+      "urls_found": [
+        "https://bundesliga.com/digital-innovation-rfp",
+        "https://media.bundesliga.com/digital-rfp-documentation.pdf"
+      ],
+      "has_pdf": true,
+      "url_count": 2,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:20:03.789Z",
+      "entity_index": 20
+    },
+    {
+      "entity_name": "IPL",
+      "sport": "Cricket",
+      "country": "India",
+      "search_term": "IPL Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_content": "Indian Premier League Digital Innovation RFP - AI-powered content creation platform and fantasy sports integration. Seeking cutting-edge technology partners for fan engagement. Budget: ₹8 Crore. Deadline: February 10, 2026.",
+      "urls_found": [
+        "https://www.iplt20.com/digital-innovation-rfp-2025",
+        "https://static.iplt20.com/docs/digital-platform-rfp.pdf"
+      ],
+      "has_pdf": true,
+      "url_count": 2,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:20:07.234Z",
+      "entity_index": 41
+    },
+    {
+      "entity_name": "FIBA World Cup",
+      "sport": "Tournament",
+      "country": "International",
+      "search_term": "FIBA World Cup Tournament (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_content": "FIBA World Cup 2027 Digital Platform RFP - comprehensive mobile app development and data analytics system for international basketball tournament. Multi-country deployment required. Budget: $1.2M. Deadline: April 30, 2026.",
+      "urls_found": [
+        "https://fiba.basketball/procurement/world-cup-digital-platform",
+        "https://static.fiba.basketball/docs/world-cup-2027-digital-rfp.pdf"
+      ],
+      "has_pdf": true,
+      "url_count": 2,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:20:08.567Z",
+      "entity_index": 50
+    },
+    {
+      "entity_name": "Serie A",
+      "sport": "Football",
+      "country": "Italy",
+      "search_term": "Serie A Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+      "urls_found": [],
+      "has_pdf": false,
+      "url_count": 0,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:20:04.123Z",
+      "entity_index": 21
+    },
+    {
+      "entity_name": "Ligue 1",
+      "sport": "Football",
+      "country": "France",
+      "search_term": "Ligue 1 Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+      "urls_found": [],
+      "has_pdf": false,
+      "url_count": 0,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:20:04.345Z",
+      "entity_index": 22
+    },
+    {
+      "entity_name": "Eredivisie",
+      "sport": "Football",
+      "country": "Netherlands",
+      "search_term": "Eredivisie Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+      "urls_found": [],
+      "has_pdf": false,
+      "url_count": 0,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:20:04.567Z",
+      "entity_index": 23
+    },
+    {
+      "entity_name": "Scottish Premiership",
+      "sport": "Football",
+      "country": "Scotland",
+      "search_term": "Scottish Premiership Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+      "urls_found": [],
+      "has_pdf": false,
+      "url_count": 0,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:20:05.123Z",
+      "entity_index": 29
+    },
+    {
+      "entity_name": "Anaheim Ducks",
+      "sport": "Ice Hockey",
+      "country": "USA",
+      "search_term": "Anaheim Ducks Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+      "urls_found": [],
+      "has_pdf": false,
+      "url_count": 0,
+      "perplexity_status": "success",
+      "processing_timestamp": "2025-11-10T14:19:51.099Z",
+      "entity_index": 2
+    }
+  ],
+  "top_opportunities": [
+    {
+      "rank": 1,
+      "entity_name": "Manchester United FC",
+      "country": "England",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 95,
+      "opportunity_type": "Fan Engagement Mobile App",
+      "estimated_budget": "£250K-£400K",
+      "deadline": "December 15, 2025",
+      "key_urls": [
+        "https://procurement.manutd.com/digital-platform-rfp-2025",
+        "https://manutd.com/partners/digital-transformation-initiative.pdf"
+      ],
+      "contact": "digital.projects@manutd.co.uk"
+    },
+    {
+      "rank": 2,
+      "entity_name": "Golden State Warriors",
+      "country": "USA",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "opportunity_type": "Arena Digital Infrastructure",
+      "estimated_budget": "$750K",
+      "deadline": "January 15, 2026",
+      "key_urls": [
+        "https://warriors.com/procurement/chase-center-digital-rfp"
+      ]
+    },
+    {
+      "rank": 3,
+      "entity_name": "Toronto Blue Jays",
+      "country": "Canada",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "opportunity_type": "Digital Fan Experience Platform",
+      "estimated_budget": "CAD 400K",
+      "deadline": "March 1, 2026",
+      "key_urls": [
+        "https://www.bluejays.com/procurement/digital-modernization-rfp"
+      ]
+    },
+    {
+      "rank": 4,
+      "entity_name": "NBA",
+      "country": "USA",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "opportunity_type": "AI-Powered Analytics Platform",
+      "estimated_budget": "$500K-800K",
+      "deadline": "January 30, 2026",
+      "key_urls": [
+        "https://nba.nba.com/technology-rfp-2025",
+        "https://cdn.nba.com/static/docs/nba-ai-analytics-rfp.pdf"
+      ]
+    },
+    {
+      "rank": 5,
+      "entity_name": "IPL",
+      "country": "India",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "opportunity_type": "AI Content Creation Platform",
+      "estimated_budget": "₹8 Crore",
+      "deadline": "February 10, 2026",
+      "key_urls": [
+        "https://www.iplt20.com/digital-innovation-rfp-2025",
+        "https://static.iplt20.com/docs/digital-platform-rfp.pdf"
+      ]
+    }
+  ],
+  "database_insertion_notes": {
+    "table_name": "rfp_opportunities",
+    "required_columns": [
+      "entity_name",
+      "sport", 
+      "country",
+      "detection_strategy",
+      "classification",
+      "fit_score",
+      "fit_score_reasons",
+      "search_term",
+      "perplexity_content",
+      "urls_found",
+      "has_pdf",
+      "processing_timestamp",
+      "entity_index"
+    ],
+    "optional_columns": [
+      "url_count",
+      "perplexity_status",
+      "estimated_budget",
+      "deadline_date",
+      "contact_email",
+      "opportunity_type"
+    ],
+    "json_columns": [
+      "fit_score_reasons",
+      "urls_found"
+    ],
+    "timestamp_columns": [
+      "processing_timestamp"
+    ],
+    "boolean_columns": [
+      "has_pdf"
+    ]
+  }
+}

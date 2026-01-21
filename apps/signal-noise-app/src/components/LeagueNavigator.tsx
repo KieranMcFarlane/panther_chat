@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from 'react'
-import { useApi } from '@/lib/swr-config'
+import { useEntities } from '@/lib/swr-config'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ChevronUp, ChevronDown } from 'lucide-react'
@@ -28,20 +28,20 @@ interface LeagueGroup {
 export function LeagueNavigator() {
   console.log('🏆 LeagueNavigator: Component rendering')
   
-  const { data: entitiesData, isLoading } = useApi('/api/entities?limit=2000')
+  const { entities, isLoading } = useEntities('/api/entities?limit=2000')
   
-  console.log('🏆 LeagueNavigator: isLoading:', isLoading, 'has data:', !!entitiesData)
+  console.log('🏆 LeagueNavigator: isLoading:', isLoading, 'has data:', !!entities)
   
   // Group clubs by league alphabetically
   const leaguesData = useMemo(() => {
-    if (!entitiesData?.entities) {
+    if (!entities?.entities) {
       console.log('🏆 LeagueNavigator: No entities data')
       return []
     }
     
-    console.log(`🏆 LeagueNavigator: Processing ${entitiesData.entities.length} entities`)
+    console.log(`🏆 LeagueNavigator: Processing ${entities.entities.length} entities`)
     
-    const clubs = entitiesData.entities.filter(
+    const clubs = entities.entities.filter(
       (entity: any) => entity.properties?.type === 'Club' && entity.properties?.level
     ) as Club[]
     
@@ -71,7 +71,7 @@ export function LeagueNavigator() {
     console.log(`🏆 LeagueNavigator: Found ${result.length} leagues:`, result.map(l => `${l.league} (${l.clubs.length} clubs)`))
     
     return result
-  }, [entitiesData])
+  }, [entities])
   
   const [currentLeagueIndex, setCurrentLeagueIndex] = useState(0)
   const [currentClubIndex, setCurrentClubIndex] = useState(0)

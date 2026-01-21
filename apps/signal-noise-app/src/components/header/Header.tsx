@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import HistoryNav from './HistoryNav';
-import LeagueNav from './LeagueNav';
+import LeagueNavSimple from './LeagueNavSimple';
 import Notifications from './Notifications';
 import SearchBox from './SearchBox';
 
@@ -22,7 +22,7 @@ export default function Header() {
           {/* Left side: History navigation and club filters */}
           <div className="flex items-center gap-4">
             <HistoryNav />
-            <LeagueNav />
+            <LeagueNavSimple />
           </div>
 
           {/* Right side: Search and notifications */}

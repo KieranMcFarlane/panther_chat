@@ -1,0 +1,23 @@
+{
+  "name": "yellow-panther-voice-agent",
+  "version": "1.0.0",
+  "description": "Voice AI Agent for Yellow Panther Signal Noise App with Claude Agent integration",
+  "main": "agent.js",
+  "scripts": {
+    "start": "node agent.js",
+    "dev": "nodemon agent.js"
+  },
+  "dependencies": {
+    "@livekit/agents": "^1.0.17",
+    "@livekit/agents-plugin-openai": "^1.0.17",
+    "dotenv": "^16.3.1",
+    "node-fetch": "^3.3.2",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

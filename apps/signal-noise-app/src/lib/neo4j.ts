@@ -24,32 +24,107 @@ export interface VectorSearchOptions {
   entityType?: string
 }
 
+/**
+ * Get database URI with priority: FALKORDB_URI > NEO4J_URI > default
+ */
+function isNeo4jScheme(uri?: string): boolean {
+  if (!uri) return false
+  const lower = uri.toLowerCase()
+  return lower.startsWith('bolt://') ||
+    lower.startsWith('neo4j://') ||
+    lower.startsWith('neo4j+s://') ||
+    lower.startsWith('neo4j+ssc://') ||
+    lower.startsWith('bolt+s://') ||
+    lower.startsWith('bolt+ssc://')
+}
+
+function getDatabaseUri(): string {
+  const candidates = [
+    process.env.FALKORDB_URI,
+    process.env.NEO4J_URI,
+    process.env.NEXT_PUBLIC_FALKORDB_URI,
+    process.env.NEXT_PUBLIC_NEO4J_URI
+  ].filter(Boolean) as string[]
+
+  const valid = candidates.find(isNeo4jScheme)
+  if (!valid && candidates.length > 0) {
+    console.warn('⚠️ No valid Neo4j URI found. Ignoring unsupported schemes:', candidates)
+  }
+
+  return valid || 'bolt://localhost:7687'
+}
+
+/**
+ * Get database username with priority: FALKORDB_USER > NEO4J_USER > NEO4J_USERNAME > default
+ */
+function getDatabaseUser(): string {
+  return process.env.FALKORDB_USER ||
+         process.env.NEO4J_USER ||
+         process.env.NEO4J_USERNAME ||
+         process.env.NEXT_PUBLIC_FALKORDB_USER ||
+         process.env.NEXT_PUBLIC_NEO4J_USER ||
+         process.env.NEXT_PUBLIC_NEO4J_USERNAME ||
+         'neo4j'
+}
+
+/**
+ * Get database password with priority: FALKORDB_PASSWORD > NEO4J_PASSWORD > default
+ */
+function getDatabasePassword(): string {
+  return process.env.FALKORDB_PASSWORD ||
+         process.env.NEO4J_PASSWORD ||
+         process.env.NEXT_PUBLIC_FALKORDB_PASSWORD ||
+         process.env.NEXT_PUBLIC_NEO4J_PASSWORD ||
+         ''
+}
+
+/**
+ * Get database name
+ */
+function getDatabaseName(): string {
+  return process.env.FALKORDB_DATABASE ||
+         process.env.NEO4J_DATABASE ||
+         'neo4j'
+}
+
 export class Neo4jService {
   private driver: any
   private initialized = false
+  private readonly uri: string
+  private readonly databaseName: string
 
   public getDriver() {
     return this.driver
   }
 
   constructor() {
+    this.uri = getDatabaseUri()
+    this.databaseName = getDatabaseName()
+
+    // Log which database backend we're connecting to
+    if (this.uri.includes('localhost') || this.uri.includes('127.0.0.1') || this.uri.includes('falkordb')) {
+      console.log('🔗 Connecting to FalkorDB (Neo4j-compatible)')
+    } else {
+      console.log('🔗 Connecting to Neo4j AuraDB')
+    }
+
     this.driver = neo4j.driver(
-      process.env.NEO4J_URI || process.env.NEXT_PUBLIC_NEO4J_URI || 'neo4j+s://cce1f84b.databases.neo4j.io',
+      this.uri,
       neo4j.auth.basic(
-        process.env.NEO4J_USERNAME || process.env.NEO4J_USER || process.env.NEXT_PUBLIC_NEO4J_USER || 'neo4j',
-        process.env.NEO4J_PASSWORD || process.env.NEXT_PUBLIC_NEO4J_PASSWORD || 'llNASCzMWGT-nTt-JkD9Qk_4W6PpJrv39X0PuYAIKV0'
+        getDatabaseUser(),
+        getDatabasePassword()
       )
     )
   }
 
   async initialize() {
     if (this.initialized) return
-    
+
     try {
       await this.driver.verifyConnectivity()
-      
+
       // Create vector index if it doesn't exist
-      const session = this.driver.session()
+      const session = this.driver.session({ database: this.databaseName })
       try {
         await session.run(`
           CREATE VECTOR INDEX entity_embeddings IF NOT EXISTS
@@ -62,26 +137,26 @@ export class Neo4jService {
             }
           }
         `)
-        console.log('✅ Vector index created/verified')
+        console.log(`✅ Vector index created/verified for database: ${this.databaseName}`)
       } finally {
         await session.close()
       }
-      
+
       this.initialized = true
     } catch (error) {
-      console.error('❌ Failed to initialize Neo4j:', error)
+      console.error('❌ Failed to initialize Neo4j/FalkorDB:', error)
       throw error
     }
   }
 
   async vectorSearch(query: string, options: VectorSearchOptions = {}): Promise<SearchResult[]> {
     await this.initialize()
-    
+
     try {
       // Generate embedding
       const embedding = await this.generateEmbedding(query)
-      
-      const session = this.driver.session()
+
+      const session = this.driver.session({ database: this.databaseName })
       try {
         // First try vector search, fallback to text search if no results
         const result = await session.run(`
@@ -103,7 +178,7 @@ export class Neo4jService {
           limit: neo4j.int(parseInt((options.limit || 10).toString())),
           threshold: options.threshold || 0.7
         })
-        
+
         if (result.records.length > 0) {
           return result.records.map(record => ({
             entity: this.formatNode(record.get('node')),
@@ -111,11 +186,11 @@ export class Neo4jService {
             connections: record.get('connections').filter((conn: any) => conn.target)
           }))
         }
-        
+
         // Fallback to text search if no vector results
         console.log('📝 No vector results, falling back to text search')
         return await this.fallbackVectorSearch(query, options)
-        
+
       } finally {
         await session.close()
       }
@@ -127,11 +202,11 @@ export class Neo4jService {
 
   private async fallbackVectorSearch(query: string, options: VectorSearchOptions = {}): Promise<SearchResult[]> {
     try {
-      const session = this.driver.session()
+      const session = this.driver.session({ database: this.databaseName })
       try {
         const result = await session.run(`
           MATCH (n)
-          WHERE n.name CONTAINS $query 
+          WHERE n.name CONTAINS $query
              OR n.description CONTAINS $query
              OR n.type CONTAINS $query
              OR n.sport CONTAINS $query
@@ -150,7 +225,7 @@ export class Neo4jService {
           query,
           limit: neo4j.int(parseInt((options.limit || 10).toString()))
         })
-        
+
         return result.records.map(record => ({
           entity: this.formatNode(record.get('node')),
           similarity: record.get('score'),
@@ -167,13 +242,13 @@ export class Neo4jService {
 
   async textSearch(query: string, options: VectorSearchOptions = {}): Promise<Entity[]> {
     await this.initialize()
-    
+
     try {
-      const session = this.driver.session()
+      const session = this.driver.session({ database: this.databaseName })
       try {
         const result = await session.run(`
           MATCH (n)
-          WHERE n.name CONTAINS $query 
+          WHERE n.name CONTAINS $query
              OR n.description CONTAINS $query
              OR n.type CONTAINS $query
              OR n.sport CONTAINS $query
@@ -185,7 +260,7 @@ export class Neo4jService {
           query,
           limit: neo4j.int(parseInt((options.limit || 10).toString()))
         })
-        
+
         return result.records.map(record => this.formatNode(record.get('n')))
       } finally {
         await session.close()
@@ -198,9 +273,9 @@ export class Neo4jService {
 
   async getEntityRelationships(entityId: string): Promise<Connection[]> {
     await this.initialize()
-    
+
     try {
-      const session = this.driver.session()
+      const session = this.driver.session({ database: this.databaseName })
       try {
         const result = await session.run(`
           MATCH (n)-[r]-(related)
@@ -208,7 +283,7 @@ export class Neo4jService {
           RETURN type(r) as relationship, related.name as target, labels(related)[0] as target_type
           LIMIT 50
         `, { entityId: parseInt(entityId) })
-        
+
         return result.records.map(record => ({
           relationship: record.get('relationship'),
           target: record.get('target'),

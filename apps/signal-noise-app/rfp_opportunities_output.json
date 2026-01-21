@@ -1,0 +1,767 @@
+{
+  "total_rfps_detected": 54,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "PSG City 2",
+      "src_link": "https://example.com/rfp/psg-city-2-digital",
+      "summary_json": {
+        "title": "PSG City 2 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.881499112693444,
+      "validation_timestamp": "2026-01-07T03:17:06.987Z"
+    },
+    {
+      "organization": "Juventus Hotspur 5",
+      "src_link": "https://example.com/tender/juventus-hotspur-5-app.pdf",
+      "summary_json": {
+        "title": "Juventus Hotspur 5 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.8568008071992681,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Benfica Wanderers 9",
+      "src_link": "https://example.com/tender/benfica-wanderers-9-app.pdf",
+      "summary_json": {
+        "title": "Benfica Wanderers 9 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.988221809296937,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "PSG Dynamo 12",
+      "src_link": "https://example.com/news/psg-dynamo-12-partnership",
+      "summary_json": {
+        "title": "PSG Dynamo 12 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.7795287562380078,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "AC Milan Wanderers 19",
+      "src_link": "https://example.com/tender/ac-milan-wanderers-19-app.pdf",
+      "summary_json": {
+        "title": "AC Milan Wanderers 19 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.8568366719385028,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Ajax United 24",
+      "src_link": "https://example.com/tender/ajax-united-24-app.pdf",
+      "summary_json": {
+        "title": "Ajax United 24 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.9689778616037032,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Bayern United 26",
+      "src_link": "https://example.com/news/bayern-united-26-partnership",
+      "summary_json": {
+        "title": "Bayern United 26 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.8316956423501496,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Real Wanderers 27",
+      "src_link": "https://example.com/news/real-wanderers-27-partnership",
+      "summary_json": {
+        "title": "Real Wanderers 27 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.9324449298534023,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Benfica Athletic 29",
+      "src_link": "https://example.com/rfp/benfica-athletic-29-digital",
+      "summary_json": {
+        "title": "Benfica Athletic 29 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.9845351077101336,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "PSG Wanderers 44",
+      "src_link": "https://example.com/news/psg-wanderers-44-partnership",
+      "summary_json": {
+        "title": "PSG Wanderers 44 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.9774913970888772,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Ajax Athletic 48",
+      "src_link": "https://example.com/rfp/ajax-athletic-48-digital",
+      "summary_json": {
+        "title": "Ajax Athletic 48 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.9913124644991124,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Porto Club 50",
+      "src_link": "https://example.com/news/porto-club-50-partnership",
+      "summary_json": {
+        "title": "Porto Club 50 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.8028718804353806,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Real United 51",
+      "src_link": "https://example.com/rfp/real-united-51-digital",
+      "summary_json": {
+        "title": "Real United 51 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.7369424113325285,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Ajax United 56",
+      "src_link": "https://example.com/rfp/ajax-united-56-digital",
+      "summary_json": {
+        "title": "Ajax United 56 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.9316058357146306,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Chelsea United 59",
+      "src_link": "https://example.com/news/chelsea-united-59-partnership",
+      "summary_json": {
+        "title": "Chelsea United 59 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.9879640764964172,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Ajax Dynamo 72",
+      "src_link": "https://example.com/news/ajax-dynamo-72-partnership",
+      "summary_json": {
+        "title": "Ajax Dynamo 72 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.8971896980465321,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Real Athletic 75",
+      "src_link": "https://example.com/news/real-athletic-75-partnership",
+      "summary_json": {
+        "title": "Real Athletic 75 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.8534281803863037,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "AC Milan Club 88",
+      "src_link": "https://example.com/rfp/ac-milan-club-88-digital",
+      "summary_json": {
+        "title": "AC Milan Club 88 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.977172175912734,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Juventus Hotspur 104",
+      "src_link": "https://example.com/tender/juventus-hotspur-104-app.pdf",
+      "summary_json": {
+        "title": "Juventus Hotspur 104 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.8559496016443252,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "AC Milan Rovers 107",
+      "src_link": "https://example.com/news/ac-milan-rovers-107-partnership",
+      "summary_json": {
+        "title": "AC Milan Rovers 107 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.7628297219118096,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Barcelona Sporting 108",
+      "src_link": "https://example.com/rfp/barcelona-sporting-108-digital",
+      "summary_json": {
+        "title": "Barcelona Sporting 108 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.7035552752470329,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Arsenal Club 110",
+      "src_link": "https://example.com/rfp/arsenal-club-110-digital",
+      "summary_json": {
+        "title": "Arsenal Club 110 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.8243364224976278,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "PSG Hotspur 123",
+      "src_link": "https://example.com/news/psg-hotspur-123-partnership",
+      "summary_json": {
+        "title": "PSG Hotspur 123 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.7606127507970938,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "FC Sporting 126",
+      "src_link": "https://example.com/tender/fc-sporting-126-app.pdf",
+      "summary_json": {
+        "title": "FC Sporting 126 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.7533637805139226,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Barcelona Athletic 141",
+      "src_link": "https://example.com/news/barcelona-athletic-141-partnership",
+      "summary_json": {
+        "title": "Barcelona Athletic 141 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.8460565943141507,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Arsenal United 146",
+      "src_link": "https://example.com/news/arsenal-united-146-partnership",
+      "summary_json": {
+        "title": "Arsenal United 146 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.9639395482934412,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "PSG FC 155",
+      "src_link": "https://example.com/news/psg-fc-155-partnership",
+      "summary_json": {
+        "title": "PSG FC 155 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.896688183347329,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Real Athletic 159",
+      "src_link": "https://example.com/news/real-athletic-159-partnership",
+      "summary_json": {
+        "title": "Real Athletic 159 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.8251020612444024,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Liverpool Hotspur 170",
+      "src_link": "https://example.com/rfp/liverpool-hotspur-170-digital",
+      "summary_json": {
+        "title": "Liverpool Hotspur 170 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.955317798180104,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Liverpool FC 177",
+      "src_link": "https://example.com/tender/liverpool-fc-177-app.pdf",
+      "summary_json": {
+        "title": "Liverpool FC 177 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.8445125859661352,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Liverpool Athletic 186",
+      "src_link": "https://example.com/tender/liverpool-athletic-186-app.pdf",
+      "summary_json": {
+        "title": "Liverpool Athletic 186 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.9155942470021019,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Arsenal Athletic 196",
+      "src_link": "https://example.com/tender/arsenal-athletic-196-app.pdf",
+      "summary_json": {
+        "title": "Arsenal Athletic 196 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.870969022433211,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Liverpool Rovers 204",
+      "src_link": "https://example.com/news/liverpool-rovers-204-partnership",
+      "summary_json": {
+        "title": "Liverpool Rovers 204 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.8326924684202063,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Chelsea City 205",
+      "src_link": "https://example.com/news/chelsea-city-205-partnership",
+      "summary_json": {
+        "title": "Chelsea City 205 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.9330543213528404,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Arsenal Wanderers 208",
+      "src_link": "https://example.com/rfp/arsenal-wanderers-208-digital",
+      "summary_json": {
+        "title": "Arsenal Wanderers 208 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.8134283247194329,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Bayern Dynamo 213",
+      "src_link": "https://example.com/rfp/bayern-dynamo-213-digital",
+      "summary_json": {
+        "title": "Bayern Dynamo 213 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.7438910071805948,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "PSG Athletic 216",
+      "src_link": "https://example.com/tender/psg-athletic-216-app.pdf",
+      "summary_json": {
+        "title": "PSG Athletic 216 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.7406901622690427,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "PSG Dynamo 225",
+      "src_link": "https://example.com/tender/psg-dynamo-225-app.pdf",
+      "summary_json": {
+        "title": "PSG Dynamo 225 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.731679431642661,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Manchester FC 226",
+      "src_link": "https://example.com/tender/manchester-fc-226-app.pdf",
+      "summary_json": {
+        "title": "Manchester FC 226 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.992813494861867,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "PSG Athletic 234",
+      "src_link": "https://example.com/rfp/psg-athletic-234-digital",
+      "summary_json": {
+        "title": "PSG Athletic 234 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.8716124334354276,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "FC Dynamo 239",
+      "src_link": "https://example.com/tender/fc-dynamo-239-app.pdf",
+      "summary_json": {
+        "title": "FC Dynamo 239 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.7863246130792692,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Inter Rovers 251",
+      "src_link": "https://example.com/tender/inter-rovers-251-app.pdf",
+      "summary_json": {
+        "title": "Inter Rovers 251 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.7266371179442275,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Manchester Wanderers 252",
+      "src_link": "https://example.com/rfp/manchester-wanderers-252-digital",
+      "summary_json": {
+        "title": "Manchester Wanderers 252 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.8069441443753597,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Juventus FC 256",
+      "src_link": "https://example.com/news/juventus-fc-256-partnership",
+      "summary_json": {
+        "title": "Juventus FC 256 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.779474820684709,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "PSG FC 257",
+      "src_link": "https://example.com/tender/psg-fc-257-app.pdf",
+      "summary_json": {
+        "title": "PSG FC 257 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.9212626329195395,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Ajax FC 265",
+      "src_link": "https://example.com/tender/ajax-fc-265-app.pdf",
+      "summary_json": {
+        "title": "Ajax FC 265 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.9596876907903805,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Barcelona Rovers 266",
+      "src_link": "https://example.com/news/barcelona-rovers-266-partnership",
+      "summary_json": {
+        "title": "Barcelona Rovers 266 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.8280966781397613,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Bayern United 277",
+      "src_link": "https://example.com/news/bayern-united-277-partnership",
+      "summary_json": {
+        "title": "Bayern United 277 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.715976650753122,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Manchester Club 279",
+      "src_link": "https://example.com/news/manchester-club-279-partnership",
+      "summary_json": {
+        "title": "Manchester Club 279 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.7543389191900385,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Ajax Rovers 281",
+      "src_link": "https://example.com/tender/ajax-rovers-281-app.pdf",
+      "summary_json": {
+        "title": "Ajax Rovers 281 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.9857433371470445,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Real City 284",
+      "src_link": "https://example.com/news/real-city-284-partnership",
+      "summary_json": {
+        "title": "Real City 284 Technology Partnership Announcement",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      },
+      "perplexity_score": 0.7756931762829885,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Inter Rovers 286",
+      "src_link": "https://example.com/rfp/inter-rovers-286-digital",
+      "summary_json": {
+        "title": "Inter Rovers 286 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.705981601915885,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Real Wanderers 288",
+      "src_link": "https://example.com/tender/real-wanderers-288-app.pdf",
+      "summary_json": {
+        "title": "Real Wanderers 288 Mobile App Development Tender Document",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.7764204627927197,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    },
+    {
+      "organization": "Barcelona Sporting 290",
+      "src_link": "https://example.com/rfp/barcelona-sporting-290-digital",
+      "summary_json": {
+        "title": "Barcelona Sporting 290 Digital Transformation RFP - Invites Proposals",
+        "confidence": 0.8,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      },
+      "perplexity_score": 0.7071099016222132,
+      "validation_timestamp": "2026-01-07T03:17:07.036Z"
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.72,
+    "avg_fit_score": 72,
+    "top_opportunity": "PSG City 2"
+  }
+}

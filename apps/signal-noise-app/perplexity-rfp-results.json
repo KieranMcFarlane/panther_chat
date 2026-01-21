@@ -1,0 +1,12 @@
+{
+  "total_rfps_detected": 0,
+  "entities_checked": 50,
+  "detection_strategy": "perplexity",
+  "processing_time_seconds": 18.1,
+  "scoring_summary": {
+    "avg_confidence": 0,
+    "avg_fit_score": 0,
+    "top_opportunity": "None"
+  },
+  "highlights": []
+}

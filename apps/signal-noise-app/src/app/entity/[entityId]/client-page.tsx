@@ -66,24 +66,27 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   const params = useParams()
   const router = useRouter()
   const actualEntityId = params.entityId as string || entityId
-  
+
   // const { currentClub } = useClubNavigation()
   // const [isTransitioning, setIsTransitioning] = useState(false)
   // const [displayEntityId, setDisplayEntityId] = useState(actualEntityId)
-  
+
   // Add loading timeout state
   const [isLoadingTimeout, setIsLoadingTimeout] = useState(false)
-  
+
+  // Smooth transition state
+  const [showSkeleton, setShowSkeleton] = useState(true)
+
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false)
-  
+
   // Use the actual entity ID for data fetching
-  const { data: entityData, error, isLoading } = useEntity(actualEntityId)
+  const { entity, error, isLoading } = useEntity(actualEntityId)
   
-  const entity = entityData?.entity || null
-  const connections = entityData?.connections || []
-  const dataSource = entityData?.source || null
-  const dossier = entityData?.dossier || null
+  // Note: In simplified SWR, we only get the entity. For connections and dossier, make direct API calls if needed
+  const connections = []  // Simplified - not loading connections for now
+  const dataSource = entity ? 'cache' : null
+  const dossier = null  // Simplified - not loading dossier for now
   
   // Set loading timeout if loading for too long
   useEffect(() => {
@@ -91,12 +94,26 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
       const timeout = setTimeout(() => {
         setIsLoadingTimeout(true)
       }, 10000) // 10 seconds
-      
+
       return () => clearTimeout(timeout)
     } else {
       setIsLoadingTimeout(false)
     }
   }, [isLoading])
+
+  // Smooth skeleton transition - keep skeleton visible briefly when data loads
+  useEffect(() => {
+    if (!isLoading && entity) {
+      // Small delay to fade out skeleton smoothly
+      const timeout = setTimeout(() => {
+        setShowSkeleton(false)
+      }, 100) // 100ms delay for smooth transition
+
+      return () => clearTimeout(timeout)
+    } else if (isLoading) {
+      setShowSkeleton(true)
+    }
+  }, [isLoading, entity])
   
   // Show error state if timeout occurs
   if (isLoadingTimeout && isLoading) {
@@ -140,8 +157,8 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
   //   }
   // }, [currentClub, displayEntityId, router])
 
-  // Show loading state - use skeleton structure
-  if (isLoading) {
+  // Show loading state - use skeleton structure with smooth transition
+  if (showSkeleton && isLoading) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -403,8 +420,8 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
       {/* Fixed Header at Top */}
       <Header />
 
-      {/* Main Content Area */}
-      <div className="flex-1 bg-[#1c1e2d]">
+      {/* Main Content Area with smooth fade-in */}
+      <div className={`flex-1 bg-[#1c1e2d] transition-opacity duration-150 ${showSkeleton ? 'opacity-0' : 'opacity-100'}`}>
         <div className="container mx-auto px-4 py-8">
 
           {/* Entity Dossier Content */}

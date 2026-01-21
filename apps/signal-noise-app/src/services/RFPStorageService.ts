@@ -141,7 +141,7 @@ export class RFPStorageService {
   }
 
   /**
-   * Save RFP to Supabase for UI display
+   * Save RFP to Unified Supabase Table for UI display
    */
   private async saveToSupabase(rfpData: RFPData) {
     // Parse numeric value for sorting
@@ -151,25 +151,48 @@ export class RFPStorageService {
     const supabaseData = {
       title: rfpData.title,
       organization: rfpData.organization,
-      entity_id: rfpData.entityId,
       description: rfpData.description || null,
+      location: null, // Will be populated if available
       estimated_value: rfpData.estimatedValue || null,
-      value_numeric: valueNumeric,
       currency: currency,
+      value_numeric: valueNumeric,
       deadline: rfpData.deadline ? new Date(rfpData.deadline).toISOString().split('T')[0] : null,
-      source: rfpData.source || 'a2a-automation',
-      confidence_score: rfpData.confidence || 0.5,
+      detected_at: new Date().toISOString(),
+      source: rfpData.source || 'ai-detected', // AI-detected for A2A system
+      source_url: null, // Will be populated if available
       category: rfpData.category || 'general',
+      subcategory: null, // Will be populated if available
       status: 'detected',
       priority: 'medium', // Will be calculated below
+      priority_score: 5, // Will be calculated below
+      confidence_score: rfpData.confidence || 0.5,
+      confidence: Math.round((rfpData.confidence || 0.5) * 100), // Convert to percentage
+      yellow_panther_fit: Math.round((rfpData.confidence || 0.5) * 100), // Map confidence to fit score
+      entity_id: rfpData.entityId,
+      entity_name: null, // Will be populated from cached_entities
+      entity_type: null, // Will be populated from cached_entities
+      neo4j_id: null, // Will be set after Neo4j creation
+      batch_id: rfpData.batchId || null,
+      requirements: null, // Will be populated if available
       agent_notes: rfpData.agentNotes || {},
       contact_info: rfpData.contactInfo || {},
-      batch_id: rfpData.batchId || null,
-      detected_at: new Date().toISOString()
+      competition_info: rfpData.competitionInfo || {},
+      metadata: {
+        original_source: rfpData.source || 'a2a-automation',
+        detection_method: 'ai-analysis'
+      },
+      tags: [], // Will be populated if available
+      keywords: [], // Will be extracted from description
+      link_status: 'unverified',
+      assigned_to: null,
+      follow_up_date: null,
+      next_steps: null,
+      notes: null,
+      conversion_stage: 'opportunity'
     };
 
     const { data, error } = await supabase
-      .from('rfps')
+      .from('rfp_opportunities_unified')
       .insert(supabaseData)
       .select()
       .single();
@@ -179,15 +202,18 @@ export class RFPStorageService {
       throw new Error(`Supabase storage failed: ${error.message}`);
     }
 
-    // Calculate and update priority
-    const priority = await this.calculateAndSetPriority(data.id, valueNumeric, rfpData.confidence || 0.5, rfpData.deadline);
+    // Update entity information from cached_entities if available
+    await this.updateEntityInfo(data.id, rfpData.entityId);
+
+    // Calculate and update priority and priority score
+    const priority = await this.calculateAndSetUnifiedPriority(data.id, valueNumeric, rfpData.confidence || 0.5, rfpData.deadline);
     data.priority = priority;
 
     return data;
   }
 
   /**
-   * Save RFP to Neo4j for relationship mapping
+   * Save RFP to Neo4j for relationship mapping (Updated for Unified System)
    */
   private async saveToNeo4j(rfpData: RFPData, supabaseId: string) {
     try {
@@ -208,7 +234,7 @@ export class RFPStorageService {
           return null;
         }
 
-        // Create the RFP node
+        // Create the RFP node with unified structure
         const rfpResult = await session.run(`
           CREATE (rfp:RFP {
             id: $rfpId,
@@ -223,7 +249,15 @@ export class RFPStorageService {
             detectedAt: datetime(),
             status: 'detected',
             category: $category,
-            batchId: $batchId
+            subcategory: $subcategory,
+            priority: $priority,
+            priorityScore: $priorityScore,
+            yellowPantherFit: $yellowPantherFit,
+            batchId: $batchId,
+            agentNotes: $agentNotes,
+            contactInfo: $contactInfo,
+            competitionInfo: $competitionInfo,
+            conversionStage: $conversionStage
           })
           RETURN rfp
         `, {
@@ -234,10 +268,18 @@ export class RFPStorageService {
           estimatedValue: rfpData.estimatedValue || '',
           deadline: rfpData.deadline || null,
           confidence: rfpData.confidence || 0.5,
-          source: rfpData.source || 'a2a-automation',
+          source: rfpData.source || 'ai-detected',
           supabaseId: supabaseId,
           category: rfpData.category || 'general',
-          batchId: rfpData.batchId || null
+          subcategory: null, // Will be populated if available
+          priority: 'medium', // Will be calculated
+          priorityScore: 5, // Will be calculated
+          yellowPantherFit: Math.round((rfpData.confidence || 0.5) * 100),
+          batchId: rfpData.batchId || null,
+          agentNotes: rfpData.agentNotes || {},
+          contactInfo: rfpData.contactInfo || {},
+          competitionInfo: rfpData.competitionInfo || {},
+          conversionStage: 'opportunity'
         });
 
         // Create relationship between entity and RFP
@@ -249,6 +291,12 @@ export class RFPStorageService {
           entityId: rfpData.entityId,
           rfpId: rfpId
         });
+
+        // Update Supabase record with Neo4j ID
+        await supabase
+          .from('rfp_opportunities_unified')
+          .update({ neo4j_id: rfpId })
+          .eq('id', supabaseId);
 
         console.log(`🔗 Neo4j relationship created: ${rfpData.entityId} -> HAS_RFP -> ${rfpId}`);
         return { rfpId };
@@ -264,20 +312,26 @@ export class RFPStorageService {
   }
 
   /**
-   * Calculate and set RFP priority
+   * Calculate and set Unified RFP priority and priority score
    */
-  private async calculateAndSetPriority(rfpId: string, value: number, confidence: number, deadline?: string): Promise<string> {
+  private async calculateAndSetUnifiedPriority(rfpId: string, value: number, confidence: number, deadline?: string): Promise<string> {
+    const fitScore = Math.round(confidence * 100); // Map confidence to fit score
     let priority = 'medium';
+    let priorityScore = 5;
 
     // Calculate priority based on multiple factors
-    if (confidence > 0.8 && value > 1000000) {
+    if (confidence > 0.8 && value > 1000000 && fitScore > 80) {
       priority = 'critical';
-    } else if (confidence > 0.7 && value > 500000) {
+      priorityScore = 10;
+    } else if (confidence > 0.7 && value > 500000 && fitScore > 70) {
       priority = 'high';
-    } else if (confidence > 0.6) {
+      priorityScore = 8;
+    } else if (confidence > 0.6 || fitScore > 60) {
       priority = 'medium';
+      priorityScore = 6;
     } else {
       priority = 'low';
+      priorityScore = 3;
     }
 
     // Urgency factor - boost priority if deadline is soon
@@ -285,22 +339,65 @@ export class RFPStorageService {
       const daysUntilDeadline = Math.ceil((new Date(deadline).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
       if (daysUntilDeadline < 30 && confidence > 0.7) {
         priority = 'critical';
+        priorityScore = Math.min(10, priorityScore + 2);
       } else if (daysUntilDeadline < 60 && confidence > 0.6) {
         priority = 'high';
+        priorityScore = Math.min(9, priorityScore + 1);
       }
     }
 
-    // Update Supabase with calculated priority
+    // Update Supabase with calculated priority and priority score
     try {
       await supabase
-        .from('rfps')
-        .update({ priority })
+        .from('rfp_opportunities_unified')
+        .update({ 
+          priority, 
+          priority_score: priorityScore,
+          yellow_panther_fit: fitScore
+        })
         .eq('id', rfpId);
     } catch (error) {
-      console.warn('Failed to update priority:', error);
+      console.warn('Failed to update unified priority:', error);
     }
 
     return priority;
+  }
+
+  /**
+   * Update entity information from cached_entities table
+   */
+  private async updateEntityInfo(rfpId: string, entityId: string) {
+    if (!entityId) return;
+
+    try {
+      const { data: entityData, error } = await supabase
+        .from('cached_entities')
+        .select('properties, labels')
+        .eq('neo4j_id', entityId)
+        .single();
+
+      if (error || !entityData) {
+        console.warn(`Entity ${entityId} not found in cached_entities`);
+        return;
+      }
+
+      const entityName = entityData.properties?.name || 'Unknown';
+      const entityType = entityData.properties?.type || 
+                       entityData.properties?.entityType || 
+                       (entityData.labels?.includes('Entity') ? 'Entity' : 'Unknown');
+
+      await supabase
+        .from('rfp_opportunities_unified')
+        .update({
+          entity_name: entityName,
+          entity_type: entityType
+        })
+        .eq('id', rfpId);
+
+      console.log(`Updated entity info for RFP ${rfpId}: ${entityName} (${entityType})`);
+    } catch (error) {
+      console.warn('Failed to update entity info:', error);
+    }
   }
 
   /**
@@ -323,14 +420,15 @@ export class RFPStorageService {
   }
 
   /**
-   * Get RFPs for display in /tenders - NEW SUPABASE METHOD
+   * Get RFPs for display in /tenders - UNIFIED TABLE METHOD
    */
   async getRFPs(options: {
     limit?: number;
     status?: string;
     priority?: string;
     category?: string;
-    orderBy?: 'detected_at' | 'confidence_score' | 'value_numeric' | 'deadline';
+    source?: string; // New: filter by source (ai-detected, comprehensive, static)
+    orderBy?: 'detected_at' | 'confidence_score' | 'value_numeric' | 'deadline' | 'yellow_panther_fit' | 'priority_score';
     orderDirection?: 'asc' | 'desc';
   } = {}) {
     const {
@@ -338,13 +436,14 @@ export class RFPStorageService {
       status,
       priority,
       category,
+      source,
       orderBy = 'detected_at',
       orderDirection = 'desc'
     } = options;
 
     try {
       let query = supabase
-        .from('rfps')
+        .from('rfp_opportunities_unified')
         .select('*')
         .order(orderBy, { ascending: orderDirection === 'asc' })
         .limit(limit);
@@ -359,29 +458,32 @@ export class RFPStorageService {
       if (category) {
         query = query.eq('category', category);
       }
+      if (source) {
+        query = query.eq('source', source);
+      }
 
       const { data, error } = await query;
 
       if (error) {
-        throw new Error(`Failed to fetch RFPs: ${error.message}`);
+        throw new Error(`Failed to fetch unified RFPs: ${error.message}`);
       }
 
       return data || [];
 
     } catch (error) {
-      console.error('Error fetching RFPs:', error);
+      console.error('Error fetching unified RFPs:', error);
       return [];
     }
   }
 
   /**
-   * Get RFP statistics for dashboard - NEW SUPABASE METHOD
+   * Get RFP statistics for dashboard - UNIFIED TABLE METHOD
    */
   async getRFPStatistics() {
     try {
       const { data, error } = await supabase
-        .from('rfps')
-        .select('status, priority, confidence_score, value_numeric, detected_at');
+        .from('rfp_opportunities_unified')
+        .select('status, priority, source, confidence_score, yellow_panther_fit, value_numeric, detected_at');
 
       if (error) throw error;
 
@@ -391,49 +493,63 @@ export class RFPStorageService {
         total: rfps.length,
         byStatus: this.groupBy(rfps, 'status'),
         byPriority: this.groupBy(rfps, 'priority'),
+        bySource: this.groupBy(rfps, 'source'), // New: breakdown by source
         avgConfidence: rfps.length > 0 ? rfps.reduce((sum, rfp) => sum + (rfp.confidence_score || 0), 0) / rfps.length : 0,
+        avgFitScore: rfps.length > 0 ? rfps.reduce((sum, rfp) => sum + (rfp.yellow_panther_fit || 0), 0) / rfps.length : 0,
         totalValue: rfps.reduce((sum, rfp) => sum + (rfp.value_numeric || 0), 0),
         recentCount: rfps.filter(rfp => {
           const detected = new Date(rfp.detected_at);
           const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
           return detected > weekAgo;
-        }).length
+        }).length,
+        aiDetectedCount: rfps.filter(rfp => rfp.source === 'ai-detected').length,
+        comprehensiveCount: rfps.filter(rfp => rfp.source === 'comprehensive').length,
+        staticCount: rfps.filter(rfp => rfp.source === 'static').length
       };
 
     } catch (error) {
-      console.error('Error getting RFP statistics:', error);
+      console.error('Error getting unified RFP statistics:', error);
       return {
         total: 0,
         byStatus: {},
         byPriority: {},
+        bySource: {},
         avgConfidence: 0,
+        avgFitScore: 0,
         totalValue: 0,
-        recentCount: 0
+        recentCount: 0,
+        aiDetectedCount: 0,
+        comprehensiveCount: 0,
+        staticCount: 0
       };
     }
   }
 
   /**
-   * Update RFP status - ENHANCED FOR BOTH SYSTEMS
+   * Update RFP status - UNIFIED TABLE METHOD
    */
   async updateRFPStatus(rfpId: string, status: string, notes?: any) {
     try {
-      const updateData: any = { status, updated_at: new Date().toISOString() };
+      const updateData: any = { 
+        status, 
+        updated_at: new Date().toISOString(),
+        conversion_stage: this.mapStatusToConversionStage(status)
+      };
       
       if (notes) {
         updateData.agent_notes = notes;
       }
 
-      // Update Supabase
+      // Update Unified Supabase Table
       const { data, error } = await supabase
-        .from('rfps')
+        .from('rfp_opportunities_unified')
         .update(updateData)
         .eq('id', rfpId)
         .select()
         .single();
 
       if (error) {
-        throw new Error(`Failed to update RFP status: ${error.message}`);
+        throw new Error(`Failed to update unified RFP status: ${error.message}`);
       }
 
       // Also update Neo4j if available
@@ -442,8 +558,8 @@ export class RFPStorageService {
           const session = this.neo4j.getDriver().session();
           try {
             await session.run(
-              'MATCH (rfp:RFP {supabaseId: $rfpId}) SET rfp.status = $status RETURN rfp',
-              { rfpId, status }
+              'MATCH (rfp:RFP {supabaseId: $rfpId}) SET rfp.status = $status, rfp.conversionStage = $conversionStage RETURN rfp',
+              { rfpId, status, conversionStage: this.mapStatusToConversionStage(status) }
             );
           } finally {
             await session.close();
@@ -456,8 +572,30 @@ export class RFPStorageService {
       return data;
 
     } catch (error) {
-      console.error('Error updating RFP status:', error);
+      console.error('Error updating unified RFP status:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Map status to conversion stage
+   */
+  private mapStatusToConversionStage(status: string): string {
+    switch (status) {
+      case 'new':
+      case 'detected':
+      case 'analyzing':
+        return 'opportunity';
+      case 'qualified':
+        return 'qualified';
+      case 'pursuing':
+        return 'pursued';
+      case 'won':
+        return 'won';
+      case 'lost':
+        return 'lost';
+      default:
+        return 'opportunity';
     }
   }
 

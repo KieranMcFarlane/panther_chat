@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-11-14T13:43:31.329Z",
+  "summary": {
+    "totalEntities": 4422,
+    "jsonSeedEntries": 268,
+    "duplicateEntries": 210,
+    "uniqueNames": 4212,
+    "expectedFinalCount": 4212
+  },
+  "queries": {
+    "jsonSeedQuery": "\nSELECT \n  id,\n  properties->>'name' as entity_name,\n  created_at\nFROM cached_entities \nWHERE properties->>'name' LIKE '%(json_seed)%'\nORDER BY properties->>'name'\nLIMIT 10;",
+    "duplicateQuery": "\nSELECT \n  properties->>'name' as entity_name,\n  COUNT(*) as count,\n  STRING_AGG(id::TEXT, ', ') as duplicate_ids\nFROM cached_entities \nWHERE properties->>'name' IN (\n  SELECT properties->>'name' \n  FROM cached_entities \n  GROUP BY properties->>'name' \n  HAVING COUNT(*) > 1\n)\nGROUP BY properties->>'name'\nORDER BY COUNT(*) DESC\nLIMIT 10;",
+    "cleanVersionQuery": "\nWITH json_seed_entities AS (\n  SELECT \n    properties->>'name' as json_name,\n    REPLACE(properties->>'name', ' (json_seed)', '') as clean_name\n  FROM cached_entities \n  WHERE properties->>'name' LIKE '%(json_seed)%'\n)\nSELECT \n  jse.json_name,\n  jse.clean_name,\n  COUNT(ce.id) as clean_version_count,\n  STRING_AGG(ce.id::TEXT, ', ') as clean_ids\nFROM json_seed_entities jse\nLEFT JOIN cached_entities ce ON ce.properties->>'name' = jse.clean_name\nGROUP BY jse.json_name, jse.clean_name\nORDER BY clean_version_count DESC\nLIMIT 10;",
+    "cleanupDuplicatesQuery": "\nWITH ranked_entities AS (\n  SELECT \n    id,\n    properties->>'name' as entity_name,\n    ROW_NUMBER() OVER (\n      PARTITION BY properties->>'name' \n      ORDER BY created_at DESC, id DESC\n    ) as rn\n  FROM cached_entities\n  WHERE properties->>'name' IN (\n    SELECT properties->>'name' \n    FROM cached_entities \n    GROUP BY properties->>'name' \n    HAVING COUNT(*) > 1\n  )\n)\nDELETE FROM cached_entities \nWHERE id IN (\n  SELECT id \n  FROM ranked_entities \n  WHERE rn > 1\n);",
+    "cleanJsonSeedQuery": "\nWITH json_seed_entities AS (\n  SELECT \n    id,\n    properties->>'name' as json_name,\n    REPLACE(properties->>'name', ' (json_seed)', '') as clean_name\n  FROM cached_entities \n  WHERE properties->>'name' LIKE '%(json_seed)%'\n),\nclean_check AS (\n  SELECT \n    jse.id,\n    jse.json_name,\n    jse.clean_name,\n    COUNT(ce.id) as existing_clean_count\n  FROM json_seed_entities jse\n  LEFT JOIN cached_entities ce ON ce.properties->>'name' = jse.clean_name\n  GROUP BY jse.id, jse.json_name, jse.clean_name\n)\nUPDATE cached_entities \nSET properties = jsonb_set(\n  jsonb_set(properties, '{name}', to_jsonb(clean_name)),\n  '{updated_at}',\n  to_jsonb(NOW())\n)\nWHERE id IN (\n  SELECT id \n  FROM clean_check \n  WHERE existing_clean_count = 1  -- Only clean json_seed if it's the only version\n);",
+    "removeRemainingJsonSeedQuery": "\nDELETE FROM cached_entities \nWHERE properties->>'name' LIKE '%(json_seed)%'\nAND REPLACE(properties->>'name', ' (json_seed)', '') IN (\n  SELECT DISTINCT properties->>'name' \n  FROM cached_entities \n  WHERE properties->>'name' NOT LIKE '%(json_seed)%'\n);",
+    "verificationQuery": "\nSELECT \n  COUNT(*) as total_entities,\n  COUNT(CASE WHEN properties->>'name' LIKE '%(json_seed)%' THEN 1 END) as json_seed_count,\n  COUNT(DISTINCT properties->>'name') as unique_names,\n  COUNT(*) - COUNT(DISTINCT properties->>'name') as duplicate_count\nFROM cached_entities;"
+  },
+  "executionSteps": [
+    "1. Analyze current data state",
+    "2. Remove duplicate entries (keep newest)",
+    "3. Clean json_seed suffixes where needed",
+    "4. Remove redundant json_seed entries",
+    "5. Verify final data integrity"
+  ]
+}

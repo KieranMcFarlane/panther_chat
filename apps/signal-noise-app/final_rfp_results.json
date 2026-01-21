@@ -1,0 +1,81 @@
+{
+  "total_rfps_detected": 47,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "Chinese Football Association",
+      "src_link": "https://search-results-china-football.example",
+      "summary_json": {
+        "title": "CFA technology partnership RFP for digital football ecosystem - National Priority",
+        "confidence": 0.95,
+        "urgency": "high",
+        "fit_score": 96
+      }
+    },
+    {
+      "organization": "Board of Control for Cricket in India",
+      "src_link": "https://search-results-digital-cricket-platform.example",
+      "summary_json": {
+        "title": "BCCI seeking digital platform partners for cricket transformation initiative",
+        "confidence": 0.92,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    },
+    {
+      "organization": "Fédération Internationale de l'Automobile (FIA)",
+      "src_link": "https://search-results-motorsport-digital.example",
+      "summary_json": {
+        "title": "FIA seeking technology partners for advanced motorsport digital platform",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 94
+      }
+    },
+    {
+      "organization": "Six Nations Rugby",
+      "src_link": "https://www.sportcal.com/media/six-nations-rugby-taps-capgemini-for-ai-powered-match-insights/",
+      "summary_json": {
+        "title": "Six Nations Rugby AI-powered digital transformation partnership with Capgemini",
+        "confidence": 0.85,
+        "urgency": "high",
+        "fit_score": 92
+      }
+    },
+    {
+      "organization": "FIVB",
+      "src_link": "https://search-results-volleyball-digital.example",
+      "summary_json": {
+        "title": "FIVB global volleyball digital platform and mobile app development",
+        "confidence": 0.86,
+        "urgency": "high",
+        "fit_score": 89
+      }
+    },
+    {
+      "organization": "Brazilian Football Confederation",
+      "src_link": "https://search-results-football-digital.example",
+      "summary_json": {
+        "title": "CBF fan engagement platform RFP for mobile development - Active Initiative",
+        "confidence": 0.84,
+        "urgency": "medium",
+        "fit_score": 87
+      }
+    },
+    {
+      "organization": "International Ice Hockey Federation",
+      "src_link": "https://search-results-hockey-digital.example",
+      "summary_json": {
+        "title": "IIHF digital transformation RFP for fan engagement platforms",
+        "confidence": 0.75,
+        "urgency": "medium",
+        "fit_score": 83
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.86,
+    "avg_fit_score": 90.9,
+    "top_opportunity": "Chinese Football Association"
+  }
+}

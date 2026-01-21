@@ -1,0 +1,138 @@
+{
+  "timestamp": "2025-11-14T13:29:49.529Z",
+  "verification": {
+    "total": 25,
+    "found": 25,
+    "missing": 0,
+    "successRate": "100.0",
+    "successfulBadges": [
+      {
+        "name": "barnsley-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/barnsley-badge.png",
+        "size": "221136"
+      },
+      {
+        "name": "birmingham-city-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/birmingham-city-badge.png",
+        "size": "109971"
+      },
+      {
+        "name": "blackpool-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/blackpool-badge.png",
+        "size": "132109"
+      },
+      {
+        "name": "bolton-wanderers-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/bolton-wanderers-badge.png",
+        "size": "161186"
+      },
+      {
+        "name": "bristol-rovers-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/bristol-rovers-badge.png",
+        "size": "121077"
+      },
+      {
+        "name": "burton-albion-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/burton-albion-badge.png",
+        "size": "109492"
+      },
+      {
+        "name": "cambridge-united-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/cambridge-united-badge.png",
+        "size": "24718"
+      },
+      {
+        "name": "charlton-athletic-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/charlton-athletic-badge.png",
+        "size": "157015"
+      },
+      {
+        "name": "crawley-town-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/crawley-town-badge.png",
+        "size": "120358"
+      },
+      {
+        "name": "exeter-city-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/exeter-city-badge.png",
+        "size": "115015"
+      },
+      {
+        "name": "huddersfield-town-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/huddersfield-town-badge.png",
+        "size": "148447"
+      },
+      {
+        "name": "leyton-orient-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/leyton-orient-badge.png",
+        "size": "173891"
+      },
+      {
+        "name": "lincoln-city-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/lincoln-city-badge.png",
+        "size": "30803"
+      },
+      {
+        "name": "mansfield-town-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/mansfield-town-badge.png",
+        "size": "47549"
+      },
+      {
+        "name": "northampton-town-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/northampton-town-badge.png",
+        "size": "146519"
+      },
+      {
+        "name": "peterborough-united-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/peterborough-united-badge.png",
+        "size": "168406"
+      },
+      {
+        "name": "portsmouth-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/portsmouth-badge.png",
+        "size": "221150"
+      },
+      {
+        "name": "reading-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/reading-badge.png",
+        "size": "147412"
+      },
+      {
+        "name": "rotherham-united-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/rotherham-united-badge.png",
+        "size": "291074"
+      },
+      {
+        "name": "shrewsbury-town-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/shrewsbury-town-badge.png",
+        "size": "370699"
+      },
+      {
+        "name": "stevenage-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/stevenage-badge.png",
+        "size": "104615"
+      },
+      {
+        "name": "stockport-county-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/stockport-county-badge.png",
+        "size": "164078"
+      },
+      {
+        "name": "wigan-athletic-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/wigan-athletic-badge.png",
+        "size": "152998"
+      },
+      {
+        "name": "wrexham-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/wrexham-badge.png",
+        "size": "116898"
+      },
+      {
+        "name": "wycombe-wanderers-badge.png",
+        "url": "https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/wycombe-wanderers-badge.png",
+        "size": "132853"
+      }
+    ],
+    "missingBadges": [],
+    "totalSizeBytes": 3689469
+  }
+}

@@ -53,8 +53,8 @@ fi
 # Fallback to environment variable or default
 TOTAL_ENTITIES=${TOTAL_ENTITIES:-${ENTITY_COUNT:-4500}}
 
-# Calculate required batches (300 entities per batch, round up)
-BATCH_SIZE=300
+# Calculate required batches (50 entities per batch, round up)
+BATCH_SIZE=50
 TOTAL_BATCHES=$(( (TOTAL_ENTITIES + BATCH_SIZE - 1) / BATCH_SIZE ))
 
 # Ensure at least 1 batch
@@ -216,8 +216,8 @@ update_progress() {
 # --- Run one batch with all 3 strategies in parallel ---
 run_batch() {
   local BATCH_ID=$1
-  local RANGE_START=$(( (BATCH_ID - 1) * 300 ))
-  local RANGE_END=$(( RANGE_START + 299 ))
+  local RANGE_START=$(( (BATCH_ID - 1) * 50 ))
+  local RANGE_END=$(( RANGE_START + 49 ))
 
   echo "🟡 [Batch $BATCH_ID] Starting ABC test (entities ${RANGE_START}-${RANGE_END})..." | tee -a "$LOG_DIR/test-cron.log"
   echo "   🧠 Perplexity-first | 💼 LinkedIn-first | 🌐 BrightData-first" | tee -a "$LOG_DIR/test-cron.log"

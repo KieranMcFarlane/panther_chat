@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useUser } from '@/contexts/UserContext';
-import DynamicStatus from '@/components/ui/DynamicStatus';
 
 interface SimpleStreamingChatProps {
   className?: string;
@@ -217,14 +216,21 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
                       };
                       setMessages(prev => [...prev, assistantMessage]);
                     }
-                    assistantMessage.content += chunk.result;
-                    setMessages(prev => 
-                      prev.map(msg => 
-                        msg.id === assistantMessage!.id 
-                          ? { ...msg, content: assistantMessage!.content }
-                          : msg
-                      )
-                    );
+                    // Check for duplicate content to prevent repetition
+                    const contentToAdd = chunk.result.trim();
+                    const currentContent = assistantMessage.content || '';
+                    
+                    if (!currentContent.includes(contentToAdd)) {
+                      assistantMessage.content += (currentContent ? '\n\n' : '') + contentToAdd;
+                      
+                      setMessages(prev => 
+                        prev.map(msg => 
+                          msg.id === assistantMessage!.id 
+                            ? { ...msg, content: assistantMessage!.content }
+                            : msg
+                        )
+                      );
+                    }
                   }
                   break;
 
@@ -332,7 +338,11 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
       {(isLoading || currentStatus) && (
         <div className="bg-gray-50 border-b p-3">
           <div className="flex flex-col items-center space-y-2">
-            <DynamicStatus currentTool={currentTool} isLoading={isLoading} />
+            {currentTool && (
+              <div className="text-sm text-gray-600 text-center max-w-xs">
+                Using <span className="font-medium text-blue-500">{currentTool.replace('mcp__', '').replace(/__/g, ' - ')}</span>
+              </div>
+            )}
             {currentStatus && (
               <div className="text-xs text-gray-500 text-center max-w-xs">
                 {currentStatus}

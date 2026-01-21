@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { readFile, access } from 'fs/promises'
+import { join } from 'path'
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
 
 export async function GET(
   request: NextRequest,
@@ -7,55 +10,91 @@ export async function GET(
   const slug = params.slug.join('/')
   console.log(`🏷️ Badge API: Requesting badge for slug: ${slug}`)
   
-  const s3Url = `https://sportsintelligence.s3.eu-north-1.amazonaws.com/badges/${slug}`
-  console.log(`🏷️ Badge API: Trying S3 URL: ${s3Url}`)
-
+  // First try local file system (since S3 upload failed in our workflow)
+  const localPath = join(process.cwd(), 'public', 'badges', slug)
+  console.log(`🏷️ Badge API: Checking local file: ${localPath}`)
+  
   try {
-    const response = await fetch(s3Url)
-    console.log(`🏷️ Badge API: S3 response status: ${response.status}`)
+    // Check if local file exists
+    await access(localPath)
+    console.log(`🏷️ Badge API: Found local file, serving from disk`)
     
-    if (!response.ok) {
-      console.log(`🏷️ Badge API: Badge not found in S3, returning fallback`)
+    const imageBuffer = await readFile(localPath)
+    const extension = slug.toLowerCase().split('.').pop()
+    const contentType = extension === 'png' ? 'image/png' : 
+                        extension === 'jpg' || extension === 'jpeg' ? 'image/jpeg' : 
+                        extension === 'svg' ? 'image/svg+xml' : 'image/png'
+    
+    return new NextResponse(imageBuffer, {
+      headers: {
+        'Content-Type': contentType,
+        'Cache-Control': 'public, max-age=86400', // Cache for 24 hours
+        'Access-Control-Allow-Origin': '*',
+      },
+    })
+  } catch (localError) {
+    console.log(`🏷️ Badge API: Local file not found, trying S3 for ${slug}`)
+
+    try {
+      // Use AWS SDK to fetch from S3 (handles private objects)
+      const s3Client = new S3Client({
+        region: process.env.AWS_REGION || 'eu-north-1',
+        credentials: {
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+        }
+      })
+
+      const bucketName = process.env.S3_BUCKET || 'sportsintelligence'
+      const key = `badges/${slug}`
       
-      // Return a fallback badge SVG
-      const fallbackSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-        <rect width="64" height="64" fill="#f0f0f0" stroke="#ccc" stroke-width="2"/>
-        <circle cx="32" cy="24" r="8" fill="#666"/>
-        <rect x="20" y="36" width="24" height="16" rx="4" fill="#666"/>
-        <text x="32" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#999">NO BADGE</text>
-      </svg>`
+      console.log(`🏷️ Badge API: Fetching from S3 bucket: ${bucketName}, key: ${key}`)
       
-      return new NextResponse(fallbackSvg, {
-        status: 200,
+      const command = new GetObjectCommand({
+        Bucket: bucketName,
+        Key: key,
+      })
+
+      const response = await s3Client.send(command)
+      
+      if (!response.Body) {
+        throw new Error('Empty response body from S3')
+      }
+
+      // Convert stream to buffer
+      const byteArray = await response.Body.transformToByteArray()
+      const imageBuffer = Buffer.from(byteArray)
+      
+      // Get content type from response or default to image/png
+      const contentType = response.ContentType || 'image/png'
+      
+      console.log(`🏷️ Badge API: Successfully fetched from S3, size: ${imageBuffer.length}`)
+
+      // Return the image with proper caching headers
+      return new NextResponse(imageBuffer, {
         headers: {
-          'Content-Type': 'image/svg+xml',
-          'Cache-Control': 'public, max-age=300', // Cache for 5 minutes
+          'Content-Type': contentType,
+          'Cache-Control': 'public, max-age=86400, immutable', // Cache for 24 hours
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      })
+    } catch (s3Error: any) {
+      console.error('Error fetching badge from S3:', s3Error.message)
+
+      // If S3 fails (e.g. 404), return 404 status to let Next.js handle fallback
+      console.log(`🏷️ Badge API: Badge not found in S3 or error occurred, returning 404`)
+
+      return new NextResponse('Badge not found', {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/plain',
+          'Cache-Control': 'public, max-age=300',
           'Access-Control-Allow-Origin': '*',
         },
       })
     }
-
-    const imageBuffer = await response.arrayBuffer()
-    
-    // Get content type from response or default to image/png
-    const contentType = response.headers.get('content-type') || 'image/png'
-    
-    // Return the image with proper caching headers
-    return new NextResponse(imageBuffer, {
-      headers: {
-        'Content-Type': contentType,
-        'Cache-Control': 'public, max-age=86400, immutable', // Cache for 24 hours
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    })
-  } catch (error) {
-    console.error('Error fetching badge from S3:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch badge' },
-      { status: 500 }
-    )
   }
 }
 

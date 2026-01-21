@@ -1,0 +1,179 @@
+{
+  "processed_entities": 25,
+  "found_opportunities": [
+    {
+      "organization": "Bali United",
+      "src_link": "https://suitmedia.com/work/baliutd",
+      "summary_json": {
+        "title": "Bali United mobile app development for fan engagement",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "Bandari FC",
+      "src_link": "https://www.kbc.co.ke/5228-2/",
+      "summary_json": {
+        "title": "Bandari FC partnership talks and digital transformation initiatives",
+        "confidence": 0.75,
+        "urgency": "medium",
+        "fit_score": 75
+      }
+    },
+    {
+      "organization": "Baltimore Ravens",
+      "src_link": "https://imaginear.com/press-release/imaginear-otcqb-ipnff-signs-first-nfl-team-baltimore-ravens-two-year-agreement",
+      "summary_json": {
+        "title": "Baltimore Ravens AR mobile app integration with ImagineAR",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    },
+    {
+      "organization": "Bangkok United",
+      "src_link": "https://www.paperandpage.com/our-services/online-public-relations/",
+      "summary_json": {
+        "title": "Bangkok United digital partnership and website development",
+        "confidence": 0.80,
+        "urgency": "medium",
+        "fit_score": 80
+      }
+    },
+    {
+      "organization": "Barnsley FC",
+      "src_link": "https://www.barnsleyfc.co.uk/privacy-policy/",
+      "summary_json": {
+        "title": "Barnsley FC mobile app and digital platform development",
+        "confidence": 0.80,
+        "urgency": "medium",
+        "fit_score": 80
+      }
+    },
+    {
+      "organization": "Bayer Leverkusen",
+      "src_link": "https://www.momentslab.com/blog/bayer-leverkusen",
+      "summary_json": {
+        "title": "Bayer Leverkusen Moments Lab mobile app for fan engagement",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    },
+    {
+      "organization": "Bayern Munich Women",
+      "src_link": "https://fcbayern.com/en/news/2022/08/cooperation-until-2025-fc-bayern-and-sap-extend-partnership",
+      "summary_json": {
+        "title": "Bayern Munich Women digital transformation and SAP partnership",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    },
+    {
+      "organization": "Paris Saint-Germain Handball",
+      "src_link": "https://www.psg.fr/en/content/paris-saint-germain-handball-welcomes-blue-soft-as-its-new-official-supporter",
+      "summary_json": {
+        "title": "PSG Handball digital transformation partnership with Blue Soft",
+        "confidence": 0.95,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    },
+    {
+      "organization": "Belenenses",
+      "src_link": "https://run.unl.pt/bitstream/10362/186552/1/FALL25_52112_Enhancing_Fan_Engagement_and_Loyalty_through_Digitalization_and_Social_Media_A_Strategic_Plan_for_Belenenses.pdf",
+      "summary_json": {
+        "title": "Belenenses digital transformation and mobile app strategy",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "Belgrade Partizan Basketball",
+      "src_link": "https://app-works.app/article?id=13",
+      "summary_json": {
+        "title": "Partizan Belgrade mobile app for fan interaction and engagement",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "Belgrade Partizan Football",
+      "src_link": "https://www.app-works.app/article?id=13",
+      "summary_json": {
+        "title": "Partizan Belgrade football mobile app fan engagement platform",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    },
+    {
+      "organization": "Belfast Giants",
+      "src_link": "https://www.halosolutions.com/halo-sse-arena/",
+      "summary_json": {
+        "title": "Belfast Giants digital transformation and safety solutions",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://www.sas.com/en_us/customers/newsport-lisboa-e-benfica-eng.html",
+      "summary_json": {
+        "title": "Benfica digital transformation with new website and mobile app",
+        "confidence": 0.95,
+        "urgency": "high",
+        "fit_score": 95
+      }
+    },
+    {
+      "organization": "Benfica Basketball",
+      "src_link": "https://www.sas.com/en_us/customers/newsport-lisboa-e-benfica-eng.html",
+      "summary_json": {
+        "title": "Benfica Basketball digital transformation as part of multi-sport club platform",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "Betis",
+      "src_link": "https://en.realbetisbalompie.es/news/current_news/real-betis-sign-a-collaboration-agreement-with-fc-platinum-26200",
+      "summary_json": {
+        "title": "Real Betis digital transformation collaboration and fan engagement initiatives",
+        "confidence": 0.90,
+        "urgency": "high",
+        "fit_score": 90
+      }
+    },
+    {
+      "organization": "Benfica Handball",
+      "src_link": "https://www.sas.com/en_us/customers/newsport-lisboa-e-benfica-eng.html",
+      "summary_json": {
+        "title": "Benfica Handball digital transformation integrated in multi-sport platform",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 85
+      }
+    },
+    {
+      "organization": "Benfica Futsal",
+      "src_link": "https://www.sportsbusinessjournal.com/Articles/2025/06/11/infinite-reality-launches-immersive-merchandise-store-for-sl-benfica/",
+      "summary_json": {
+        "title": "Benfica Futsal digital transformation with immersive merchandise store",
+        "confidence": 0.80,
+        "urgency": "medium",
+        "fit_score": 80
+      }
+    }
+  ],
+  "no_results": [
+    "Avaí FC",
+    "Belgrade Water Polo"
+  ]
+}

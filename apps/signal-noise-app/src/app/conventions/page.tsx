@@ -340,134 +340,136 @@ export default function ConventionsPage() {
             </Button>
           </div>
           {isDetailOpen && (
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h2 className="text-2xl font-bold text-white mb-2">{selectedConvention.title}</h2>
-              <p className="text-fm-light-grey">{selectedConvention.description}</p>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setSelectedConvention(null)}
-              className="border-custom-border text-white hover:bg-custom-bg"
-            >
-              ×
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-fm-medium-grey">
-                <Calendar className="w-4 h-4" />
-                <span className="text-sm">Date</span>
-              </div>
-              <div className="text-white">
-                {selectedConvention.start.toLocaleDateString('en-US', { 
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-fm-medium-grey">
-                <MapPin className="w-4 h-4" />
-                <span className="text-sm">Location</span>
-              </div>
-              <div className="text-white">{selectedConvention.location}</div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-fm-medium-grey">
-                <Users className="w-4 h-4" />
-                <span className="text-sm">Expected Attendance</span>
-              </div>
-              <div className="text-white">{selectedConvention.expectedAttendees.toLocaleString()}</div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-fm-medium-grey">
-                <Target className="w-4 h-4" />
-                <span className="text-sm">Networking Value</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[...Array(10)].map((_, i) => (
-                    <div
-                      key={i}
-                      className={`w-2 h-4 ${i < selectedConvention.networkingScore ? 'bg-yellow-400' : 'bg-gray-600'}`}
-                    />
-                  ))}
+            <>
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-2">{selectedConvention.title}</h2>
+                  <p className="text-fm-light-grey">{selectedConvention.description}</p>
                 </div>
-                <span className="text-white ml-2">{selectedConvention.networkingScore}/10</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedConvention(null)}
+                  className="border-custom-border text-white hover:bg-custom-bg"
+                >
+                  ×
+                </Button>
               </div>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-white font-semibold mb-3">Target Attendees</h3>
-              <div className="space-y-2">
-                {selectedConvention.targetAttendees.map((attendee, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                    <span className="text-fm-light-grey text-sm">{attendee}</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-fm-medium-grey">
+                    <Calendar className="w-4 h-4" />
+                    <span className="text-sm">Date</span>
                   </div>
-                ))}
-              </div>
-            </div>
+                  <div className="text-white">
+                    {selectedConvention.start.toLocaleDateString('en-US', { 
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </div>
+                </div>
 
-            <div>
-              <h3 className="text-white font-semibold mb-3">Key Federations</h3>
-              <div className="flex flex-wrap gap-2">
-                {selectedConvention.federations.map((fed, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs">
-                    {fed}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-fm-medium-grey">
+                    <MapPin className="w-4 h-4" />
+                    <span className="text-sm">Location</span>
+                  </div>
+                  <div className="text-white">{selectedConvention.location}</div>
+                </div>
 
-          {selectedConvention.hasRelatedEntities && (
-            <div className="mt-6">
-              <h3 className="text-white font-semibold mb-3">Related Entities in Database</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {selectedConvention.relatedEntities?.map((entity) => (
-                  <div key={entity.id} className="p-3 rounded-lg bg-custom-bg border border-custom-border">
-                    <div className="text-white font-medium text-sm">{entity.name}</div>
-                    <div className="text-fm-medium-grey text-xs mt-1">{entity.type}</div>
-                    <div className="flex gap-1 mt-2">
-                      {entity.labels.slice(0, 2).map((label, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {label}
-                        </Badge>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-fm-medium-grey">
+                    <Users className="w-4 h-4" />
+                    <span className="text-sm">Expected Attendance</span>
+                  </div>
+                  <div className="text-white">{selectedConvention.expectedAttendees.toLocaleString()}</div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-fm-medium-grey">
+                    <Target className="w-4 h-4" />
+                    <span className="text-sm">Networking Value</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex">
+                      {[...Array(10)].map((_, i) => (
+                        <div
+                          key={i}
+                          className={`w-2 h-4 ${i < selectedConvention.networkingScore ? 'bg-yellow-400' : 'bg-gray-600'}`}
+                        />
                       ))}
                     </div>
+                    <span className="text-white ml-2">{selectedConvention.networkingScore}/10</span>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
-          )}
 
-          <div className="flex items-center gap-4 mt-6">
-            <Button
-              className="bg-yellow-500 text-black hover:bg-yellow-400"
-              onClick={() => window.open(selectedConvention.webUrl, '_blank')}
-            >
-              <ExternalLink className="w-4 h-4 mr-2" />
-              Visit Official Website
-            </Button>
-            <Button
-              variant="outline"
-              className="border-custom-border text-white hover:bg-custom-bg"
-            >
-              <Target className="w-4 h-4 mr-2" />
-              Generate Lead Strategy
-            </Button>
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-white font-semibold mb-3">Target Attendees</h3>
+                  <div className="space-y-2">
+                    {selectedConvention.targetAttendees.map((attendee, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                        <span className="text-fm-light-grey text-sm">{attendee}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-white font-semibold mb-3">Key Federations</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedConvention.federations.map((fed, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {fed}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {selectedConvention.hasRelatedEntities && (
+                <div className="mt-6">
+                  <h3 className="text-white font-semibold mb-3">Related Entities in Database</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {selectedConvention.relatedEntities?.map((entity) => (
+                      <div key={entity.id} className="p-3 rounded-lg bg-custom-bg border border-custom-border">
+                        <div className="text-white font-medium text-sm">{entity.name}</div>
+                        <div className="text-fm-medium-grey text-xs mt-1">{entity.type}</div>
+                        <div className="flex gap-1 mt-2">
+                          {entity.labels.slice(0, 2).map((label, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {label}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center gap-4 mt-6">
+                <Button
+                  className="bg-yellow-500 text-black hover:bg-yellow-400"
+                  onClick={() => window.open(selectedConvention.webUrl, '_blank')}
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Visit Official Website
+                </Button>
+                <Button
+                  variant="outline"
+                  className="border-custom-border text-white hover:bg-custom-bg"
+                >
+                  <Target className="w-4 h-4 mr-2" />
+                  Generate Lead Strategy
+                </Button>
+              </div>
+            </>
           )}
         </Card>
       )}

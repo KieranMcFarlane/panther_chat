@@ -1,0 +1,760 @@
+{
+  "total_rfps_detected": 53,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "Arsenal",
+      "src_link": "https://procurement.example.com/arsenal-1767406567228",
+      "summary_json": {
+        "title": "Arsenal - Kit Supplier RFP",
+        "confidence": 0.99,
+        "urgency": "low",
+        "fit_score": 73,
+        "sport": "Football",
+        "country": "England",
+        "rfp_type": "Kit Supplier",
+        "estimated_value": "$15.1M"
+      }
+    },
+    {
+      "organization": "Los Angeles FC",
+      "src_link": "https://procurement.example.com/los-angeles-fc-1767406567239",
+      "summary_json": {
+        "title": "Los Angeles FC - Training Facility RFP",
+        "confidence": 0.99,
+        "urgency": "medium",
+        "fit_score": 94,
+        "sport": "Football",
+        "country": "United States",
+        "rfp_type": "Training Facility",
+        "estimated_value": "$52.3M"
+      }
+    },
+    {
+      "organization": "Bayern Munich (Women)",
+      "src_link": "https://procurement.example.com/bayern-munich-(women)-1767406567227",
+      "summary_json": {
+        "title": "Bayern Munich (Women) - Academy Program RFP",
+        "confidence": 0.97,
+        "urgency": "low",
+        "fit_score": 76,
+        "sport": "Football",
+        "country": "Germany",
+        "rfp_type": "Academy Program",
+        "estimated_value": "$8.1M"
+      }
+    },
+    {
+      "organization": "Deportivo Cuenca",
+      "src_link": "https://procurement.example.com/deportivo-cuenca-1767406567261",
+      "summary_json": {
+        "title": "Deportivo Cuenca - Digital Transformation RFP",
+        "confidence": 0.97,
+        "urgency": "high",
+        "fit_score": 72,
+        "sport": "Football",
+        "country": "Ecuador",
+        "rfp_type": "Digital Transformation",
+        "estimated_value": "$47.5M"
+      }
+    },
+    {
+      "organization": "Real Salt Lake",
+      "src_link": "https://procurement.example.com/real-salt-lake-1767406567275",
+      "summary_json": {
+        "title": "Real Salt Lake - Academy Program RFP",
+        "confidence": 0.97,
+        "urgency": "medium",
+        "fit_score": 97,
+        "sport": "Football",
+        "country": "United States",
+        "rfp_type": "Academy Program",
+        "estimated_value": "$35.6M"
+      }
+    },
+    {
+      "organization": "Blues",
+      "src_link": "https://procurement.example.com/blues-1767406567302",
+      "summary_json": {
+        "title": "Blues - Technology Partnership RFP",
+        "confidence": 0.96,
+        "urgency": "high",
+        "fit_score": 68,
+        "sport": "Rugby",
+        "country": "New Zealand",
+        "rfp_type": "Technology Partnership",
+        "estimated_value": "$10.5M"
+      }
+    },
+    {
+      "organization": "FC Dallas",
+      "src_link": "https://procurement.example.com/fc-dallas-1767406567275",
+      "summary_json": {
+        "title": "FC Dallas - Academy Program RFP",
+        "confidence": 0.91,
+        "urgency": "low",
+        "fit_score": 98,
+        "sport": "Football",
+        "country": "United States",
+        "rfp_type": "Academy Program",
+        "estimated_value": "$12.0M"
+      }
+    },
+    {
+      "organization": "BC Neptūnas",
+      "src_link": "https://procurement.example.com/bc-neptūnas-1767406567301",
+      "summary_json": {
+        "title": "BC Neptūnas - Marketing Services RFP",
+        "confidence": 0.91,
+        "urgency": "low",
+        "fit_score": 67,
+        "sport": "Basketball",
+        "country": "Lithuania",
+        "rfp_type": "Marketing Services",
+        "estimated_value": "$27.2M"
+      }
+    },
+    {
+      "organization": "AEK Athens",
+      "src_link": "https://procurement.example.com/aek-athens-1767406567240",
+      "summary_json": {
+        "title": "AEK Athens - Technology Partnership RFP",
+        "confidence": 0.9,
+        "urgency": "high",
+        "fit_score": 75,
+        "sport": "Basketball",
+        "country": "Greece",
+        "rfp_type": "Technology Partnership",
+        "estimated_value": "$38.7M"
+      }
+    },
+    {
+      "organization": "Nashville SC",
+      "src_link": "https://procurement.example.com/nashville-sc-1767406567275",
+      "summary_json": {
+        "title": "Nashville SC - Kit Supplier RFP",
+        "confidence": 0.89,
+        "urgency": "medium",
+        "fit_score": 81,
+        "sport": "Football",
+        "country": "United States",
+        "rfp_type": "Kit Supplier",
+        "estimated_value": "$39.9M"
+      }
+    },
+    {
+      "organization": "Rapid Wien",
+      "src_link": "https://procurement.example.com/rapid-wien-1767406567288",
+      "summary_json": {
+        "title": "Rapid Wien - Stadium Development RFP",
+        "confidence": 0.89,
+        "urgency": "medium",
+        "fit_score": 62,
+        "sport": "Football",
+        "country": "Austria",
+        "rfp_type": "Stadium Development",
+        "estimated_value": "$15.8M"
+      }
+    },
+    {
+      "organization": "Charlotte FC",
+      "src_link": "https://procurement.example.com/charlotte-fc-1767406567275",
+      "summary_json": {
+        "title": "Charlotte FC - Stadium Development RFP",
+        "confidence": 0.88,
+        "urgency": "low",
+        "fit_score": 86,
+        "sport": "Football",
+        "country": "United States",
+        "rfp_type": "Stadium Development",
+        "estimated_value": "$54.6M"
+      }
+    },
+    {
+      "organization": "Bay of Plenty Steamers",
+      "src_link": "https://procurement.example.com/bay-of-plenty-steamers-1767406567301",
+      "summary_json": {
+        "title": "Bay of Plenty Steamers - Technology Partnership RFP",
+        "confidence": 0.88,
+        "urgency": "high",
+        "fit_score": 99,
+        "sport": "Rugby",
+        "country": "New Zealand",
+        "rfp_type": "Technology Partnership",
+        "estimated_value": "$52.1M"
+      }
+    },
+    {
+      "organization": "Accrington Stanley",
+      "src_link": "https://procurement.example.com/accrington-stanley-1767406567239",
+      "summary_json": {
+        "title": "Accrington Stanley - Stadium Development RFP",
+        "confidence": 0.86,
+        "urgency": "low",
+        "fit_score": 95,
+        "sport": "Football",
+        "country": "England",
+        "rfp_type": "Stadium Development",
+        "estimated_value": "$28.0M"
+      }
+    },
+    {
+      "organization": "Wydad AC",
+      "src_link": "https://procurement.example.com/wydad-ac-1767406567240",
+      "summary_json": {
+        "title": "Wydad AC - Digital Transformation RFP",
+        "confidence": 0.86,
+        "urgency": "medium",
+        "fit_score": 90,
+        "sport": "Football",
+        "country": "Morocco",
+        "rfp_type": "Digital Transformation",
+        "estimated_value": "$36.0M"
+      }
+    },
+    {
+      "organization": "Bangkok United",
+      "src_link": "https://procurement.example.com/bangkok-united-1767406567227",
+      "summary_json": {
+        "title": "Bangkok United - Digital Transformation RFP",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 65,
+        "sport": "Football",
+        "country": "Thailand",
+        "rfp_type": "Digital Transformation",
+        "estimated_value": "$26.5M"
+      }
+    },
+    {
+      "organization": "Baltimore Ravens",
+      "src_link": "https://procurement.example.com/baltimore-ravens-1767406567227",
+      "summary_json": {
+        "title": "Baltimore Ravens - Equipment Supply RFP",
+        "confidence": 0.84,
+        "urgency": "medium",
+        "fit_score": 94,
+        "sport": "American Football",
+        "country": "USA",
+        "rfp_type": "Equipment Supply",
+        "estimated_value": "$11.9M"
+      }
+    },
+    {
+      "organization": "Blackburn Rovers",
+      "src_link": "https://procurement.example.com/blackburn-rovers-1767406567302",
+      "summary_json": {
+        "title": "Blackburn Rovers - Digital Transformation RFP",
+        "confidence": 0.84,
+        "urgency": "medium",
+        "fit_score": 67,
+        "sport": "Football",
+        "country": "England",
+        "rfp_type": "Digital Transformation",
+        "estimated_value": "$13.3M"
+      }
+    },
+    {
+      "organization": "Bandari FC",
+      "src_link": "https://procurement.example.com/bandari-fc-1767406567226",
+      "summary_json": {
+        "title": "Bandari FC - Stadium Development RFP",
+        "confidence": 0.83,
+        "urgency": "high",
+        "fit_score": 86,
+        "sport": "Football",
+        "country": "Iran",
+        "rfp_type": "Stadium Development",
+        "estimated_value": "$21.0M"
+      }
+    },
+    {
+      "organization": "Boca Juniors",
+      "src_link": "https://procurement.example.com/boca-juniors-1767406567241",
+      "summary_json": {
+        "title": "Boca Juniors - Kit Supplier RFP",
+        "confidence": 0.81,
+        "urgency": "low",
+        "fit_score": 78,
+        "sport": "Football",
+        "country": "Argentina",
+        "rfp_type": "Kit Supplier",
+        "estimated_value": "$24.5M"
+      }
+    },
+    {
+      "organization": "Orlando City",
+      "src_link": "https://procurement.example.com/orlando-city-1767406567275",
+      "summary_json": {
+        "title": "Orlando City - Training Facility RFP",
+        "confidence": 0.79,
+        "urgency": "low",
+        "fit_score": 92,
+        "sport": "Football",
+        "country": "United States",
+        "rfp_type": "Training Facility",
+        "estimated_value": "$31.7M"
+      }
+    },
+    {
+      "organization": "Universitario de Deportes",
+      "src_link": "https://procurement.example.com/universitario-de-deportes-1767406567260",
+      "summary_json": {
+        "title": "Universitario de Deportes - Stadium Development RFP",
+        "confidence": 0.78,
+        "urgency": "medium",
+        "fit_score": 93,
+        "sport": "Football",
+        "country": "Peru",
+        "rfp_type": "Stadium Development",
+        "estimated_value": "$18.1M"
+      }
+    },
+    {
+      "organization": "Atlanta Vibe",
+      "src_link": "https://procurement.example.com/atlanta-vibe-1767406567290",
+      "summary_json": {
+        "title": "Atlanta Vibe - Equipment Supply RFP",
+        "confidence": 0.78,
+        "urgency": "medium",
+        "fit_score": 85,
+        "sport": "Volleyball",
+        "country": "United States",
+        "rfp_type": "Equipment Supply",
+        "estimated_value": "$42.6M"
+      }
+    },
+    {
+      "organization": "Cruz Azul Hidalgo",
+      "src_link": "https://procurement.example.com/cruz-azul-hidalgo-1767406567274",
+      "summary_json": {
+        "title": "Cruz Azul Hidalgo - Digital Transformation RFP",
+        "confidence": 0.77,
+        "urgency": "low",
+        "fit_score": 93,
+        "sport": "Football",
+        "country": "Mexico",
+        "rfp_type": "Digital Transformation",
+        "estimated_value": "$40.4M"
+      }
+    },
+    {
+      "organization": "Fulham",
+      "src_link": "https://procurement.example.com/fulham-1767406567228",
+      "summary_json": {
+        "title": "Fulham - Stadium Development RFP",
+        "confidence": 0.76,
+        "urgency": "low",
+        "fit_score": 72,
+        "sport": "Football",
+        "country": "England",
+        "rfp_type": "Stadium Development",
+        "estimated_value": "$46.8M"
+      }
+    },
+    {
+      "organization": "Jorge Wilstermann",
+      "src_link": "https://procurement.example.com/jorge-wilstermann-1767406567261",
+      "summary_json": {
+        "title": "Jorge Wilstermann - Kit Supplier RFP",
+        "confidence": 0.76,
+        "urgency": "low",
+        "fit_score": 82,
+        "sport": "Football",
+        "country": "Bolivia",
+        "rfp_type": "Kit Supplier",
+        "estimated_value": "$41.7M"
+      }
+    },
+    {
+      "organization": "Handball Club Eger",
+      "src_link": "https://procurement.example.com/handball-club-eger-1767406567288",
+      "summary_json": {
+        "title": "Handball Club Eger - Facility Upgrade RFP",
+        "confidence": 0.76,
+        "urgency": "low",
+        "fit_score": 95,
+        "sport": "Handball",
+        "country": "Hungary",
+        "rfp_type": "Facility Upgrade",
+        "estimated_value": "$45.0M"
+      }
+    },
+    {
+      "organization": "Millonarios FC",
+      "src_link": "https://procurement.example.com/millonarios-fc-1767406567241",
+      "summary_json": {
+        "title": "Millonarios FC - Digital Transformation RFP",
+        "confidence": 0.74,
+        "urgency": "high",
+        "fit_score": 73,
+        "sport": "Football",
+        "country": "Colombia",
+        "rfp_type": "Digital Transformation",
+        "estimated_value": "$7.8M"
+      }
+    },
+    {
+      "organization": "United Autosports",
+      "src_link": "https://procurement.example.com/united-autosports-1767406567275",
+      "summary_json": {
+        "title": "United Autosports - Technology Partnership RFP",
+        "confidence": 0.74,
+        "urgency": "low",
+        "fit_score": 62,
+        "sport": "Motorsport",
+        "country": "United Kingdom",
+        "rfp_type": "Technology Partnership",
+        "estimated_value": "$42.3M"
+      }
+    },
+    {
+      "organization": "Bengal",
+      "src_link": "https://procurement.example.com/bengal-1767406567302",
+      "summary_json": {
+        "title": "Bengal - Academy Equipment RFP",
+        "confidence": 0.74,
+        "urgency": "high",
+        "fit_score": 71,
+        "sport": "Cricket",
+        "country": "India",
+        "rfp_type": "Academy Equipment",
+        "estimated_value": "$17.4M"
+      }
+    },
+    {
+      "organization": "Barcelona SC",
+      "src_link": "https://procurement.example.com/barcelona-sc-1767406567261",
+      "summary_json": {
+        "title": "Barcelona SC - Training Facility RFP",
+        "confidence": 0.73,
+        "urgency": "medium",
+        "fit_score": 90,
+        "sport": "Football",
+        "country": "Ecuador",
+        "rfp_type": "Training Facility",
+        "estimated_value": "$10.1M"
+      }
+    },
+    {
+      "organization": "Mazatlán",
+      "src_link": "https://procurement.example.com/mazatlán-1767406567274",
+      "summary_json": {
+        "title": "Mazatlán - Academy Program RFP",
+        "confidence": 0.73,
+        "urgency": "low",
+        "fit_score": 85,
+        "sport": "Football",
+        "country": "Mexico",
+        "rfp_type": "Academy Program",
+        "estimated_value": "$35.7M"
+      }
+    },
+    {
+      "organization": "OK Hože",
+      "src_link": "https://procurement.example.com/ok-hože-1767406567290",
+      "summary_json": {
+        "title": "OK Hože - Equipment Supply RFP",
+        "confidence": 0.73,
+        "urgency": "high",
+        "fit_score": 78,
+        "sport": "Volleyball",
+        "country": "Slovenia",
+        "rfp_type": "Equipment Supply",
+        "estimated_value": "$42.4M"
+      }
+    },
+    {
+      "organization": "Başakşehir FK",
+      "src_link": "https://procurement.example.com/başakşehir-fk-1767406567291",
+      "summary_json": {
+        "title": "Başakşehir FK - Digital Transformation RFP",
+        "confidence": 0.73,
+        "urgency": "medium",
+        "fit_score": 75,
+        "sport": "Football",
+        "country": "Türkiye",
+        "rfp_type": "Digital Transformation",
+        "estimated_value": "$42.4M"
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://procurement.example.com/manchester-city-1767406567228",
+      "summary_json": {
+        "title": "Manchester City - Academy Program RFP",
+        "confidence": 0.72,
+        "urgency": "low",
+        "fit_score": 97,
+        "sport": "Football",
+        "country": "England",
+        "rfp_type": "Academy Program",
+        "estimated_value": "$48.9M"
+      }
+    },
+    {
+      "organization": "León",
+      "src_link": "https://procurement.example.com/león-1767406567274",
+      "summary_json": {
+        "title": "León - Digital Transformation RFP",
+        "confidence": 0.72,
+        "urgency": "low",
+        "fit_score": 77,
+        "sport": "Football",
+        "country": "Mexico",
+        "rfp_type": "Digital Transformation",
+        "estimated_value": "$17.1M"
+      }
+    },
+    {
+      "organization": "Newcastle United",
+      "src_link": "https://procurement.example.com/newcastle-united-1767406567228",
+      "summary_json": {
+        "title": "Newcastle United - Academy Program RFP",
+        "confidence": 0.71,
+        "urgency": "low",
+        "fit_score": 89,
+        "sport": "Football",
+        "country": "England",
+        "rfp_type": "Academy Program",
+        "estimated_value": "$25.9M"
+      }
+    },
+    {
+      "organization": "Cienciano",
+      "src_link": "https://procurement.example.com/cienciano-1767406567260",
+      "summary_json": {
+        "title": "Cienciano - Kit Supplier RFP",
+        "confidence": 0.71,
+        "urgency": "medium",
+        "fit_score": 69,
+        "sport": "Football",
+        "country": "Peru",
+        "rfp_type": "Kit Supplier",
+        "estimated_value": "$10.2M"
+      }
+    },
+    {
+      "organization": "Olmedo",
+      "src_link": "https://procurement.example.com/olmedo-1767406567261",
+      "summary_json": {
+        "title": "Olmedo - Stadium Development RFP",
+        "confidence": 0.71,
+        "urgency": "low",
+        "fit_score": 82,
+        "sport": "Football",
+        "country": "Ecuador",
+        "rfp_type": "Stadium Development",
+        "estimated_value": "$27.5M"
+      }
+    },
+    {
+      "organization": "Necaxa",
+      "src_link": "https://procurement.example.com/necaxa-1767406567274",
+      "summary_json": {
+        "title": "Necaxa - Training Facility RFP",
+        "confidence": 0.71,
+        "urgency": "low",
+        "fit_score": 67,
+        "sport": "Football",
+        "country": "Mexico",
+        "rfp_type": "Training Facility",
+        "estimated_value": "$5.1M"
+      }
+    },
+    {
+      "organization": "Coritiba",
+      "src_link": "https://procurement.example.com/coritiba-1767406567274",
+      "summary_json": {
+        "title": "Coritiba - Training Facility RFP",
+        "confidence": 0.68,
+        "urgency": "high",
+        "fit_score": 66,
+        "sport": "Football",
+        "country": "Brazil",
+        "rfp_type": "Training Facility",
+        "estimated_value": "$5.6M"
+      }
+    },
+    {
+      "organization": "Border",
+      "src_link": "https://procurement.example.com/border-1767406567302",
+      "summary_json": {
+        "title": "Border - Ground Maintenance RFP",
+        "confidence": 0.68,
+        "urgency": "medium",
+        "fit_score": 86,
+        "sport": "Cricket",
+        "country": "South Africa",
+        "rfp_type": "Ground Maintenance",
+        "estimated_value": "$41.7M"
+      }
+    },
+    {
+      "organization": "Raja CA",
+      "src_link": "https://procurement.example.com/raja-ca-1767406567240",
+      "summary_json": {
+        "title": "Raja CA - Stadium Development RFP",
+        "confidence": 0.67,
+        "urgency": "low",
+        "fit_score": 96,
+        "sport": "Football",
+        "country": "Morocco",
+        "rfp_type": "Stadium Development",
+        "estimated_value": "$37.4M"
+      }
+    },
+    {
+      "organization": "ÖIF Arendal",
+      "src_link": "https://procurement.example.com/öif-arendal-1767406567288",
+      "summary_json": {
+        "title": "ÖIF Arendal - Technology Partnership RFP",
+        "confidence": 0.67,
+        "urgency": "high",
+        "fit_score": 95,
+        "sport": "Handball",
+        "country": "Norway",
+        "rfp_type": "Technology Partnership",
+        "estimated_value": "$40.7M"
+      }
+    },
+    {
+      "organization": "Norfolk Admirals",
+      "src_link": "https://procurement.example.com/norfolk-admirals-1767406567290",
+      "summary_json": {
+        "title": "Norfolk Admirals - Equipment Supply RFP",
+        "confidence": 0.66,
+        "urgency": "medium",
+        "fit_score": 95,
+        "sport": "Ice Hockey",
+        "country": "United States",
+        "rfp_type": "Equipment Supply",
+        "estimated_value": "$8.7M"
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://procurement.example.com/manchester-united-1767406567228",
+      "summary_json": {
+        "title": "Manchester United - Academy Program RFP",
+        "confidence": 0.64,
+        "urgency": "high",
+        "fit_score": 87,
+        "sport": "Football",
+        "country": "England",
+        "rfp_type": "Academy Program",
+        "estimated_value": "$44.8M"
+      }
+    },
+    {
+      "organization": "Bolívar",
+      "src_link": "https://procurement.example.com/bolívar-1767406567261",
+      "summary_json": {
+        "title": "Bolívar - Academy Program RFP",
+        "confidence": 0.64,
+        "urgency": "low",
+        "fit_score": 73,
+        "sport": "Football",
+        "country": "Bolivia",
+        "rfp_type": "Academy Program",
+        "estimated_value": "$12.5M"
+      }
+    },
+    {
+      "organization": "Benfica",
+      "src_link": "https://procurement.example.com/benfica-1767406567227",
+      "summary_json": {
+        "title": "Benfica - Training Facility RFP",
+        "confidence": 0.63,
+        "urgency": "medium",
+        "fit_score": 86,
+        "sport": "Football",
+        "country": "Portugal",
+        "rfp_type": "Training Facility",
+        "estimated_value": "$39.6M"
+      }
+    },
+    {
+      "organization": "Bolton Wanderers",
+      "src_link": "https://procurement.example.com/bolton-wanderers-1767406567228",
+      "summary_json": {
+        "title": "Bolton Wanderers - Kit Supplier RFP",
+        "confidence": 0.63,
+        "urgency": "medium",
+        "fit_score": 65,
+        "sport": "Football",
+        "country": "England",
+        "rfp_type": "Kit Supplier",
+        "estimated_value": "$44.7M"
+      }
+    },
+    {
+      "organization": "FC Cincinnati",
+      "src_link": "https://procurement.example.com/fc-cincinnati-1767406567275",
+      "summary_json": {
+        "title": "FC Cincinnati - Kit Supplier RFP",
+        "confidence": 0.63,
+        "urgency": "medium",
+        "fit_score": 92,
+        "sport": "Football",
+        "country": "United States",
+        "rfp_type": "Kit Supplier",
+        "estimated_value": "$19.3M"
+      }
+    },
+    {
+      "organization": "Bedford Blues",
+      "src_link": "https://procurement.example.com/bedford-blues-1767406567301",
+      "summary_json": {
+        "title": "Bedford Blues - Facility Upgrade RFP",
+        "confidence": 0.63,
+        "urgency": "high",
+        "fit_score": 80,
+        "sport": "Rugby",
+        "country": "England",
+        "rfp_type": "Facility Upgrade",
+        "estimated_value": "$37.7M"
+      }
+    },
+    {
+      "organization": "MKS Dąbrowa Górnicza",
+      "src_link": "https://procurement.example.com/mks-dąbrowa-górnicza-1767406567290",
+      "summary_json": {
+        "title": "MKS Dąbrowa Górnicza - Technology Partnership RFP",
+        "confidence": 0.62,
+        "urgency": "medium",
+        "fit_score": 94,
+        "sport": "Basketball",
+        "country": "Poland",
+        "rfp_type": "Technology Partnership",
+        "estimated_value": "$14.9M"
+      }
+    },
+    {
+      "organization": "Atalanta",
+      "src_link": "https://procurement.example.com/atalanta-1767406567290",
+      "summary_json": {
+        "title": "Atalanta - Digital Transformation RFP",
+        "confidence": 0.61,
+        "urgency": "low",
+        "fit_score": 93,
+        "sport": "Football",
+        "country": "Italy",
+        "rfp_type": "Digital Transformation",
+        "estimated_value": "$11.8M"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": "0.78",
+    "avg_fit_score": 82,
+    "top_opportunity": "Arsenal"
+  },
+  "processing_log": {
+    "processing_time_seconds": "0.09",
+    "entities_processed": 300,
+    "rfps_found": 53,
+    "success_rate": "17.7%",
+    "timestamp": "2026-01-03T02:16:07.303Z"
+  }
+}

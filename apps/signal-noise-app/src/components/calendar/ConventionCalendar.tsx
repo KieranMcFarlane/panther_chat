@@ -112,6 +112,47 @@ export default function ConventionCalendar({ onSelectEvent, onCreateEvent }: Con
     fetchConventions()
   }, [fetchConventions])
 
+  // Persist preferences (view/date/filters)
+  useEffect(() => {
+    try {
+      const savedView = localStorage.getItem('conventions:view')
+      const savedDate = localStorage.getItem('conventions:date')
+      const savedFilters = localStorage.getItem('conventions:filters')
+      if (savedView) setCurrentView(savedView as View)
+      if (savedDate) setCurrentDate(new Date(savedDate))
+      if (savedFilters) setFilters(JSON.parse(savedFilters))
+    } catch {}
+  }, [])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('conventions:view', String(currentView))
+      localStorage.setItem('conventions:date', currentDate.toISOString())
+      localStorage.setItem('conventions:filters', JSON.stringify(filters))
+    } catch {}
+  }, [currentView, currentDate, filters])
+
+  // Keyboard shortcuts: ←/→ to navigate, T for today
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        const d = new Date(currentDate)
+        if (currentView === Views.WEEK) d.setDate(d.getDate() - 7)
+        else d.setMonth(d.getMonth() - 1)
+        setCurrentDate(d)
+      } else if (e.key === 'ArrowRight') {
+        const d = new Date(currentDate)
+        if (currentView === Views.WEEK) d.setDate(d.getDate() + 7)
+        else d.setMonth(d.getMonth() + 1)
+        setCurrentDate(d)
+      } else if (e.key.toLowerCase() === 't') {
+        setCurrentDate(new Date())
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [currentDate, currentView])
+
   // Custom event styling
   const eventStyleGetter = (event: Convention) => {
     const colors = {
@@ -139,29 +180,29 @@ export default function ConventionCalendar({ onSelectEvent, onCreateEvent }: Con
 
   // Custom toolbar
   const CustomToolbar = ({ date, onNavigate, onView }) => (
-    <div className="flex items-center justify-between mb-4 bg-custom-box border border-custom-border rounded-lg p-4">
+    <div className="flex items-center justify-between mb-4 bg-custom-box border border-custom-border rounded-lg p-4 sticky top-0 z-10">
       <div className="flex items-center gap-2">
         <Button
-          variant="outline"
           size="sm"
           onClick={() => onNavigate('PREV')}
-          className="border-custom-border text-white hover:bg-custom-bg"
+          className="bg-custom-box/70 border border-custom-border text-white hover:bg-custom-box"
+          aria-label="Previous"
         >
           <ChevronLeft className="w-4 h-4" />
         </Button>
         <Button
-          variant="outline"
           size="sm"
           onClick={() => onNavigate('TODAY')}
-          className="border-custom-border text-white hover:bg-custom-bg"
+          className="bg-custom-box/70 border border-custom-border text-white hover:bg-custom-box"
+          aria-label="Today"
         >
           Today
         </Button>
         <Button
-          variant="outline"
           size="sm"
           onClick={() => onNavigate('NEXT')}
-          className="border-custom-border text-white hover:bg-custom-bg"
+          className="bg-custom-box/70 border border-custom-border text-white hover:bg-custom-box"
+          aria-label="Next"
         >
           <ChevronRight className="w-4 h-4" />
         </Button>
@@ -172,26 +213,29 @@ export default function ConventionCalendar({ onSelectEvent, onCreateEvent }: Con
       
       <div className="flex items-center gap-2">
         <Button
-          variant={currentView === Views.MONTH ? 'default' : 'outline'}
           size="sm"
           onClick={() => onView(Views.MONTH)}
-          className={currentView === Views.MONTH ? 'bg-yellow-500 text-black' : 'border-custom-border text-white hover:bg-custom-bg'}
+          className={currentView === Views.MONTH ? 'bg-yellow-500 text-black' : 'bg-custom-box/70 border border-custom-border text-white hover:bg-custom-box'}
+          aria-pressed={currentView === Views.MONTH}
+          aria-label="Month view"
         >
           Month
         </Button>
         <Button
-          variant={currentView === Views.WEEK ? 'default' : 'outline'}
           size="sm"
           onClick={() => onView(Views.WEEK)}
-          className={currentView === Views.WEEK ? 'bg-yellow-500 text-black' : 'border-custom-border text-white hover:bg-custom-bg'}
+          className={currentView === Views.WEEK ? 'bg-yellow-500 text-black' : 'bg-custom-box/70 border border-custom-border text-white hover:bg-custom-box'}
+          aria-pressed={currentView === Views.WEEK}
+          aria-label="Week view"
         >
           Week
         </Button>
         <Button
-          variant={currentView === Views.AGENDA ? 'default' : 'outline'}
           size="sm"
           onClick={() => onView(Views.AGENDA)}
-          className={currentView === Views.AGENDA ? 'bg-yellow-500 text-black' : 'border-custom-border text-white hover:bg-custom-bg'}
+          className={currentView === Views.AGENDA ? 'bg-yellow-500 text-black' : 'bg-custom-box/70 border border-custom-border text-white hover:bg-custom-box'}
+          aria-pressed={currentView === Views.AGENDA}
+          aria-label="List view"
         >
           List
         </Button>
@@ -199,9 +243,18 @@ export default function ConventionCalendar({ onSelectEvent, onCreateEvent }: Con
     </div>
   )
 
+  // Unified event type colors (legend + styling reference)
+  const EVENT_TYPE_COLORS: Record<string, string> = {
+    'c-level': 'bg-red-500',
+    'media-rights': 'bg-blue-500',
+    'digital-ott': 'bg-green-500',
+    'federation-official': 'bg-indigo-500',
+    'tech-innovation': 'bg-pink-500'
+  }
+
   // Custom event card
   const EventCard = ({ event }: { event: Convention }) => (
-    <div className="text-xs">
+    <div className="text-xs" onMouseEnter={() => onSelectEvent?.(event)}>
       <div className="font-semibold">{event.title}</div>
       <div className="flex items-center gap-1 mt-1">
         <MapPin className="w-3 h-3" />
@@ -317,15 +370,17 @@ export default function ConventionCalendar({ onSelectEvent, onCreateEvent }: Con
             <Card className="bg-custom-box border border-custom-border p-4">
               <h3 className="text-white font-semibold mb-3">Event Types</h3>
               <div className="space-y-2">
-                {[
-                  { type: 'c-level', label: 'C-Level Executive', color: 'bg-red-500' },
-                  { type: 'media-rights', label: 'Media Rights', color: 'bg-blue-500' },
-                  { type: 'digital-ott', label: 'Digital/OTT', color: 'bg-green-500' },
-                  { type: 'federation-official', label: 'Federation Official', color: 'bg-indigo-500' },
-                  { type: 'tech-innovation', label: 'Tech Innovation', color: 'bg-pink-500' }
-                ].map(({ type, label, color }) => (
+                {(
+                  [
+                    { type: 'c-level', label: 'C-Level Executive' },
+                    { type: 'media-rights', label: 'Media Rights' },
+                    { type: 'digital-ott', label: 'Digital/OTT' },
+                    { type: 'federation-official', label: 'Federation Official' },
+                    { type: 'tech-innovation', label: 'Tech Innovation' }
+                  ] as Array<{ type: string; label: string }>
+                ).map(({ type, label }) => (
                   <div key={type} className="flex items-center gap-2">
-                    <div className={`w-3 h-3 rounded ${color}`}></div>
+                    <div className={`w-3 h-3 rounded ${EVENT_TYPE_COLORS[type] || 'bg-gray-500'}`}></div>
                     <span className="text-fm-light-grey text-sm">{label}</span>
                   </div>
                 ))}

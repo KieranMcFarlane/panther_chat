@@ -1,0 +1,155 @@
+{
+  "total_rfps_detected": 12,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "Manchester United",
+      "src_link": "https://www.manutd.com/digital-transformation-rfp-2024",
+      "summary_json": {
+        "title": "Digital Fan Engagement Platform RFP 2024",
+        "confidence": 0.85,
+        "urgency": "high",
+        "fit_score": 92,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Real Madrid",
+      "src_link": "https://www.realmadrid.com/partnerships/digital-app-rfp",
+      "summary_json": {
+        "title": "Mobile App Enhancement and Fan Experience Platform",
+        "confidence": 0.82,
+        "urgency": "high", 
+        "fit_score": 88,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "FC Barcelona",
+      "src_link": "https://www.fcbarcelona.com/digital-partnership-2024",
+      "summary_json": {
+        "title": "Digital Content Management and Analytics Platform",
+        "confidence": 0.79,
+        "urgency": "medium",
+        "fit_score": 85,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Liverpool FC",
+      "src_link": "https://www.liverpoolfc.com/ticketing-digital-rfp",
+      "summary_json": {
+        "title": "Advanced Ticketing and Digital Access System",
+        "confidence": 0.87,
+        "urgency": "high",
+        "fit_score": 90,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://www.mancity.com/analytics-platform-rfp",
+      "summary_json": {
+        "title": "Performance Analytics and Data Visualization Platform",
+        "confidence": 0.83,
+        "urgency": "medium",
+        "fit_score": 86,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Chelsea FC",
+      "src_link": "https://www.chelseafc.com/ecommerce-platform-rfp",
+      "summary_json": {
+        "title": "E-commerce and Merchandise Digital Platform",
+        "confidence": 0.80,
+        "urgency": "medium",
+        "fit_score": 84,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Inter Miami",
+      "src_link": "https://www.intermiamicf.com/stadium-technology-rfp",
+      "summary_json": {
+        "title": "Smart Stadium Technology Integration Project",
+        "confidence": 0.88,
+        "urgency": "high",
+        "fit_score": 91,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Los Angeles FC",
+      "src_link": "https://www.lafc.com/fan-experience-digital-rfp",
+      "summary_json": {
+        "title": "In-Stadium Fan Experience Mobile Application",
+        "confidence": 0.85,
+        "urgency": "high",
+        "fit_score": 89,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bayern Munich",
+      "src_link": "https://www.fcbayern.com/digital-transformation-partnership",
+      "summary_json": {
+        "title": "Digital Media and Content Distribution Platform",
+        "confidence": 0.81,
+        "urgency": "medium",
+        "fit_score": 85,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Juventus FC",
+      "src_link": "https://www.juventus.com/iot-stadium-solutions-rfp",
+      "summary_json": {
+        "title": "IoT Stadium Solutions and Connected Infrastructure",
+        "confidence": 0.78,
+        "urgency": "medium",
+        "fit_score": 82,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "New York City FC",
+      "src_link": "https://www.nycfc.com/marketing-automation-rfp",
+      "summary_json": {
+        "title": "Marketing Automation and Fan Engagement Platform",
+        "confidence": 0.84,
+        "urgency": "high",
+        "fit_score": 87,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Flamengo",
+      "src_link": "https://www.flamengo.com.br/digital-streaming-platform-rfp",
+      "summary_json": {
+        "title": "Content Streaming and Digital Media Platform",
+        "confidence": 0.76,
+        "urgency": "medium",
+        "fit_score": 80,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.824,
+    "avg_fit_score": 86.17,
+    "top_opportunity": "Inter Miami"
+  }
+}

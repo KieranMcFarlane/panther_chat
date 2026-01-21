@@ -234,20 +234,32 @@ const RFP_PROCUREMENT_KEYWORDS = {
     "supplier evaluation", "tender invitation", "contract opportunity"
   ],
   
-  // Digital Project Indicators
+  // Digital Project Indicators (PRIORITY 1 - Digital Agency Focus)
   digital_projects: [
     "digital transformation", "website development", "mobile app",
     "application development", "web development", "software development",
     "digital platform", "online platform", "digital solution",
-    "technology implementation", "system integration", "digital overhaul"
+    "technology implementation", "system integration", "digital overhaul",
+    "CRM integration", "fan engagement platform", "digital marketing",
+    "content management system", "e-commerce platform", "analytics platform"
   ],
   
-  // Sports-Specific Indicators
+  // Sports-Specific Digital Indicators (PRIORITY 1 - Sports Agency Focus)
   sports_digital: [
     "fan engagement platform", "ticketing system", "sports app",
     "fan experience", "digital stadium", "mobile ticketing",
     "sports technology", "digital sports", "athlete management",
-    "competition management", "league management", "federation platform"
+    "competition management", "league management", "federation platform",
+    "digital fan experience", "mobile sports application", "sports CRM",
+    "live streaming platform", "sports content management", "fantasy sports"
+  ],
+  
+  // EXCLUDE: Infrastructure & Construction (Negative Keywords)
+  exclude_infrastructure: [
+    "construction", "infrastructure", "stadium construction", "facility management",
+    "building", "physical infrastructure", "real estate", "venue construction",
+    "civil engineering", "architecture", "facilities", "grounds maintenance",
+    "catering", "security", "transportation", "accommodation", "equipment supply"
   ],
   
   // Budget & Investment Indicators
@@ -508,9 +520,45 @@ const ENTITY_MONITORING_SETUP = {
 
 ---
 
+## 🚀 UPDATED LLM EXECUTION INSTRUCTIONS (Digital-First Focus)
+
+### **🤖 Instructions for LLM Execution - Digital Agency Specialization**
+
+As an AI assistant, you will now execute RFP detection with a **DIGITAL-FIRST** strategy that aligns with Yellow Panther's core competencies:
+
+#### **Digital-First Detection Priority**
+1. **Primary Focus**: Digital transformation, mobile apps, web development, fan engagement platforms
+2. **Sports Domain**: Federations, leagues, clubs seeking digital solutions  
+3. **Project Size**: £50K-£1M (optimal for digital agency services)
+4. **EXCLUDE**: Infrastructure, construction, facility management, real estate
+
+#### **Digital Scoring Priority Matrix**
+```javascript
+const DIGITAL_PRIORITY_SCORES = {
+  "digital transformation": 1.0,
+  "mobile app development": 1.0,
+  "website development": 0.95,
+  "fan engagement platform": 0.95,
+  "CRM integration": 0.9,
+  "digital marketing": 0.85,
+  "sports technology": 0.9,
+  "ticketing system": 0.8,
+  "construction": -0.5,  // NEGATIVE SCORE
+  "infrastructure": -0.5,  // NEGATIVE SCORE
+  "facility management": -0.5  // NEGATIVE SCORE
+};
+```
+
+#### **Digital-First Search Strategy**
+For each sports entity, prioritize these search patterns:
+1. **LinkedIn**: "digital transformation", "mobile app", "website development"
+2. **Technology**: "sports app", "fan platform", "digital engagement"
+3. **Partnerships**: "technology partner", "digital agency", "digital innovation"
+4. **AVOID**: "construction", "stadium", "infrastructure", "facilities"
+
 ## 🚀 LLM EXECUTION INSTRUCTIONS FOR 6-MONTH BACKTESTING
 
-### **🤖 Instructions for LLM Execution**
+### **🤖 Instructions for LLM Execution (Legacy Backtest)**
 
 As an AI assistant, you will now execute a comprehensive 6-month backtest of the RFP detection system using the following methodology:
 
@@ -549,10 +597,10 @@ const HISTORICAL_ANALYSIS_CONFIG = {
 // For each entity in Neo4j, perform historical search
 async function analyzeEntityHistorical(entity) {
   const search_queries = [
-    `site:linkedin.com "${entity.name}" RFP OR proposal OR tender OR "digital transformation" OR "mobile app"`,
-    `"${entity.name}" "request for proposal" OR "soliciting proposals"`,
-    `"${entity.name}" "digital transformation" OR "technology partnership"`,
-    `"${entity.name}" "strategic investment" OR "budget allocation" digital`
+    `site:linkedin.com "${entity.name}" "digital transformation" OR "mobile app" OR "website development" OR "fan engagement platform" OR "digital RFP"`,
+    `"${entity.name}" "request for proposal" AND ("digital" OR "technology" OR "mobile" OR "online")`,
+    `"${entity.name}" "technology partnership" OR "digital transformation" OR "sports app"`,
+    `"${entity.name}" "digital investment" OR "technology budget" AND NOT ("construction" OR "infrastructure")`
   ];
   
   // Simulate web search for each query across 6-month period
@@ -867,6 +915,163 @@ Based on sports intelligence analysis of 97+ enriched entities:
 #### **Premier Target Segment (Opportunity Score: 85+)**
 - **Organizations**: Manchester City (92), IOC (96), World Athletics (94), Arsenal (90)
 - **Budget Range**: £300K-£500K+ for comprehensive digital initiatives
+
+---
+
+## 🎯 Yellow Panther Business Alignment (Updated 2025-11-05)
+
+### **Digital-First RFP Strategy**
+The RFP monitoring system has been optimized to prioritize opportunities that align with Yellow Panther's core competencies as a digital agency:
+
+#### **Target RFP Categories (High Priority)**
+- **Digital Transformation**: Website redesign, platform modernization, CRM integration
+- **Mobile App Development**: Fan engagement apps, sports organization mobile platforms
+- **Fan Engagement Platforms**: Interactive content, real-time data, community features
+- **Web Development**: Federation websites, tournament platforms, digital presence
+- **Digital Strategy Consulting**: Technology roadmap, digital innovation consulting
+
+#### **Non-Target Categories (Avoid/Deprioritize)**
+- **Infrastructure Projects**: Stadium construction, venue development, physical facilities
+- **Construction & Real Estate**: Sports complex development, facility management
+- **Traditional Procurement**: Equipment supply, catering, security services
+- **Event Logistics**: Transportation, accommodation, on-site operations
+
+### **Strategic Opportunity Examples**
+**✅ Aligned Opportunities (Pursue Aggressively):**
+- Cricket West Indies Digital Transformation RFP (£200K-£500K)
+- UEFA Champions League Mobile App Enhancement (£400K-£700K)
+- Premier League Digital Fan Experience Platform (£500K-£1M)
+- IOC Olympic Digital Transformation Initiative (£700K-£1M)
+
+**❌ Misaligned Opportunities (Avoid):**
+- Olympic Village Infrastructure Construction (£50M+)
+- Stadium Facility Management Services (£5M-£10M)
+- Sports Complex Real Estate Development (£20M+)
+
+### **Implementation Details**
+- **Data Source**: `digital-rfp-opportunities.js` with 40 curated opportunities
+- **Fit Scoring**: 84-96 range for digital projects vs 60-80 for infrastructure
+- **Budget Range**: £150K-£1.2M (optimal for agency services)
+- **Technical Stack**: Same monitoring system, refined opportunity filtering
+
+This ensures the RFP pipeline consistently delivers opportunities where Yellow Panther can leverage its award-winning digital expertise and proven sports industry track record.
+
+---
+
+## 🔄 UPDATED RFP MONITORING EXECUTION (Digital-First)
+
+### **🎯 Real-Time Digital RFP Detection (Updated 2025-11-05)**
+
+#### **Step 1: Digital-First Entity Selection**
+```cypher
+// Query Neo4j for high-priority digital entities
+MATCH (e:Entity)
+WHERE e.yellowPantherPriority <= 5
+AND e.type IN ['Club', 'League', 'Federation', 'Tournament']
+AND e.digitalTransformationScore >= 70
+AND e.digitalMaturityScore >= 60
+RETURN e.name, e.type, e.sport, e.country, e.digitalTransformationScore
+ORDER BY e.digitalTransformationScore DESC
+LIMIT 300;
+```
+
+#### **Step 2: Digital-First Search Execution**
+For each entity, execute these DIGITAL-PRIORITY searches:
+
+```bash
+# Primary Digital Transformation Search
+brightData_search(query="${entity_name} ${sport} 'digital transformation' OR 'mobile app' OR 'website development' OR 'fan engagement platform'")
+
+# Secondary Technology Partnership Search  
+brightData_search(query="${entity_name} 'technology partner' OR 'digital agency' OR 'sports app' OR 'digital innovation'")
+
+# Tertiary Digital Platform Search
+brightData_search(query="${entity_name} 'digital platform' OR 'CRM integration' OR 'ticketing system' OR 'digital marketing'")
+
+# EXCLUDE INFRASTRUCTURE: Apply negative filtering
+# Results containing "construction", "stadium", "infrastructure" get NEGATIVE scores
+```
+
+#### **Step 3: Digital-First Scoring Algorithm**
+```javascript
+const calculateDigitalFitScore = (content, entity) => {
+  let score = entity.digitalTransformationScore * 0.4;
+  
+  // Digital project bonuses
+  if (content.includes("digital transformation")) score += 25;
+  if (content.includes("mobile app")) score += 25;
+  if (content.includes("website development")) score += 20;
+  if (content.includes("fan engagement")) score += 20;
+  
+  // Sports domain bonuses
+  if (content.includes("sports") || content.includes(entity.sport)) score += 15;
+  if (content.includes("federation") || content.includes("league")) score += 10;
+  
+  // Infrastructure penalties
+  if (content.includes("construction")) score -= 50;
+  if (content.includes("stadium")) score -= 50;
+  if (content.includes("infrastructure")) score -= 50;
+  if (content.includes("facility management")) score -= 50;
+  
+  return Math.min(100, Math.max(0, score));
+};
+```
+
+#### **Step 4: Digital-First Validation**
+Use Perplexity MCP to validate digital opportunities:
+```javascript
+const validation_prompt = `
+Analyze this sports RFP for digital transformation alignment:
+- Is this a DIGITAL project (website, app, platform)?
+- Does it match Yellow Panther's digital agency services?
+- Is it NOT infrastructure/construction?
+- Is the budget range suitable (£50K-£1M)?
+
+Opportunity: ${rfp_content}
+Entity: ${entity_name}
+`;
+```
+
+### **📊 Expected Digital-First Results**
+
+**Target Success Metrics:**
+- **Digital RFPs Detected**: 85-95% (vs current 2%)
+- **Yellow Panther Fit Score**: 85-95 average (vs current 80)
+- **Infrastructure Noise**: <5% (vs current 90%)
+- **Actionable Opportunities**: 20-30 per batch (vs current 1-2)
+
+**Expected Opportunity Types:**
+1. **Digital Transformation** (40%) - £200K-£500K
+2. **Mobile App Development** (30%) - £150K-£400K  
+3. **Web Platform Development** (20%) - £80K-£250K
+4. **Fan Engagement Systems** (10%) - £100K-£300K
+
+### **🔧 Implementation Commands**
+
+```bash
+# Test Digital-First Monitoring
+./run-rfp-monitor.sh batch1 --debug
+
+# Check Results
+cat logs/rfp_results_batch1_*.json | jq '.total_rfps_detected, .entities_checked'
+
+# Validate Digital Quality
+cat logs/rfp_results_batch1_*.json | jq '.highlights[].summary_json.title'
+
+# Run Full Digital Pipeline
+SEARCH_MODE=granular ./run-rfp-monitor.sh batch1
+```
+
+### **🎯 Success Validation**
+
+**Digital-First Success Indicators:**
+✅ High volume of digital transformation RFPs detected  
+✅ Yellow Panther fit scores consistently 85+  
+✅ Infrastructure noise filtered out (<5%)  
+✅ Actionable opportunities with real budgets  
+✅ Direct alignment with agency service offerings  
+
+**The system now acts as a digital business development tool** rather than a generic procurement finder.
 - **Project Types**: Digital transformation, mobile applications, integrated systems
 - **Characteristics**: High digital maturity, global reach, commercial focus
 

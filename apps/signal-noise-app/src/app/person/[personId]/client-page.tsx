@@ -86,8 +86,7 @@ export default function PersonProfileClient({ entityId }: { entityId: string }) 
   const router = useRouter();
   const actualEntityId = params.entityId as string || entityId;
   
-  const { data: entityData, error, isLoading } = useEntity(actualEntityId);
-  const entity = entityData?.entity || null;
+  const { entity, error, isLoading } = useEntity(actualEntityId);
   
   const [activeTab, setActiveTab] = useState('overview');
   const [showEmailComposer, setShowEmailComposer] = useState(false);

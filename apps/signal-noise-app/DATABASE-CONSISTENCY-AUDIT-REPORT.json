@@ -1,0 +1,150 @@
+{
+  "audit_date": "2025-11-16T04:03:37.307Z",
+  "summary": {
+    "total_issues": 6,
+    "critical_issues": 2,
+    "major_issues": 4,
+    "most_affected_sports": [
+      "Football",
+      "Basketball"
+    ]
+  },
+  "issues": {
+    "critical": [
+      {
+        "sport": "Football",
+        "league": "Premier League",
+        "issue": "Massive data gap",
+        "neo4j_count": 1,
+        "cached_count": 24,
+        "gap_percentage": 96,
+        "priority": "CRITICAL",
+        "impact": "Navigation broken, incomplete league coverage",
+        "expected": 20,
+        "found": 1,
+        "missing": 19
+      },
+      {
+        "sport": "Basketball",
+        "league": "NBA",
+        "issue": "Massive data gap",
+        "neo4j_count": 2,
+        "cached_count": 30,
+        "gap_percentage": 93,
+        "priority": "CRITICAL",
+        "impact": "Navigation broken, incomplete league coverage",
+        "expected": 30,
+        "found": 2,
+        "missing": 28
+      }
+    ],
+    "major": [
+      {
+        "sport": "Football",
+        "league": "English Championship",
+        "issue": "Significant data gap",
+        "neo4j_count": 2,
+        "expected": 24,
+        "gap_percentage": 92,
+        "priority": "HIGH",
+        "impact": "Navigation partially broken",
+        "missing": 22
+      },
+      {
+        "sport": "Football",
+        "league": "La Liga",
+        "issue": "Complete data missing",
+        "neo4j_count": 1,
+        "expected": 20,
+        "gap_percentage": 95,
+        "priority": "HIGH",
+        "impact": "No Spanish league coverage",
+        "missing": 19
+      },
+      {
+        "sport": "Football",
+        "league": "Bundesliga",
+        "issue": "Significant data gap",
+        "neo4j_count": 1,
+        "cached_count": 13,
+        "gap_percentage": 92,
+        "priority": "HIGH",
+        "impact": "Partial German league coverage",
+        "missing": 17
+      },
+      {
+        "sport": "Football",
+        "league": "2. Bundesliga",
+        "issue": "Data gap",
+        "neo4j_count": 0,
+        "cached_count": 6,
+        "gap_percentage": 100,
+        "priority": "MEDIUM",
+        "impact": "No 2nd division German coverage",
+        "missing": 6
+      }
+    ],
+    "minor": [],
+    "observations": [
+      {
+        "pattern": "League Navigation Vulnerability",
+        "description": "Leagues with <5 teams have broken navigation",
+        "affected_leagues": [
+          "Premier League",
+          "NBA",
+          "La Liga",
+          "Bundesliga"
+        ],
+        "cause": "Insufficient team count for proper up/down cycling"
+      },
+      {
+        "pattern": "Data Sync Issues",
+        "description": "cached_entities has complete data but Neo4j is missing most entries",
+        "root_cause": "Failed sync processes between databases",
+        "impact": "Frontend queries incomplete data"
+      },
+      {
+        "pattern": "Sport Classification Inconsistency",
+        "description": "Some teams classified as \"Soccer\" instead of \"Football\"",
+        "examples": [
+          "Multiple entries with sport: \"Soccer\""
+        ],
+        "impact": "Fragmented sport categories"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "category": "Immediate Action",
+      "priority": "CRITICAL",
+      "actions": [
+        "Sync Premier League: Add 19 missing teams from cached_entities to Neo4j",
+        "Sync NBA: Add 28 missing teams from cached_entities to Neo4j",
+        "Sync La Liga: Add 19 missing teams from cached_entities to Neo4j",
+        "Sync Bundesliga: Add 17 missing teams from cached_entities to Neo4j"
+      ]
+    },
+    {
+      "category": "System Improvements",
+      "priority": "HIGH",
+      "actions": [
+        "Implement automatic sync triggers for cached_entities updates",
+        "Add data validation to prevent incomplete league imports",
+        "Create duplicate detection and cleanup processes",
+        "Establish minimum team count thresholds for league navigation"
+      ]
+    },
+    {
+      "category": "Navigation Enhancement",
+      "priority": "MEDIUM",
+      "actions": [
+        "Add fallback navigation for leagues with <5 teams",
+        "Implement progressive loading for large leagues",
+        "Create league-specific navigation components",
+        "Add search functionality within leagues"
+      ]
+    }
+  ],
+  "estimated_effort": "4-6 hours to sync critical leagues",
+  "risk_level": "HIGH - Multiple major sports leagues have broken navigation"
+}

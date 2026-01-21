@@ -20,7 +20,11 @@ export function formatValue(value: any): string {
         const timestamp = value.low
         const date = new Date(timestamp)
         if (!isNaN(date.getTime())) {
-          return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+          return date.toLocaleDateString('en-US', { 
+            weekday: 'short', 
+            month: 'short', 
+            day: 'numeric' 
+          })
         }
       }
       
@@ -37,7 +41,11 @@ export function formatValue(value: any): string {
       if (typeof timestamp === 'number') {
         const date = new Date(timestamp)
         if (!isNaN(date.getTime())) {
-          return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+          return date.toLocaleDateString('en-US', { 
+            weekday: 'short', 
+            month: 'short', 
+            day: 'numeric' 
+          })
         }
       }
     }
@@ -58,7 +66,11 @@ export function formatValue(value: any): string {
         
         const date = new Date(year, month, day, hour, minute, second)
         if (!isNaN(date.getTime())) {
-          return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+          return date.toLocaleDateString('en-US', { 
+            weekday: 'short', 
+            month: 'short', 
+            day: 'numeric' 
+          })
         }
       } catch (error) {
         console.warn('Failed to convert Neo4j DateTime:', error)

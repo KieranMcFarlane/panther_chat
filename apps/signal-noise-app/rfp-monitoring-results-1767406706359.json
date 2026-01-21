@@ -1,0 +1,683 @@
+{
+  "total_rfps_detected": 56,
+  "entities_checked": 300,
+  "highlights": [
+    {
+      "organization": "Atalanta",
+      "src_link": "https://procurement.example.com/atalanta-1767406706336",
+      "summary_json": {
+        "title": "Atalanta - Digital Transformation RFP",
+        "confidence": 1,
+        "urgency": "medium",
+        "fit_score": 83,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Kaizer Chiefs",
+      "src_link": "https://procurement.example.com/kaizer-chiefs-1767406706291",
+      "summary_json": {
+        "title": "Kaizer Chiefs - Stadium Development RFP",
+        "confidence": 1,
+        "urgency": "high",
+        "fit_score": 70,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Boca Juniors",
+      "src_link": "https://procurement.example.com/boca-juniors-1767406706292",
+      "summary_json": {
+        "title": "Boca Juniors - Stadium Development RFP",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 70,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Goiás",
+      "src_link": "https://procurement.example.com/goiás-1767406706321",
+      "summary_json": {
+        "title": "Goiás - Stadium Development RFP",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 77,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Perth Wildcats",
+      "src_link": "https://procurement.example.com/perth-wildcats-1767406706336",
+      "summary_json": {
+        "title": "Perth Wildcats - Technology Partnership RFP",
+        "confidence": 1,
+        "urgency": "medium",
+        "fit_score": 74,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Belgrade Partizan (Football)",
+      "src_link": "https://procurement.example.com/belgrade-partizan-(football)-1767406706274",
+      "summary_json": {
+        "title": "Belgrade Partizan (Football) - Academy Program RFP",
+        "confidence": 1,
+        "urgency": "high",
+        "fit_score": 73,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Barrow",
+      "src_link": "https://procurement.example.com/barrow-1767406706350",
+      "summary_json": {
+        "title": "Barrow - Academy Program RFP",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 76,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Rapid Wien",
+      "src_link": "https://procurement.example.com/rapid-wien-1767406706335",
+      "summary_json": {
+        "title": "Rapid Wien - Academy Program RFP",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 82,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Cali America",
+      "src_link": "https://procurement.example.com/cali-america-1767406706293",
+      "summary_json": {
+        "title": "Cali America - Training Facility RFP",
+        "confidence": 1,
+        "urgency": "high",
+        "fit_score": 95,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Arsenal FC",
+      "src_link": "https://procurement.example.com/arsenal-fc-1767406706306",
+      "summary_json": {
+        "title": "Arsenal FC - Digital Transformation RFP",
+        "confidence": 1,
+        "urgency": "low",
+        "fit_score": 90,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Leicester City",
+      "src_link": "https://procurement.example.com/leicester-city-1767406706277",
+      "summary_json": {
+        "title": "Leicester City - Training Facility RFP",
+        "confidence": 0.93,
+        "urgency": "low",
+        "fit_score": 67,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Flamengo",
+      "src_link": "https://procurement.example.com/flamengo-1767406706292",
+      "summary_json": {
+        "title": "Flamengo - Academy Program RFP",
+        "confidence": 0.93,
+        "urgency": "high",
+        "fit_score": 96,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Accrington Stanley",
+      "src_link": "https://procurement.example.com/accrington-stanley-1767406706290",
+      "summary_json": {
+        "title": "Accrington Stanley - Digital Transformation RFP",
+        "confidence": 0.92,
+        "urgency": "high",
+        "fit_score": 64,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Ipswich Town",
+      "src_link": "https://procurement.example.com/ipswich-town-1767406706277",
+      "summary_json": {
+        "title": "Ipswich Town - Academy Program RFP",
+        "confidence": 0.9,
+        "urgency": "medium",
+        "fit_score": 76,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Atlético Mineiro",
+      "src_link": "https://procurement.example.com/atlético-mineiro-1767406706307",
+      "summary_json": {
+        "title": "Atlético Mineiro - Academy Program RFP",
+        "confidence": 0.9,
+        "urgency": "high",
+        "fit_score": 76,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Watford",
+      "src_link": "https://procurement.example.com/watford-1767406706277",
+      "summary_json": {
+        "title": "Watford - Training Facility RFP",
+        "confidence": 0.89,
+        "urgency": "high",
+        "fit_score": 83,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Barbados",
+      "src_link": "https://procurement.example.com/barbados-1767406706337",
+      "summary_json": {
+        "title": "Barbados - Academy Equipment RFP",
+        "confidence": 0.87,
+        "urgency": "medium",
+        "fit_score": 91,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Blues",
+      "src_link": "https://procurement.example.com/blues-1767406706352",
+      "summary_json": {
+        "title": "Blues - Equipment Supply RFP",
+        "confidence": 0.87,
+        "urgency": "high",
+        "fit_score": 88,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Blackburn Rovers",
+      "src_link": "https://procurement.example.com/blackburn-rovers-1767406706352",
+      "summary_json": {
+        "title": "Blackburn Rovers - Digital Transformation RFP",
+        "confidence": 0.85,
+        "urgency": "medium",
+        "fit_score": 98,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bakersfield Condors",
+      "src_link": "https://procurement.example.com/bakersfield-condors-1767406706337",
+      "summary_json": {
+        "title": "Bakersfield Condors - Equipment Supply RFP",
+        "confidence": 0.84,
+        "urgency": "high",
+        "fit_score": 94,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Atlanta Hawks",
+      "src_link": "https://procurement.example.com/atlanta-hawks-1767406706336",
+      "summary_json": {
+        "title": "Atlanta Hawks - Arena Renovation RFP",
+        "confidence": 0.83,
+        "urgency": "medium",
+        "fit_score": 75,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bay of Plenty Steamers",
+      "src_link": "https://procurement.example.com/bay-of-plenty-steamers-1767406706351",
+      "summary_json": {
+        "title": "Bay of Plenty Steamers - Technology Partnership RFP",
+        "confidence": 0.83,
+        "urgency": "high",
+        "fit_score": 61,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "FC Barcelona",
+      "src_link": "https://procurement.example.com/fc-barcelona-1767406706277",
+      "summary_json": {
+        "title": "FC Barcelona - Academy Program RFP",
+        "confidence": 0.82,
+        "urgency": "low",
+        "fit_score": 93,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Bidasoa Irún",
+      "src_link": "https://procurement.example.com/bidasoa-irún-1767406706351",
+      "summary_json": {
+        "title": "Bidasoa Irún - Technology Partnership RFP",
+        "confidence": 0.82,
+        "urgency": "high",
+        "fit_score": 69,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "AEK Athens",
+      "src_link": "https://procurement.example.com/aek-athens-1767406706291",
+      "summary_json": {
+        "title": "AEK Athens - Marketing Services RFP",
+        "confidence": 0.81,
+        "urgency": "high",
+        "fit_score": 66,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "BC Donetsk",
+      "src_link": "https://procurement.example.com/bc-donetsk-1767406706323",
+      "summary_json": {
+        "title": "BC Donetsk - Technology Partnership RFP",
+        "confidence": 0.81,
+        "urgency": "low",
+        "fit_score": 86,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Aix-en-Provence (Provence Rugby)",
+      "src_link": "https://procurement.example.com/aix-en-provence-(provence-rugby)-1767406706291",
+      "summary_json": {
+        "title": "Aix-en-Provence (Provence Rugby) - Facility Upgrade RFP",
+        "confidence": 0.79,
+        "urgency": "medium",
+        "fit_score": 97,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "AS Douanes",
+      "src_link": "https://procurement.example.com/as-douanes-1767406706291",
+      "summary_json": {
+        "title": "AS Douanes - Youth Development RFP",
+        "confidence": 0.79,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Colorado Rapids",
+      "src_link": "https://procurement.example.com/colorado-rapids-1767406706322",
+      "summary_json": {
+        "title": "Colorado Rapids - Kit Supplier RFP",
+        "confidence": 0.79,
+        "urgency": "low",
+        "fit_score": 77,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "CB Murcia",
+      "src_link": "https://procurement.example.com/cb-murcia-1767406706323",
+      "summary_json": {
+        "title": "CB Murcia - Technology Partnership RFP",
+        "confidence": 0.79,
+        "urgency": "high",
+        "fit_score": 80,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "1. FC Köln",
+      "src_link": "https://procurement.example.com/1.-fc-köln-1767406706290",
+      "summary_json": {
+        "title": "1. FC Köln - Kit Supplier RFP",
+        "confidence": 0.77,
+        "urgency": "high",
+        "fit_score": 92,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Manchester United",
+      "src_link": "https://procurement.example.com/manchester-united-1767406706276",
+      "summary_json": {
+        "title": "Manchester United - Stadium Development RFP",
+        "confidence": 0.76,
+        "urgency": "low",
+        "fit_score": 64,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "Olympique de Marseille",
+      "src_link": "https://procurement.example.com/olympique-de-marseille-1767406706322",
+      "summary_json": {
+        "title": "Olympique de Marseille - Kit Supplier RFP",
+        "confidence": 0.76,
+        "urgency": "high",
+        "fit_score": 72,
+        "rfp_type": "ACTIVE_RFP",
+        "opportunity_stage": "open_tender"
+      }
+    },
+    {
+      "organization": "CSD Macara",
+      "src_link": "https://procurement.example.com/csd-macara-1767406706306",
+      "summary_json": {
+        "title": "CSD Macara - Academy Program RFP",
+        "confidence": 0.75,
+        "urgency": "medium",
+        "fit_score": 76,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Barangay Ginebra San Miguel",
+      "src_link": "https://procurement.example.com/barangay-ginebra-san-miguel-1767406706337",
+      "summary_json": {
+        "title": "Barangay Ginebra San Miguel - Marketing Services RFP",
+        "confidence": 0.74,
+        "urgency": "medium",
+        "fit_score": 72,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Border",
+      "src_link": "https://procurement.example.com/border-1767406706356",
+      "summary_json": {
+        "title": "Border - Tournament Hosting RFP",
+        "confidence": 0.74,
+        "urgency": "medium",
+        "fit_score": 72,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Bayer 04 Leverkusen",
+      "src_link": "https://procurement.example.com/bayer-04-leverkusen-1767406706351",
+      "summary_json": {
+        "title": "Bayer 04 Leverkusen - Stadium Development RFP",
+        "confidence": 0.73,
+        "urgency": "low",
+        "fit_score": 79,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Barnsley",
+      "src_link": "https://procurement.example.com/barnsley-1767406706350",
+      "summary_json": {
+        "title": "Barnsley - Training Facility RFP",
+        "confidence": 0.72,
+        "urgency": "low",
+        "fit_score": 69,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Bayern Munich (Women)",
+      "src_link": "https://procurement.example.com/bayern-munich-(women)-1767406706274",
+      "summary_json": {
+        "title": "Bayern Munich (Women) - Stadium Development RFP",
+        "confidence": 0.71,
+        "urgency": "medium",
+        "fit_score": 70,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "CR Vasco da Gama",
+      "src_link": "https://procurement.example.com/cr-vasco-da-gama-1767406706292",
+      "summary_json": {
+        "title": "CR Vasco da Gama - Academy Program RFP",
+        "confidence": 0.71,
+        "urgency": "high",
+        "fit_score": 94,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "partnership_announced"
+      }
+    },
+    {
+      "organization": "Nottingham Forest",
+      "src_link": "https://procurement.example.com/nottingham-forest-1767406706277",
+      "summary_json": {
+        "title": "Nottingham Forest - Kit Supplier RFP",
+        "confidence": 0.7,
+        "urgency": "low",
+        "fit_score": 60,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Boland",
+      "src_link": "https://procurement.example.com/boland-1767406706352",
+      "summary_json": {
+        "title": "Boland - Ground Maintenance RFP",
+        "confidence": 0.7,
+        "urgency": "low",
+        "fit_score": 74,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Boston Bruins",
+      "src_link": "https://procurement.example.com/boston-bruins-1767406706357",
+      "summary_json": {
+        "title": "Boston Bruins - Marketing Services RFP",
+        "confidence": 0.69,
+        "urgency": "low",
+        "fit_score": 94,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Cienciano",
+      "src_link": "https://procurement.example.com/cienciano-1767406706306",
+      "summary_json": {
+        "title": "Cienciano - Academy Program RFP",
+        "confidence": 0.67,
+        "urgency": "medium",
+        "fit_score": 68,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Atlético de Madrid",
+      "src_link": "https://procurement.example.com/atlético-de-madrid-1767406706336",
+      "summary_json": {
+        "title": "Atlético de Madrid - Academy Program RFP",
+        "confidence": 0.67,
+        "urgency": "medium",
+        "fit_score": 71,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Golden State Warriors",
+      "src_link": "https://procurement.example.com/golden-state-warriors-1767406706306",
+      "summary_json": {
+        "title": "Golden State Warriors - Youth Development RFP",
+        "confidence": 0.66,
+        "urgency": "high",
+        "fit_score": 92,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Atenas de Córdoba",
+      "src_link": "https://procurement.example.com/atenas-de-córdoba-1767406706336",
+      "summary_json": {
+        "title": "Atenas de Córdoba - Technology Partnership RFP",
+        "confidence": 0.66,
+        "urgency": "medium",
+        "fit_score": 74,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Manchester City",
+      "src_link": "https://procurement.example.com/manchester-city-1767406706276",
+      "summary_json": {
+        "title": "Manchester City - Kit Supplier RFP",
+        "confidence": 0.65,
+        "urgency": "low",
+        "fit_score": 77,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Everton",
+      "src_link": "https://procurement.example.com/everton-1767406706277",
+      "summary_json": {
+        "title": "Everton - Stadium Development RFP",
+        "confidence": 0.65,
+        "urgency": "low",
+        "fit_score": 96,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Fulham",
+      "src_link": "https://procurement.example.com/fulham-1767406706277",
+      "summary_json": {
+        "title": "Fulham - Training Facility RFP",
+        "confidence": 0.65,
+        "urgency": "low",
+        "fit_score": 89,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Vancouver Whitecaps",
+      "src_link": "https://procurement.example.com/vancouver-whitecaps-1767406706322",
+      "summary_json": {
+        "title": "Vancouver Whitecaps - Kit Supplier RFP",
+        "confidence": 0.63,
+        "urgency": "low",
+        "fit_score": 61,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Always Ready",
+      "src_link": "https://procurement.example.com/always-ready-1767406706307",
+      "summary_json": {
+        "title": "Always Ready - Stadium Development RFP",
+        "confidence": 0.62,
+        "urgency": "high",
+        "fit_score": 90,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Philadelphia Union",
+      "src_link": "https://procurement.example.com/philadelphia-union-1767406706322",
+      "summary_json": {
+        "title": "Philadelphia Union - Kit Supplier RFP",
+        "confidence": 0.62,
+        "urgency": "medium",
+        "fit_score": 90,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "New York Red Bulls",
+      "src_link": "https://procurement.example.com/new-york-red-bulls-1767406706322",
+      "summary_json": {
+        "title": "New York Red Bulls - Stadium Development RFP",
+        "confidence": 0.61,
+        "urgency": "low",
+        "fit_score": 61,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Bath Rugby",
+      "src_link": "https://procurement.example.com/bath-rugby-1767406706351",
+      "summary_json": {
+        "title": "Bath Rugby - Equipment Supply RFP",
+        "confidence": 0.61,
+        "urgency": "medium",
+        "fit_score": 68,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    },
+    {
+      "organization": "Everton de Viña del Mar",
+      "src_link": "https://procurement.example.com/everton-de-viña-del-mar-1767406706306",
+      "summary_json": {
+        "title": "Everton de Viña del Mar - Stadium Development RFP",
+        "confidence": 0.6,
+        "urgency": "medium",
+        "fit_score": 87,
+        "rfp_type": "SIGNAL",
+        "opportunity_stage": "vendor_selected"
+      }
+    }
+  ],
+  "scoring_summary": {
+    "avg_confidence": 0.799,
+    "avg_fit_score": 78,
+    "top_opportunity": "Atalanta"
+  }
+}

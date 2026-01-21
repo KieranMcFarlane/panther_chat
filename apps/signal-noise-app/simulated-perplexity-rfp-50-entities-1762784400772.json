@@ -1,0 +1,1177 @@
+{
+  "summary": {
+    "total_entities": 50,
+    "active_rfps": 8,
+    "signals": 42,
+    "excluded": 0,
+    "processing_time_seconds": 10,
+    "timestamp": "2025-11-10T14:20:00.772Z"
+  },
+  "results": [
+    {
+      "entity_name": "Manchester United FC",
+      "sport": "Football",
+      "country": "England",
+      "search_term": "Manchester United FC Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 95,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "UK/EU location bonus",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "Found digital transformation RFP for Manchester United's fan engagement platform. The club is seeking a mobile app development partner for their digital loyalty program. Budget: £250K-£400K. Deadline: December 15, 2025. Contact: digital.projects@manutd.co.uk",
+        "urls": [
+          "https://procurement.manutd.com/digital-platform-rfp-2025",
+          "https://manutd.com/partners/digital-transformation-initiative.pdf"
+        ]
+      },
+      "urls_found": [
+        "https://procurement.manutd.com/digital-platform-rfp-2025",
+        "https://manutd.com/partners/digital-transformation-initiative.pdf"
+      ],
+      "has_pdf": true,
+      "processing_timestamp": "2025-11-10T14:19:50.890Z",
+      "entity_index": 1
+    },
+    {
+      "entity_name": "Anaheim Ducks",
+      "sport": "Ice Hockey",
+      "country": "USA",
+      "search_term": "Anaheim Ducks Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:51.099Z",
+      "entity_index": 2
+    },
+    {
+      "entity_name": "Arizona Diamondbacks",
+      "sport": "Baseball",
+      "country": "USA",
+      "search_term": "Arizona Diamondbacks Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:51.301Z",
+      "entity_index": 3
+    },
+    {
+      "entity_name": "Dallas Mavericks",
+      "sport": "Basketball",
+      "country": "USA",
+      "search_term": "Dallas Mavericks Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:51.503Z",
+      "entity_index": 4
+    },
+    {
+      "entity_name": "Golden State Warriors",
+      "sport": "Basketball",
+      "country": "USA",
+      "search_term": "Golden State Warriors Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "Chase Center Digital Transformation RFP - upgrading arena's digital infrastructure including IoT sensors, mobile ordering system, and fan engagement platforms. Budget: $750K. Deadline: January 15, 2026.",
+        "urls": [
+          "https://warriors.com/procurement/chase-center-digital-rfp"
+        ]
+      },
+      "urls_found": [
+        "https://warriors.com/procurement/chase-center-digital-rfp"
+      ],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:51.704Z",
+      "entity_index": 5
+    },
+    {
+      "entity_name": "Houston Astros",
+      "sport": "Baseball",
+      "country": "USA",
+      "search_term": "Houston Astros Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:51.907Z",
+      "entity_index": 6
+    },
+    {
+      "entity_name": "Los Angeles Lakers",
+      "sport": "Basketball",
+      "country": "USA",
+      "search_term": "Los Angeles Lakers Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:52.109Z",
+      "entity_index": 7
+    },
+    {
+      "entity_name": "Miami Heat",
+      "sport": "Basketball",
+      "country": "USA",
+      "search_term": "Miami Heat Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:52.311Z",
+      "entity_index": 8
+    },
+    {
+      "entity_name": "New England Patriots",
+      "sport": "Football",
+      "country": "USA",
+      "search_term": "New England Patriots Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:52.513Z",
+      "entity_index": 9
+    },
+    {
+      "entity_name": "New York Giants",
+      "sport": "Football",
+      "country": "USA",
+      "search_term": "New York Giants Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:52.714Z",
+      "entity_index": 10
+    },
+    {
+      "entity_name": "San Antonio Spurs",
+      "sport": "Basketball",
+      "country": "USA",
+      "search_term": "San Antonio Spurs Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:52.917Z",
+      "entity_index": 11
+    },
+    {
+      "entity_name": "Seattle Seahawks",
+      "sport": "Football",
+      "country": "USA",
+      "search_term": "Seattle Seahawks Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:53.119Z",
+      "entity_index": 12
+    },
+    {
+      "entity_name": "Toronto Blue Jays",
+      "sport": "Baseball",
+      "country": "Canada",
+      "search_term": "Toronto Blue Jays Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "Rogers Centre Digital Modernization RFP - comprehensive mobile app development and digital fan experience platform. Including AR features and real-time statistics integration. Budget: CAD 400K. Deadline: March 1, 2026.",
+        "urls": [
+          "https://www.bluejays.com/procurement/digital-modernization-rfp"
+        ]
+      },
+      "urls_found": [
+        "https://www.bluejays.com/procurement/digital-modernization-rfp"
+      ],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:53.321Z",
+      "entity_index": 13
+    },
+    {
+      "entity_name": "Toronto Raptors",
+      "sport": "Basketball",
+      "country": "Canada",
+      "search_term": "Toronto Raptors Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:53.524Z",
+      "entity_index": 14
+    },
+    {
+      "entity_name": "Vancouver Canucks",
+      "sport": "Ice Hockey",
+      "country": "Canada",
+      "search_term": "Vancouver Canucks Ice Hockey (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:53.726Z",
+      "entity_index": 15
+    },
+    {
+      "entity_name": "NBA",
+      "sport": "Basketball",
+      "country": "USA",
+      "search_term": "NBA Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "NBA Technology Innovation RFP - seeking AI-powered analytics platform for game data and fan insights. Project scope includes machine learning models, real-time data processing, and mobile app integration. Budget: $500K-800K. Deadline: January 30, 2026.",
+        "urls": [
+          "https://nba.nba.com/technology-rfp-2025",
+          "https://cdn.nba.com/static/docs/nba-ai-analytics-rfp.pdf"
+        ]
+      },
+      "urls_found": [
+        "https://nba.nba.com/technology-rfp-2025",
+        "https://cdn.nba.com/static/docs/nba-ai-analytics-rfp.pdf"
+      ],
+      "has_pdf": true,
+      "processing_timestamp": "2025-11-10T14:19:53.928Z",
+      "entity_index": 16
+    },
+    {
+      "entity_name": "WNBA",
+      "sport": "Basketball",
+      "country": "USA",
+      "search_term": "WNBA Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:54.129Z",
+      "entity_index": 17
+    },
+    {
+      "entity_name": "MLB",
+      "sport": "Baseball",
+      "country": "USA",
+      "search_term": "MLB Baseball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:54.331Z",
+      "entity_index": 18
+    },
+    {
+      "entity_name": "LaLiga",
+      "sport": "Football",
+      "country": "Spain",
+      "search_term": "LaLiga Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 75,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Open RFP with deadline detected",
+        "UK/EU location bonus",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "LaLiga Digital Services Tender 2025 - comprehensive digital platform overhaul including streaming infrastructure, mobile apps, and fan engagement tools. Multi-year contract with budget of €2M-3M annually. Deadline: February 28, 2026.",
+        "urls": [
+          "https://procurement.laliga.com/digital-services-tender-2025",
+          "https://www.laliga.com/documents/digital-transformation-rfp.pdf"
+        ]
+      },
+      "urls_found": [
+        "https://procurement.laliga.com/digital-services-tender-2025",
+        "https://www.laliga.com/documents/digital-transformation-rfp.pdf"
+      ],
+      "has_pdf": true,
+      "processing_timestamp": "2025-11-10T14:19:54.532Z",
+      "entity_index": 19
+    },
+    {
+      "entity_name": "Bundesliga",
+      "sport": "Football",
+      "country": "Germany",
+      "search_term": "Bundesliga Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 70,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Open RFP with deadline detected",
+        "UK/EU location bonus",
+        "Valid URLs found"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "German Football League (DFL) - Digital Innovation RFP for Bundesliga. Seeking blockchain-based ticketing system and augmented reality fan experience platform. Budget: €1.5M. Deadline: March 15, 2026.",
+        "urls": [
+          "https://bundesliga.com/digital-innovation-rfp",
+          "https://media.bundesliga.com/digital-rfp-documentation.pdf"
+        ]
+      },
+      "urls_found": [
+        "https://bundesliga.com/digital-innovation-rfp",
+        "https://media.bundesliga.com/digital-rfp-documentation.pdf"
+      ],
+      "has_pdf": true,
+      "processing_timestamp": "2025-11-10T14:19:54.733Z",
+      "entity_index": 20
+    },
+    {
+      "entity_name": "Serie A",
+      "sport": "Football",
+      "country": "Italy",
+      "search_term": "Serie A Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:54.935Z",
+      "entity_index": 21
+    },
+    {
+      "entity_name": "Ligue 1",
+      "sport": "Football",
+      "country": "France",
+      "search_term": "Ligue 1 Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:55.136Z",
+      "entity_index": 22
+    },
+    {
+      "entity_name": "Eredivisie",
+      "sport": "Football",
+      "country": "Netherlands",
+      "search_term": "Eredivisie Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:55.338Z",
+      "entity_index": 23
+    },
+    {
+      "entity_name": "Primeira Liga",
+      "sport": "Football",
+      "country": "Portugal",
+      "search_term": "Primeira Liga Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:55.539Z",
+      "entity_index": 24
+    },
+    {
+      "entity_name": "Russian Premier League",
+      "sport": "Football",
+      "country": "Russia",
+      "search_term": "Russian Premier League Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:55.741Z",
+      "entity_index": 25
+    },
+    {
+      "entity_name": "Ukrainian Premier League",
+      "sport": "Football",
+      "country": "Ukraine",
+      "search_term": "Ukrainian Premier League Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:55.943Z",
+      "entity_index": 26
+    },
+    {
+      "entity_name": "Turkish Süper Lig",
+      "sport": "Football",
+      "country": "Turkey",
+      "search_term": "Turkish Süper Lig Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:56.144Z",
+      "entity_index": 27
+    },
+    {
+      "entity_name": "Greek Super League",
+      "sport": "Football",
+      "country": "Greece",
+      "search_term": "Greek Super League Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:56.345Z",
+      "entity_index": 28
+    },
+    {
+      "entity_name": "Scottish Premiership",
+      "sport": "Football",
+      "country": "Scotland",
+      "search_term": "Scottish Premiership Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:56.546Z",
+      "entity_index": 29
+    },
+    {
+      "entity_name": "Belgian Pro League",
+      "sport": "Football",
+      "country": "Belgium",
+      "search_term": "Belgian Pro League Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:56.747Z",
+      "entity_index": 30
+    },
+    {
+      "entity_name": "Austrian Bundesliga",
+      "sport": "Football",
+      "country": "Austria",
+      "search_term": "Austrian Bundesliga Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:56.947Z",
+      "entity_index": 31
+    },
+    {
+      "entity_name": "Swiss Super League",
+      "sport": "Football",
+      "country": "Switzerland",
+      "search_term": "Swiss Super League Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:57.148Z",
+      "entity_index": 32
+    },
+    {
+      "entity_name": "Danish Superliga",
+      "sport": "Football",
+      "country": "Denmark",
+      "search_term": "Danish Superliga Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:57.349Z",
+      "entity_index": 33
+    },
+    {
+      "entity_name": "Norwegian Eliteserien",
+      "sport": "Football",
+      "country": "Norway",
+      "search_term": "Norwegian Eliteserien Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:57.550Z",
+      "entity_index": 34
+    },
+    {
+      "entity_name": "Swedish Allsvenskan",
+      "sport": "Football",
+      "country": "Sweden",
+      "search_term": "Swedish Allsvenskan Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:57.752Z",
+      "entity_index": 35
+    },
+    {
+      "entity_name": "Finnish Veikkausliiga",
+      "sport": "Football",
+      "country": "Finland",
+      "search_term": "Finnish Veikkausliiga Football (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:57.952Z",
+      "entity_index": 36
+    },
+    {
+      "entity_name": "CSL",
+      "sport": "Basketball",
+      "country": "China",
+      "search_term": "CSL Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:58.154Z",
+      "entity_index": 37
+    },
+    {
+      "entity_name": "KBL",
+      "sport": "Basketball",
+      "country": "South Korea",
+      "search_term": "KBL Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:58.355Z",
+      "entity_index": 38
+    },
+    {
+      "entity_name": "B.League",
+      "sport": "Basketball",
+      "country": "Japan",
+      "search_term": "B.League Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:58.557Z",
+      "entity_index": 39
+    },
+    {
+      "entity_name": "NBL",
+      "sport": "Basketball",
+      "country": "Australia",
+      "search_term": "NBL Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:58.758Z",
+      "entity_index": 40
+    },
+    {
+      "entity_name": "IPL",
+      "sport": "Cricket",
+      "country": "India",
+      "search_term": "IPL Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "Indian Premier League Digital Innovation RFP - AI-powered content creation platform and fantasy sports integration. Seeking cutting-edge technology partners for fan engagement. Budget: ₹8 Crore. Deadline: February 10, 2026.",
+        "urls": [
+          "https://www.iplt20.com/digital-innovation-rfp-2025",
+          "https://static.iplt20.com/docs/digital-platform-rfp.pdf"
+        ]
+      },
+      "urls_found": [
+        "https://www.iplt20.com/digital-innovation-rfp-2025",
+        "https://static.iplt20.com/docs/digital-platform-rfp.pdf"
+      ],
+      "has_pdf": true,
+      "processing_timestamp": "2025-11-10T14:19:58.959Z",
+      "entity_index": 41
+    },
+    {
+      "entity_name": "The Hundred",
+      "sport": "Cricket",
+      "country": "England",
+      "search_term": "The Hundred Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:59.161Z",
+      "entity_index": 42
+    },
+    {
+      "entity_name": "WPL",
+      "sport": "Cricket",
+      "country": "India",
+      "search_term": "WPL Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:59.362Z",
+      "entity_index": 43
+    },
+    {
+      "entity_name": "BBL",
+      "sport": "Cricket",
+      "country": "Australia",
+      "search_term": "BBL Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:59.563Z",
+      "entity_index": 44
+    },
+    {
+      "entity_name": "CPL",
+      "sport": "Cricket",
+      "country": "West Indies",
+      "search_term": "CPL Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:59.766Z",
+      "entity_index": 45
+    },
+    {
+      "entity_name": "PSL",
+      "sport": "Cricket",
+      "country": "Pakistan",
+      "search_term": "PSL Cricket (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 40,
+      "fit_score_reasons": [
+        "Digital/software project detected"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:19:59.967Z",
+      "entity_index": 46
+    },
+    {
+      "entity_name": "EuroLeague",
+      "sport": "Basketball",
+      "country": "Europe",
+      "search_term": "EuroLeague Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:20:00.168Z",
+      "entity_index": 47
+    },
+    {
+      "entity_name": "EuroCup",
+      "sport": "Basketball",
+      "country": "Europe",
+      "search_term": "EuroCup Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:20:00.369Z",
+      "entity_index": 48
+    },
+    {
+      "entity_name": "Basketball Champions League",
+      "sport": "Basketball",
+      "country": "Europe",
+      "search_term": "Basketball Champions League Basketball (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "SIGNAL",
+      "fit_score": 50,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "UK/EU location bonus"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "No active digital RFPs found for this entity. Recent digital transformation initiatives noted but no current procurement opportunities identified.",
+        "urls": []
+      },
+      "urls_found": [],
+      "has_pdf": false,
+      "processing_timestamp": "2025-11-10T14:20:00.570Z",
+      "entity_index": 49
+    },
+    {
+      "entity_name": "FIBA World Cup",
+      "sport": "Tournament",
+      "country": "International",
+      "search_term": "FIBA World Cup Tournament (\"digital transformation RFP\" OR \"mobile app tender\" OR \"web development RFP\" OR \"software development\" OR \"technology platform RFP\" OR \"digital platform\")",
+      "detection_strategy": "perplexity",
+      "classification": "ACTIVE_RFP",
+      "fit_score": 85,
+      "fit_score_reasons": [
+        "Digital/software project detected",
+        "Budget in £80K-£500K range detected",
+        "Open RFP with deadline detected",
+        "Valid URLs found",
+        "Detailed content available"
+      ],
+      "perplexity_response": {
+        "status": "success",
+        "content": "FIBA World Cup 2027 Digital Platform RFP - comprehensive mobile app development and data analytics system for international basketball tournament. Multi-country deployment required. Budget: $1.2M. Deadline: April 30, 2026.",
+        "urls": [
+          "https://fiba.basketball/procurement/world-cup-digital-platform",
+          "https://static.fiba.basketball/docs/world-cup-2027-digital-rfp.pdf"
+        ]
+      },
+      "urls_found": [
+        "https://fiba.basketball/procurement/world-cup-digital-platform",
+        "https://static.fiba.basketball/docs/world-cup-2027-digital-rfp.pdf"
+      ],
+      "has_pdf": true,
+      "processing_timestamp": "2025-11-10T14:20:00.772Z",
+      "entity_index": 50
+    }
+  ],
+  "metadata": {
+    "detection_strategy": "perplexity",
+    "simulation_note": "This is a simulated response demonstrating expected MCP output format",
+    "query_template": "entity + sport + digital RFP keywords",
+    "scoring_criteria": {
+      "digital_project": 40,
+      "budget_range": 20,
+      "open_rfp": 15,
+      "uk_eu_location": 10,
+      "non_digital_penalty": -50,
+      "fabricated_penalty": -50
+    },
+    "fit_score_calculation": {
+      "description": "CRITICAL FIT SCORE CALCULATION",
+      "criteria": {
+        "+40": "Digital/software project",
+        "+20": "Budget £80K-£500K",
+        "+15": "Open RFP with deadline",
+        "+10": "UK/EU location",
+        "-50": "Fabricated/placeholder URL"
+      }
+    }
+  }
+}

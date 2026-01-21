@@ -1,6 +1,72 @@
 version: '3.8'
 
 services:
+  # FalkorDB - Neo4j-compatible graph database
+  falkordb:
+    image: falkordb/falkordb:latest
+    ports:
+      - "6379:6379"  # Redis protocol
+      - "7687:7687"  # BOLT protocol (Neo4j compatible)
+    environment:
+      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD}
+    volumes:
+      - falkordb_data:/data
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    container_name: falkordb-graph
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis cache for supplementary caching
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    container_name: redis-cache
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI backend for temporal intelligence
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8000"
+    environment:
+      - FALKORDB_URI=bolt://falkordb:7687
+      - FALKORDB_USER=${FALKORDB_USER:-falkordb}
+      - FALKORDB_PASSWORD=${FALKORDB_PASSWORD}
+      - FALKORDB_DATABASE=${FALKORDB_DATABASE:-sports_intelligence}
+      - SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    env_file:
+      - .env.local
+      - .env.production
+    depends_on:
+      falkordb:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    container_name: signal-noise-backend
+    volumes:
+      - ./logs:/app/logs
+
+  # Next.js frontend app
   mcp-app:
     build: .
     ports:
@@ -9,6 +75,7 @@ services:
       - NODE_ENV=production
       - PORT=3005
       - HOSTNAME=0.0.0.0
+      - FALKORDB_URI=bolt://localhost:7687
     env_file:
       - .env.local
       - .env.production
@@ -19,7 +86,9 @@ services:
     networks:
       - mcp-network
     container_name: mcp-production-system
-    
+    depends_on:
+      - backend
+
   # Optional: Add nginx for reverse proxy
   nginx:
     image: nginx:alpine
@@ -29,6 +98,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - mcp-app
+      - backend
     networks:
       - mcp-network
     container_name: mcp-nginx
@@ -41,3 +111,5 @@ networks:
 volumes:
   logs:
   mcp-servers:
+  falkordb_data:
+  redis_data:

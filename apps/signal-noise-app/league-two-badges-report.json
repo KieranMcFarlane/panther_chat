@@ -1,0 +1,106 @@
+{
+  "timestamp": "2025-11-14T13:31:05.356Z",
+  "league": "League Two",
+  "total": 24,
+  "successful": 0,
+  "failed": 24,
+  "successRate": "0.0",
+  "results": [
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "No TheSportsDB data found"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    },
+    {
+      "success": false,
+      "error": "Failed to download/upload badge"
+    }
+  ]
+}

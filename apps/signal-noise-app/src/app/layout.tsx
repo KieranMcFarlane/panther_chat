@@ -20,6 +20,13 @@ const SimpleStreamingChat = dynamic(() => import('@/components/chat/SimpleStream
 
 const inter = Inter({ subsets: ['latin'] })
 
+const SPORTS_AGENT_CONFIG = {
+  name: "Sports Intelligence Agent",
+  description: "AI agent specializing in sports entity analysis, RFP intelligence, and database operations",
+  capabilities: ["database-query", "web-research", "data-analysis", "entity-enrichment"],
+  tools: ["neo4j-mcp", "brightdata", "file-operations", "web-search"]
+}
+
 export const metadata: Metadata = {
   title: 'Signal Noise App - AI-Powered Sports Intelligence',
   description: 'AI-powered dossier enrichment system with Neo4j integration and Football Manager styling',
@@ -53,11 +60,8 @@ export default function RootLayout({
                     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
                     'Access-Control-Allow-Headers': 'Content-Type',
                   }}
-                  agentConfig={{
-                    name: "Sports Intelligence Agent",
-                    description: "AI agent specializing in sports entity analysis, RFP intelligence, and database operations",
-                    capabilities: ["database-query", "web-research", "data-analysis", "entity-enrichment"],
-                    tools: ["neo4j-mcp", "brightdata", "file-operations", "web-search"]
+                  properties={{
+                    agentConfig: SPORTS_AGENT_CONFIG
                   }}
                   enableAGUI={true}
                   showInspector={process.env.NODE_ENV === 'development'}
