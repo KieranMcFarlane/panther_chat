@@ -76,7 +76,7 @@ def get_falkordb_client():
     port = parsed.port or 6379
 
     try:
-        db = FalkorDB(host=host, port=port, username=username, password=password)
+        db = FalkorDB(host=host, port=port, username=username, password=password, ssl=True)
         # Test connection
         g = db.select_graph(database)
         g.query("RETURN 1 AS test")

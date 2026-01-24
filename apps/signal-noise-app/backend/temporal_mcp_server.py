@@ -330,6 +330,185 @@ async def record_outcome(
 
 
 # =============================================================================
+# Phase 2: New Temporal Query Tools
+# =============================================================================
+
+async def query_episodes(
+    entities: list[str],
+    from_time: str,
+    to_time: str,
+    episode_types: Optional[list[str]] = None,
+    max_results: int = 100
+) -> Dict[str, Any]:
+    """
+    Query episodes within time bounds using Graphiti's retrieve_episodes()
+
+    Uses Graphiti's bi-temporal query capabilities to fetch episodes
+    that were valid within the specified time window.
+
+    Args:
+        entities: List of entity names to query
+        from_time: ISO timestamp start of time window (e.g., "2020-01-01T00:00:00Z")
+        to_time: ISO timestamp end of time window (e.g., "2020-12-31T23:59:59Z")
+        episode_types: Optional filter by episode types (RFP_DETECTED, PARTNERSHIP_FORMED, etc.)
+        max_results: Maximum number of episodes to return
+
+    Returns:
+        Episodes with entities, relationships, and temporal metadata
+    """
+    logger.info(f"Querying episodes for {entities} from {from_time} to {to_time}")
+
+    # Import Graphiti service
+    from backend.graphiti_service import GraphitiService
+
+    service = GraphitiService()
+    try:
+        await service.initialize()
+        result = await service.query_episodes(
+            entities=entities,
+            from_time=from_time,
+            to_time=to_time,
+            episode_types=episode_types,
+            limit=max_results
+        )
+        return result
+    finally:
+        service.close()
+
+
+async def get_entity_state_at_time(
+    entity_id: str,
+    at_time: str
+) -> Dict[str, Any]:
+    """
+    Resolve entity state at specific timestamp
+
+    Collapses all active episodes at the given time into a state snapshot.
+    Uses Graphiti's valid_at/valid_before bi-temporal model.
+
+    Args:
+        entity_id: Entity identifier (name or neo4j_id)
+        at_time: ISO timestamp to resolve state at (e.g., "2020-03-15T10:30:00Z")
+
+    Returns:
+        Entity state including relationships, affiliations, and properties
+    """
+    logger.info(f"Getting state for {entity_id} at {at_time}")
+
+    # Import Graphiti service
+    from backend.graphiti_service import GraphitiService
+
+    service = GraphitiService()
+    try:
+        await service.initialize()
+        result = await service.get_entity_state_at_time(entity_id, at_time)
+        return result
+    finally:
+        service.close()
+
+
+async def compute_entity_diff(
+    entity_id: str,
+    from_time: str,
+    to_time: str
+) -> Dict[str, Any]:
+    """
+    Detect structural changes between time periods
+
+    Compares entity state at two points in time to identify:
+    - New relationships formed
+    - Old relationships ended
+    - Property changes
+    - Confidence deltas
+
+    Args:
+        entity_id: Entity identifier (name or neo4j_id)
+        from_time: Start time ISO timestamp (e.g., "2019-01-01T00:00:00Z")
+        to_time: End time ISO timestamp (e.g., "2023-12-31T23:59:59Z")
+
+    Returns:
+        Change summary with before/after comparison
+    """
+    logger.info(f"Computing diff for {entity_id} from {from_time} to {to_time}")
+
+    # Import Graphiti service
+    from backend.graphiti_service import GraphitiService
+
+    service = GraphitiService()
+    try:
+        await service.initialize()
+        result = await service.compute_entity_diff(entity_id, from_time, to_time)
+        return result
+    finally:
+        service.close()
+
+
+async def build_temporal_narrative(
+    entities: list[str],
+    from_time: str,
+    to_time: str,
+    episode_types: Optional[list[str]] = None,
+    max_tokens: int = 2000
+) -> Dict[str, Any]:
+    """
+    Compress episodes into token-bounded narrative for Claude
+
+    Converts raw episode data into human-readable timeline:
+    - Groups by episode type (transfers, RFPs, partnerships)
+    - Time-ordered bullet points
+    - Truncates at max_tokens
+    - Includes confidence scores
+
+    Args:
+        entities: List of entity names to query
+        from_time: ISO timestamp start of time window
+        to_time: ISO timestamp end of time window
+        episode_types: Optional filter by episode types
+        max_tokens: Maximum tokens in narrative (default: 2000)
+
+    Returns:
+        Compressed narrative text with metadata
+    """
+    logger.info(f"Building narrative for {entities} from {from_time} to {to_time} (max_tokens: {max_tokens})")
+
+    # Import services
+    from backend.graphiti_service import GraphitiService
+    from backend.narrative_builder import build_narrative_from_episodes
+
+    # Fetch episodes
+    service = GraphitiService()
+    try:
+        await service.initialize()
+        episodes_result = await service.query_episodes(
+            entities=entities,
+            from_time=from_time,
+            to_time=to_time,
+            episode_types=episode_types,
+            limit=500  # Fetch more, will truncate in narrative
+        )
+    finally:
+        service.close()
+
+    # Build narrative
+    episodes = episodes_result.get('episodes', [])
+    narrative_result = build_narrative_from_episodes(
+        episodes=episodes,
+        max_tokens=max_tokens,
+        group_by_type=True
+    )
+
+    # Add query metadata
+    narrative_result['query'] = {
+        'entities': entities,
+        'from_time': from_time,
+        'to_time': to_time,
+        'episode_types': episode_types
+    }
+
+    return narrative_result
+
+
+# =============================================================================
 # MCP Server using stdio protocol
 # =============================================================================
 
@@ -493,6 +672,113 @@ async def main():
                 },
                 "required": ["rfp_id", "entity_id", "entity_name", "status"]
             }
+        },
+        # Phase 2: New Temporal Query Tools
+        "query_episodes": {
+            "name": "query_episodes",
+            "description": "Query episodes within time bounds using Graphiti's bi-temporal retrieval. Returns episodes with entities, relationships, and temporal metadata.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "entities": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "List of entity names to query"
+                    },
+                    "from_time": {
+                        "type": "string",
+                        "description": "ISO timestamp start of time window (e.g., 2020-01-01T00:00:00Z)"
+                    },
+                    "to_time": {
+                        "type": "string",
+                        "description": "ISO timestamp end of time window (e.g., 2020-12-31T23:59:59Z)"
+                    },
+                    "episode_types": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Optional filter by episode types (RFP_DETECTED, PARTNERSHIP_FORMED, etc.)"
+                    },
+                    "max_results": {
+                        "type": "number",
+                        "description": "Maximum number of episodes to return (default: 100)",
+                        "default": 100
+                    }
+                },
+                "required": ["entities", "from_time", "to_time"]
+            }
+        },
+        "get_entity_state_at_time": {
+            "name": "get_entity_state_at_time",
+            "description": "Resolve entity state at specific timestamp. Returns snapshot of relationships, affiliations, and properties at that point in time using Graphiti's bi-temporal model.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "entity_id": {
+                        "type": "string",
+                        "description": "Entity identifier (name or neo4j_id)"
+                    },
+                    "at_time": {
+                        "type": "string",
+                        "description": "ISO timestamp to resolve state at (e.g., 2020-03-15T10:30:00Z)"
+                    }
+                },
+                "required": ["entity_id", "at_time"]
+            }
+        },
+        "compute_entity_diff": {
+            "name": "compute_entity_diff",
+            "description": "Detect structural changes between two time periods. Compares entity state to identify new/ended relationships, property changes, and confidence deltas.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "entity_id": {
+                        "type": "string",
+                        "description": "Entity identifier (name or neo4j_id)"
+                    },
+                    "from_time": {
+                        "type": "string",
+                        "description": "Start time ISO timestamp (e.g., 2019-01-01T00:00:00Z)"
+                    },
+                    "to_time": {
+                        "type": "string",
+                        "description": "End time ISO timestamp (e.g., 2023-12-31T23:59:59Z)"
+                    }
+                },
+                "required": ["entity_id", "from_time", "to_time"]
+            }
+        },
+        "build_temporal_narrative": {
+            "name": "build_temporal_narrative",
+            "description": "Compress episodes into token-bounded narrative for Claude. Groups by episode type, time-ordered bullets, truncates at max_tokens. Use for timeline queries.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "entities": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "List of entity names to query"
+                    },
+                    "from_time": {
+                        "type": "string",
+                        "description": "ISO timestamp start of time window"
+                    },
+                    "to_time": {
+                        "type": "string",
+                        "description": "ISO timestamp end of time window"
+                    },
+                    "episode_types": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Optional filter by episode types"
+                    },
+                    "max_tokens": {
+                        "type": "number",
+                        "description": "Maximum tokens in narrative (default: 2000)",
+                        "default": 2000
+                    }
+                },
+                "required": ["entities", "from_time", "to_time"]
+            }
         }
     }
 
@@ -502,7 +788,12 @@ async def main():
         "analyze_temporal_fit": analyze_temporal_fit,
         "get_temporal_patterns": get_temporal_patterns,
         "create_rfp_episode": create_rfp_episode,
-        "record_outcome": record_outcome
+        "record_outcome": record_outcome,
+        # Phase 2: New temporal query tools
+        "query_episodes": query_episodes,
+        "get_entity_state_at_time": get_entity_state_at_time,
+        "compute_entity_diff": compute_entity_diff,
+        "build_temporal_narrative": build_temporal_narrative
     }
 
     # Read from stdin, write to stdout

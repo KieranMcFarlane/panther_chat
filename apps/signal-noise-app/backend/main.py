@@ -319,6 +319,128 @@ async def get_temporal_patterns(
 
 
 # =============================================================================
+# Signal Validation Endpoints (Ralph Loop Integration)
+# =============================================================================
+
+class RawSignal(BaseModel):
+    """Raw signal from scraper (pre-validation)"""
+    entity_id: str = Field(..., description="Entity ID")
+    signal_type: str = Field(..., description="Signal type (e.g., RFP_DETECTED)")
+    confidence: float = Field(..., ge=0, le=1, description="Initial confidence score")
+    evidence: List[Dict[str, Any]] = Field(..., description="Evidence items")
+    metadata: Optional[Dict[str, Any]] = Field(None, description="Additional metadata")
+    first_seen: Optional[str] = Field(None, description="Timestamp when signal was detected")
+
+
+class SignalValidationResponse(BaseModel):
+    """Response from Ralph Loop validation"""
+    validated_signals: int = Field(..., description="Number of signals that passed validation")
+    rejected_signals: int = Field(..., description="Number of signals that failed validation")
+    signals: List[Dict[str, Any]] = Field(..., description="Validated signal details")
+    validation_time_seconds: float = Field(..., description="Time taken for validation")
+
+
+@app.post("/api/signals/validate", response_model=SignalValidationResponse)
+async def validate_signals(raw_signals: List[RawSignal]):
+    """
+    Validate raw signals through Ralph Loop (batch-enforced validation)
+
+    Process:
+    1. Receives raw signals from scrapers
+    2. Passes through Ralph Loop (3-pass validation)
+    3. Only validated signals written to Graphiti
+    4. Returns validation results
+
+    Ralph Loop Rules:
+    - Minimum 3 pieces of evidence per signal
+    - Confidence > 0.7 required
+    - Maximum 3 validation passes
+    - Claude validation for consistency checking
+    """
+    try:
+        from backend.ralph_loop import RalphLoop, RalphLoopConfig
+        from backend.claude_client import ClaudeClient
+        from backend.schemas import Entity, Signal, Evidence, SignalType
+
+        # Initialize Ralph Loop
+        claude_client = ClaudeClient()
+        await claude_client.initialize()
+
+        if not graphiti_service:
+            raise HTTPException(status_code=503, detail="Graphiti service not available")
+
+        config = RalphLoopConfig(
+            min_evidence=3,
+            min_confidence=0.7,
+            max_passes=3
+        )
+        ralph_loop = RalphLoop(claude_client, graphiti_service, config)
+
+        logger.info(f"🔄 Ralph Loop: Validating {len(raw_signals)} raw signals")
+
+        # Convert RawSignal to dicts for Ralph Loop
+        raw_signal_dicts = [signal.dict() for signal in raw_signals]
+
+        # Group signals by entity_id for batch validation
+        from collections import defaultdict
+        signals_by_entity = defaultdict(list)
+        for signal_dict in raw_signal_dicts:
+            signals_by_entity[signal_dict['entity_id']].append(signal_dict)
+
+        # Validate each entity's signals
+        all_validated_signals = []
+        total_rejected = 0
+        start_time = datetime.now()
+
+        for entity_id, entity_signals in signals_by_entity.items():
+            logger.info(f"  Processing entity: {entity_id} ({len(entity_signals)} signals)")
+
+            validated = await ralph_loop.validate_signals(entity_signals, entity_id)
+            rejected = len(entity_signals) - len(validated)
+
+            all_validated_signals.extend(validated)
+            total_rejected += rejected
+
+            logger.info(f"    Validated: {validated}, Rejected: {rejected}")
+
+        validation_time = (datetime.now() - start_time).total_seconds()
+
+        logger.info(f"✅ Ralph Loop complete: {len(all_validated_signals)} validated, {total_rejected} rejected")
+
+        # Convert validated signals to dict for response
+        validated_signal_dicts = []
+        for signal in all_validated_signals:
+            signal_dict = {
+                "id": signal.id,
+                "type": signal.type.value if hasattr(signal.type, 'value') else signal.type,
+                "confidence": signal.confidence,
+                "first_seen": signal.first_seen.isoformat() if hasattr(signal.first_seen, 'isoformat') else str(signal.first_seen),
+                "entity_id": signal.entity_id,
+                "validated": signal.validated,
+                "validation_pass": signal.validation_pass,
+                "metadata": signal.metadata
+            }
+            validated_signal_dicts.append(signal_dict)
+
+        return SignalValidationResponse(
+            validated_signals=len(all_validated_signals),
+            rejected_signals=total_rejected,
+            signals=validated_signal_dicts,
+            validation_time_seconds=validation_time
+        )
+
+    except ImportError as e:
+        logger.error(f"Ralph Loop import error: {e}")
+        raise HTTPException(
+            status_code=501,
+            detail=f"Ralph Loop not available: {str(e)}. Ensure backend/ralph_loop.py and backend/claude_client.py exist."
+        )
+    except Exception as e:
+        logger.error(f"Error in Ralph Loop validation: {e}")
+        raise HTTPException(status_code=500, detail=f"Validation failed: {str(e)}")
+
+
+# =============================================================================
 # Database Management Endpoints
 # =============================================================================
 

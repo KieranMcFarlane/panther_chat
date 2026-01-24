@@ -4,8 +4,62 @@ import logging
 from typing import Dict, Any, Optional, List, Tuple
 import os
 from datetime import datetime
+from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# Model Cascade Configuration
+# =============================================================================
+
+@dataclass
+class ModelConfig:
+    """Configuration for a Claude model"""
+    name: str
+    model_id: str
+    max_tokens: int = 4096
+    cost_per_million_tokens: float = 0.0
+
+
+class ModelRegistry:
+    """Registry of available Claude models with pricing"""
+
+    MODELS = {
+        "haiku": ModelConfig(
+            name="haiku",
+            model_id="claude-3-5-haiku-20241022",
+            max_tokens=8192,
+            cost_per_million_tokens=0.25  # $0.25/M input tokens
+        ),
+        "sonnet": ModelConfig(
+            name="sonnet",
+            model_id="claude-3-5-sonnet-20241022",
+            max_tokens=8192,
+            cost_per_million_tokens=3.0  # $3.0/M input tokens
+        ),
+        "opus": ModelConfig(
+            name="opus",
+            model_id="claude-3-opus-20240229",
+            max_tokens=4096,
+            cost_per_million_tokens=15.0  # $15.0/M input tokens
+        )
+    }
+
+    @classmethod
+    def get_model(cls, model_name: str) -> Optional[ModelConfig]:
+        """Get model configuration by name"""
+        return cls.MODELS.get(model_name)
+
+    @classmethod
+    def get_all_models(cls) -> Dict[str, ModelConfig]:
+        """Get all available models"""
+        return cls.MODELS
+
+
+# =============================================================================
+# Claude Client with Model Cascade
+# =============================================================================
 
 class ClaudeCodeClient:
     """Client for Claude Code reasoning and signal synthesis"""
@@ -264,16 +318,237 @@ class ClaudeCodeClient:
             }
         }
 
-# Convenience functions for direct usage
+
+class ClaudeClient:
+    """
+    Claude API client with model cascade support
+
+    Implements Haiku → Sonnet → Opus cascade for cost/latency optimization.
+
+    Strategy:
+    - Scraping: Sonnet (quality critical)
+    - Validation: Sonnet (complex reasoning)
+    - Synthesis: Opus (rare, critical insights)
+    - Copilot reasoning: Haiku → Sonnet fallback
+
+    Model cascade fallback:
+    1. Try Haiku first (fastest, cheapest)
+    2. If insufficient, fallback to Sonnet
+    3. If still insufficient, fallback to Opus
+    """
+
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
+        """
+        Initialize Claude client
+
+        Args:
+            api_key: Anthropic API key (default: from ANTHROPIC_API_KEY env)
+            base_url: Custom base URL (default: from ANTHROPIC_BASE_URL env)
+        """
+        self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY")
+        self.base_url = base_url or os.getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com")
+
+        if not self.api_key:
+            logger.warning("⚠️ ANTHROPIC_API_KEY not set - client will fail")
+
+        self.default_model = "haiku"
+        self.cascade_order = ["haiku", "sonnet", "opus"]
+
+        logger.info(f"🤖 ClaudeClient initialized (default: {self.default_model})")
+
+    async def query_with_cascade(
+        self,
+        prompt: str,
+        max_tokens: int = 2000,
+        tools: Optional[List[Dict]] = None,
+        system_prompt: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Query Claude with model cascade fallback
+
+        Tries models in order (haiku → sonnet → opus) until one produces a sufficient result.
+
+        Args:
+            prompt: User prompt
+            max_tokens: Maximum tokens to generate
+            tools: Optional list of tools for tool use
+            system_prompt: Optional system prompt
+
+        Returns:
+            Response dict with:
+            - content: Generated content
+            - model_used: Which model succeeded
+            - confidence: Confidence in result (0.0-1.0)
+            - tool_results: Results of tool use (if any)
+            - tokens_used: Input/output tokens
+        """
+        for model_name in self.cascade_order:
+            try:
+                logger.info(f"🔄 Trying model: {model_name}")
+
+                result = await self._query(
+                    prompt=prompt,
+                    model=model_name,
+                    max_tokens=max_tokens,
+                    tools=tools,
+                    system_prompt=system_prompt
+                )
+
+                # Check if result is sufficient
+                if self._is_sufficient(result):
+                    logger.info(f"✅ {model_name} sufficient for query")
+                    result["model_used"] = model_name
+                    result["cascade_attempts"] = self.cascade_order.index(model_name) + 1
+                    return result
+                else:
+                    logger.warning(f"⚠️ {model_name} insufficient, escalating...")
+                    continue
+
+            except Exception as e:
+                logger.error(f"❌ {model_name} failed: {e}")
+                continue
+
+        # All models failed
+        raise Exception("All models in cascade failed")
+
+    async def query(
+        self,
+        prompt: str,
+        model: str = "haiku",
+        max_tokens: int = 2000,
+        tools: Optional[List[Dict]] = None,
+        system_prompt: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """
+        Query Claude with specific model
+
+        Args:
+            prompt: User prompt
+            model: Model name (haiku, sonnet, opus)
+            max_tokens: Maximum tokens to generate
+            tools: Optional list of tools
+            system_prompt: Optional system prompt
+
+        Returns:
+            Response dict with content, tokens_used, etc.
+        """
+        model_config = ModelRegistry.get_model(model)
+
+        if not model_config:
+            raise ValueError(f"Unknown model: {model}")
+
+        headers = {
+            "x-api-key": self.api_key,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json"
+        }
+
+        # Build request body
+        body = {
+            "model": model_config.model_id,
+            "max_tokens": max_tokens,
+            "messages": [
+                {"role": "user", "content": prompt}
+            ]
+        }
+
+        if system_prompt:
+            body["system"] = system_prompt
+
+        if tools:
+            body["tools"] = tools
+
+        try:
+            response = requests.post(
+                f"{self.base_url}/v1/messages",
+                headers=headers,
+                json=body,
+                timeout=60
+            )
+
+            response.raise_for_status()
+            result = response.json()
+
+            # Extract content
+            content = result.get("content", [])
+            text_blocks = [block.get("text", "") for block in content if block.get("type") == "text"]
+
+            return {
+                "content": "\n".join(text_blocks),
+                "model_used": model,
+                "raw_response": result,
+                "tokens_used": result.get("usage", {}),
+                "stop_reason": result.get("stop_reason")
+            }
+
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Claude API request failed: {e}")
+            raise
+
+    def _is_sufficient(self, result: Dict[str, Any]) -> bool:
+        """
+        Check if result is sufficient
+
+        Criteria:
+        - Has content
+        - Content length > 50 chars
+        - No errors
+        """
+        content = result.get("content", "")
+
+        if not content:
+            return False
+
+        if len(content) < 50:
+            return False
+
+        if "error" in result or result.get("stop_reason") == "max_tokens":
+            return False
+
+        return True
+
+
+# =============================================================================
+# Convenience Functions
+# =============================================================================
+
+async def query_with_cascade(
+    prompt: str,
+    max_tokens: int = 2000,
+    tools: Optional[List[Dict]] = None,
+    system_prompt: Optional[str] = None
+) -> Dict[str, Any]:
+    """
+    Convenience function to query Claude with model cascade
+
+    Args:
+        prompt: User prompt
+        max_tokens: Maximum tokens to generate
+        tools: Optional list of tools
+        system_prompt: Optional system prompt
+
+    Returns:
+        Response from Claude with cascade fallback
+    """
+    client = ClaudeClient()
+    return await client.query_with_cascade(prompt, max_tokens, tools, system_prompt)
+
+
+# Legacy convenience functions (kept for backward compatibility)
 def synthesize_signals(entity_name: str, entity_type: str, signals: Dict[str, Any]) -> Tuple[str, List[Dict[str, Any]]]:
-    """Convenience function to synthesize signals"""
+    """Convenience function to synthesize signals (legacy)"""
     client = ClaudeCodeClient()
     return client.synthesize_signals(entity_name, entity_type, signals)
 
 def generate_cypher_query(query: str, entity_context: Optional[str] = None, limit: int = 10) -> Dict[str, Any]:
-    """Convenience function to generate Cypher query"""
+    """Convenience function to generate Cypher query (legacy)"""
     client = ClaudeCodeClient()
     return client.generate_cypher_query(query, entity_context, limit)
+
+
+# =============================================================================
+# Test / Main
+# =============================================================================
 
 if __name__ == "__main__":
     # Test the client

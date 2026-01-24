@@ -1,54 +1,26 @@
 #!/usr/bin/env python3
-"""Test FalkorDB using native falkordb-py library"""
-import sys
+from falkordb import FalkorDB
+
+print("Testing FalkorDB native client without auth...")
 
 try:
-    from falkordb import FalkorDB
-except ImportError:
-    print("Installing falkordb-py...")
-    import subprocess
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "falkordb"])
-    from falkordb import FalkorDB
+    # Connect without username/password for local dev
+    db = FalkorDB(host='localhost', port=6379, ssl=False)
+    g = db.select_graph('sports_intelligence')
 
-# Connection details
-host = "r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud"
-port = 50743
-password = "N!HH@CBC9QDesFdS"
-username = "falkordb"
-
-print(f"Connecting to FalkorDB Cloud...")
-print(f"  Host: {host}")
-print(f"  Port: {port}")
-print(f"  User: {username}")
-
-try:
-    db = FalkorDB(host=host, port=port, username=username, password=password)
-    print("✅ FalkorDB connection successful")
-
-    # Test graph operations
-    g = db.select_graph("sports_intelligence")
-    print("✅ Selected graph: sports_intelligence")
-
-    # Simple test query
+    # Test query
     result = g.query("RETURN 1 AS test")
-    print(f"✅ Query result: {result.result_set}")
+    print(f"✓ Query successful: {result}")
 
-    # Test creating nodes
-    g.query("CREATE (n:Test {name: 'GraphRAG', active: true}) RETURN n")
-    print("✅ Created test node")
+    # Create entity
+    g.query("CREATE (ac:Entity {name: 'AC Milan', type: 'ORG'})")
+    print("✓ Created AC Milan")
 
     # Query back
-    result = g.query("MATCH (n:Test) RETURN n.name")
-    print(f"✅ Found: {result.result_set}")
+    result = g.query("MATCH (n:Entity) RETURN count(n) AS count")
+    print(f"✓ Total entities: {result[0][0]}")
 
-    # Clean up
-    g.query("MATCH (n:Test) DELETE n")
-    print("✅ Cleaned up test data")
+    print("\n✅ SUCCESS! FalkorDB works!")
 
 except Exception as e:
-    print(f"❌ Error: {e}")
-    import traceback
-    traceback.print_exc()
-    sys.exit(1)
-
-print("\n✅ FalkorDB + GraphRAG is ready!")
+    print(f"✗ Failed: {e}")
