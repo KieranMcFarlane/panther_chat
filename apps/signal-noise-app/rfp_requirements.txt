@@ -1,0 +1,26 @@
+# Perplexity-First Hybrid RFP Detection System
+# Python Dependencies
+
+# MCP Client SDK
+mcp>=0.1.0
+
+# Async support
+asyncio>=3.4.3
+
+# Data processing
+python-dotenv>=1.0.0
+
+# Optional: For enhanced web scraping fallback
+beautifulsoup4>=4.12.0
+requests>=2.31.0
+
+# Optional: For database operations
+supabase>=2.0.0
+neo4j>=5.0.0
+
+# Optional: For data analysis
+pandas>=2.0.0
+
+# Development dependencies
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
