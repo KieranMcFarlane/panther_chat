@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useUser } from '@/contexts/UserContext';
+import ReactMarkdown from 'react-markdown';
 
 interface SimpleStreamingChatProps {
   className?: string;
@@ -12,18 +13,6 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  isStreaming?: boolean;
-}
-
-interface StreamChunk {
-  type: 'status' | 'text' | 'tool_use' | 'tool_result' | 'final' | 'error';
-  status?: string;
-  message?: string;
-  text?: string;
-  tool?: string;
-  result?: any;
-  data?: any;
-  error?: string;
 }
 
 export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
@@ -32,11 +21,8 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [currentStatus, setCurrentStatus] = useState<string>('');
-  const [currentTool, setCurrentTool] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -75,9 +61,6 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
-    setCurrentStatus('Initializing sports intelligence tools...');
-
-    abortControllerRef.current = new AbortController();
 
     try {
       const response = await fetch('/api/copilotkit', {
@@ -100,8 +83,7 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
               threadId: userId
             }
           }
-        }),
-        signal: abortControllerRef.current.signal
+        })
       });
 
       if (!response.ok) {
@@ -129,122 +111,54 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
         for (const line of lines) {
           if (line.startsWith('data: ')) {
             try {
-              const chunk: StreamChunk = JSON.parse(line.slice(6));
-              
-              switch (chunk.type) {
-                case 'status':
-                  setCurrentStatus(chunk.message || '');
-                  if (chunk.message?.includes('tools_ready')) {
-                    setCurrentTool('');
-                  }
-                  break;
+              const chunk = JSON.parse(line.slice(6));
 
-                case 'tool_use':
-                  // Don't set generic status text - let DynamicStatus handle the display
-                  // setCurrentStatus(chunk.message || `Using ${chunk.tool}...`);
-                  setCurrentTool(chunk.tool || '');
-                  console.log('Frontend tool execution:', {
-                    tool: chunk.tool,
-                    message: chunk.message,
-                    args: chunk.args
-                  });
-                  break;
-
-                case 'text':
-                  if (!assistantMessage) {
-                    assistantMessage = {
-                      id: `assistant_${Date.now()}`,
-                      role: 'assistant',
-                      content: '',
-                      timestamp: new Date(),
-                      isStreaming: true
-                    };
-                    setMessages(prev => [...prev, assistantMessage]);
-                  }
-                  
-                  if (chunk.text) {
-                    assistantMessage.content += chunk.text;
-                    setMessages(prev => 
-                      prev.map(msg => 
-                        msg.id === assistantMessage!.id 
-                          ? { ...msg, content: assistantMessage!.content }
-                          : msg
-                      )
-                    );
-                  }
-                  break;
-
-                case 'final':
-                  if (assistantMessage) {
-                    assistantMessage.isStreaming = false;
-                    setMessages(prev => 
-                      prev.map(msg => 
-                        msg.id === assistantMessage!.id 
-                          ? { ...msg, isStreaming: false }
-                          : msg
-                      )
-                    );
-                  } else if (chunk.data?.data?.generateCopilotResponse?.messages?.[0]?.content?.[0]) {
-                    const finalMessage: Message = {
-                      id: `assistant_${Date.now()}`,
-                      role: 'assistant',
-                      content: chunk.data.data.generateCopilotResponse.messages[0].content[0],
-                      timestamp: new Date(),
-                      isStreaming: false
-                    };
-                    setMessages(prev => [...prev, finalMessage]);
-                  }
-                  break;
-
-                case 'tool_result':
-                  const resultStatus = `Processed ${chunk.tool} results`;
-                  setCurrentStatus(resultStatus);
-                  console.log('Frontend tool result received:', {
-                    tool: chunk.tool,
-                    resultLength: chunk.result ? JSON.stringify(chunk.result).length : 0,
-                    resultPreview: chunk.result ? JSON.stringify(chunk.result).slice(0, 200) : 'No result'
-                  });
-                  // Optionally add tool results to the message
-                  if (chunk.result && typeof chunk.result === 'string') {
-                    if (!assistantMessage) {
-                      assistantMessage = {
-                        id: `assistant_${Date.now()}`,
-                        role: 'assistant',
-                        content: '',
-                        timestamp: new Date(),
-                        isStreaming: true
-                      };
-                      setMessages(prev => [...prev, assistantMessage]);
-                    }
-                    // Check for duplicate content to prevent repetition
-                    const contentToAdd = chunk.result.trim();
-                    const currentContent = assistantMessage.content || '';
-                    
-                    if (!currentContent.includes(contentToAdd)) {
-                      assistantMessage.content += (currentContent ? '\n\n' : '') + contentToAdd;
-                      
-                      setMessages(prev => 
-                        prev.map(msg => 
-                          msg.id === assistantMessage!.id 
-                            ? { ...msg, content: assistantMessage!.content }
-                            : msg
-                        )
-                      );
-                    }
-                  }
-                  break;
-
-                case 'error':
-                  console.error('Stream error:', chunk.error);
-                  const errorMessage: Message = {
-                    id: `error_${Date.now()}`,
+              if (chunk.type === 'text' && chunk.text) {
+                if (!assistantMessage) {
+                  assistantMessage = {
+                    id: `assistant_${Date.now()}`,
                     role: 'assistant',
-                    content: chunk.message || 'An error occurred while processing your request.',
-                    timestamp: new Date(),
-                    isStreaming: false
+                    content: '',
+                    timestamp: new Date()
                   };
-                  setMessages(prev => [...prev, errorMessage]);
-                  break;
+                  setMessages(prev => [...prev, assistantMessage]);
+                }
+                assistantMessage.content += chunk.text;
+                setMessages(prev =>
+                  prev.map(msg =>
+                    msg.id === assistantMessage!.id
+                      ? { ...msg, content: assistantMessage!.content }
+                      : msg
+                  )
+                );
+              } else if (chunk.type === 'final' && chunk.data?.data?.generateCopilotResponse?.messages?.[0]?.content?.[0]) {
+                const finalContent = chunk.data.data.generateCopilotResponse.messages[0].content[0];
+                if (assistantMessage) {
+                  assistantMessage.content = finalContent;
+                  setMessages(prev =>
+                    prev.map(msg =>
+                      msg.id === assistantMessage!.id
+                        ? { ...msg, content: finalContent }
+                        : msg
+                    )
+                  );
+                } else {
+                  const finalMessage: Message = {
+                    id: `assistant_${Date.now()}`,
+                    role: 'assistant',
+                    content: finalContent,
+                    timestamp: new Date()
+                  };
+                  setMessages(prev => [...prev, finalMessage]);
+                }
+              } else if (chunk.type === 'error') {
+                const errorMessage: Message = {
+                  id: `error_${Date.now()}`,
+                  role: 'assistant',
+                  content: chunk.message || 'An error occurred while processing your request.',
+                  timestamp: new Date()
+                };
+                setMessages(prev => [...prev, errorMessage]);
               }
             } catch (parseError) {
               console.error('Error parsing chunk:', parseError);
@@ -253,33 +167,16 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
         }
       }
     } catch (error: any) {
-      if (error.name === 'AbortError') {
-        console.log('Request was aborted');
-      } else {
-        console.error('Error sending message:', error);
-        const errorMessage: Message = {
-          id: `error_${Date.now()}`,
-          role: 'assistant',
-          content: `Sorry, I encountered an error: ${error.message || 'Unknown error'}`,
-          timestamp: new Date(),
-          isStreaming: false
-        };
-        setMessages(prev => [...prev, errorMessage]);
-      }
+      console.error('Error sending message:', error);
+      const errorMessage: Message = {
+        id: `error_${Date.now()}`,
+        role: 'assistant',
+        content: `Sorry, I encountered an error: ${error.message || 'Unknown error'}`,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
-      setCurrentStatus('');
-      setCurrentTool('');
-      abortControllerRef.current = null;
-    }
-  };
-
-  const handleStopGeneration = () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-      setIsLoading(false);
-      setCurrentStatus('');
-      setCurrentTool('');
     }
   };
 
@@ -288,19 +185,6 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
       e.preventDefault();
       handleSendMessage();
     }
-  };
-
-  // Simple text formatter for basic markdown-like rendering
-  const formatText = (text: string) => {
-    // Convert basic markdown to HTML
-    let formatted = text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono">$1</code>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br />');
-    
-    return `<p>${formatted}</p>`;
   };
 
   if (!isOpen) {
@@ -334,35 +218,19 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
         </button>
       </div>
 
-      {/* Status Bar */}
-      {(isLoading || currentStatus) && (
+      {/* Loading Indicator */}
+      {isLoading && (
         <div className="bg-gray-50 border-b p-3">
-          <div className="flex flex-col items-center space-y-2">
-            {currentTool && (
-              <div className="text-sm text-gray-600 text-center max-w-xs">
-                Using <span className="font-medium text-blue-500">{currentTool.replace('mcp__', '').replace(/__/g, ' - ')}</span>
-              </div>
-            )}
-            {currentStatus && (
-              <div className="text-xs text-gray-500 text-center max-w-xs">
-                {currentStatus}
-              </div>
-            )}
-            {isLoading && (
-              <button
-                onClick={handleStopGeneration}
-                className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded hover:bg-red-200"
-              >
-                Stop
-              </button>
-            )}
+          <div className="flex items-center justify-center space-x-2">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+            <span className="text-sm text-gray-600">Analyzing with sports intelligence tools...</span>
           </div>
         </div>
       )}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.length === 0 && (
+        {(!messages || messages.length === 0) && (
           <div className="text-center text-gray-500 py-8">
             <div className="mb-4">
               <svg className="w-12 h-12 mx-auto text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -374,7 +242,7 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
           </div>
         )}
 
-        {messages.map((message) => (
+        {messages && messages.map((message) => (
           <div
             key={message.id}
             className={`flex ${
@@ -386,24 +254,14 @@ export function SimpleStreamingChat({ className }: SimpleStreamingChatProps) {
                 message.role === 'user'
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-800'
-              } ${message.isStreaming ? 'animate-pulse' : ''}`}
+              }`}
             >
               {message.role === 'assistant' ? (
-                <div 
-                  className="text-sm leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: formatText(message.content) }}
-                />
+                <div className="text-sm leading-relaxed prose prose-sm max-w-none">
+                  <ReactMarkdown>{message.content}</ReactMarkdown>
+                </div>
               ) : (
                 <div className="whitespace-pre-wrap text-sm">{message.content}</div>
-              )}
-              {message.isStreaming && (
-                <div className="flex items-center mt-3">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
-                </div>
               )}
             </div>
           </div>

@@ -1,3 +1,40 @@
+/**
+ * CopilotKit API Route - Sports Intelligence
+ *
+ * ARCHITECTURE (Phase 2 - Single MCP Server):
+ * This route uses a hybrid approach combining:
+ * - CopilotKit Provider for frontend state management
+ * - Claude Agent SDK for AI processing with MCP tools
+ * - Custom streaming for real-time responses
+ *
+ * MCP SERVERS (Official Graphiti Only):
+ * - graphiti: Official Graphiti MCP from github.com/getzep/graphiti
+ *   Location: backend/graphiti_mcp_server_official/
+ *   Backend: Neo4j Aura (cloud graph database)
+ *   Capabilities:
+ *     - Episode management (add, retrieve, delete)
+ *     - Entity management and relationship handling
+ *     - Semantic and hybrid search for facts and nodes
+ *     - Temporal knowledge graph for AI agents
+ *
+ * REMOVED (Previous Architecture):
+ * - falkordb-mcp: Replaced by official Graphiti
+ * - temporal-intelligence: Replaced by Graphiti episodes
+ * - brightData: Removed (scraping not in core scope)
+ * - perplexity-mcp: Removed (use Claude's built-in knowledge)
+ * - byterover-mcp: Removed (email not in scope)
+ *
+ * GRAPH INTELLIGENCE:
+ * - Entity/Signal/Evidence/Relationship schema in Supabase
+ * - Temporal knowledge graph via Graphiti (Neo4j backend)
+ * - RFP detection and pattern analysis
+ * - Semantic search over entity relationships
+ *
+ * NOTE: This is a custom implementation that bypasses CopilotRuntime
+ * to support advanced MCP tool integration not available in standard
+ * CopilotKit patterns. Consider migrating to CopilotRuntime in the future
+ * for better standardization.
+ */
 import { NextRequest } from "next/server";
 import { query } from "@anthropic-ai/claude-agent-sdk";
 
@@ -26,8 +63,145 @@ interface ClaudeWebhookResponse {
   error?: string;
 }
 
-// FastAPI backend URL for temporal intelligence
+// FastAPI backend URLs
 const FASTAPI_URL = process.env.FASTAPI_URL || 'http://localhost:8000';
+const GRAPH_INTELLIGENCE_API = process.env.GRAPH_INTELLIGENCE_API || 'http://localhost:8001';
+
+// =============================================================================
+// MCP Server Configuration Cache (avoid recreating on every request)
+// =============================================================================
+
+let cachedMcpServerConfig: any = null;
+
+/**
+ * Load MCP server configuration from mcp-config.json
+ * Substitutes ${VAR_NAME} environment variables with actual values
+ */
+function getMCPServerConfig() {
+  if (cachedMcpServerConfig) {
+    return cachedMcpServerConfig;
+  }
+
+  try {
+    // Read mcp-config.json (single source of truth)
+    const fs = require('fs');
+    const path = require('path');
+    const configPath = path.join(process.cwd(), 'mcp-config.json');
+    const configContent = fs.readFileSync(configPath, 'utf-8');
+    const rawConfig = JSON.parse(configContent);
+
+    // Substitute environment variables (${VAR_NAME} -> process.env.VAR_NAME)
+    const substituteEnv = (value: string): string => {
+      return value.replace(/\$\{([^}]+)\}/g, (_match: string, varName: string) => {
+        return process.env[varName] || '';
+      });
+    };
+
+    // Process env values recursively
+    const processEnv = (env: Record<string, string>): Record<string, string> => {
+      const processed: Record<string, string> = {};
+      for (const [key, value] of Object.entries(env)) {
+        processed[key] = substituteEnv(value);
+      }
+      return processed;
+    };
+
+    // Transform config to Claude Agent SDK format
+    cachedMcpServerConfig = {};
+    for (const [serverName, serverConfig] of Object.entries(rawConfig.mcpServers)) {
+      const config = serverConfig as any;
+      const processedEnv = processEnv(config.env || {});
+
+      // Debug: Log environment variables (with sensitive values redacted)
+      console.log(`🔍 MCP Server [${serverName}] Environment Variables:`);
+      for (const [key, value] of Object.entries(processedEnv)) {
+        const redactedValue = value.length > 0 ? `*** (${value.length} chars)` : '(EMPTY!)';
+        console.log(`  - ${key}: ${redactedValue}`);
+      }
+
+      cachedMcpServerConfig[serverName] = {
+        command: config.command,
+        args: config.args,
+        env: processedEnv
+      };
+    }
+
+    console.log('✅ Loaded MCP server config from mcp-config.json:', Object.keys(cachedMcpServerConfig));
+    return cachedMcpServerConfig;
+
+  } catch (error) {
+    console.error('❌ Failed to load mcp-config.json, using fallback:', error);
+    // Fallback to minimal config if file read fails
+    cachedMcpServerConfig = {
+      "graphiti-intelligence": {
+        "command": "python",
+        "args": ["backend/graphiti_mcp_server.py"],
+        "env": {
+          "FALKORDB_URI": process.env.FALKORDB_URI || "",
+          "FALKORDB_USER": process.env.FALKORDB_USER || "neo4j",
+          "FALKORDB_PASSWORD": process.env.FALKORDB_PASSWORD || "",
+          "FALKORDB_DATABASE": process.env.FALKORDB_DATABASE || "sports_intelligence"
+        }
+      }
+    };
+    return cachedMcpServerConfig;
+  }
+}
+
+const ALLOWED_TOOLS: string[] = [
+  // =============================================================================
+  // OFFICIAL GRAPHITI MCP TOOLS (Low-Level Graph Operations Only)
+  // =============================================================================
+  // Graphiti provides temporally-aware knowledge graph capabilities
+  // Semantic helpers (search_entities, get_entity_signals) live in service layer
+
+  // Memory ingestion
+  "mcp__graphiti__add_memory",
+
+  // Search tools
+  "mcp__graphiti__search_nodes",
+  "mcp__graphiti__search_memory_facts",
+
+  // Retrieval tools
+  "mcp__graphiti__get_episodes",
+  "mcp__graphiti__get_entity_edge",
+  "mcp__graphiti__get_status",
+
+  // Deletion tools (use with caution)
+  "mcp__graphiti__delete_entity_edge",
+  "mcp__graphiti__delete_episode",
+  "mcp__graphiti__clear_graph",
+
+  // =============================================================================
+  // ARCHITECTURE NOTES:
+  // =============================================================================
+  // Single MCP Server: Official Graphiti from github.com/getzep/graphiti
+  // Location: backend/graphiti_mcp_server_official/
+  //
+  // Graphiti provides temporally-aware knowledge graph capabilities:
+  // - Episode management (add, retrieve, delete)
+  // - Entity management and relationship handling
+  // - Semantic and hybrid search
+  // - Graph maintenance operations
+  //
+  // MCP Tool Naming Convention:
+  //   mcp__<server-name>__<tool-name>
+  //   Example: mcp__graphiti__add_memory
+  //
+  // Previous Architecture (DEPRECATED):
+  // - falkordb-mcp: Replaced by Graphiti Neo4j backend
+  // - temporal-intelligence: Replaced by Graphiti episodes
+  // - brightData: Removed (scraping not needed for core intelligence)
+  // - perplexity-mcp: Removed (use Claude's built-in knowledge)
+  // - byterover-mcp: Removed (email not in scope)
+  //
+  // Data Migration:
+  // - Episode → Entity/Signal/Evidence schema: COMPLETE
+  // - Migration script: backend/migrate_episodes_to_signals.py
+  // - Supabase tables: entities, signals, evidence, relationships
+  // =============================================================================
+];
+
 
 // =============================================================================
 // Temporal Intelligence Tools
@@ -158,37 +332,270 @@ const temporalTools = {
   }
 };
 
+// =============================================================================
+// MVP Graph Intelligence Tools (NEW)
+// =============================================================================
+// These tools integrate with the Graph Intelligence MVP API (port 8001)
+// Backend: backend/graph_intelligence_api.py
+// Documentation: COPILTKIT_INTEGRATION_COMPLETE.md
+
+const graphIntelligenceTools = {
+  'query_entity_mvp': {
+    description: 'Query an entity from the MVP knowledge graph including signals and timeline',
+    parameters: {
+      entity_id: { type: 'string', description: 'Entity identifier (e.g., "ac_milan", "manchester_united")' },
+      include_timeline: { type: 'boolean', description: 'Include signal timeline (default: false)' },
+      timeline_days: { type: 'number', description: 'Days to look back for timeline (default: 30)' }
+    },
+    handler: async (args: { entity_id: string; include_timeline?: boolean; timeline_days?: number }) => {
+      try {
+        const params = new URLSearchParams();
+        if (args.include_timeline) params.append('include_timeline', 'true');
+        if (args.timeline_days) params.append('timeline_days', String(args.timeline_days));
+
+        const response = await fetch(
+          `${GRAPH_INTELLIGENCE_API}/query-entity?${params.toString()}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ entity_id: args.entity_id })
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Graph API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Format response for Claude
+        if (data.success && data.data.found) {
+          return {
+            entity: data.data.name,
+            type: data.data.type,
+            signals: data.data.signal_count,
+            timeline: data.data.timeline
+          };
+        } else {
+          return {
+            not_found: true,
+            entity_id: args.entity_id,
+            suggestion: 'Entity not found in knowledge graph. Try running an intelligence batch first.'
+          };
+        }
+
+      } catch (error) {
+        console.error('Graph intelligence query error:', error);
+        return {
+          error: 'Failed to query entity',
+          entity_id: args.entity_id,
+          details: error instanceof Error ? error.message : 'Unknown error'
+        };
+      }
+    }
+  },
+
+  'search_entities_mvp': {
+    description: 'Search for entities across the knowledge graph by name, type, or metadata',
+    parameters: {
+      query: { type: 'string', description: 'Search query string' },
+      entity_type: { type: 'string', description: 'Optional entity type filter (e.g., "ORG")' },
+      limit: { type: 'number', description: 'Maximum results to return (default: 10)' }
+    },
+    handler: async (args: { query: string; entity_type?: string; limit?: number }) => {
+      try {
+        const response = await fetch(`${GRAPH_INTELLIGENCE_API}/search-entities`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: args.query,
+            entity_type: args.entity_type,
+            limit: args.limit || 10
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          return {
+            count: data.count,
+            results: data.results.map((e: any) => ({
+              name: e.name,
+              type: e.entity_type,
+              created: e.created_at
+            }))
+          };
+        } else {
+          return { error: 'Search failed', details: data };
+        }
+      } catch (error) {
+        console.error('Graph intelligence search error:', error);
+        return { error: 'Search failed', details: error instanceof Error ? error.message : 'Unknown error' };
+      }
+    }
+  },
+
+  'run_intelligence_batch': {
+    description: 'Run the intelligence pipeline to process entities and extract signals automatically. Use this to populate the knowledge graph with fresh data.',
+    parameters: {
+      batch_size: { type: 'number', description: 'Number of entities to process (default: 5, recommended: 5-10)' }
+    },
+    handler: async (args: { batch_size?: number }) => {
+      try {
+        const response = await fetch(`${GRAPH_INTELLIGENCE_API}/run-batch`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            batch_size: args.batch_size || 5
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          return {
+            processed: data.data.entities_processed,
+            signals_added: data.data.signals_added_to_graph,
+            duration: `${data.data.duration_seconds}s`,
+            stats: `Extracted ${data.data.signals_extracted} signals, validated ${data.data.signals_validated}`
+          };
+        } else {
+          return { error: 'Batch processing failed', details: data };
+        }
+      } catch (error) {
+        console.error('Graph intelligence batch error:', error);
+        return { error: 'Batch processing failed', details: error instanceof Error ? error.message : 'Unknown error' };
+      }
+    }
+  },
+
+  'get_system_stats_mvp': {
+    description: 'Get system statistics including total entities, signals, and configuration',
+    parameters: {},
+    handler: async () => {
+      try {
+        const response = await fetch(`${GRAPH_INTELLIGENCE_API}/stats`);
+        const data = await response.json();
+
+        if (data.success) {
+          return {
+            total_entities: data.stats.graph.total_entities,
+            total_signals: data.stats.graph.total_signals,
+            backend: data.stats.graph.backend,
+            signal_types: data.stats.extractor.signal_types
+          };
+        } else {
+          return { error: 'Failed to get stats', details: data };
+        }
+      } catch (error) {
+        console.error('Graph intelligence stats error:', error);
+        return { error: 'Failed to get stats', details: error instanceof Error ? error.message : 'Unknown error' };
+      }
+    }
+  },
+
+  'list_signal_types_mvp': {
+    description: 'List all available signal types in the MVP system',
+    parameters: {},
+    handler: async () => {
+      try {
+        const response = await fetch(`${GRAPH_INTELLIGENCE_API}/signal-types`);
+        const data = await response.json();
+
+        if (data.success) {
+          return {
+            signal_types: data.signal_types,
+            description: 'Canonical signal types supported by the MVP system'
+          };
+        } else {
+          return { error: 'Failed to list signal types', details: data };
+        }
+      } catch (error) {
+        console.error('Graph intelligence signal types error:', error);
+        return { error: 'Failed to list signal types', details: error instanceof Error ? error.message : 'Unknown error' };
+      }
+    }
+  },
+
+  'get_entity_signals_mvp': {
+    description: 'Get all signals for a specific entity with optional filtering',
+    parameters: {
+      entity_id: { type: 'string', description: 'Entity identifier' },
+      signal_types: { type: 'array', description: 'Optional list of signal types to filter by' },
+      days: { type: 'number', description: 'Days to look back (default: 30)' },
+      limit: { type: 'number', description: 'Maximum signals to return (default: 20)' }
+    },
+    handler: async (args: { entity_id: string; signal_types?: string[]; days?: number; limit?: number }) => {
+      try {
+        const response = await fetch(`${GRAPH_INTELLIGENCE_API}/entity-signals`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            entity_id: args.entity_id,
+            signal_types: args.signal_types,
+            days: args.days || 30,
+            limit: args.limit || 20
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          return {
+            entity_id: data.entity_id,
+            count: data.count,
+            signals: data.signals
+          };
+        } else {
+          return { error: 'Failed to get entity signals', details: data };
+        }
+      } catch (error) {
+        console.error('Graph intelligence entity signals error:', error);
+        return { error: 'Failed to get entity signals', details: error instanceof Error ? error.message : 'Unknown error' };
+      }
+    }
+  }
+};
+
+// =============================================================================
+// Combined Tools Object (Temporal API Only - No Graph Intelligence Tools)
+// =============================================================================
+// Graph Intelligence operations use official Graphiti MCP tools only
+// Semantic helpers for Graphiti live in the service layer (backend/services/)
+const allRestTools = {
+  ...temporalTools
+};
+
 export async function POST(req: NextRequest) {
   try {
     // Parse the incoming CopilotKit request
     const body = await req.json();
     console.log('Raw CopilotKit request body:', JSON.stringify(body, null, 2));
     
-    // Handle CopilotKit GraphQL format
+    // Handle CopilotKit message format
+    // CopilotKit uses GraphQL format with textMessage wrapper - extract to standard format
     let messages: any[] = [];
     let userId: string | undefined;
-    let context: any = {};
     let stream = true;
 
-    if (body.variables && body.variables.data && body.variables.data.messages) {
-      // CopilotKit GraphQL format
+    if (body.variables?.data?.messages) {
+      // CopilotKit GraphQL format - extract textMessage content
       const copilotMessages = body.variables.data.messages;
       userId = body.variables.data.threadId;
-      
-      // Convert CopilotKit messages to our format
+
+      // Convert to standard message format
       messages = copilotMessages
-        .filter((msg: any) => msg.textMessage && msg.textMessage.role !== 'assistant' || msg.textMessage.content)
+        .filter((msg: any) => msg.textMessage?.content)
         .map((msg: any) => ({
           role: msg.textMessage.role,
           content: msg.textMessage.content,
           id: msg.id
         }));
-      
+
       console.log('Converted CopilotKit messages:', messages.length, 'messages');
     } else {
       // Legacy REST format
       messages = body.messages || [];
-      context = body.context || {};
       userId = body.userId;
       stream = body.stream !== false;
     }
@@ -197,7 +604,7 @@ export async function POST(req: NextRequest) {
     console.log('Processed CopilotKit request:', JSON.stringify({ messages: messages.length, userId, stream }, null, 2));
 
     // Validate that messages array is not empty (exclude empty assistant messages)
-    const validMessages = messages.filter(msg => msg.role === 'user' && msg.content.trim());
+    const validMessages = messages.filter(msg => msg.role === 'user' && msg.content?.trim());
     if (validMessages.length === 0) {
       console.log('No valid user messages detected, returning greeting');
       
@@ -235,6 +642,24 @@ export async function POST(req: NextRequest) {
     const latestUserMessage = validMessages[validMessages.length - 1];
     console.log('Sending to Claude Agent SDK:', latestUserMessage.content);
 
+    // CRITICAL FIX: Convert string to async generator for MCP support
+    // The Claude Agent SDK requires an async generator for the prompt parameter
+    // when using MCP servers. A simple string disables MCP mode.
+    // Reference: https://platform.claude.com/docs/en/agent-sdk/custom-tools
+    async function* generateMessages() {
+      console.log('🔧 Async generator called - yielding message');
+      const message = {
+        type: "user" as const,
+        message: {
+          role: "user" as const,
+          content: latestUserMessage.content
+        }
+      };
+      console.log('🔧 Yielding message:', JSON.stringify(message, null, 2));
+      yield message;
+      console.log('🔧 Message yielded successfully');
+    }
+
     // Create streaming response for real-time feedback
     console.log('Starting streaming response with Claude Agent SDK');
     
@@ -254,204 +679,173 @@ export async function POST(req: NextRequest) {
             };
             controller.enqueue(encoder.encode(`data: ${JSON.stringify(initChunk)}\n\n`));
 
-            // Use Claude Agent SDK with MCP servers
-            for await (const message of query({
-              prompt: latestUserMessage.content,
-              options: {
-                mcpServers: {
-                  "falkordb-mcp": {
-                    "command": "python",
-                    "args": [
-                      "backend/falkordb_mcp_server_fastmcp.py"
-                    ],
-                    "env": {
-                      "FALKORDB_URI": process.env.FALKORDB_URI,
-                      "FALKORDB_USER": process.env.FALKORDB_USER,
-                      "FALKORDB_PASSWORD": process.env.FALKORDB_PASSWORD,
-                      "FALKORDB_DATABASE": process.env.FALKORDB_DATABASE || "sports_intelligence"
-                    }
+            // Use Claude Agent SDK with MCP servers and MODEL CASCADE
+            // Model cascade: Try Haiku first (fast, cheap), fallback to Sonnet if needed
+            console.log('🔧 About to call Agent SDK query() with MCP servers...');
+            const mcpConfig = getMCPServerConfig();
+            console.log(`   MCP servers configured: ${Object.keys(mcpConfig).join(', ')}`);
+            console.log(`   Allowed tools: ${ALLOWED_TOOLS.length} tools`);
+
+            const modelCascade = ['sonnet'];  // Test with Sonnet first to verify MCP works
+            let modelUsed: string | null = null;
+            let querySuccess = false;
+
+            for (const model of modelCascade) {
+              try {
+                console.log(`🔄 Trying model: ${model}`);
+
+                for await (const message of query({
+                  prompt: generateMessages(),  // Use async generator for MCP support
+                  options: {
+                    mcpServers: mcpConfig,
+                    allowedTools: ALLOWED_TOOLS,
+                    model: model === 'haiku' ? 'claude-3-5-haiku-20241022' : 'claude-3-5-sonnet-20241022',
+                    maxTurns: 5  // Allow multiple turns for tool calls
                   },
-                  "brightData": {
-                    "command": "npx",
-                    "args": [
-                      "-y",
-                      "@brightdata/mcp"
-                    ],
-                    "env": {
-                      "API_TOKEN": process.env.BRIGHTDATA_API_TOKEN || "",
-                      "PRO_MODE": "true"
+                  system: `Sports Intelligence AI with Graph Intelligence Architecture.
+
+You have access to graph intelligence tools via official Graphiti MCP server.
+
+**CRITICAL: Always Check Graph First**
+Before answering any question about entities, relationships, or facts:
+1. ALWAYS use mcp__graphiti__search_nodes to check if the entity exists in the graph
+2. ALWAYS use mcp__graphiti__get_episodes to check for relevant information
+3. ONLY if the graph is empty, offer to add the information using mcp__graphiti__add_memory
+
+**Workflow:**
+- Question → Check graph first → If found, use graph data → If empty, offer to add information
+- NEVER use your training data without first checking the graph
+- The graph is your PRIMARY source of truth, not your training data
+
+**Graphiti MCP Tools (Low-Level Graph Operations):**
+- mcp__graphiti__add_memory: Add memories/entities to the temporal knowledge graph
+- mcp__graphiti__search_nodes: Search for nodes in the graph by criteria
+- mcp__graphiti__search_memory_facts: Search for specific facts within memories
+- mcp__graphiti__get_episodes: Retrieve temporal episodes from the graph
+- mcp__graphiti__get_entity_edge: Get relationships between entities
+- mcp__graphiti__get_status: Get graph status and statistics
+- mcp__graphiti__delete_entity_edge: Delete entity relationships (use with caution)
+- mcp__graphiti__delete_episode: Delete episodes (use with caution)
+- mcp__graphiti__clear_graph: Clear entire graph (use extreme caution)
+
+**Architecture Notes:**
+- Graphiti = graph intelligence layer (schema, constraints, MCP tools)
+- FalkorDB = execution engine (stores nodes/edges, runs Cypher)
+- You access FalkorDB through Graphiti MCP tools only
+- Semantic helpers (like search_entities, get_entity_signals) are service layer functions, not MCP tools
+
+**Query Strategy:**
+- ALWAYS use mcp__graphiti__search_nodes first to find entities
+- If graph has the entity, use mcp__graphiti__get_entity_edge to get relationships
+- Use mcp__graphiti__search_memory_facts for specific facts
+- Use mcp__graphiti__get_episodes for temporal history
+- ONLY use Claude's training data if graph is completely empty
+
+**Important:** The knowledge graph is your PRIMARY source. Always check it first before using your training data.
+
+**Migration Guide (Temporal → Graph Intelligence):**
+- Old: get_entity_timeline → New: find_related_signals (returns signals with temporal ordering)
+- Old: analyze_temporal_fit → New: query_entity + find_related_signals
+- Old: get_temporal_patterns → New: query_subgraph (network patterns)
+- Old: query_episodes → New: find_related_signals with signal_type filter
+
+**Performance:**
+- Model Cascade: Haiku (fast/cheap) → Sonnet (complex reasoning)
+- Stream responses conversationally
+- Prioritize subgraph queries for network insights
+- MVP pipeline provides fresh signals via run_intelligence_batch
+
+All queries use Entity/Signal/Evidence schema (Episode-based system deprecated).`
+                }, stream)) {
+                  // Log message type for debugging
+                  console.log(`📨 Received message type: ${message.type}${message.subtype ? ` (${message.subtype})` : ''}`);
+
+                  // Handle assistant messages (which contain the actual response)
+                  if (message.type === 'assistant' && message.message) {
+                    // Extract text from content array
+                    const content = message.message.content || [];
+                    for (const contentItem of content) {
+                      if (contentItem.type === 'text' && contentItem.text) {
+                        const chunk = {
+                          type: 'text',
+                          text: contentItem.text
+                        };
+                        controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
+                        fullResponse += contentItem.text;
+                      }
                     }
-                  },
-                  "perplexity-mcp": {
-                    "command": "npx",
-                    "args": [
-                      "-y",
-                      "mcp-perplexity-search"
-                    ],
-                    "env": {
-                      "PERPLEXITY_API_KEY": process.env.PERPLEXITY_API_KEY || ""
-                    }
-                  }
-                },
-                allowedTools: [
-                  // FalkorDB tools
-                  "mcp__falkordb-mcp__search_rfps",
-                  "mcp__falkordb-mcp__get_entity_timeline",
-                  "mcp__falkordb-mcp__search_entities",
-                  "mcp__falkordb-mcp__add_rfp_episode",
-                  "mcp__falkordb-mcp__query_graph",
-                  "mcp__falkordb-mcp__get_graph_stats",
-                  "mcp__falkordb-mcp__list_graphs",
-                  // BrightData tools
-                  "mcp__brightData__search_engine",
-                  "mcp__brightData__scrape_as_markdown",
-                  "mcp__brightData__scrape_batch",
-                  "mcp__brightData__extract",
-                  // Perplexity tools
-                  "mcp__perplexity-mcp__chat_completion"
-                ]
-              },
-              system: `You are a Sports Intelligence AI assistant with access to powerful tools:
-- FalkorDB knowledge graph with 3,400+ sports entities and 30+ RFPs (clubs, players, competitions)
-- BrightData web search for real-time information
-- Perplexity AI for up-to-date insights
-- Temporal Intelligence for RFP analysis and entity history
+                  } else if (message.type === 'text') {
+                    // Direct text message (backward compatibility)
+                    const chunk = {
+                      type: 'text',
+                      text: message.text
+                    };
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
+                    fullResponse += message.text;
+                  } else if (message.type === 'tool_use') {
+                    // CRITICAL DIAGNOSTIC: Log when tools are actually called
+                    console.log(`🔧 TOOL CALLED: ${message.tool}`);
+                    console.log(`   Args:`, JSON.stringify(message.args).substring(0, 200));
 
-Your task is to help users analyze sports clubs, identify business opportunities, find decision makers, and provide comprehensive sports intelligence using both database knowledge and real-time web research.
-
-FALKORDB TOOLS:
-- search_rfps: Search for RFP opportunities by sport, category, or keywords
-- get_entity_timeline: Get an organization's complete RFP history
-- search_entities: Find sports entities (clubs, players, tournaments)
-- add_rfp_episode: Add new RFP discoveries to the knowledge graph
-- query_graph: Run custom Cypher queries on the knowledge graph
-- get_graph_stats: View database statistics
-
-TEMPORAL INTELLIGENCE TOOLS:
-- get_entity_timeline: Get an entity's complete history (RFPs, partnerships, changes)
-- analyze_temporal_fit: Analyze if an entity fits an RFP based on their patterns
-- get_temporal_patterns: Get aggregate trends across all entities
-- create_rfp_episode: Record RFP detections for future analysis
-
-When users ask about:
-- "Show me Tennis RFPs" → Use search_rfps with sport="Tennis"
-- "What's PGA's RFP history?" → Use get_entity_timeline with "PGA"
-- "Find golf organizations" → Use search_entities with query="golf"
-- "Add a new RFP" → Use add_rfp_episode
-
-When users ask about sports entities, use the FalkorDB tools to search the knowledge graph.
-When users need current information, use BrightData or Perplexity search tools.
-Always provide detailed, actionable insights based on the tool results.
-
-Provide your analysis in a conversational, streaming manner as if you're thinking through the problem step by step.`
-            })) {
-              // Enhanced logging for granular tool execution details
-              console.log('Claude Agent SDK message:', {
-                type: message.type,
-                subtype: message.subtype,
-                tool: message.tool,
-                toolArgs: message.tool_args,
-                content: message.text || message.content?.slice(0, 200),
-                fullMessage: JSON.stringify(message, null, 2).slice(0, 500),
-                timestamp: new Date().toISOString()
-              });
-              
-              if (message.type === 'system' && message.subtype === 'init') {
-                console.log('MCP Servers initialized:', message.mcp_servers);
-                // Send tools ready status
-                const toolsChunk = {
-                  type: 'status',
-                  status: 'tools_ready',
-                  message: 'Sports intelligence tools initialized'
-                };
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify(toolsChunk)}\n\n`));
-              } else if (message.type === 'tool_use') {
-                // Enhanced tool execution notifications with arguments
-                console.log('Tool execution details:', {
-                  tool: message.tool,
-                  args: message.tool_args,
-                  timestamp: new Date().toISOString()
-                });
-                
-                // Stream detailed tool execution to frontend
-                const toolDetails = message.tool_args ? 
-                  `Executing ${message.tool} with: ${JSON.stringify(message.tool_args).slice(0, 150)}...` :
-                  `Using ${message.tool} to gather intelligence...`;
-                  
-                const toolChunk = {
-                  type: 'tool_use',
-                  tool: message.tool,
-                  message: toolDetails,
-                  args: message.tool_args
-                };
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify(toolChunk)}\n\n`));
-              } else if (message.type === 'text') {
-                // Stream text content as it's generated
-                if (message.text && message.text.trim()) {
-                  const textChunk = {
-                    type: 'text',
-                    text: message.text
-                  };
-                  controller.enqueue(encoder.encode(`data: ${JSON.stringify(textChunk)}\n\n`));
-                  fullResponse += message.text;
-                }
-              } else if (message.type === 'result' && message.subtype === 'success') {
-                // Stream tool results
-                toolResults.push({
-                  tool: message.tool,
-                  result: message.result
-                });
-                
-                const resultChunk = {
-                  type: 'tool_result',
-                  tool: message.tool,
-                  result: message.result
-                };
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify(resultChunk)}\n\n`));
-                console.log('Tool result received:', {
-                  tool: message.tool,
-                  resultLength: message.result ? JSON.stringify(message.result).length : 0,
-                  resultPreview: message.result ? JSON.stringify(message.result).slice(0, 200) : 'No result',
-                  timestamp: new Date().toISOString()
-                });
-                
-                // Don't overwrite fullResponse with tool results - let the assistant response handle it
-                // Tool results are for logging/feedback, not the main response text
-              } else if (message.type === 'assistant') {
-                // Enhanced assistant message handling with tool use detection
-                if (message.message && message.message.content && Array.isArray(message.message.content)) {
-                  for (const contentBlock of message.message.content) {
-                    if (contentBlock.type === 'text' && contentBlock.text) {
-                      const textChunk = {
-                        type: 'text',
-                        text: contentBlock.text
-                      };
-                      controller.enqueue(encoder.encode(`data: ${JSON.stringify(textChunk)}\n\n`));
-                      fullResponse += contentBlock.text;
-                    } else if (contentBlock.type === 'tool_use') {
-                      // Stream tool execution details
-                      console.log('Tool execution detected:', {
-                        tool: contentBlock.name,
-                        toolId: contentBlock.id,
-                        toolInput: contentBlock.input,
-                        timestamp: new Date().toISOString()
-                      });
-                      
-                      const toolExecutionChunk = {
-                        type: 'tool_use',
-                        tool: contentBlock.name,
-                        message: `Executing ${contentBlock.name} with: ${JSON.stringify(contentBlock.input).slice(0, 150)}...`,
-                        args: contentBlock.input
-                      };
-                      controller.enqueue(encoder.encode(`data: ${JSON.stringify(toolExecutionChunk)}\n\n`));
-                    }
+                    const toolChunk = {
+                      type: 'tool',
+                      tool: message.tool,
+                      args: message.args
+                    };
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(toolChunk)}\n\n`));
+                    toolResults.push(message);
+                  } else if (message.type === 'tool_result') {
+                    // Log tool results
+                    console.log(`✅ TOOL RESULT: ${message.tool}`);
+                    console.log(`   Result:`, JSON.stringify(message.result).substring(0, 200));
+                    const resultChunk = {
+                      type: 'tool_result',
+                      tool: message.tool,
+                      result: message.result
+                    };
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify(resultChunk)}\n\n`));
                   }
                 }
-              } else {
-                // Log other message types for debugging
-                console.log('Other message type:', message.type, message.subtype);
+
+                modelUsed = model;
+                querySuccess = true;
+                console.log(`✅ ${model} sufficient for query`);
+                break; // Model succeeded, exit cascade
+
+              } catch (error) {
+                console.error(`❌ ${model} failed:`, error);
+                if (model === modelCascade[modelCascade.length - 1]) {
+                  // Last model failed, rethrow error
+                  throw error;
+                }
+                // Continue to next model in cascade
               }
             }
+
+            if (!querySuccess) {
+              throw new Error('All models in cascade failed');
+            }
+
+            // CRITICAL DIAGNOSTIC: Log tool usage summary
+            console.log('═══════════════════════════════════════════════════════');
+            console.log('📊 TOOL EXECUTION SUMMARY');
+            console.log('═══════════════════════════════════════════════════════');
+            console.log(`Model used: ${modelUsed}`);
+            console.log(`MCP servers configured: ${Object.keys(getMCPServerConfig()).length}`);
+            console.log(`Allowed tools: ${ALLOWED_TOOLS.length}`);
+            console.log(`Tool calls made: ${toolResults.length}`);
+            if (toolResults.length > 0) {
+              console.log('Tools called:');
+              toolResults.forEach((result, idx) => {
+                console.log(`  ${idx + 1}. ${result.tool}`);
+              });
+            } else {
+              console.log('⚠️  No tools were called!');
+              console.log('   This means the model chose not to use any tools.');
+              console.log('   Even though MCP servers are configured, the model may');
+              console.log('   decide not to use tools based on the query.');
+            }
+            console.log('═══════════════════════════════════════════════════════');
 
             // Send completion status
             const completeChunk = {

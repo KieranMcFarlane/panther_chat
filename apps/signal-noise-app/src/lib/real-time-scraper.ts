@@ -1,9 +1,13 @@
 /**
  * 🚀 Real-Time Data Scraper
- * 
+ *
  * Scrapes live data from various sources to power the alerts feed
  * Uses multiple APIs and web scraping techniques
+ *
+ * Integrated with Ralph Loop for signal validation (Phase 3.3)
  */
+
+import { validateSignalsViaRalphLoop, RawSignal, RawEvidence } from './ralph-loop-client';
 
 interface LiveAlert {
   id: string;
@@ -134,7 +138,7 @@ class RealTimeScraper {
           details: update.details
         };
 
-        this.addAlert(alert);
+        await this.addAlertWithValidation(alert);
       }
     } catch (error) {
       console.error('LinkedIn scraping error:', error);
@@ -172,7 +176,7 @@ class RealTimeScraper {
               }
             };
 
-            this.addAlert(alert);
+            await this.addAlertWithValidation(alert);
           }
         }
       }
@@ -209,7 +213,7 @@ class RealTimeScraper {
             }
           };
 
-          this.addAlert(alert);
+          await this.addAlertWithValidation(alert);
         }
       } catch (error) {
         console.error(`Error scraping ${company.name} careers:`, error);
@@ -240,7 +244,7 @@ class RealTimeScraper {
             }
           };
 
-          this.addAlert(alert);
+          await this.addAlertWithValidation(alert);
         }
       }
     } catch (error) {
@@ -278,7 +282,7 @@ class RealTimeScraper {
             }
           };
 
-          this.addAlert(alert);
+          await this.addAlertWithValidation(alert);
         }
       }
     } catch (error) {
@@ -287,6 +291,90 @@ class RealTimeScraper {
   }
 
   // Helper methods
+
+  /**
+   * Add alert with Ralph Loop validation (if applicable)
+   *
+   * For RFP-related signals, submits to Ralph Loop for validation
+   * before adding to alerts feed
+   */
+  private async addAlertWithValidation(alert: LiveAlert): Promise<void> {
+    // Check if this is an RFP-related signal that needs validation
+    const isRFPSignal = alert.type === 'funding' ||
+                        alert.type === 'expansion' ||
+                        alert.description.toLowerCase().includes('rfp') ||
+                        alert.description.toLowerCase().includes('procurement');
+
+    if (isRFPSignal) {
+      try {
+        // Convert alert to Ralph Loop format
+        const rawSignal: RawSignal = {
+          entity_id: this.entityNameToId(alert.entity),
+          signal_type: this.alertTypeToSignalType(alert.type),
+          confidence: alert.impact / 100, // Convert impact to 0-1 confidence
+          evidence: [{
+            source: alert.source,
+            date: alert.timestamp,
+            url: alert.entityUrl,
+            extracted_text: alert.description,
+            credibility_score: 0.7 // Default for now
+          }],
+          metadata: {
+            alert_type: alert.type,
+            importance: alert.importance,
+            ...alert.details
+          }
+        };
+
+        // Submit to Ralph Loop
+        const result = await validateSignalsViaRalphLoop([rawSignal]);
+
+        console.log(`🔄 Ralph Loop validation for ${alert.entity}:`, {
+          validated: result.validated_signals,
+          rejected: result.rejected_signals
+        });
+
+        // Only add alert if signal passed validation
+        if (result.validated_signals > 0) {
+          this.addAlert(alert);
+        } else {
+          console.log(`⚠️ Signal rejected by Ralph Loop: ${alert.entity} - ${alert.description}`);
+        }
+
+      } catch (error) {
+        console.error('❌ Ralph Loop validation failed, adding alert anyway:', error);
+        // Fallback: add alert even if validation fails
+        this.addAlert(alert);
+      }
+    } else {
+      // Non-RFP signals don't need validation
+      this.addAlert(alert);
+    }
+  }
+
+  /**
+   * Convert entity name to ID format
+   */
+  private entityNameToId(name: string): string {
+    return name.toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .replace(/\s+/g, '-');
+  }
+
+  /**
+   * Convert alert type to signal type
+   */
+  private alertTypeToSignalType(type: string): string {
+    const typeMap: Record<string, string> = {
+      'funding': 'RFP_DETECTED',
+      'expansion': 'PARTNERSHIP_FORMED',
+      'hiring': 'PARTNERSHIP_FORMED',
+      'promotion': 'RFP_DETECTED',
+      'departure': 'RFP_DETECTED'
+    };
+    return typeMap[type] || 'RFP_DETECTED';
+  }
+
   private addAlert(alert: LiveAlert) {
     // Avoid duplicates
     const isDuplicate = this.alerts.some(existing => 

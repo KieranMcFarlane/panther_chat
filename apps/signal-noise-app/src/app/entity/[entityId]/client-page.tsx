@@ -10,6 +10,7 @@ import Header from "@/components/header/Header"
 import { useEntity } from "@/lib/swr-config"
 import EmailComposeModal from "@/components/email/EmailComposeModal"
 import EntityDossierRouter from "@/components/entity-dossier"
+import { useCopilotReadable } from "@copilotkit/react-core"
 // import { useClubNavigation } from "@/contexts/ClubNavigationContext"
 // import { EntityProfileSkeleton, BadgeSkeleton } from "@/components/ui/skeleton"
 import { 
@@ -82,7 +83,23 @@ export default function EntityProfileClient({ entityId }: { entityId: string }) 
 
   // Use the actual entity ID for data fetching
   const { entity, error, isLoading } = useEntity(actualEntityId)
-  
+
+  // Expose current entity context to CopilotKit for AI awareness
+  useCopilotReadable({
+    description: "Current sports entity being viewed by the user",
+    value: entity ? {
+      id: entity.neo4j_id,
+      name: entity.properties?.name || entity.properties?.title || 'Unknown',
+      type: entity.labels?.join(', ') || 'Entity',
+      sport: entity.properties?.sport,
+      league: entity.properties?.league,
+      country: entity.properties?.country,
+      foundedYear: entity.properties?.founded_year,
+      stadium: entity.properties?.stadium,
+      context: `User is viewing ${entity.properties?.name || 'this entity'}, a ${entity.labels?.join(' ') || 'entity'}${entity.properties?.league ? ` in ${entity.properties.league}` : ''}${entity.properties?.sport ? ` (${entity.properties.sport})` : ''}`
+    } : null
+  })
+
   // Note: In simplified SWR, we only get the entity. For connections and dossier, make direct API calls if needed
   const connections = []  // Simplified - not loading connections for now
   const dataSource = entity ? 'cache' : null

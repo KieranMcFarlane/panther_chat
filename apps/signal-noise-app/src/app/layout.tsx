@@ -11,6 +11,7 @@ import { SharedCopilotProvider } from '@/contexts/SharedCopilotContext'
 import { CopilotKit } from "@copilotkit/react-core"
 import "@copilotkit/react-ui/styles.css"
 import dynamic from 'next/dynamic'
+import { TemporalIntelligenceTools } from '@/components/temporal/TemporalIntelligenceTools'
 
 const SimpleStreamingChat = dynamic(() => import('@/components/chat/SimpleStreamingChat'), {
   ssr: false,
@@ -51,21 +52,16 @@ export default function RootLayout({
           <TabProvider>
             <ThreadProvider>
               <SWRProvider>
-                <CopilotKit 
+                <CopilotKit
                   runtimeUrl="/api/copilotkit"
-                  publicLicenseKey={process.env.NEXT_PUBLIC_LICENSE_KEY}
-                  publicApiKey={process.env.COPILOT_CLOUD_PUBLIC_API_KEY}
-                  headers={{
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type',
-                  }}
+                  publicApiKey={process.env.NEXT_PUBLIC_COPILOTKIT_API_KEY}
                   properties={{
                     agentConfig: SPORTS_AGENT_CONFIG
                   }}
                   enableAGUI={true}
                   showInspector={process.env.NODE_ENV === 'development'}
                 >
+                  <TemporalIntelligenceTools />
                   <SharedCopilotProvider>
                     <AppNavigation>
                       {children}

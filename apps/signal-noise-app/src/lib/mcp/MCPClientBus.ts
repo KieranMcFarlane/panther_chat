@@ -1,6 +1,58 @@
 /**
- * MCP Client Bus
- * Manages connections to multiple MCP servers and provides unified interface
+ * ⚠️ DEPRECATED - MCP Client Bus
+ *
+ * ============================================================
+ * ARCHITECTURE MIGRATION NOTICE (January 2026)
+ * ============================================================
+ *
+ * This file is DEPRECATED and will be removed in a future release.
+ *
+ * Migration Path:
+ * → Use Claude Agent SDK directly with MCP tools
+ * → See: src/app/api/copilotkit/route.ts for implementation
+ *
+ * Why Deprecated:
+ * 1. MCP servers now consolidated into single graphiti-intelligence MCP
+ * 2. Claude Agent SDK provides built-in MCP tool management
+ * 3. No need for custom bus abstraction layer
+ *
+ * New Architecture:
+ * - Single MCP server: graphiti-intelligence (backend/graphiti_mcp_server.py)
+ * - Scraping MCPs: brightData, perplexity-mcp, byterover-mcp
+ * - Claude Agent SDK: @anthropic-ai/claude-agent-sdk
+ * - Model cascade: Haiku → Sonnet → Opus
+ *
+ * Migration Steps:
+ * 1. Remove imports of MCPClientBus and mcpBus
+ * 2. Update to use Claude Agent SDK's query() function directly
+ * 3. Use getMCPServerConfig() for MCP server configuration
+ * 4. Update tool names to new graph intelligence tools:
+ *    - Old: mcp__temporal-intelligence__*
+ *    - New: mcp__graphiti-intelligence__query_entity
+ *
+ * Example Migration:
+ *
+ * OLD (deprecated):
+ *   import { mcpBus } from '@/lib/mcp/MCPClientBus';
+ *   await mcpBus.initialize();
+ *   const result = await mcpBus.callTool('tool_name', args);
+ *
+ * NEW (current):
+ *   import { query } from '@anthropic-ai/claude-agent-sdk';
+ *   const result = await query({
+ *     prompt: userMessage,
+ *     options: {
+ *       mcpServers: getMCPServerConfig(),
+ *       allowedTools: ALLOWED_TOOLS
+ *     }
+ *   });
+ *
+ * For questions, see:
+ * - CLAUDE.md (project documentation)
+ * - src/app/api/copilotkit/route.ts (implementation example)
+ * - backend/graphiti_mcp_server.py (new MCP server)
+ *
+ * ============================================================
  */
 
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
@@ -34,12 +86,21 @@ export class MCPClientBus {
   private tools: Map<string, MCPTool> = new Map();
   private isInitialized = false;
 
-  constructor(private servers: MCPServerConfig[]) {}
+  constructor(private servers: MCPServerConfig[]) {
+    // Deprecation warning on instantiation
+    if (typeof window === 'undefined') {
+      console.warn('⚠️  WARNING: MCPClientBus is deprecated. Use Claude Agent SDK directly.');
+      console.warn('   See migration guide in file header.');
+    }
+  }
 
   /**
+   * @deprecated Use Claude Agent SDK's query() function directly
    * Initialize all MCP server connections
    */
   async initialize(): Promise<void> {
+    console.warn('⚠️  MCPClientBus.initialize() is deprecated. Use Claude Agent SDK instead.');
+
     if (this.isInitialized) {
       return;
     }
