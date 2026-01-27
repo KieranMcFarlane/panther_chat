@@ -200,11 +200,46 @@ async function processEntityForRfp(entity, index) {
     };
     
     console.log(`[ENTITY-FOUND] ${entityName} - ${rfpType} (Score: ${fitScore})`);
-    
-    // Step 5: Write to Supabase (in production would use actual Supabase client)
-    // await supabase.from('rfp_opportunities').insert(rfpHighlight);
-    
-    return rfpHighlight;
+
+    // Step 5: Submit to Ralph Loop for validation (Iteration 08 compliant)
+    const { validateSignalViaRalphLoop, convertBrightDataToSignal } = require('./src/lib/ralph-loop-node-client');
+
+    // Convert BrightData result to Ralph Loop signal format
+    const brightDataResult = {
+      title: bestResult.title,
+      description: bestResult.description,
+      url: bestResult.url,
+      confidence: 0.85, // BrightData confidence
+      rfpType: rfpType,
+      fitScore: fitScore,
+      searchQuery: searchQuery,
+      urlValid: true
+    };
+
+    const rawSignal = convertBrightDataToSignal(brightDataResult, entityName);
+
+    try {
+      // Submit to Ralph Loop for validation
+      const validationResult = await validateSignalViaRalphLoop(rawSignal);
+
+      if (validationResult.validated_signals > 0) {
+        console.log(`[RALPH-LOOP-VALIDATED] ${entityName} - Signal validated (pass 3/3) and written to Graphiti`);
+        console.log(`   Confidence: ${rawSignal.confidence}, Fit Score: ${fitScore}, RFP Type: ${rfpType}`);
+      } else {
+        console.log(`[RALPH-LOOP-REJECTED] ${entityName} - Signal rejected: ${validationResult.rejected_signals} rejected`);
+        console.log(`   Reason: Failed 3-pass validation (min_evidence=3, min_confidence=0.7)`);
+      }
+
+      return {
+        ...rfpHighlight,
+        ralph_loop_validated: validationResult.validated_signals > 0,
+        validation_pass: validationResult.validated_signals > 0 ? 3 : 0
+      };
+
+    } catch (error) {
+      console.error(`[RALPH-LOOP-ERROR] ${entityName} - Validation failed:`, error.message);
+      return rfpHighlight; // Return original result on error
+    }
     
   } catch (error) {
     console.error(`Error processing ${entityName}:`, error.message);

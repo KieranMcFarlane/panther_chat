@@ -266,19 +266,66 @@ async function processEntity(entity, index) {
     }
     
     console.log(`[ENTITY-FOUND] ${entity.name} - ${rfpType} (Score: ${fitScore})`);
-    
-    return {
-      organization: entity.name,
-      src_link: validURLs[0] || null, // Use only validated URLs from BrightData
-      detection_strategy: 'brightdata',
-      summary_json: {
-        title: `Digital RFP opportunity for ${entity.name}`,
-        confidence: Math.min(90, 50 + fitScore),
-        urgency: fitScore > 50 ? 'high' : fitScore > 30 ? 'medium' : 'low',
-        fit_score: fitScore,
-        rfp_type: rfpType
-      }
+
+    // Step 6: Submit to Ralph Loop for validation (Iteration 08 compliant)
+    const { validateSignalViaRalphLoop, convertBrightDataToSignal } = require('./src/lib/ralph-loop-node-client');
+
+    // Convert BrightData result to Ralph Loop signal format
+    const brightDataResult = {
+      title: `Digital RFP opportunity for ${entity.name}`,
+      description: result.organic[0].description,
+      url: validURLs[0] || null,
+      confidence: 0.85, // BrightData confidence
+      rfpType: rfpType,
+      fitScore: fitScore,
+      searchQuery: searchQuery,
+      urlValid: true
     };
+
+    const rawSignal = convertBrightDataToSignal(brightDataResult, entity.name);
+
+    try {
+      // Submit to Ralph Loop for validation
+      const validationResult = await validateSignalViaRalphLoop(rawSignal);
+
+      if (validationResult.validated_signals > 0) {
+        console.log(`[RALPH-LOOP-VALIDATED] ${entity.name} - Signal validated (pass 3/3) and written to Graphiti`);
+        console.log(`   Confidence: ${rawSignal.confidence}, Fit Score: ${fitScore}, RFP Type: ${rfpType}`);
+      } else {
+        console.log(`[RALPH-LOOP-REJECTED] ${entity.name} - Signal rejected: ${validationResult.rejected_signals} rejected`);
+        console.log(`   Reason: Failed 3-pass validation (min_evidence=3, min_confidence=0.7)`);
+      }
+
+      return {
+        organization: entity.name,
+        src_link: validURLs[0] || null, // Use only validated URLs from BrightData
+        detection_strategy: 'brightdata',
+        summary_json: {
+          title: `Digital RFP opportunity for ${entity.name}`,
+          confidence: Math.min(90, 50 + fitScore),
+          urgency: fitScore > 50 ? 'high' : fitScore > 30 ? 'medium' : 'low',
+          fit_score: fitScore,
+          rfp_type: rfpType
+        },
+        ralph_loop_validated: validationResult.validated_signals > 0,
+        validation_pass: validationResult.validated_signals > 0 ? 3 : 0
+      };
+
+    } catch (error) {
+      console.error(`[RALPH-LOOP-ERROR] ${entity.name} - Validation failed:`, error.message);
+      return {
+        organization: entity.name,
+        src_link: validURLs[0] || null,
+        detection_strategy: 'brightdata',
+        summary_json: {
+          title: `Digital RFP opportunity for ${entity.name}`,
+          confidence: Math.min(90, 50 + fitScore),
+          urgency: fitScore > 50 ? 'high' : fitScore > 30 ? 'medium' : 'low',
+          fit_score: fitScore,
+          rfp_type: rfpType
+        }
+      }; // Return original result on error
+    }
     
   } catch (error) {
     console.error(`Error processing ${entity.name}:`, error);
