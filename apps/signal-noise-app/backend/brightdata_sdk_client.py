@@ -129,8 +129,8 @@ class BrightDataSDKClient:
                     "engine": engine
                 }
 
-            # Check if result has content
-            if not result or not hasattr(result, 'content'):
+            # Check if result has data
+            if not result or not hasattr(result, 'data'):
                 return {
                     "status": "error",
                     "error": "No results returned",
@@ -138,29 +138,19 @@ class BrightDataSDKClient:
                     "engine": engine
                 }
 
-            # Format results based on content structure
+            # Format results based on data structure
             results = []
-            content = result.content if hasattr(result, 'content') else []
+            content = result.data if hasattr(result, 'data') else []
 
-            # Handle different content formats
-            if isinstance(content, dict):
-                # Google returns dict format
-                for item in content.get('organic', []):
-                    results.append({
-                        "position": item.get('pos'),
-                        "title": item.get('title'),
-                        "url": item.get('link'),
-                        "snippet": item.get('snippet', '')
-                    })
-            elif isinstance(content, list):
-                # Other engines might return list
+            # Handle data format (list of dicts)
+            if isinstance(content, list):
                 for item in content:
                     if isinstance(item, dict):
                         results.append({
-                            "position": item.get('pos') or item.get('position'),
+                            "position": item.get('position'),
                             "title": item.get('title'),
-                            "url": item.get('url') or item.get('link'),
-                            "snippet": item.get('snippet', '') or item.get('description', '')
+                            "url": item.get('url'),
+                            "snippet": item.get('description', '') or item.get('snippet', '')
                         })
 
             logger.info(f"✅ Search returned {len(results)} results")
@@ -213,7 +203,7 @@ class BrightDataSDKClient:
             )
 
             # Check result
-            if not result or not hasattr(result, 'content'):
+            if not result or not hasattr(result, 'data'):
                 return {
                     "status": "error",
                     "error": "No content returned",
@@ -222,7 +212,7 @@ class BrightDataSDKClient:
 
             # Convert HTML to markdown
             from bs4 import BeautifulSoup
-            html_content = result.content if hasattr(result, 'content') else ""
+            html_content = result.data if hasattr(result, 'data') else ""
             soup = BeautifulSoup(html_content, 'html.parser')
 
             # Remove scripts/styles
@@ -296,11 +286,11 @@ class BrightDataSDKClient:
 
             # Handle results
             if isinstance(results, list):
-                for result in results:
-                    if result and hasattr(result, 'content'):
+                for idx, result in enumerate(results):
+                    if result and hasattr(result, 'data'):
                         # Convert to markdown
                         from bs4 import BeautifulSoup
-                        soup = BeautifulSoup(result.content, 'html.parser')
+                        soup = BeautifulSoup(result.data, 'html.parser')
 
                         for tag in soup(["script", "style", "nav", "footer", "header"]):
                             tag.decompose()
@@ -314,8 +304,10 @@ class BrightDataSDKClient:
                         lines = [line.strip() for line in content.split('\n') if line.strip()]
                         content = '\n'.join(lines)
 
+                        url = cleaned_urls[idx] if idx < len(cleaned_urls) else "unknown"
+
                         successful_results.append({
-                            "url": result.url if hasattr(result, 'url') else cleaned_urls[len(successful_results)],
+                            "url": url,
                             "status": "success",
                             "content": content,
                             "metadata": {
@@ -324,16 +316,17 @@ class BrightDataSDKClient:
                         })
                     else:
                         failed_count += 1
+                        url = cleaned_urls[idx] if idx < len(cleaned_urls) else "unknown"
                         successful_results.append({
-                            "url": cleaned_urls[len(successful_results)],
+                            "url": url,
                             "status": "error",
                             "error": "No content returned"
                         })
             else:
                 # Single result
-                if results and hasattr(results, 'content'):
+                if results and hasattr(results, 'data'):
                     from bs4 import BeautifulSoup
-                    soup = BeautifulSoup(results.content, 'html.parser')
+                    soup = BeautifulSoup(results.data, 'html.parser')
 
                     for tag in soup(["script", "style", "nav", "footer", "header"]):
                         tag.decompose()
