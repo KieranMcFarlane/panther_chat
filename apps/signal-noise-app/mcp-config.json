@@ -1,28 +1,19 @@
 {
   "mcpServers": {
     "graphiti": {
-      "transport": "stdio",
-      "command": "/Users/kieranmcfarlane/.local/bin/uv",
-      "args": [
-        "run",
-        "--directory",
-        "backend/graphiti_mcp_server_official",
-        "--project",
-        ".",
-        "main.py",
-        "--transport",
-        "stdio"
-      ],
+      "command": "python3",
+      "args": ["backend/graphiti_mcp_server_official/src/graphiti_mcp_server.py"],
       "env": {
         "DATABASE_PROVIDER": "falkordb",
-        "FALKORDB_URI": "${FALKORDB_URI}",
-        "FALKORDB_USER": "${FALKORDB_USER}",
-        "FALKORDB_PASSWORD": "${FALKORDB_PASSWORD}",
-        "FALKORDB_DATABASE": "${FALKORDB_DATABASE}",
-        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "FALKORDB_URI": "rediss://r-6jissuruar.instance-vnsu2asxb.hc-srom4rolb.eu-west-1.aws.f2e0a955bb84.cloud:50743",
+        "FALKORDB_USER": "falkordb",
+        "FALKORDB_PASSWORD": "N!HH@CBC9QDesFdS",
+        "FALKORDB_DATABASE": "sports_intelligence",
         "MODEL_NAME": "gpt-4o-mini",
-        "EMBEDDING_MODEL": "text-embedding-3-small"
+        "EMBEDDING_MODEL": "text-embedding-3-small",
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}"
       }
     }
-  }
+  },
+  "_comment": "BrightData MCP server removed - now using brightdata-sdk directly via backend/brightdata_sdk_client.py with HTTP fallback"
 }
