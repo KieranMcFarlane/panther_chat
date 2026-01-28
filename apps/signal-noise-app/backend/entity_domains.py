@@ -165,8 +165,8 @@ def bind_template_placeholders(template: dict, entity_name: str) -> dict:
     entity_domain = get_entity_domain(entity_name)
 
     # Update channels that use [entity_domain] placeholder
-    if 'channels' in bound_template:
-        for channel in bound_template['channels']:
+    if 'signal_channels' in bound_template:
+        for channel in bound_template['signal_channels']:
             if channel.get('channel_type') == 'official_site':
                 # Replace [entity_domain] placeholders
                 example_domains = channel.get('example_domains', [])
