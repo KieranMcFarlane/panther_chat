@@ -237,6 +237,42 @@ class OutcomeService:
                 f"(feedback loop triggered)"
             )
 
+            # NEW: Trigger binding feedback processor
+            try:
+                from backend.binding_feedback_processor import BindingFeedbackProcessor
+
+                feedback_processor = BindingFeedbackProcessor()
+
+                # Determine outcome type for feedback
+                outcome_type = status.value if isinstance(status, RFPStatus) else status
+
+                # Only process terminal outcomes
+                if outcome_type in ["won", "lost"]:
+                    feedback_result = await feedback_processor.process_outcome_feedback(
+                        rfp_id=rfp_id,
+                        entity_id=entity_id,
+                        outcome=outcome_type,
+                        value_actual=value_actual,
+                        metadata={
+                            "outcome_id": outcome_id,
+                            "stage": stage,
+                            "probability": probability,
+                            "competitor": competitor,
+                            "loss_reason": loss_reason
+                        }
+                    )
+
+                    if feedback_result.success:
+                        logger.info(
+                            f"🔄 Binding updated: {entity_id} "
+                            f"(confidence: {feedback_result.new_confidence:.2f})"
+                        )
+
+            except ImportError:
+                logger.warning("⚠️  BindingFeedbackProcessor not available, skipping binding update")
+            except Exception as e:
+                logger.error(f"⚠️  Failed to update binding: {e}")
+
             return {
                 "success": True,
                 "outcome_id": outcome_id,
