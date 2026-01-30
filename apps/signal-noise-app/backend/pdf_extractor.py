@@ -34,14 +34,16 @@ class PDFExtractor:
     3. OCR (optional) - for scanned PDFs
     """
 
-    def __init__(self, enable_ocr: bool = False):
+    def __init__(self, enable_ocr: bool = True, ocr_threshold: int = 100):
         """
         Initialize PDF extractor.
 
         Args:
-            enable_ocr: Whether to enable OCR fallback (requires tesseract)
+            enable_ocr: Whether to enable OCR fallback (requires tesseract). Default: True
+            ocr_threshold: Auto-trigger OCR when native extraction returns fewer chars. Default: 100
         """
         self.enable_ocr = enable_ocr
+        self.ocr_threshold = ocr_threshold
 
         # Try to import pdfplumber
         try:
@@ -132,19 +134,20 @@ class PDFExtractor:
         # Try pdfplumber first (best for digital PDFs)
         if self.has_pdfplumber:
             result = self._extract_with_pdfplumber(pdf_bytes, max_pages)
-            if result["status"] == "success" and result["char_count"] > 500:
+            if result["status"] == "success" and result["char_count"] > self.ocr_threshold:
                 return result
 
         # Try PyMuPDF as fallback
         if self.has_fitz:
             result = self._extract_with_fitz(pdf_bytes, max_pages)
-            if result["status"] == "success" and result["char_count"] > 500:
+            if result["status"] == "success" and result["char_count"] > self.ocr_threshold:
                 return result
 
-        # Try OCR as last resort (if enabled)
+        # Try OCR as last resort (if enabled) - auto-triggered for scanned PDFs
         if self.has_ocr and self.enable_ocr:
+            logger.info(f"  🔍 Native extraction below threshold ({self.ocr_threshold} chars), triggering OCR...")
             result = await self._extract_with_ocr(pdf_bytes, max_pages)
-            if result["status"] == "success" and result["char_count"] > 100:
+            if result["status"] == "success" and result["char_count"] > self.ocr_threshold:
                 return result
 
         # All methods failed
@@ -303,12 +306,21 @@ class PDFExtractor:
 # Singleton instance
 _pdf_extractor_instance = None
 
-def get_pdf_extractor(enable_ocr: bool = False) -> PDFExtractor:
-    """Get or create singleton PDF extractor instance."""
+def get_pdf_extractor(enable_ocr: bool = True, ocr_threshold: int = 100) -> PDFExtractor:
+    """
+    Get or create singleton PDF extractor instance.
+
+    Args:
+        enable_ocr: Whether to enable OCR fallback (default: True)
+        ocr_threshold: Auto-trigger OCR threshold (default: 100 chars)
+
+    Returns:
+        PDFExtractor instance
+    """
     global _pdf_extractor_instance
 
     if _pdf_extractor_instance is None:
-        _pdf_extractor_instance = PDFExtractor(enable_ocr=enable_ocr)
+        _pdf_extractor_instance = PDFExtractor(enable_ocr=enable_ocr, ocr_threshold=ocr_threshold)
 
     return _pdf_extractor_instance
 
@@ -316,7 +328,8 @@ def get_pdf_extractor(enable_ocr: bool = False) -> PDFExtractor:
 # Convenience function for quick usage
 async def extract_pdf_text(
     url: str,
-    enable_ocr: bool = False,
+    enable_ocr: bool = True,
+    ocr_threshold: int = 100,
     max_pages: Optional[int] = None
 ) -> Optional[str]:
     """
@@ -324,13 +337,14 @@ async def extract_pdf_text(
 
     Args:
         url: PDF URL
-        enable_ocr: Enable OCR fallback
+        enable_ocr: Enable OCR fallback (default: True)
+        ocr_threshold: Auto-trigger OCR threshold (default: 100 chars)
         max_pages: Max pages to extract
 
     Returns:
         Extracted text or None if failed
     """
-    extractor = get_pdf_extractor(enable_ocr=enable_ocr)
+    extractor = get_pdf_extractor(enable_ocr=enable_ocr, ocr_threshold=ocr_threshold)
     result = await extractor.extract(url, max_pages=max_pages)
 
     if result["status"] == "success":

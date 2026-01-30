@@ -16,8 +16,8 @@
   "iteration_limits": {
     "max_per_category": 3,
     "max_categories_total": 8,
-    "max_iterations_per_entity": 26,
-    "_calibration_note": "26 iterations optimal (Arsenal: 21, PDF with extraction: ~25-30, avg: 26)"
+    "max_iterations_per_entity": 30,
+    "_calibration_note": "30 iterations optimal (Arsenal: 21, PDF with extraction: ~25-30, avg: 30 provides buffer)"
   },
 
   "time_limits": {
@@ -71,6 +71,11 @@
     "pdf_extraction_fallback": "pymupdf",
     "pdf_extraction_cost_usd": 0.0,
     "pdf_extraction_test_result": "3,784 chars extracted from ICF PDF (vs 0 before)",
+    "ocr_enabled": true,
+    "ocr_threshold": 100,
+    "ocr_cost_usd": 0.01,
+    "ocr_method": "tesseract",
+    "ocr_auto_trigger": "Native extraction < 100 chars",
     "low_quality_budget_multiplier": 1.5,
     "quality_threshold_chars": 100
   },
@@ -153,8 +158,8 @@
     },
 
     "combined_analysis": {
-      "optimal_iteration_cap": 26,
-      "optimal_cap_justification": "Optimal with PDF extraction (Arsenal: 21, PDFs with extraction: ~25-30, avg: 26). Covers 95%+ of entities.",
+      "optimal_iteration_cap": 30,
+      "optimal_cap_justification": "Optimal with PDF extraction (Arsenal: 21, PDFs with extraction: ~25-30, avg: 30). Covers 95%+ of entities with buffer.",
       "budget_savings_with_early_stopping": "73% ($4.47 per entity average)",
       "total_waste_in_calibration": "258 iterations + $8.94 for both entities",
       "website_vs_pdf_cost_efficiency": "With PDF extraction, PDFs = websites in cost and efficiency",
@@ -170,7 +175,7 @@
       "entities_per_month_optimized": "1,000 (up from 667) - same budget, more coverage",
       "priority_1": "Enable early stopping - saves 73% budget waste",
       "priority_2": "PDF extraction implemented ✅ - no longer 2× cost penalty",
-      "priority_3": "Reduce iteration cap from 150 → 26 (prevents 86% waste)",
+      "priority_3": "Reduce iteration cap from 150 → 30 (prevents 86% waste, with buffer)",
       "priority_4": "Monitor performance with PDF extraction - measure actual accept rates",
       "priority_5": "Consider OCR fallback for scanned PDFs (optional enhancement)"
     }
@@ -200,6 +205,16 @@
         "calibration_complete": true
       }
     ]
+  },
+
+  "discovery_mode": {
+    "enabled": true,
+    "iterations_per_entity": 30,
+    "use_optimal_iterations": true,
+    "cost_per_entity": 0.75,
+    "checkpoint_interval": 100,
+    "manual_trigger_only": true,
+    "_note": "Batch template discovery mode - one complete pass through all 2,921 entities, then manual triggering only"
   },
 
   "8_fixed_categories": [
