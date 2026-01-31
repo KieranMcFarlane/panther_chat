@@ -269,6 +269,11 @@ class RalphLoopValidator:
         except Exception as e:
             logger.error(f"⚠️  Failed to update binding from validation: {e}")
 
+        # NEW: Yellow Panther scoring and alerting
+        await self._process_yellow_panter_scoring(
+            signal, pass3_result['signal'], start_time
+        )
+
         return ValidationResponse(
             status="validated",
             signal_id=pass3_result['signal']['id'],
@@ -328,13 +333,172 @@ class RalphLoopValidator:
         except Exception as e:
             logger.error(f"⚠️  Failed to update binding from rejection: {e}")
 
-    async def _pass1_filter(self, signal: Dict) -> Dict:
-        """Pass 1: Rule-based filtering"""
-        logger.info("🔁 Pass 1/3: Rule-based filtering")
+    async def _process_yellow_panter_scoring(
+        self,
+        original_signal: WebhookSignal,
+        validated_signal: Dict,
+        start_time: datetime
+    ):
+        """
+        Process Yellow Panther fit scoring and alerting for validated signals.
 
-        # Check confidence threshold
-        if signal['confidence'] < self.config['min_confidence']:
-            logger.debug(f"❌ Pass 1: Low confidence {signal['confidence']} < {self.config['min_confidence']}")
+        This runs AFTER Ralph Loop validation (all 3 passes passed).
+
+        Args:
+            original_signal: Original signal from webhook
+            validated_signal: Signal after Pass 3 validation
+            start_time: When validation started
+        """
+        try:
+            # Import YP components
+            from backend.yellow_panther_scorer import score_yp_fit
+            from backend.reasoning import analyze_reason_likelihood
+            from backend.alerts import AlertManager, PriorityTier
+
+            # Build signal dict for YP scoring
+            signal_dict = {
+                'id': validated_signal['id'],
+                'entity_id': original_signal.entity_id,
+                'entity_name': original_signal.entity_name or original_signal.entity_id,
+                'entity_type': original_signal.metadata.get('entity_type', 'club') if original_signal.metadata else 'club',
+                'country': original_signal.metadata.get('country', 'UK') if original_signal.metadata else 'UK',
+                'league': original_signal.metadata.get('league') if original_signal.metadata else None,
+                'signal_category': validated_signal.get('category', 'Operations'),
+                'signal_type': original_signal.type,
+                'confidence': validated_signal['final_confidence'],
+                'temporal_multiplier': validated_signal.get('temporal_multiplier', 1.0),
+                'evidence': original_signal.evidence or []
+            }
+
+            # Get entity context for better scoring
+            entity_context = {
+                'name': original_signal.entity_name or original_signal.entity_id,
+                'type': original_signal.metadata.get('entity_type', 'club') if original_signal.metadata else 'club',
+                'country': original_signal.metadata.get('country', 'UK') if original_signal.metadata else 'UK',
+                'size': original_signal.metadata.get('size') if original_signal.metadata else None
+            }
+
+            # Score YP fit
+            logger.info(f"🎯 Scoring Yellow Panther fit for {original_signal.entity_id}...")
+            yp_fit = score_yp_fit(signal_dict, entity_context)
+
+            logger.info(
+                f"   Fit Score: {yp_fit['fit_score']:.1f}/100 | "
+                f"Priority: {yp_fit['priority']} | "
+                f"Services: {', '.join(yp_fit['service_alignment'][:3])}"
+            )
+
+            # Only analyze reasoning and send alerts if fit score is decent
+            if yp_fit['fit_score'] >= 50:
+                # Analyze reasoning
+                reasoning = await asyncio.to_thread(
+                    analyze_reason_likelihood, signal_dict, entity_context
+                )
+
+                logger.info(
+                    f"   Reasoning: {reasoning['primary_name']} "
+                    f"({reasoning['primary_confidence']:.0%}) | "
+                    f"Urgency: {reasoning['urgency']}"
+                )
+
+                # Build opportunity object for alerts
+                opportunity = {
+                    'id': validated_signal['id'],
+                    'entity_id': original_signal.entity_id,
+                    'entity_name': original_signal.entity_name or original_signal.entity_id,
+                    'entity_type': entity_context['type'],
+                    'country': entity_context['country'],
+                    'league': entity_context.get('league'),
+                    'category': signal_dict['signal_category'],
+                    'signal_type': signal_dict['signal_type'],
+                    'confidence': signal_dict['confidence'],
+                    'temporal_multiplier': signal_dict['temporal_multiplier'],
+                    'fit_score': yp_fit['fit_score'],
+                    'priority': yp_fit['priority'],
+                    'budget_alignment': yp_fit['budget_alignment'],
+                    'service_alignment': yp_fit['service_alignment'],
+                    'yp_advantages': yp_fit['yp_advantages'],
+                    'recommended_actions': yp_fit['recommended_actions'],
+                    'reasoning': reasoning,
+                    'evidence': signal_dict['evidence'],
+                    'dashboard_url': f"https://signal-noise.com/entity/{original_signal.entity_id}"
+                }
+
+                # Send alert based on priority tier
+                alert_manager = AlertManager()
+                tier = PriorityTier(yp_fit['priority'])
+
+                logger.info(f"📢 Sending {tier.value} alert to Yellow Panther...")
+                alert_result = await alert_manager.send_alert(opportunity, tier)
+
+                if alert_result['success']:
+                    logger.info(
+                        f"   ✅ Alert sent via: {', '.join(alert_result['channels_sent'])}"
+                    )
+                else:
+                    logger.warning(
+                        f"   ⚠️  Alert partially failed: {alert_result['channels_failed']}"
+                    )
+                    if alert_result.get('errors'):
+                        logger.warning(f"   Errors: {alert_result['errors']}")
+            else:
+                logger.info(
+                    f"   ℹ️  Fit score {yp_fit['fit_score']:.1f} below threshold, skipping alerts"
+                )
+
+        except ImportError as e:
+            logger.warning(f"⚠️  Yellow Panther components not available: {e}")
+        except Exception as e:
+            logger.error(f"⚠️  Yellow Panther scoring failed: {e}")
+            logger.debug(traceback.format_exc())
+
+    async def _pass1_filter(self, signal: Dict) -> Dict:
+        """Pass 1: Rule-based filtering (with temporal adjustment)"""
+        logger.info("🔁 Pass 1/4: Rule-based filtering")
+
+        # NEW: Get temporal prior for threshold adjustment
+        try:
+            from backend.temporal.temporal_prior_service import TemporalPriorService
+            from backend.temporal.category_mapper import CategoryMapper
+
+            temporal_service = TemporalPriorService()
+
+            # Infer signal category from metadata
+            pattern_id = signal.get('type') or signal.get('pattern_id', '')
+            current_category = signal.get('category', 'Operations')
+
+            signal_category = CategoryMapper.map_template_to_category(
+                pattern_id, current_category
+            )
+
+            # Get temporal multiplier
+            mult_response = temporal_service.get_multiplier(
+                entity_id=signal['entity_id'],
+                signal_category=signal_category
+            )
+
+            # Adjust threshold based on temporal prior
+            base_threshold = self.config['min_confidence']
+            adjusted_threshold = base_threshold * (1.0 / mult_response.multiplier)
+
+            logger.info(
+                f"📊 Temporal adjustment: {mult_response.multiplier:.2f}x "
+                f"(backoff: {mult_response.backoff_level}, "
+                f"threshold: {base_threshold:.2f} → {adjusted_threshold:.2f})"
+            )
+
+        except Exception as e:
+            # Fallback to original threshold if temporal service fails
+            logger.warning(f"⚠️  Temporal service unavailable, using base threshold: {e}")
+            adjusted_threshold = self.config['min_confidence']
+            mult_response = None
+
+        # Check confidence threshold (with temporal adjustment)
+        if signal['confidence'] < adjusted_threshold:
+            logger.debug(
+                f"❌ Pass 1: Low confidence {signal['confidence']:.2f} < "
+                f"{adjusted_threshold:.2f} (temporal-adjusted)"
+            )
             return {'survived': False}
 
         # Check evidence count
@@ -348,6 +512,12 @@ class RalphLoopValidator:
         if avg_credibility < 0.6:
             logger.debug(f"❌ Pass 1: Low credibility {avg_credibility} < 0.6")
             return {'survived': False}
+
+        # Store temporal info for later use in Pass 3
+        if mult_response:
+            signal['_temporal_multiplier'] = mult_response.multiplier
+            signal['_temporal_backoff_level'] = mult_response.backoff_level
+            signal['_temporal_category'] = signal_category.value
 
         logger.info(f"✅ Pass 1: Signal {signal['id']} survived")
         return {'survived': True, 'signal': signal}
@@ -637,14 +807,44 @@ Be thorough in checking verification status and adjusting confidence accordingly
         """Pass 3: Final confirmation (now Pass 4/4 with evidence verification)"""
         logger.info("🔁 Pass 4/4: Final confirmation")
 
-        if signal['pass2_confidence'] >= self.config['min_confidence']:
-            signal['final_confidence'] = signal['pass2_confidence']
+        base_confidence = signal['pass2_confidence']
+
+        # NEW: Apply temporal multiplier to final confidence
+        temporal_multiplier = signal.get('_temporal_multiplier')
+
+        if temporal_multiplier is not None:
+            adjusted_confidence = base_confidence * temporal_multiplier
+            adjusted_confidence = max(0.0, min(1.0, adjusted_confidence))
+
+            logger.info(
+                f"📊 Final temporal adjustment: {temporal_multiplier:.2f}x "
+                f"(backoff: {signal.get('_temporal_backoff_level')}, "
+                f"category: {signal.get('_temporal_category')})"
+            )
+            logger.info(
+                f"   Confidence: {base_confidence:.2f} → {adjusted_confidence:.2f}"
+            )
+
+            signal['final_confidence'] = adjusted_confidence
+            signal['temporal_adjustment'] = {
+                'multiplier': temporal_multiplier,
+                'backoff_level': signal.get('_temporal_backoff_level'),
+                'category': signal.get('_temporal_category'),
+                'base_confidence': base_confidence
+            }
+
+        else:
+            # No temporal adjustment
+            signal['final_confidence'] = base_confidence
+
+        # Check if signal meets final threshold
+        if signal['final_confidence'] >= self.config['min_confidence']:
             signal['validated'] = True
             signal['validation_pass'] = 3
-            logger.info(f"✅ Pass 3: Signal {signal['id']} confirmed (confidence: {signal['final_confidence']})")
+            logger.info(f"✅ Pass 3: Signal {signal['id']} confirmed (confidence: {signal['final_confidence']:.2f})")
             return {'survived': True, 'signal': signal}
         else:
-            logger.info(f"❌ Pass 3: Signal {signal['id']} rejected (confidence: {signal['pass2_confidence']})")
+            logger.info(f"❌ Pass 3: Signal {signal['id']} rejected (confidence: {signal['final_confidence']:.2f})")
             return {'survived': False, 'signal': signal}
 
 
