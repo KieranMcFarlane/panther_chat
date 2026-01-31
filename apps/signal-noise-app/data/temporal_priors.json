@@ -1,0 +1,121 @@
+{
+  "arsenal-fc:ANALYTICS": {
+    "entity_id": "arsenal-fc",
+    "signal_category": "ANALYTICS",
+    "seasonality": {
+      "Q1": 1.0,
+      "Q2": 0.0,
+      "Q3": 0.0,
+      "Q4": 0.0
+    },
+    "recurrence_mean": 0.0,
+    "recurrence_std": 0.0,
+    "momentum_30d": 2,
+    "momentum_90d": 2,
+    "last_seen": "2026-01-18 22:14:51.765532+00:00",
+    "sample_size": 2,
+    "computed_at": "2026-01-30 23:16:01.191770"
+  },
+  "barcelona-fc:OPERATIONS": {
+    "entity_id": "barcelona-fc",
+    "signal_category": "OPERATIONS",
+    "seasonality": {
+      "Q1": 1.0,
+      "Q2": 0.0,
+      "Q3": 0.0,
+      "Q4": 0.0
+    },
+    "recurrence_mean": 0.0,
+    "recurrence_std": 0.0,
+    "momentum_30d": 2,
+    "momentum_90d": 2,
+    "last_seen": "2026-01-18 22:18:58.727403+00:00",
+    "sample_size": 2,
+    "computed_at": "2026-01-30 23:16:01.191798"
+  },
+  "arsenal-fc:*": {
+    "entity_id": "arsenal-fc",
+    "signal_category": "OPERATIONS",
+    "seasonality": {
+      "Q1": 1.0,
+      "Q2": 0.0,
+      "Q3": 0.0,
+      "Q4": 0.0
+    },
+    "recurrence_mean": 0.0,
+    "recurrence_std": 0.0,
+    "momentum_30d": 2,
+    "momentum_90d": 2,
+    "last_seen": "2026-01-18 22:14:51.765532+00:00",
+    "sample_size": 2,
+    "computed_at": "2026-01-30 23:16:01.191844"
+  },
+  "barcelona-fc:*": {
+    "entity_id": "barcelona-fc",
+    "signal_category": "OPERATIONS",
+    "seasonality": {
+      "Q1": 1.0,
+      "Q2": 0.0,
+      "Q3": 0.0,
+      "Q4": 0.0
+    },
+    "recurrence_mean": 0.0,
+    "recurrence_std": 0.0,
+    "momentum_30d": 2,
+    "momentum_90d": 2,
+    "last_seen": "2026-01-18 22:18:58.727403+00:00",
+    "sample_size": 2,
+    "computed_at": "2026-01-30 23:16:01.191857"
+  },
+  "*:ANALYTICS": {
+    "entity_id": "*",
+    "signal_category": "ANALYTICS",
+    "seasonality": {
+      "Q1": 1.0,
+      "Q2": 0.0,
+      "Q3": 0.0,
+      "Q4": 0.0
+    },
+    "recurrence_mean": 0.0,
+    "recurrence_std": 0.0,
+    "momentum_30d": 3,
+    "momentum_90d": 3,
+    "last_seen": "2026-01-18 22:18:43.293421+00:00",
+    "sample_size": 3,
+    "computed_at": "2026-01-30 23:16:01.191870"
+  },
+  "*:OPERATIONS": {
+    "entity_id": "*",
+    "signal_category": "OPERATIONS",
+    "seasonality": {
+      "Q1": 1.0,
+      "Q2": 0.0,
+      "Q3": 0.0,
+      "Q4": 0.0
+    },
+    "recurrence_mean": 0.0,
+    "recurrence_std": 0.0,
+    "momentum_30d": 4,
+    "momentum_90d": 4,
+    "last_seen": "2026-01-18 22:18:58.727403+00:00",
+    "sample_size": 4,
+    "computed_at": "2026-01-30 23:16:01.191883"
+  },
+  "*:*": {
+    "entity_id": "*",
+    "signal_category": "OPERATIONS",
+    "seasonality": {
+      "Q1": 1.0,
+      "Q2": 0.0,
+      "Q3": 0.0,
+      "Q4": 0.0
+    },
+    "recurrence_mean": 0.0,
+    "recurrence_std": 0.0,
+    "momentum_30d": 7,
+    "momentum_90d": 7,
+    "last_seen": "2026-01-18 22:18:58.727403+00:00",
+    "sample_size": 7,
+    "computed_at": "2026-01-30 23:16:01.191901"
+  }
+}
