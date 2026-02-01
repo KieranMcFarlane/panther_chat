@@ -59,13 +59,86 @@ npm run sync:health      # Check database sync health
 |--------|---------|----------------------|
 | neo4j-mcp | Knowledge graph queries via Neo4j Aura | NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD, NEO4J_DATABASE |
 | falkordb-mcp | Native FalkorDB graph database (backend/falkordb_mcp_server_fastmcp.py) | FALKORDB_URI, FALKORDB_USER, FALKORDB_PASSWORD |
-| brightData | Web scraping (LinkedIn, Crunchbase, Google News) | BRIGHTDATA_API_TOKEN |
+| brightData | **DEPRECATED** - Now uses BrightData SDK directly (see below) | BRIGHTDATA_API_TOKEN |
 | supabase | Database operations (22 production tables) | SUPABASE_ACCESS_TOKEN |
 | perplexity-mcp | Market intelligence research | PERPLEXITY_API_KEY |
 | byterover-mcp | Email intelligence | BYTEROVER_API_KEY |
 | glm-4.5v | Visual reasoning for images (Z.AI) | ZAI_API_KEY |
 | headless-verifier | RFP verification with Puppeteer | PUPPETEER_SKIP_DOWNLOAD |
 | temporal-intelligence | Entity timeline tracking, RFP patterns, temporal fit scoring (backend/temporal_mcp_server.py) | FASTAPI_URL, SUPABASE_URL, SUPABASE_ANON_KEY |
+
+**Note**: The `brightData` MCP server entry is deprecated. We now use the **BrightData SDK** (official Python package) directly for all web scraping. See "BrightData Web Scraping" section below.
+
+### BrightData Web Scraping (SDK, NOT MCP)
+
+**CRITICAL**: All BrightData web scraping uses the official Python SDK package, NOT MCP servers.
+
+**File**: `backend/brightdata_sdk_client.py`
+
+**Primary Discovery Methods**:
+
+| Method | Returns | Use Case |
+|--------|---------|----------|
+| `search_engine(query, engine)` | Search results with position, title, URL, snippet | Domain discovery |
+| `scrape_as_markdown(url)` | Clean markdown content | Official site scraping |
+| `scrape_batch(urls)` | Multiple URLs scraped concurrently | Batch processing |
+
+**Usage Examples**:
+
+```python
+from backend.brightdata_sdk_client import BrightDataSDKClient
+
+# Create SDK client (NOT MCP)
+brightdata = BrightDataSDKClient()
+
+# Example 1: Search for domains
+results = await brightdata.search_engine(
+    query='"Arsenal FC" official website',
+    engine='google',
+    num_results=10
+)
+# Returns: {status: 'success', results: [{position, title, url, snippet}, ...]}
+
+# Example 2: Scrape content
+content = await brightdata.scrape_as_markdown('https://arsenal.com')
+# Returns: {status: 'success', content: 'markdown text', ...}
+
+# Example 3: Batch scraping
+urls = ['https://site1.com', 'https://site2.com']
+results = await brightdata.scrape_batch(urls)
+# Returns: {status: 'success', total_urls: 2, successful: 2, results: [...]}
+
+# Example 4: Job board scraping
+jobs = await brightdata.scrape_jobs_board(
+    entity_name='Arsenal FC',
+    keywords=['CRM', 'Digital', 'Data']
+)
+# Returns: search results for job postings
+
+# Example 5: Press release scraping
+press = await brightdata.scrape_press_release(entity_name='Arsenal FC')
+# Returns: search results for press releases
+```
+
+**Do NOT use MCP tools** for BrightData:
+- ❌ `mcp__brightdata__*` (MCP tools)
+- ❌ `mcp__brightdata-mcp__*` (MCP tools)
+- ❌ Any MCP tool with "brightdata" in the name
+
+**Always use the SDK client**:
+- ✅ `BrightDataSDKClient()` class
+- ✅ Direct Python methods: `search_engine()`, `scrape_as_markdown()`, `scrape_batch()`
+- ✅ Convenience methods: `scrape_jobs_board()`, `scrape_press_release()`
+
+**Benefits**:
+- Direct Python integration (no MCP overhead)
+- Automatic proxy rotation (handled by SDK)
+- Anti-bot protection built-in
+- HTTP fallback for reliability (using httpx when SDK unavailable)
+- Async/concurrent scraping support
+- Pay-per-success pricing model
+
+**Environment Variable**: `BRIGHTDATA_API_TOKEN` (required)
 
 ### Key Integration Points
 
@@ -159,6 +232,55 @@ BETTER_AUTH_URL=http://localhost:3005
 - Badges stored in S3 or served from `r2.thesportsdb.com`
 - Badge service at `src/services/badge-service.ts`
 - Component at `src/components/badge/EntityBadge.tsx`
+
+## Decision Types (Internal vs External)
+
+### Internal Development (Code-Level)
+
+The Ralph Loop uses these decision types in the codebase:
+
+- **ACCEPT**: Strong evidence of future procurement action (+0.06 delta)
+- **WEAK_ACCEPT**: Capability present but procurement intent unclear (+0.02 delta)
+- **REJECT**: No evidence or evidence contradicts hypothesis (0.00 delta)
+- **NO_PROGRESS**: Evidence exists but adds no new predictive information (0.00 delta)
+- **SATURATED**: Category exhausted, no new information expected (0.00 delta)
+
+### External Communication (Sales/Customers)
+
+For APIs, documentation, and customer communication, we use different names:
+
+- **Procurement Signal** (same as ACCEPT): Strong procurement intent detected 🎯
+- **Capability Signal** (same as WEAK_ACCEPT): Digital capability detected 💡
+- **No Signal** (REJECT/NO_PROGRESS): No evidence detected ❌
+- **Saturated** (SATURATED): Category exhausted 🔄
+
+### Why the Difference?
+
+"Weak Accept" sounds negative to customers. "Capability Signal" accurately reflects that the entity has digital maturity without implying procurement intent.
+
+**Key distinction**:
+- **Capability Signal** = Has the technology
+- **Procurement Signal** = Buying the technology
+
+Sales team uses this distinction to prioritize:
+- **Procurement Signal** → Immediate outreach (high probability of sale)
+- **Capability Signal** → Monitor/watchlist (may purchase in future)
+
+### API Endpoints
+
+- `/api/ralph/confidence-bands` - Get band definitions with pricing
+- `/api/ralph/decision-mapping` - Get internal → external name mapping
+
+### Confidence Bands (Pricing)
+
+| Band | Range | Meaning | Price |
+|------|-------|---------|-------|
+| EXPLORATORY | <0.30 | Research phase | $0 |
+| INFORMED | 0.30-0.60 | Monitoring | $500/entity/month |
+| CONFIDENT | 0.60-0.80 | Sales engaged | $2,000/entity/month |
+| ACTIONABLE | >0.80 + gate | Immediate outreach | $5,000/entity/month |
+
+**Note**: ACTIONABLE requires both high confidence (>0.80) AND the actionable gate (≥2 ACCEPTs across ≥2 categories).
 
 ## Common Patterns
 

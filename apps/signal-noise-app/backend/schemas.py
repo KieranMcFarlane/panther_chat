@@ -135,6 +135,38 @@ class SignalSubtype(str, Enum):
 
 
 @dataclass
+class ConfidenceValidation:
+    """
+    Results of Claude confidence validation in Pass 2
+
+    Tracks Claude's assessment of scraper-assigned confidence scores:
+    - original_confidence: Confidence from scraper
+    - validated_confidence: Claude's assessed confidence
+    - adjustment: Difference (validated - original)
+    - rationale: Claude's reasoning for adjustment
+    - requires_manual_review: Edge cases flagged for human review
+    - validation_timestamp: When validation occurred
+    """
+    original_confidence: float
+    validated_confidence: float
+    adjustment: float
+    rationale: str
+    requires_manual_review: bool = False
+    validation_timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for database storage"""
+        return {
+            'original_confidence': self.original_confidence,
+            'validated_confidence': self.validated_confidence,
+            'adjustment': self.adjustment,
+            'rationale': self.rationale,
+            'requires_manual_review': self.requires_manual_review,
+            'validation_timestamp': self.validation_timestamp.isoformat()
+        }
+
+
+@dataclass
 class Signal:
     """
     Signal: Intelligence event about an entity
@@ -146,11 +178,13 @@ class Signal:
     - confidence: Float 0.0-1.0 (must meet minimum for validation)
     - first_seen: Timestamp when first detected
     - entity_id: Reference to Entity.id
+    - confidence_validation: Optional Claude confidence validation from Pass 2
 
     Validation rules (Ralph Loop):
     - Minimum 3 pieces of evidence
     - Confidence >= 0.7 for acceptance
     - No duplicates within time window
+    - Claude validates confidence matches evidence quality (Pass 2)
     """
     id: str
     type: SignalType
@@ -161,6 +195,7 @@ class Signal:
     metadata: Dict[str, Any] = field(default_factory=dict)
     validated: bool = False
     validation_pass: int = 0
+    confidence_validation: Optional[ConfidenceValidation] = None
 
     def __post_init__(self):
         """Validate signal fields"""
@@ -172,7 +207,7 @@ class Signal:
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for database storage"""
-        return {
+        result = {
             'id': self.id,
             'type': self.type.value,
             'subtype': self.subtype.value if self.subtype else None,
@@ -183,6 +218,12 @@ class Signal:
             'validated': self.validated,
             'validation_pass': self.validation_pass
         }
+
+        # Include confidence validation if present
+        if self.confidence_validation:
+            result['confidence_validation'] = self.confidence_validation.to_dict()
+
+        return result
 
 
 # =============================================================================
@@ -319,6 +360,414 @@ class Relationship:
             'valid_from': self.valid_from.isoformat(),
             'valid_until': self.valid_until.isoformat() if self.valid_until else None,
             'metadata': self.metadata
+        }
+
+
+# =============================================================================
+# RALPH LOOP STATE-AWARE SCHEMA
+# =============================================================================
+
+class HypothesisAction(str, Enum):
+    """Actions that can be taken on a hypothesis during iteration"""
+    REINFORCE = "reinforce"
+    WEAKEN = "weaken"
+    INVALIDATE = "invalidate"
+    NONE = "none"
+
+
+@dataclass
+class BeliefLedgerEntry:
+    """
+    Append-only audit log entry for hypothesis changes
+
+    Tracks every hypothesis modification with full provenance for:
+    - Auditability: Trace any confidence change to its source
+    - Explainability: Understand WHY confidence changed
+    - Fine-tuning: Learn which evidence sources are reliable
+
+    This ledger is the single source of truth for all confidence adjustments.
+    """
+    iteration: int
+    hypothesis_id: str
+    change: HypothesisAction  # REINFORCE | WEAKEN | INVALIDATE
+    confidence_impact: float   # e.g., -0.08 for weakening
+    evidence_ref: str          # e.g., "annual_report_2023" or URL
+    timestamp: datetime
+    category: str
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for JSON serialization"""
+        return {
+            'iteration': self.iteration,
+            'hypothesis_id': self.hypothesis_id,
+            'change': self.change.value,
+            'confidence_impact': self.confidence_impact,
+            'evidence_ref': self.evidence_ref,
+            'timestamp': self.timestamp.isoformat(),
+            'category': self.category
+        }
+
+
+class RalphDecisionType(str, Enum):
+    """
+    Expanded Ralph Loop decision types for state-aware iteration
+
+    States:
+    - ACCEPT: Strong evidence of future procurement action
+    - WEAK_ACCEPT: Capability present but procurement intent unclear
+    - REJECT: No evidence or evidence contradicts procurement hypothesis
+    - NO_PROGRESS: Evidence exists but adds no new predictive information
+    - SATURATED: Category exhausted, no new information expected
+    """
+    ACCEPT = "ACCEPT"
+    WEAK_ACCEPT = "WEAK_ACCEPT"
+    REJECT = "REJECT"
+    NO_PROGRESS = "NO_PROGRESS"  # NEW: Evidence exists but no delta
+    SATURATED = "SATURATED"      # NEW: Category exhausted
+
+    def to_external_name(self) -> str:
+        """Convert internal decision to external customer-facing name"""
+        mapping = {
+            "ACCEPT": "PROCUREMENT_SIGNAL",
+            "WEAK_ACCEPT": "CAPABILITY_SIGNAL",
+            "REJECT": "NO_SIGNAL",
+            "NO_PROGRESS": "NO_SIGNAL",
+            "SATURATED": "SATURATED"
+        }
+        return mapping[self.value]
+
+
+class ConfidenceBand(str, Enum):
+    """
+    Business-meaningful confidence bands for sales clarity and pricing
+
+    Bands map confidence scores to business actions:
+    - EXPLORATORY: <0.30 - Research phase, no charge
+    - INFORMED: 0.30-0.60 - Monitoring mode, $500/entity/month
+    - CONFIDENT: 0.60-0.80 - Sales engaged, $2,000/entity/month
+    - ACTIONABLE: >0.80 + gate - Immediate outreach, $5,000/entity/month
+
+    The ACTIONABLE gate requires:
+    - Confidence >0.80
+    - is_actionable = True (≥2 ACCEPTs across ≥2 categories)
+    """
+    EXPLORATORY = "EXPLORATORY"    # <0.30: Noise/research
+    INFORMED = "INFORMED"          # 0.30-0.60: Monitor
+    CONFIDENT = "CONFIDENT"        # 0.60-0.80: High capability
+    ACTIONABLE = "ACTIONABLE"      # >0.80 + gate: Sales trigger
+
+
+@dataclass
+class Hypothesis:
+    """
+    Active hypothesis during Ralph Loop iteration
+
+    A hypothesis represents a testable claim about an entity's procurement readiness.
+    Hypotheses are created, reinforced, weakened, or invalidated during iteration.
+
+    Examples:
+    - "Entity modernising internally without procurement intent"
+    - "Entity actively sourcing vendors for AI platform"
+    - "Entity locked into long-term contracts, no near-term procurement"
+    """
+    hypothesis_id: str
+    entity_id: str
+    category: str
+    statement: str
+    confidence: float = 0.5
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    reinforced_count: int = 0
+    weakened_count: int = 0
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for JSON serialization"""
+        return {
+            'hypothesis_id': self.hypothesis_id,
+            'entity_id': self.entity_id,
+            'category': self.category,
+            'statement': self.statement,
+            'confidence': self.confidence,
+            'created_at': self.created_at.isoformat(),
+            'reinforced_count': self.reinforced_count,
+            'weakened_count': self.weakened_count
+        }
+
+
+@dataclass
+class CategoryStats:
+    """
+    Per-category statistics during Ralph Loop iteration
+
+    Tracks exploration history per category to enable:
+    - Category saturation detection (early stopping)
+    - Novelty multiplier calculation (duplicate detection)
+    - Category-specific confidence adjustments
+    """
+    category: str
+    total_iterations: int = 0
+    accept_count: int = 0
+    weak_accept_count: int = 0
+    reject_count: int = 0
+    no_progress_count: int = 0
+    saturated_count: int = 0
+    last_decision: RalphDecisionType = None
+    last_iteration: int = 0
+
+    @property
+    def saturation_score(self) -> float:
+        """
+        Calculate category saturation score (0.0-1.0)
+
+        Higher scores indicate category is exhausted and should be skipped.
+        Factors:
+        - Negative decision ratio (REJECT + NO_PROGRESS)
+        - Consecutive weak signals penalty
+        - Accept rate (low accept rate = high saturation)
+        """
+        if self.total_iterations == 0:
+            return 0.0
+
+        # Negative decision ratio (0.0 - 1.0)
+        negative_ratio = (self.reject_count + self.no_progress_count) / self.total_iterations
+
+        # Consecutive weak signal penalty
+        consecutive_penalty = 0.3 if self.last_decision in [
+            RalphDecisionType.WEAK_ACCEPT,
+            RalphDecisionType.NO_PROGRESS
+        ] else 0.0
+
+        # Accept rate penalty (low accept rate = high penalty)
+        accept_rate = self.accept_count / max(self.total_iterations, 1)
+        accept_penalty = max(0.0, 1.0 - accept_rate * 2)
+
+        return min(1.0, negative_ratio * 0.5 + consecutive_penalty + accept_penalty * 0.2)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for JSON serialization"""
+        return {
+            'category': self.category,
+            'total_iterations': self.total_iterations,
+            'accept_count': self.accept_count,
+            'weak_accept_count': self.weak_accept_count,
+            'reject_count': self.reject_count,
+            'no_progress_count': self.no_progress_count,
+            'saturated_count': self.saturated_count,
+            'last_decision': self.last_decision.value if self.last_decision else None,
+            'last_iteration': self.last_iteration,
+            'saturation_score': self.saturation_score
+        }
+
+
+@dataclass
+class RalphState:
+    """
+    Complete state of Ralph Loop for an entity
+
+    The RalphState object is passed through iterations and maintains:
+    - Current confidence score
+    - Per-category statistics
+    - Active hypotheses with confidence scores
+    - Confidence history for saturation detection
+    - Evidence seen (for novelty detection)
+    - Early stopping flags
+
+    Critical guardrails (see KNVB case study):
+    1. If accept_count == 0: confidence_ceiling = 0.70 (WEAK_ACCEPT inflation protection)
+    2. is_actionable flag requires >= 2 ACCEPTs in >= 2 categories
+    3. Category saturation multiplier reduces WEAK_ACCEPT impact over time
+    """
+    entity_id: str
+    entity_name: str
+    current_confidence: float = 0.20
+    iterations_completed: int = 0
+    category_stats: Dict[str, CategoryStats] = field(default_factory=dict)
+    active_hypotheses: List[Hypothesis] = field(default_factory=list)
+    confidence_ceiling: float = 0.95
+    confidence_history: List[float] = field(default_factory=list)
+    seen_evidences: List[str] = field(default_factory=list)
+    category_saturated: bool = False
+    confidence_saturated: bool = False
+    global_saturated: bool = False
+    belief_ledger: List[BeliefLedgerEntry] = field(default_factory=list)
+
+    def get_category_stats(self, category: str) -> CategoryStats:
+        """Get or create category stats"""
+        if category not in self.category_stats:
+            self.category_stats[category] = CategoryStats(category=category)
+        return self.category_stats[category]
+
+    def update_confidence(self, new_confidence: float):
+        """
+        Update confidence with clamping and saturation detection
+
+        Also enforces Guardrail 1: WEAK_ACCEPT confidence ceiling
+        If accept_count == 0, cap confidence at 0.70
+        """
+        # Apply WEAK_ACCEPT guardrail
+        total_accepts = sum(stats.accept_count for stats in self.category_stats.values())
+        if total_accepts == 0:
+            self.confidence_ceiling = 0.70
+        else:
+            self.confidence_ceiling = 0.95
+
+        # Clamp to [0.05, ceiling]
+        self.current_confidence = max(0.05, min(self.confidence_ceiling, new_confidence))
+
+        # Track history for saturation detection
+        self.confidence_history.append(self.current_confidence)
+
+        # Detect confidence saturation (no meaningful gain over 10 iterations)
+        if len(self.confidence_history) >= 10:
+            recent_gain = self.confidence_history[-1] - self.confidence_history[-10]
+            if abs(recent_gain) < 0.01:
+                self.confidence_saturated = True
+
+    @property
+    def is_actionable(self) -> bool:
+        """
+        Guardrail 2: Actionable status gate
+
+        Entity is "actionable" (ready for sales outreach) only if:
+        - >= 2 ACCEPT decisions (strong evidence)
+        - Across >= 2 distinct categories (diversified evidence)
+
+        This prevents sales from calling on entities like KNVB with 0 ACCEPTs
+        """
+        total_accepts = sum(stats.accept_count for stats in self.category_stats.values())
+        categories_with_accepts = sum(
+            1 for stats in self.category_stats.values()
+            if stats.accept_count > 0
+        )
+
+        return (total_accepts >= 2) and (categories_with_accepts >= 2)
+
+    @property
+    def confidence_band(self) -> ConfidenceBand:
+        """
+        Calculate business-meaningful confidence band for pricing and SLAs
+
+        Bands:
+        - EXPLORATORY: <0.30 - Research phase, no charge
+        - INFORMED: 0.30-0.60 - Monitoring mode
+        - CONFIDENT: 0.60-0.80 - Sales engaged
+        - ACTIONABLE: >0.80 + is_actionable gate - Immediate outreach
+
+        The ACTIONABLE band requires BOTH high confidence AND the actionable gate.
+        High confidence without meeting the actionable gate stays CONFIDENT.
+        """
+        if self.current_confidence < 0.30:
+            return ConfidenceBand.EXPLORATORY
+        elif self.current_confidence < 0.60:
+            return ConfidenceBand.INFORMED
+        elif self.current_confidence < 0.80:
+            return ConfidenceBand.CONFIDENT
+        else:
+            # ACTIONABLE requires both confidence AND guardrail pass
+            return ConfidenceBand.ACTIONABLE if self.is_actionable else ConfidenceBand.CONFIDENT
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for JSON serialization"""
+        return {
+            'entity_id': self.entity_id,
+            'entity_name': self.entity_name,
+            'current_confidence': self.current_confidence,
+            'iterations_completed': self.iterations_completed,
+            'category_stats': {
+                cat: stats.to_dict()
+                for cat, stats in self.category_stats.items()
+            },
+            'active_hypotheses': [h.to_dict() for h in self.active_hypotheses],
+            'confidence_ceiling': self.confidence_ceiling,
+            'confidence_history': self.confidence_history,
+            'seen_evidences': self.seen_evidences,
+            'category_saturated': self.category_saturated,
+            'confidence_saturated': self.confidence_saturated,
+            'global_saturated': self.global_saturated,
+            'is_actionable': self.is_actionable,
+            'confidence_band': self.confidence_band.value,
+            'belief_ledger': [entry.to_dict() for entry in self.belief_ledger]
+        }
+
+
+@dataclass
+class HypothesisUpdate:
+    """
+    Update to a hypothesis during a single iteration
+
+    Tracks how hypotheses evolve as evidence accumulates.
+    """
+    hypothesis_id: str
+    action: HypothesisAction
+    reason: str
+    confidence_change: float = 0.0
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for JSON serialization"""
+        return {
+            'hypothesis_id': self.hypothesis_id,
+            'action': self.action.value,
+            'reason': self.reason,
+            'confidence_change': self.confidence_change
+        }
+
+
+@dataclass
+class RalphIterationOutput:
+    """
+    Output from a single Ralph Loop iteration with state-aware logic
+
+    Contains:
+    - Decision and justification
+    - Confidence calculation breakdown (raw delta, multipliers, applied delta)
+    - State update (RalphState after iteration)
+    - Hypothesis updates (if any)
+    - Cost tracking
+    - Timestamp
+    """
+    iteration: int
+    entity_id: str
+    entity_name: str
+    category: str
+    decision: RalphDecisionType
+    justification: str
+    confidence_before: float
+    confidence_after: float
+    raw_delta: float
+    novelty_multiplier: float
+    hypothesis_alignment: float
+    ceiling_damping: float
+    category_multiplier: float
+    applied_delta: float
+    updated_state: RalphState
+    hypothesis_updates: List[HypothesisUpdate]
+    source_url: str
+    evidence_found: str
+    cumulative_cost: float
+    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for JSON serialization"""
+        return {
+            'iteration': self.iteration,
+            'entity_id': self.entity_id,
+            'entity_name': self.entity_name,
+            'category': self.category,
+            'decision': self.decision.to_external_name(),  # Use external name for API
+            'justification': self.justification,
+            'confidence_before': self.confidence_before,
+            'confidence_after': self.confidence_after,
+            'raw_delta': self.raw_delta,
+            'novelty_multiplier': self.novelty_multiplier,
+            'hypothesis_alignment': self.hypothesis_alignment,
+            'ceiling_damping': self.ceiling_damping,
+            'category_multiplier': self.category_multiplier,
+            'applied_delta': self.applied_delta,
+            'updated_state': self.updated_state.to_dict(),
+            'hypothesis_updates': [update.to_dict() for update in self.hypothesis_updates],
+            'source_url': self.source_url,
+            'evidence_found': self.evidence_found,
+            'cumulative_cost': self.cumulative_cost,
+            'timestamp': self.timestamp.isoformat()
         }
 
 
