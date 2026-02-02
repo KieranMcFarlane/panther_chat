@@ -558,6 +558,13 @@ class CategoryStats:
         }
 
 
+class DepthLevel(str, Enum):
+    """Depth levels for hypothesis-driven discovery"""
+    SURFACE = "SURFACE"          # Level 1: Official sites, homepages, overview pages
+    OPERATIONAL = "OPERATIONAL"  # Level 2: Job postings, tender portals, specific pages
+    AUTHORITY = "AUTHORITY"      # Level 3: Job descriptions, strategy docs, finance pages
+
+
 @dataclass
 class RalphState:
     """
@@ -570,11 +577,17 @@ class RalphState:
     - Confidence history for saturation detection
     - Evidence seen (for novelty detection)
     - Early stopping flags
+    - Depth tracking for hypothesis-driven discovery
 
     Critical guardrails (see KNVB case study):
     1. If accept_count == 0: confidence_ceiling = 0.70 (WEAK_ACCEPT inflation protection)
     2. is_actionable flag requires >= 2 ACCEPTs in >= 2 categories
     3. Category saturation multiplier reduces WEAK_ACCEPT impact over time
+
+    Depth Control (hypothesis-driven):
+    - max_depth: Maximum depth level (default: 3)
+    - current_depth: Current depth level
+    - depth_counts: Iteration counts per depth level
     """
     entity_id: str
     entity_name: str
@@ -590,11 +603,65 @@ class RalphState:
     global_saturated: bool = False
     belief_ledger: List[BeliefLedgerEntry] = field(default_factory=list)
 
+    # Depth tracking (hypothesis-driven discovery)
+    max_depth: int = 3
+    current_depth: int = 1
+    depth_counts: Dict[int, int] = field(default_factory=dict)  # depth -> iteration count
+
     def get_category_stats(self, category: str) -> CategoryStats:
         """Get or create category stats"""
         if category not in self.category_stats:
             self.category_stats[category] = CategoryStats(category=category)
         return self.category_stats[category]
+
+    def increment_depth_count(self, depth: int):
+        """Increment iteration count for depth level"""
+        if depth not in self.depth_counts:
+            self.depth_counts[depth] = 0
+        self.depth_counts[depth] += 1
+
+    def get_depth_level(self) -> DepthLevel:
+        """Get current depth level as enum"""
+        level_map = {
+            1: DepthLevel.SURFACE,
+            2: DepthLevel.OPERATIONAL,
+            3: DepthLevel.AUTHORITY
+        }
+        return level_map.get(self.current_depth, DepthLevel.SURFACE)
+
+    def should_dig_deeper(self, hypothesis) -> bool:
+        """
+        Determine if system should dig deeper for this hypothesis
+
+        Stop if ANY of:
+        - depth >= max_depth (3)
+        - delta < 0.01 (no confidence gain)
+        - iterations >= threshold (10)
+        - hypothesis.status != ACTIVE
+
+        Args:
+            hypothesis: Hypothesis to evaluate
+
+        Returns:
+            True if should dig deeper, False otherwise
+        """
+        # Depth limit
+        if self.current_depth >= self.max_depth:
+            return False
+
+        # No confidence gain
+        if abs(hypothesis.last_delta) < 0.01:
+            return False
+
+        # Iteration limit
+        if hypothesis.iterations_attempted >= 10:
+            return False
+
+        # Hypothesis not active
+        if hypothesis.status != "ACTIVE":
+            return False
+
+        return True
 
     def update_confidence(self, new_confidence: float):
         """
@@ -685,7 +752,12 @@ class RalphState:
             'global_saturated': self.global_saturated,
             'is_actionable': self.is_actionable,
             'confidence_band': self.confidence_band.value,
-            'belief_ledger': [entry.to_dict() for entry in self.belief_ledger]
+            'belief_ledger': [entry.to_dict() for entry in self.belief_ledger],
+            # Depth tracking
+            'max_depth': self.max_depth,
+            'current_depth': self.current_depth,
+            'depth_level': self.get_depth_level().value,
+            'depth_counts': self.depth_counts
         }
 
 
