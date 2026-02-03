@@ -48,6 +48,15 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
+# Import Phase 5 components
+try:
+    from backend.batch_hypothesis_query import BatchHypothesisQuery, BatchConfig
+    BATCH_AVAILABLE = True
+except ImportError:
+    BATCH_AVAILABLE = False
+    logger.warning("Phase 5 batch query components not available")
+
+
 # =============================================================================
 # Native FalkorDB Repository
 # =============================================================================
@@ -127,6 +136,15 @@ class HypothesisRepository:
         # Connection is managed automatically
         logger.info("🔬 HypothesisRepository closed")
 
+    def _is_connected(self) -> bool:
+        """
+        Check if database connection is active
+
+        Returns:
+            True if graph object exists and is connected
+        """
+        return self.graph is not None
+
     async def _create_indexes(self):
         """Create indexes for performance"""
         try:
@@ -162,9 +180,15 @@ class HypothesisRepository:
             hypothesis: Hypothesis object
 
         Returns:
-            True if successful
+            True if saved successfully, False otherwise (but doesn't raise)
         """
         try:
+            # Check connection first
+            if not self._is_connected():
+                logger.warning(f"⚠️ FalkorDB not connected, skipping hypothesis save: {hypothesis.hypothesis_id}")
+                return False
+
+            # Convert hypothesis to dict for JSON storage
             # Convert hypothesis to dict for JSON storage
             data = {
                 'hypothesis_id': hypothesis.hypothesis_id,
@@ -243,6 +267,11 @@ class HypothesisRepository:
         from backend.hypothesis_manager import Hypothesis
 
         try:
+            # Check connection first
+            if not self._is_connected():
+                logger.warning(f"⚠️ FalkorDB not connected, cannot get hypothesis: {hypothesis_id}")
+                return None
+
             query = """
             MATCH (h:Hypothesis {hypothesis_id: $hypothesis_id})
             RETURN h
@@ -267,11 +296,16 @@ class HypothesisRepository:
             entity_id: Entity identifier
 
         Returns:
-            List of Hypothesis objects
+            List of Hypothesis objects (empty list if not connected)
         """
         from backend.hypothesis_manager import Hypothesis
 
         try:
+            # Check connection first
+            if not self._is_connected():
+                logger.warning(f"⚠️ FalkorDB not connected, cannot get hypotheses for entity: {entity_id}")
+                return []
+
             query = """
             MATCH (h:Hypothesis {entity_id: $entity_id})
             RETURN h
@@ -301,11 +335,16 @@ class HypothesisRepository:
             status: Status filter (default: "ACTIVE")
 
         Returns:
-            List of Hypothesis objects
+            List of Hypothesis objects (empty list if not connected)
         """
         from backend.hypothesis_manager import Hypothesis
 
         try:
+            # Check connection first
+            if not self._is_connected():
+                logger.warning(f"⚠️ FalkorDB not connected, cannot get active hypotheses")
+                return []
+
             if entity_id:
                 query = """
                 MATCH (h:Hypothesis {entity_id: $entity_id, status: $status})
@@ -354,9 +393,15 @@ class HypothesisRepository:
             frequency: Optional frequency (increments by 1 if not provided)
 
         Returns:
-            True if successful
+            True if saved successfully, False otherwise (but doesn't raise)
         """
         try:
+            # Check connection first
+            if not self._is_connected():
+                logger.warning(f"FalkorDB not connected, skipping cluster pattern update: {cluster_id}/{pattern_name}")
+                return False
+
+            # Use a simple hash-based approach for pattern frequencies
             # Use a simple hash-based approach for pattern frequencies
             # Store as cluster:{cluster_id}:pattern:{pattern_name}
             key = f"cluster:{cluster_id}:pattern:{pattern_name}"
@@ -402,9 +447,14 @@ class HypothesisRepository:
             cluster_id: Cluster identifier
 
         Returns:
-            Dict mapping pattern_name -> frequency
+            Dict mapping pattern_name -> frequency (empty dict if not connected)
         """
         try:
+            # Check connection first
+            if not self._is_connected():
+                logger.warning(f"⚠️ FalkorDB not connected, cannot get cluster pattern frequencies: {cluster_id}")
+                return {}
+
             query = """
             MATCH (p:Pattern {cluster_id: $cluster_id})
             RETURN p.pattern_name AS pattern, p.frequency AS frequency
@@ -430,6 +480,10 @@ class HypothesisRepository:
     def _get_pattern_frequency_from_db(self, key: str) -> Optional[int]:
         """Helper to get pattern frequency from database"""
         try:
+            # Check connection first
+            if not self._is_connected():
+                return None
+
             query = """
             MATCH (p:Pattern {id: $id})
             RETURN p.frequency AS frequency
@@ -476,6 +530,129 @@ class HypothesisRepository:
         except Exception as e:
             logger.error(f"❌ Failed to convert record to hypothesis: {e}")
             return None
+
+    # =========================================================================
+    # Phase 5 Batch Query Methods
+    # =========================================================================
+
+    async def get_hypotheses_batch(
+        self,
+        entity_ids: List[str],
+        template_id: Optional[str] = None
+    ) -> Dict[str, List]:
+        """
+        Batch query hypotheses for multiple entities (Phase 5 optimization)
+
+        Args:
+            entity_ids: List of entity IDs
+            template_id: Optional template filter
+
+        Returns:
+            Dict mapping entity_id to list of hypotheses
+        """
+        if not BATCH_AVAILABLE:
+            logger.warning("⚠️ Batch query not available, falling back to sequential")
+            results = {}
+            for entity_id in entity_ids:
+                hypotheses = await self.get_hypotheses_for_entity(entity_id)
+                if template_id:
+                    hypotheses = [h for h in hypotheses if h.metadata.get('template_id') == template_id]
+                results[entity_id] = hypotheses
+            return results
+
+        try:
+            batch = BatchHypothesisQuery(self)
+            return await batch.get_hypotheses_batch(entity_ids, template_id)
+        except Exception as e:
+            logger.error(f"❌ Batch query failed: {e}")
+            # Fallback to sequential
+            results = {}
+            for entity_id in entity_ids:
+                hypotheses = await self.get_hypotheses_for_entity(entity_id)
+                if template_id:
+                    hypotheses = [h for h in hypotheses if h.metadata.get('template_id') == template_id]
+                results[entity_id] = hypotheses
+            return results
+
+    async def update_confidences_batch(
+        self,
+        updates: List[Dict[str, float]]
+    ) -> int:
+        """
+        Batch update hypothesis confidences using UNWIND (Phase 5 optimization)
+
+        Args:
+            updates: List of {hypothesis_id, confidence_delta} dicts
+
+        Returns:
+            Number of hypotheses successfully updated
+        """
+        if not BATCH_AVAILABLE:
+            logger.warning("⚠️ Batch update not available, falling back to sequential")
+            count = 0
+            for update in updates:
+                hypothesis_id = update.get('hypothesis_id')
+                delta = update.get('confidence_delta', 0.0)
+                hypothesis = await self.get_hypothesis(hypothesis_id)
+                if hypothesis:
+                    hypothesis.confidence = max(0.0, min(1.0, hypothesis.confidence + delta))
+                    hypothesis.last_updated = datetime.now(timezone.utc)
+                    await self.save_hypothesis(hypothesis)
+                    count += 1
+            return count
+
+        try:
+            batch = BatchHypothesisQuery(self)
+            return await batch.update_confidences_batch(updates)
+        except Exception as e:
+            logger.error(f"❌ Batch update failed: {e}")
+            # Fallback to sequential
+            count = 0
+            for update in updates:
+                hypothesis_id = update.get('hypothesis_id')
+                delta = update.get('confidence_delta', 0.0)
+                hypothesis = await self.get_hypothesis(hypothesis_id)
+                if hypothesis:
+                    hypothesis.confidence = max(0.0, min(1.0, hypothesis.confidence + delta))
+                    hypothesis.last_updated = datetime.now(timezone.utc)
+                    await self.save_hypothesis(hypothesis)
+                    count += 1
+            return count
+
+    async def create_hypotheses_batch(
+        self,
+        hypotheses: List
+    ) -> int:
+        """
+        Batch create hypotheses using UNWIND (Phase 5 optimization)
+
+        Args:
+            hypotheses: List of Hypothesis objects to create
+
+        Returns:
+            Number of hypotheses successfully created
+        """
+        if not BATCH_AVAILABLE:
+            logger.warning("⚠️ Batch create not available, falling back to sequential")
+            count = 0
+            for hypothesis in hypotheses:
+                success = await self.save_hypothesis(hypothesis)
+                if success:
+                    count += 1
+            return count
+
+        try:
+            batch = BatchHypothesisQuery(self)
+            return await batch.create_hypotheses_batch(hypotheses)
+        except Exception as e:
+            logger.error(f"❌ Batch create failed: {e}")
+            # Fallback to sequential
+            count = 0
+            for hypothesis in hypotheses:
+                success = await self.save_hypothesis(hypothesis)
+                if success:
+                    count += 1
+            return count
 
 
 # =============================================================================
