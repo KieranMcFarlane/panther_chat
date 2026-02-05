@@ -1,0 +1,351 @@
+{
+    "template_name": "Yellow Panther Agency RFP Detection",
+    "template_id": "yellow_panther_agency",
+    "description": "Tailored template to detect RFPs and digital transformation opportunities for Yellow Panther agency services. Optimized for web/mobile development, digital transformation, e-commerce, API integration, and fan engagement platforms.",
+    "entity_type": "ORG",
+    "ideal_for": "Agencies seeking RFP opportunities in web/mobile development, digital transformation, e-commerce, API integration, and fan engagement",
+    "estimated_cost": 5.00,
+    "estimated_duration": "10-15 iterations (2-3 minutes)",
+    "created_at": "2026-02-05",
+    "created_by": "Yellow Panther Intelligence System",
+    "version": "1.0.0",
+    "signal_patterns": [
+        {
+            "pattern_name": "React Web Development RFP",
+            "category": "Web Development",
+            "statement": "Entity is seeking React web development services",
+            "weight": 0.6,
+            "discovery_strategy": "job_postings_first",
+            "early_indicators": [
+                "React developer job posting",
+                "Frontend developer (React) hiring",
+                "Web application development RFP",
+                "React.js project",
+                "Single page application development"
+            ],
+            "keywords": [
+                "React", "Frontend", "Web development", "JavaScript",
+                "UI/UX", "Single page application", "React.js", "JSX",
+                "Component-based", "Frontend framework"
+            ],
+            "search_queries": [
+                "{entity} React developer job posting",
+                "{entity} React web application",
+                "{entity} frontend developer React",
+                "{entity} SPA development",
+                "{entity} React.js project"
+            ]
+        },
+        {
+            "pattern_name": "Mobile App Development RFP",
+            "category": "Mobile Development",
+            "statement": "Entity is seeking mobile app development services",
+            "weight": 0.7,
+            "discovery_strategy": "job_postings_first",
+            "early_indicators": [
+                "Mobile app developer job",
+                "iOS/Android developer hiring",
+                "Mobile application RFP",
+                "React Native developer",
+                "Cross-platform mobile development"
+            ],
+            "keywords": [
+                "Mobile app", "iOS", "Android", "React Native",
+                "Cross-platform", "App development", "Mobile application",
+                "Native app", "Hybrid app", "Mobile SDK"
+            ],
+            "search_queries": [
+                "{entity} mobile app developer job",
+                "{entity} iOS Android development",
+                "{entity} React Native developer",
+                "{entity} mobile application RFP",
+                "{entity} cross-platform mobile"
+            ]
+        },
+        {
+            "pattern_name": "Digital Transformation Initiative",
+            "category": "Digital Transformation",
+            "statement": "Entity is planning digital transformation with agency partnership",
+            "weight": 0.8,
+            "discovery_strategy": "job_postings_first",
+            "early_indicators": [
+                "Digital transformation manager",
+                "Change manager hiring",
+                "Digital partner selection",
+                "Technology modernization initiative",
+                "Digital strategy consultant"
+            ],
+            "keywords": [
+                "Digital transformation", "Technology partner",
+                "Modernization", "Digital strategy", "Change management",
+                "Technology roadmap", "Digital initiative",
+                "Business transformation", "Technology consulting"
+            ],
+            "search_queries": [
+                "{entity} digital transformation initiative",
+                "{entity} digital partner agency",
+                "{entity} technology modernization",
+                "{entity} digital strategy consultant",
+                "{entity} business transformation project"
+            ]
+        },
+        {
+            "pattern_name": "E-commerce Platform Development",
+            "category": "E-commerce",
+            "statement": "Entity is seeking e-commerce platform development",
+            "weight": 0.7,
+            "discovery_strategy": "job_postings_first",
+            "early_indicators": [
+                "E-commerce developer job",
+                "Online store development",
+                "E-commerce platform RFP",
+                "Shopping cart development",
+                "Payment integration project"
+            ],
+            "keywords": [
+                "E-commerce", "Online store", "Shopping cart",
+                "Payment integration", "Marketplace", "WooCommerce",
+                "Shopify", "Magento", "Payment gateway",
+                "Online retail", "E-commerce platform"
+            ],
+            "search_queries": [
+                "{entity} e-commerce developer job",
+                "{entity} online platform development",
+                "{entity} e-commerce RFP",
+                "{entity} shopping cart development",
+                "{entity} payment integration project"
+            ]
+        },
+        {
+            "pattern_name": "API Integration Services",
+            "category": "System Integration",
+            "statement": "Entity needs API development and system integration",
+            "weight": 0.6,
+            "discovery_strategy": "job_postings_first",
+            "early_indicators": [
+                "API developer job",
+                "Integration specialist hiring",
+                "System integration RFP",
+                "Third-party integration",
+                "API development project"
+            ],
+            "keywords": [
+                "API", "Integration", "Third-party",
+                "System integration", "RESTful API", "GraphQL",
+                "API development", "Web services", "Microservices",
+                "Integration platform", "API gateway"
+            ],
+            "search_queries": [
+                "{entity} API developer job",
+                "{entity} system integration RFP",
+                "{entity} API integration project",
+                "{entity} RESTful API development",
+                "{entity} third-party integration"
+            ]
+        },
+        {
+            "pattern_name": "Fan Engagement Platform (Sports)",
+            "category": "Fan Engagement",
+            "statement": "Sports entity seeking fan engagement digital solutions",
+            "weight": 0.9,
+            "discovery_strategy": "job_postings_first",
+            "early_indicators": [
+                "Fan engagement manager",
+                "Supporter experience director",
+                "Fan platform development",
+                "Supporter app project",
+                "Fan experience digital"
+            ],
+            "keywords": [
+                "Fan engagement", "Supporter platform", "Fan app",
+                "Sports digital", "Supporter experience", "Fan loyalty",
+                "Supporter interaction", "Fan community", "Sports app",
+                "Matchday experience", "Fan activation"
+            ],
+            "search_queries": [
+                "{entity} fan engagement platform",
+                "{entity} supporter app development",
+                "{entity} fan experience digital",
+                "{entity} supporter experience manager",
+                "{entity} fan platform RFP"
+            ]
+        },
+        {
+            "pattern_name": "UI/UX Design Project",
+            "category": "Design",
+            "statement": "Entity seeking UI/UX design services",
+            "weight": 0.5,
+            "discovery_strategy": "job_postings_first",
+            "early_indicators": [
+                "UI/UX designer job",
+                "Product designer hiring",
+                "UI design RFP",
+                "User experience project",
+                "Interface design services"
+            ],
+            "keywords": [
+                "UI/UX", "Product design", "User experience",
+                "Interface design", "UX research", "User interface",
+                "Design system", "Wireframing", "Prototyping",
+                "User-centered design", "Design thinking"
+            ],
+            "search_queries": [
+                "{entity} UI UX designer job",
+                "{entity} product design RFP",
+                "{entity} user experience project",
+                "{entity} interface design",
+                "{entity} UX research"
+            ]
+        },
+        {
+            "pattern_name": "Gamification Platform",
+            "category": "Gamification",
+            "statement": "Entity seeking gamification or engagement features",
+            "weight": 0.7,
+            "discovery_strategy": "job_postings_first",
+            "early_indicators": [
+                "Gamification designer",
+                "Engagement specialist",
+                "Loyalty program development",
+                "User rewards platform",
+                "Interactive features development"
+            ],
+            "keywords": [
+                "Gamification", "Loyalty program", "Engagement",
+                "Interactive features", "User rewards", "Points system",
+                "Badges", "Leaderboards", "User motivation",
+                "Engagement mechanics", "Rewards platform"
+            ],
+            "search_queries": [
+                "{entity} gamification developer",
+                "{entity} loyalty platform development",
+                "{entity} engagement features project",
+                "{entity} rewards platform",
+                "{entity} user gamification"
+            ]
+        },
+        {
+            "pattern_name": "Node.js Backend Development",
+            "category": "Backend Development",
+            "statement": "Entity seeking Node.js backend development services",
+            "weight": 0.6,
+            "discovery_strategy": "job_postings_first",
+            "early_indicators": [
+                "Node.js developer job",
+                "Backend developer hiring",
+                "Node.js project",
+                "API development Node.js",
+                "Server-side JavaScript"
+            ],
+            "keywords": [
+                "Node.js", "Backend", "JavaScript", "Express.js",
+                "Server-side", "API development", "Microservices",
+                "REST API", "Node backend", "JavaScript runtime"
+            ],
+            "search_queries": [
+                "{entity} Node.js developer job",
+                "{entity} backend developer Node.js",
+                "{entity} Node.js project",
+                "{entity} Express.js development",
+                "{entity} server-side JavaScript"
+            ]
+        },
+        {
+            "pattern_name": "Python Data Processing Project",
+            "category": "Data Engineering",
+            "statement": "Entity seeking Python data processing or analytics services",
+            "weight": 0.5,
+            "discovery_strategy": "job_postings_first",
+            "early_indicators": [
+                "Python developer job",
+                "Data engineer hiring",
+                "Analytics platform development",
+                "Data processing pipeline",
+                "Python data project"
+            ],
+            "keywords": [
+                "Python", "Data engineering", "Analytics",
+                "Data pipeline", "ETL", "Data processing",
+                "Pandas", "NumPy", "Data analytics",
+                "Machine learning", "Data science"
+            ],
+            "search_queries": [
+                "{entity} Python developer job",
+                "{entity} data engineer",
+                "{entity} analytics platform",
+                "{entity} data processing pipeline",
+                "{entity} Python data project"
+            ]
+        }
+    ],
+    "discovery_strategies": {
+        "job_postings_first": {
+            "name": "Job Postings First",
+            "description": "Prioritize job posting searches as they reveal immediate hiring needs and project plans",
+            "hop_types": ["official_site_jobs", "job_boards", "linkedin_jobs"],
+            "priority_order": ["official_site_jobs", "job_boards", "linkedin_jobs", "press_releases", "news"]
+        },
+        "balanced": {
+            "name": "Balanced Approach",
+            "description": "Equal weight to all discovery channels",
+            "hop_types": ["official_site_jobs", "job_boards", "press_releases", "news", "linkedin_jobs"],
+            "priority_order": ["official_site_jobs", "job_boards", "press_releases", "news", "linkedin_jobs"]
+        },
+        "rfp_first": {
+            "name": "RFP Announcements First",
+            "description": "Prioritize official RFP announcements and procurement sites",
+            "hop_types": ["press_releases", "official_site_jobs", "news", "job_boards"],
+            "priority_order": ["press_releases", "official_site_jobs", "news", "job_boards"]
+        }
+    },
+    "target_entity_types": [
+        "Sports clubs",
+        "Sports leagues",
+        "Entertainment venues",
+        "E-commerce retailers",
+        "Media companies",
+        "Finance organizations",
+        "Healthcare providers",
+        "Educational institutions"
+    ],
+    "confidence_thresholds": {
+        "high_priority": 0.70,
+        "medium_priority": 0.50,
+        "low_priority": 0.30,
+        "ignore_below": 0.30
+    },
+    "cost_optimization": {
+        "max_cost_per_entity": 8.00,
+        "max_iterations_fast": 8,
+        "max_iterations_standard": 15,
+        "max_iterations_deep": 30
+    },
+    "metadata": {
+        "agency_focus": "Yellow Panther",
+        "agency_services": [
+            "Web development (React)",
+            "Mobile app development (React Native)",
+            "Digital transformation",
+            "E-commerce platforms",
+            "API integrations",
+            "UI/UX design",
+            "Gamification",
+            "Strategy consulting"
+        ],
+        "tech_stack": [
+            "React.js",
+            "React Native",
+            "Node.js",
+            "Python",
+            "RESTful APIs",
+            "GraphQL"
+        ],
+        "industry_expertise": [
+            "Sports & entertainment",
+            "Fan engagement platforms",
+            "E-commerce",
+            "Digital transformation"
+        ],
+        "case_study": "ISU Skating Platform - Fan engagement system connecting fans and skaters worldwide"
+    }
+}
