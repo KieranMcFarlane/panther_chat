@@ -17,7 +17,7 @@ Key Design Principles:
 - All state changes are auditable
 
 Usage:
-    from backend.hypothesis_manager import HypothesisManager
+    from hypothesis_manager import HypothesisManager
 
     manager = HypothesisManager()
     hypotheses = await manager.initialize_hypotheses(
@@ -45,6 +45,17 @@ from enum import Enum
 logger = logging.getLogger(__name__)
 
 
+# Import Phase 5 components
+try:
+    from backend.hypothesis_cache import HypothesisLRUCache, CacheConfig
+    CACHE_AVAILABLE = True
+except ImportError:
+    CACHE_AVAILABLE = False
+    logger.warning("Phase 5 cache not available, using basic in-memory cache only")
+    # Create a dummy CacheConfig for type hints
+    CacheConfig = None
+
+
 # =============================================================================
 # Hypothesis Lifecycle States
 # =============================================================================
@@ -54,7 +65,7 @@ class HypothesisStatus(str, Enum):
     ACTIVE = "ACTIVE"           # Normal hypothesis, under active investigation
     PROMOTED = "PROMOTED"       # Strong evidence (confidence >= 0.70, >=2 ACCEPTs)
     DEGRADED = "DEGRADED"       # Contradicted (confidence < 0.30, >=2 REJECTs)
-    SATURATED = "SATURATED"     # No new information expected (>=3 NO_PROGRESS in last 5 iterations)
+    SATURATED = "SATURATED"     # No new information expected (>=5 NO_PROGRESS in last 7 iterations)
     KILLED = "KILLED"           # Explicitly falsified (REJECT + contradictory evidence)
 
 
@@ -203,22 +214,34 @@ class HypothesisManager:
     - Retrieve top hypotheses by EIG
     """
 
-    def __init__(self, falkordb_client=None, repository=None):
+    def __init__(self, falkordb_client=None, repository=None, cache_enabled: bool = True, cache_config: CacheConfig = None):
         """
         Initialize HypothesisManager
 
         Args:
             falkordb_client: Optional FalkorDB client (deprecated, use repository)
             repository: Optional HypothesisRepository (creates default if not provided)
+            cache_enabled: Enable Phase 5 LRU cache (default: True)
+            cache_config: Optional CacheConfig for LRU cache
         """
         self.falkordb_client = falkordb_client  # Deprecated
         self._repository = repository
         self._hypotheses_cache: Dict[str, List[Hypothesis]] = {}
 
+        # Initialize Phase 5 LRU cache
+        self.lru_cache = None
+        if cache_enabled and CACHE_AVAILABLE:
+            self.lru_cache = HypothesisLRUCache(cache_config or CacheConfig())
+            logger.info("🔬 Phase 5 LRU cache enabled")
+        elif cache_enabled and not CACHE_AVAILABLE:
+            logger.warning("⚠️ Cache requested but Phase 5 components not available")
+        else:
+            logger.info("🔬 Phase 5 LRU cache disabled")
+
         # Lazy load repository (try native first, then neo4j-based)
         if not self._repository:
             try:
-                from backend.hypothesis_persistence_native import HypothesisRepository
+                from hypothesis_persistence_native import HypothesisRepository
                 self._repository = HypothesisRepository()
                 logger.info("🔬 Using native FalkorDB repository")
             except ImportError:
@@ -282,7 +305,10 @@ class HypothesisManager:
                 metadata={
                     'pattern_name': pattern_name,
                     'template_id': template_id,
-                    'entity_name': entity_name
+                    'entity_name': entity_name,
+                    'early_indicators': pattern.get('early_indicators', []),
+                    'keywords': pattern.get('keywords', []),
+                    'category': pattern.get('category', 'General')
                 }
             )
 
@@ -387,6 +413,11 @@ class HypothesisManager:
         if self._repository:
             await self._repository.save_hypothesis(hypothesis)
 
+            # Invalidate Phase 5 LRU cache entry (will be refreshed on next get)
+            if self.lru_cache:
+                await self.lru_cache.invalidate(hypothesis_id)
+                logger.debug(f"🗑️ Invalidated cache entry: {hypothesis_id}")
+
         logger.debug(
             f"🔬 Updated hypothesis {hypothesis_id}: "
             f"{decision} (+{confidence_delta:.2f}) → {hypothesis.confidence:.2f} [{hypothesis.status}]"
@@ -400,7 +431,7 @@ class HypothesisManager:
         entity_id: str
     ) -> Optional[Hypothesis]:
         """
-        Get hypothesis by ID
+        Get hypothesis by ID with Phase 5 LRU cache layer
 
         Args:
             hypothesis_id: Hypothesis identifier
@@ -409,13 +440,24 @@ class HypothesisManager:
         Returns:
             Hypothesis object or None
         """
-        # Check cache first
+        # Check Phase 5 LRU cache first (fastest)
+        if self.lru_cache:
+            cached = await self.lru_cache.get(hypothesis_id)
+            if cached:
+                logger.debug(f"✅ LRU cache hit: {hypothesis_id}")
+                return Hypothesis(**cached)
+
+        # Check in-memory cache (legacy)
         if entity_id in self._hypotheses_cache:
             for h in self._hypotheses_cache[entity_id]:
                 if h.hypothesis_id == hypothesis_id:
+                    # Update LRU cache
+                    if self.lru_cache:
+                        await self.lru_cache.set(hypothesis_id, asdict(h))
+                    logger.debug(f"✅ In-memory cache hit: {hypothesis_id}")
                     return h
 
-        # Load from FalkorDB
+        # Load from FalkorDB (slowest)
         if self._repository:
             # Initialize repository if needed
             if hasattr(self._repository, 'driver') and self._repository.driver is None:
@@ -423,8 +465,13 @@ class HypothesisManager:
 
             hypothesis = await self._repository.get_hypothesis(hypothesis_id)
             if hypothesis:
+                # Update both caches
+                if self.lru_cache:
+                    await self.lru_cache.set(hypothesis_id, asdict(hypothesis))
+                logger.debug(f"📥 Loaded from repository: {hypothesis_id}")
                 return hypothesis
 
+        logger.debug(f"❌ Hypothesis not found: {hypothesis_id}")
         return None
 
     async def get_hypotheses(self, entity_id: str) -> List[Hypothesis]:
@@ -514,7 +561,7 @@ class HypothesisManager:
         Transition rules:
         - PROMOTED: confidence >= 0.70 AND iterations_accepted >= 2
         - DEGRADED: confidence < 0.30 AND iterations_rejected >= 2
-        - SATURATED: iterations_no_progress >= 3 in last 5 iterations
+        - SATURATED: iterations_no_progress >= 5 in last 7 iterations
         - KILLED: iterations_rejected >= 2 AND contradictory_evidence exists
         - ACTIVE: default state
 
@@ -543,9 +590,10 @@ class HypothesisManager:
             return "DEGRADED"
 
         # Check for SATURATED
-        # Count recent NO_PROGRESS decisions (last 5 iterations)
+        # Require more NO_PROGRESS decisions before saturation (prevents early stopping)
+        # Updated from 3/5 to 5/7 based on validation feedback
         recent_iterations = hypothesis.iterations_attempted
-        if recent_iterations >= 5 and hypothesis.iterations_no_progress >= 3:
+        if recent_iterations >= 7 and hypothesis.iterations_no_progress >= 5:
             return "SATURATED"
 
         # Check for KILLED (REJECT + contradictory evidence)
@@ -556,6 +604,72 @@ class HypothesisManager:
 
         # Default to ACTIVE
         return "ACTIVE"
+
+    # =========================================================================
+    # Phase 5 Cache Management Methods
+    # =========================================================================
+
+    def get_cache_statistics(self):
+        """
+        Get Phase 5 LRU cache performance statistics
+
+        Returns:
+            CacheStatistics object or None if cache disabled
+        """
+        if self.lru_cache:
+            return self.lru_cache.get_statistics()
+        return None
+
+    async def clear_cache(self) -> None:
+        """Clear Phase 5 LRU cache"""
+        if self.lru_cache:
+            await self.lru_cache.clear()
+            logger.info("🗑️ LRU cache cleared")
+
+    async def warm_cache(self, limit: int = 100) -> Dict[str, int]:
+        """
+        Warm cache with recent entities using Phase 5 CacheWarmer
+
+        Args:
+            limit: Maximum number of entities to warm
+
+        Returns:
+            Dict with warming results
+        """
+        if not self.lru_cache or not self._repository:
+            logger.warning("⚠️ Cache warming not available")
+            return {}
+
+        try:
+            from cache_warmer import CacheWarmer
+
+            warmer = CacheWarmer(self.lru_cache, self._repository)
+            results = await warmer.warm_all_strategies(
+                recent_limit=limit,
+                cluster_limit=limit // 2,
+                template_limit=10
+            )
+
+            logger.info(f"🔥 Cache warming completed: {sum(results.values())} hypotheses")
+            return results
+
+        except ImportError:
+            logger.warning("⚠️ CacheWarmer not available")
+            return {}
+
+    async def invalidate_cache_entry(self, hypothesis_id: str) -> bool:
+        """
+        Invalidate a specific cache entry
+
+        Args:
+            hypothesis_id: Hypothesis ID to invalidate
+
+        Returns:
+            True if entry was invalidated, False if not found
+        """
+        if self.lru_cache:
+            return await self.lru_cache.invalidate(hypothesis_id)
+        return False
 
 
 # =============================================================================

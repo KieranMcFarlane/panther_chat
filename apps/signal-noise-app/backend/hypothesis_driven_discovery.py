@@ -49,8 +49,8 @@ logger = logging.getLogger(__name__)
 
 # Import Phase 6 components
 try:
-    from parameter_tuning import ParameterConfig
-    from eig_calculator import EIGConfig
+    from backend.parameter_tuning import ParameterConfig
+    from backend.eig_calculator import EIGConfig
     PARAMETER_TUNING_AVAILABLE = True
 except ImportError:
     PARAMETER_TUNING_AVAILABLE = False
@@ -80,6 +80,126 @@ ALLOWED_HOP_TYPES = {
     "annual_report": ["financial_section"],
     "press_release": ["recent_news"]
 }
+
+
+# =============================================================================
+# Evaluation Context Dataclass
+# =============================================================================
+
+@dataclass
+class EvaluationContext:
+    """Structured context for Claude evaluation"""
+    # Hypothesis details
+    hypothesis_statement: str
+    hypothesis_category: str
+    pattern_name: str
+    early_indicators: List[str]
+    keywords: List[str]
+    confidence_weight: float
+
+    # Iteration context
+    current_confidence: float
+    iterations_attempted: int
+    last_decision: Optional[str]
+    recent_history: List[str]
+
+    # Channel context
+    hop_type: HopType
+    channel_guidance: str
+
+    # Temporal context
+    entity_name: str
+    content_length: int
+
+    # Evidence requirements
+    min_evidence_strength: str
+    temporal_requirements: str
+
+
+# =============================================================================
+# Channel Evaluation Guidance
+# =============================================================================
+
+CHANNEL_EVALUATION_GUIDANCE = {
+    HopType.OFFICIAL_SITE: """
+    Look for: Technology partnerships, digital transformation initiatives,
+    current platform/vendor mentions, leadership team (commercial/procurement).
+
+    HIGH CONFIDENCE: Official announcements, partnership pages, case studies
+    MEDIUM CONFIDENCE: Leadership bios, technology stack mentions
+    LOW CONFIDENCE: Generic marketing copy, consumer product mentions
+    """,
+
+    HopType.CAREERS_PAGE: """
+    Look for: Procurement/commercial roles, technology leadership (CTO, Head of Digital),
+    CRM-specific roles, digital transformation roles, data analytics roles.
+
+    HIGH CONFIDENCE: Senior procurement roles, commercial director roles
+    MEDIUM CONFIDENCE: Technology leadership roles, data roles
+    LOW CONFIDENCE: Junior IT roles, coaching/playing roles
+    """,
+
+    HopType.LINKEDIN_JOB: """
+    Look for: Procurement responsibilities, technology stack requirements (Salesforce, SAP),
+    digital transformation objectives, team size/budget, reporting lines.
+
+    HIGH CONFIDENCE: Senior procurement role with specific technology requirements
+    MEDIUM CONFIDENCE: Technology leadership role with transformation goals
+    TEMPORAL: Last 30 days = strong signal, older than 90 days = weaker
+    """,
+
+    HopType.ANNUAL_REPORT: """
+    Look for: Technology investment plans, partnership agreements, current system mentions,
+    financial health, procurement department size/budget.
+
+    HIGH CONFIDENCE: Specific technology investments, partnership agreements
+    MEDIUM CONFIDENCE: Digital transformation strategy mentions
+    TEMPORAL: Most recent report = most accurate, older than 18 months = outdated
+    """,
+
+    HopType.PRESS_RELEASE: """
+    Look for: Partnership announcements, technology deployments, leadership appointments,
+    digital transformation milestones, awards/recognition.
+
+    HIGH CONFIDENCE: Multi-year partnerships, recent deployments (last 6 months)
+    MEDIUM CONFIDENCE: Leadership appointments, technology awards
+    TEMPORAL: Last 6 months = strong, older than 12 months = stale
+    """
+}
+
+
+# =============================================================================
+# Decision Criteria Guidance
+# =============================================================================
+
+DECISION_CRITERIA_GUIDANCE = """
+## ACCEPT (Strong Procurement Signal)
+CLEAR evidence of: Active procurement (job postings), recent deployments (within 12 months),
+multi-year partnerships (3+ year contracts), digital transformation initiatives,
+leadership appointments.
+
+Required: Specific quotes with dates, vendor names, contract duration.
+Confidence delta: +0.06
+
+## WEAK_ACCEPT (Capability Signal)
+Evidence of: Technology capability (uses platform X), general digital maturity,
+legacy systems, technology investments.
+
+Required: Mentions of technology but no procurement intent.
+Confidence delta: +0.02
+
+## REJECT (Evidence Contradicts Hypothesis)
+Evidence of: Explicit contradiction, entity outsources, legacy system with no replacement plans,
+consumer-focused technology.
+
+Confidence delta: -0.02
+
+## NO_PROGRESS (No Relevant Evidence)
+Content doesn't mention hypothesis topic, generic marketing copy,
+consumer products/fan engagement, too old/outdated (>18 months).
+
+Confidence delta: 0.0
+"""
 
 # Forbidden hop types (low signal sources)
 FORBIDDEN_HOP_TYPES = [
@@ -197,8 +317,8 @@ class HypothesisDrivenDiscovery:
             config: Optional ParameterConfig for Phase 6 parameter tuning
             cache_enabled: Enable Phase 5 LRU cache (default: True)
         """
-        from hypothesis_manager import HypothesisManager
-        from eig_calculator import EIGCalculator
+        from backend.hypothesis_manager import HypothesisManager
+        from backend.eig_calculator import EIGCalculator
 
         self.claude_client = claude_client
         self.brightdata_client = brightdata_client
@@ -287,7 +407,7 @@ class HypothesisDrivenDiscovery:
         Returns:
             DiscoveryResult with final assessment
         """
-        from schemas import RalphState
+        from backend.schemas import RalphState
 
         # Use config values if not specified (Phase 6 parameter tuning)
         if max_iterations is None:
@@ -450,7 +570,7 @@ class HypothesisDrivenDiscovery:
         Returns:
             HopType to execute (highest scored option)
         """
-        from sources.mcp_source_priorities import (
+        from backend.sources.mcp_source_priorities import (
             get_source_config,
             calculate_channel_score,
             ChannelBlacklist,
@@ -698,6 +818,110 @@ class HypothesisDrivenDiscovery:
         logger.error(f"❌ All search queries failed for {hop_type}")
         return None
 
+    def _build_evaluation_context(
+        self,
+        hypothesis,
+        hop_type: HopType,
+        content: str,
+        entity_name: str
+    ) -> EvaluationContext:
+        """Build structured evaluation context for Claude"""
+        # Extract hypothesis metadata
+        pattern_name = hypothesis.metadata.get('pattern_name', 'unknown')
+        template_id = hypothesis.metadata.get('template_id', '')
+
+        # Load template to get early_indicators and keywords
+        from backend.template_loader import TemplateLoader
+        loader = TemplateLoader()
+        template = loader.get_template(template_id) if template_id else None
+
+        # Find matching pattern
+        early_indicators = []
+        keywords = []
+        confidence_weight = hypothesis.prior_probability
+
+        if template:
+            for pattern in template.signal_patterns:
+                if pattern.get('pattern_name') == pattern_name:
+                    early_indicators = pattern.get('early_indicators', [])
+                    keywords = pattern.get('keywords', [])
+                    confidence_weight = pattern.get('weight', confidence_weight)
+                    break
+
+        # Get recent decision history
+        recent_history = []
+        if hypothesis.iterations_attempted > 0:
+            if hypothesis.iterations_accepted > 0:
+                recent_history.append(f"{hypothesis.iterations_accepted} ACCEPT")
+            if hypothesis.iterations_weak_accept > 0:
+                recent_history.append(f"{hypothesis.iterations_weak_accept} WEAK_ACCEPT")
+            if hypothesis.iterations_rejected > 0:
+                recent_history.append(f"{hypothesis.iterations_rejected} REJECT")
+            if hypothesis.iterations_no_progress > 0:
+                recent_history.append(f"{hypothesis.iterations_no_progress} NO_PROGRESS")
+
+        # Determine last decision
+        last_decision = None
+        if hypothesis.iterations_attempted > 0:
+            if hypothesis.last_delta > 0:
+                last_decision = "ACCEPT" if hypothesis.last_delta >= 0.04 else "WEAK_ACCEPT"
+            elif hypothesis.last_delta < 0:
+                last_decision = "REJECT"
+            else:
+                last_decision = "NO_PROGRESS"
+
+        # Get channel-specific guidance
+        channel_guidance = CHANNEL_EVALUATION_GUIDANCE.get(hop_type, "")
+
+        # Determine evidence requirements
+        if hop_type in [HopType.OFFICIAL_SITE, HopType.PRESS_RELEASE]:
+            min_evidence_strength = "specific_detail"
+            temporal_requirements = "last_12_months"
+        elif hop_type == HopType.LINKEDIN_JOB:
+            min_evidence_strength = "exact_quote"
+            temporal_requirements = "last_30_days"
+        elif hop_type == HopType.ANNUAL_REPORT:
+            min_evidence_strength = "specific_detail"
+            temporal_requirements = "most_recent_report"
+        else:  # CAREERS_PAGE
+            min_evidence_strength = "specific_detail"
+            temporal_requirements = "last_90_days"
+
+        return EvaluationContext(
+            hypothesis_statement=hypothesis.statement,
+            hypothesis_category=hypothesis.category,
+            pattern_name=pattern_name,
+            early_indicators=early_indicators,
+            keywords=keywords,
+            confidence_weight=confidence_weight,
+            current_confidence=hypothesis.confidence,
+            iterations_attempted=hypothesis.iterations_attempted,
+            last_decision=last_decision,
+            recent_history=recent_history[:3],
+            hop_type=hop_type,
+            channel_guidance=channel_guidance,
+            entity_name=entity_name,
+            content_length=len(content),
+            min_evidence_strength=min_evidence_strength,
+            temporal_requirements=temporal_requirements
+        )
+
+    def _format_early_indicators(self, indicators: List[str]) -> str:
+        """Format early indicators for prompt"""
+        if not indicators:
+            return "- No specific early indicators defined"
+        return '\n'.join(f"- {ind}" for ind in indicators)
+
+    def _fallback_result(self) -> Dict[str, Any]:
+        """Return fallback NO_PROGRESS result"""
+        return {
+            'decision': 'NO_PROGRESS',
+            'confidence_delta': 0.0,
+            'justification': 'Evaluation error',
+            'evidence_found': '',
+            'evidence_type': None
+        }
+
     async def _evaluate_content_with_claude(
         self,
         content: str,
@@ -707,9 +931,10 @@ class HypothesisDrivenDiscovery:
         """
         Evaluate scraped content with Claude + MCP pattern matching
 
-        Uses hybrid approach:
+        Uses hybrid approach with structured context builder:
         1. MCP pattern matching for fast evidence type detection
-        2. Claude evaluation for context and decision validation
+        2. Structured evaluation context for Claude (hypothesis, channel, history)
+        3. Claude evaluation for context and decision validation
 
         Args:
             content: Scraped markdown content
@@ -719,106 +944,125 @@ class HypothesisDrivenDiscovery:
         Returns:
             Evaluation result with decision and confidence delta
         """
-        from taxonomy.mcp_evidence_patterns import match_evidence_type
-        from confidence.mcp_scorer import MCPScorer, Signal
+        from backend.taxonomy.mcp_evidence_patterns import match_evidence_type
+        from backend.confidence.mcp_scorer import MCPScorer, Signal
 
-        # Step 1: MCP pattern matching (fast, rules-based)
+        # Step 1: Build structured evaluation context
+        entity_name = hypothesis.metadata.get('entity_name', 'this entity')
+        context = self._build_evaluation_context(
+            hypothesis=hypothesis,
+            hop_type=hop_type,
+            content=content,
+            entity_name=entity_name
+        )
+
+        # Step 2: MCP pattern matching (existing logic)
         mcp_matches = match_evidence_type(content, extract_metadata=True)
-
         logger.debug(f"MCP pattern matching found {len(mcp_matches)} match(es)")
 
-        # Step 2: Build enhanced prompt with MCP insights
+        # Step 3: Build MCP insights section
         mcp_insights = ""
         if mcp_matches:
-            mcp_insights = "\n\nMCP Pattern Matching Results:\n"
+            mcp_insights = "\n\n## MCP Pattern Matching Results\n"
             for match in mcp_matches:
-                mcp_insights += f"- {match['type']}: {match['signal']} (+{match['total_confidence']:.2f})\n"
+                mcp_insights += f"- **{match['type']}**: {match['signal']} (+{match['total_confidence']:.2f})\n"
 
+        # Step 4: Build comprehensive prompt
         prompt = f"""
-Evaluate this scraped content for hypothesis: {hypothesis.statement}
+# Hypothesis-Driven Discovery Evaluation
 
-Content from {hop_type.value}:
-{content[:2000]}  # Limit to 2000 chars for cost control
-{mcp_insights}
-Task: Determine if this content supports or contradicts the hypothesis.
+You are evaluating whether {context.entity_name} shows procurement readiness signals.
+
+## Hypothesis Context
+**Statement**: {context.hypothesis_statement}
+**Category**: {context.hypothesis_category}
+**Pattern**: {context.pattern_name}
+**Current Confidence**: {context.current_confidence:.2f}
+**Iterations Attempted**: {context.iterations_attempted}
+
+## Early Indicators to Look For
+{self._format_early_indicators(context.early_indicators)}
+
+## Keywords
+{', '.join(context.keywords) if context.keywords else 'None specified'}
+
+## Iteration History
+{', '.join(context.recent_history) if context.recent_history else 'First iteration'}
+Last Decision: {context.last_decision if context.last_decision else 'N/A'}
+
+## Channel Context: {context.hop_type.value.upper()}
+{context.channel_guidance}
+
+## Content to Evaluate
+```markdown
+{content[:2000]}
+```
+
+## MCP Pattern Insights
+{mcp_insights if mcp_insights else 'No high-confidence MCP patterns detected.'}
+
+## Decision Criteria
+{DECISION_CRITERIA_GUIDANCE}
+
+## Evidence Requirements
+- **Minimum Evidence Quality**: {context.min_evidence_strength}
+- **Temporal Requirements**: {context.temporal_requirements}
+
+## Your Task
+Evaluate the content against the hypothesis using:
+1. Channel-specific guidance (what to look for on this source type)
+2. MCP pattern matches (high-confidence signals)
+3. Decision criteria (when to use each decision type)
+4. Evidence requirements (quality and recency)
 
 Return JSON:
 {{
   "decision": "ACCEPT" | "WEAK_ACCEPT" | "REJECT" | "NO_PROGRESS",
   "confidence_delta": 0.0,
-  "justification": "brief explanation",
-  "evidence_found": "key evidence excerpt",
-  "evidence_type": "mcp_evidence_type_or_null"
+  "justification": "brief explanation referencing specific evidence",
+  "evidence_found": "exact quote or specific detail",
+  "evidence_type": "{mcp_matches[0]['type'] if mcp_matches else 'null'}",
+  "temporal_score": "recent_6mo | recent_12mo | older"
 }}
-
-Decision criteria:
-- ACCEPT: Strong evidence of procurement intent (+0.08 delta for MCP patterns)
-- WEAK_ACCEPT: Capability but unclear procurement intent (+0.02 delta)
-- REJECT: Evidence contradicts hypothesis (-0.02 delta)
-- NO_PROGRESS: No relevant evidence (0.0 delta)
-
-MCP Pattern Guidance:
-- If MCP detects "multi_year_partnership" → ACCEPT (+0.08)
-- If MCP detects "recent_deployment" → ACCEPT (+0.08)
-- If MCP detects "confirmed_platform" → ACCEPT (+0.08)
-- If MCP detects "technology_leadership" → WEAK_ACCEPT (+0.02)
-- If MCP detects "legacy_system" → WEAK_ACCEPT (+0.02)
 """
 
+        # Step 5: Call Claude API (existing implementation continues...)
         try:
-            # Use Anthropic messages API (not .query() which doesn't exist)
-            message = self.claude_client.messages.create(
-                model="claude-3-5-haiku-20241022",  # Use Haiku for cost efficiency
-                max_tokens=500,
-                messages=[{"role": "user", "content": prompt}]
+            # Use ClaudeClient.query() instead of Anthropic SDK
+            response = await self.claude_client.query(
+                prompt=prompt,
+                model="haiku",
+                max_tokens=500
             )
 
-            # Extract response text from Anthropic API response
-            response = message.content[0].text
+            # Extract text from response
+            response_text = response.get('text', '')
 
-            # Parse JSON response
+            # Parse JSON response (existing code)
             import json
             import re
 
-            json_match = re.search(r'\{[^}]*"decision"[^}]*\}', response, re.DOTALL)
+            json_match = re.search(r'\{[^}]*"decision"[^}]*\}', response_text, re.DOTALL)
 
             if json_match:
                 result = json.loads(json_match.group(0))
 
-                # Enhance with MCP-derived confidence delta if not provided
+                # Enhance with MCP-derived confidence if not provided
                 if mcp_matches and result.get('confidence_delta', 0) == 0.0:
-                    # Use MCP confidence calculation
-                    from confidence.mcp_scorer import calculate_mcp_confidence_from_matches
+                    from backend.confidence.mcp_scorer import calculate_mcp_confidence_from_matches
                     mcp_confidence = calculate_mcp_confidence_from_matches(mcp_matches)
-
-                    # Convert total confidence to delta (approximate)
-                    # Base is 0.70, so delta = total - 0.70
                     result['confidence_delta'] = max(0.0, mcp_confidence - 0.70)
-
-                    # Add MCP metadata
                     result['mcp_matches'] = mcp_matches
                     result['mcp_confidence'] = mcp_confidence
 
                 return result
             else:
-                logger.warning(f"Could not parse Claude response")
-                return {
-                    'decision': 'NO_PROGRESS',
-                    'confidence_delta': 0.0,
-                    'justification': 'Parse error',
-                    'evidence_found': '',
-                    'evidence_type': None
-                }
+                logger.warning(f"Could not parse Claude response: {response_text}")
+                return self._fallback_result()
 
         except Exception as e:
             logger.error(f"Claude evaluation error: {e}")
-            return {
-                'decision': 'NO_PROGRESS',
-                'confidence_delta': 0.0,
-                'justification': f'Error: {str(e)}',
-                'evidence_found': '',
-                'evidence_type': None
-            }
+            return self._fallback_result()
 
     async def _update_hypothesis_state(
         self,
@@ -839,7 +1083,7 @@ MCP Pattern Guidance:
             result: Hop execution result
             state: Current RalphState
         """
-        from sources.mcp_source_priorities import SourceType
+        from backend.sources.mcp_source_priorities import SourceType
 
         # Update hypothesis via manager
         updated_hypothesis = await self.hypothesis_manager.update_hypothesis(
