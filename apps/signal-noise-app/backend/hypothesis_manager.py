@@ -288,7 +288,12 @@ class HypothesisManager:
         # Create hypotheses from signal patterns
         hypotheses = []
 
-        for pattern in template.signal_patterns:
+        signal_patterns = template.get('signal_patterns', [])
+        if not signal_patterns:
+            logger.error(f"Template has no signal_patterns: {template_id}")
+            return []
+
+        for pattern in signal_patterns:
             pattern_name = pattern.get('pattern_name', 'Unknown')
 
             # Generate hypothesis ID
