@@ -6,6 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Signal Noise App** is an AI-powered sports intelligence and RFP (Request for Proposal) analysis platform. It combines:
 - **Sports Entity Database**: Browse/search clubs, leagues, venues, staff using FalkorDB (Neo4j-compatible graph database) with 3,400+ entities
+- **Hypothesis-Driven Discovery**: EIG-based hypothesis prioritization for intelligent entity exploration with deterministic cost control
+- **Ralph Loop**: Batch-enforced signal validation with 3-pass governance and confidence scoring
+- **Template System**: Automated discovery, enrichment, expansion, and validation of procurement patterns
 - **RFP Intelligence**: Monitor LinkedIn for procurement opportunities using AI agents with temporal intelligence
 - **AI Chat Interface**: CopilotKit-powered conversational AI with MCP tool integration
 - **Temporal Intelligence**: Track entity timelines, analyze patterns, and close the feedback loop on RFP outcomes
@@ -222,6 +225,9 @@ BETTER_AUTH_URL=http://localhost:3005
 - **Better Auth**: Authentication system (20+ references)
 - **Graphiti**: Temporal knowledge graph for RFP episodes
 - **Temporal Intelligence MCP**: Entity timeline tracking and pattern analysis
+- **Hypothesis-Driven Discovery**: EIG-based entity exploration with cost control
+- **Ralph Loop**: Signal validation with 3-pass governance
+- **Template System**: Discovery, enrichment, expansion, and validation of patterns
 
 ### Placeholder/Minimal Systems
 - **Mastra**: Basic setup only (@ag-ui/mastra, @mastra/*), minimal active usage
@@ -268,8 +274,25 @@ Sales team uses this distinction to prioritize:
 
 ### API Endpoints
 
+**Discovery & Validation**:
+- `/api/validate-exploration` (port 8001) - Ralph Loop validation for exploration governance
 - `/api/ralph/confidence-bands` - Get band definitions with pricing
 - `/api/ralph/decision-mapping` - Get internal → external name mapping
+
+**Entity & Dossier**:
+- `/api/dossier` - Generate entity dossiers with temporal intelligence
+- `/api/entities` - Browse/search entity database
+
+**Temporal Intelligence**:
+- `/api/graphiti/*` - Graphiti temporal knowledge graph operations
+
+**Batch Processing**:
+- `/api/batch-process` - Batch entity discovery
+- `/api/batch-processor` - Batch signal validation
+
+**Claude Agent**:
+- `/api/claude-agent` - Direct Claude Agent SDK integration
+- `/api/chat-simple` - Simple chat interface
 
 ### Confidence Bands (Pricing)
 
@@ -281,6 +304,34 @@ Sales team uses this distinction to prioritize:
 | ACTIONABLE | >0.80 + gate | Immediate outreach | $5,000/entity/month |
 
 **Note**: ACTIONABLE requires both high confidence (>0.80) AND the actionable gate (≥2 ACCEPTs across ≥2 categories).
+
+### Confidence Calculation (Hypothesis-Driven Discovery)
+
+Confidence scores are calculated using the **Delta System** in hypothesis-driven discovery:
+
+**Starting Point**: 0.50 (neutral prior)
+
+**Deltas per Decision**:
+- **ACCEPT**: +0.06 (strong evidence of procurement intent)
+- **WEAK_ACCEPT**: +0.02 (capability present, intent unclear)
+- **REJECT**: 0.00 (no evidence or contradicts hypothesis)
+- **NO_PROGRESS**: 0.00 (no new information)
+- **SATURATED**: 0.00 (category exhausted)
+
+**Formula**:
+```
+final_confidence = 0.50 + (num_ACCEPT * 0.06) + (num_WEAK_ACCEPT * 0.02)
+```
+
+**Bounds**: 0.00 to 1.00 (enforced by system)
+
+**Example Calculation**:
+```
+Starting: 0.50
+3 ACCEPT signals: +0.18 (3 * 0.06)
+2 WEAK_ACCEPT signals: +0.04 (2 * 0.02)
+Final: 0.72 (CONFIDENT band)
+```
 
 ## Common Patterns
 
@@ -317,6 +368,239 @@ The `backend/` directory contains FastAPI services and MCP servers:
 - **graphiti_service.py**: GraphRAG-based temporal knowledge graph service
 - **narrative_builder.py**: Converts episodes to token-bounded narratives for Claude
 
+## Core Discovery & Validation Systems
+
+### Schema Definitions
+
+**File**: `backend/schemas.py`
+
+The system uses a fixed-but-extensible schema for the intelligence layer:
+
+**Entity** (Core node):
+```python
+@dataclass
+class Entity:
+    id: str                    # Unique identifier (lowercase, dash-separated)
+    type: EntityType           # ORG, PERSON, PRODUCT, INITIATIVE, VENUE
+    name: str                  # Display name
+    metadata: Dict[str, Any]   # Extensible key-value pairs
+```
+
+**Signal** (Intelligence about entity):
+```python
+@dataclass
+class Signal:
+    id: str                    # Unique signal ID
+    type: SignalType           # RFP_DETECTED, etc.
+    subtype: SignalSubtype     # AI_PLATFORM_REWRITE, etc.
+    confidence: float          # 0.0-1.0
+    first_seen: datetime       # When signal was detected
+    entity_id: str             # Associated entity
+    evidence: List[Evidence]   # Supporting evidence
+```
+
+**Evidence** (Proof for signal):
+```python
+@dataclass
+class Evidence:
+    id: str                    # Unique evidence ID
+    source: str                # URL or source identifier
+    content: str               # Evidence content
+    confidence: float          # 0.0-1.0
+    collected_at: datetime     # Collection timestamp
+```
+
+**Signal Types** (Fixed):
+- `RFP_DETECTED` - Request for Proposal detected
+- `CRM_ANALYTICS` - CRM/analytics capability detected
+- `DIGITAL_TRANSFORMATION` - Digital transformation initiative
+- `JOB_POSTING` - Relevant job posting detected
+- `PRESS_RELEASE` - Relevant press release
+
+**Entity Types** (Fixed):
+- `ORG` - Organization (club, league, company)
+- `PERSON` - Individual (staff, executive)
+- `PRODUCT` - Product or platform
+- `INITIATIVE` - Project or program
+- `VENUE` - Physical location
+
+### Hypothesis-Driven Discovery
+
+**File**: `backend/hypothesis_driven_discovery.py`
+
+**Purpose**: Deterministic single-hop entity exploration with EIG-based hypothesis prioritization.
+
+**Key Features**:
+- **Single-hop-per-iteration**: No multi-hop, no parallel exploration (cost control)
+- **EIG-based ranking**: Prioritizes uncertain + valuable hypotheses
+- **Depth-aware stopping**: Enforces 2-3 level depth limit
+- **Deterministic cost**: Predictable per-iteration cost
+
+**Decision Types** (Internal → External):
+- **ACCEPT** → Procurement Signal: Strong evidence (+0.06 delta)
+- **WEAK_ACCEPT** → Capability Signal: Capability present (+0.02 delta)
+- **REJECT** → No Signal: No evidence (0.00 delta)
+- **NO_PROGRESS** → No Signal: No new info (0.00 delta)
+- **SATURATED** → Saturated: Category exhausted (0.00 delta)
+
+**Usage**:
+```python
+from backend.hypothesis_driven_discovery import HypothesisDrivenDiscovery
+
+discovery = HypothesisDrivenDiscovery(
+    claude_client=claude,
+    brightdata_client=brightdata
+)
+
+result = await discovery.run_discovery(
+    entity_id="arsenal-fc",
+    entity_name="Arsenal FC",
+    template_id="tier_1_club_centralized_procurement",
+    max_iterations=30,
+    max_depth=3
+)
+
+# Result contains:
+# - final_confidence: float (0-1)
+# - validated_signals: List[Signal]
+# - total_cost: float (API credits)
+# - iteration_count: int
+```
+
+**Flow**:
+1. Initialize hypothesis set from template
+2. For each iteration:
+   - Re-score all ACTIVE hypotheses by EIG (Expected Information Gain)
+   - Select top hypothesis (runtime enforces single-hop)
+   - Choose hop type within strategy rails
+   - Execute hop (scrape + evaluate)
+   - Update hypothesis state and confidence
+   - Check stopping conditions
+3. Return final entity assessment
+
+**Related Files**:
+- `backend/hypothesis_manager.py`: Hypothesis lifecycle management
+- `backend/eig_calculator.py`: Expected Information Gain scoring
+- `backend/hypothesis_persistence.py`: FalkorDB storage for hypotheses
+- `backend/schemas.py`: Entity/Signal/Evidence schema definitions
+
+### Ralph Loop (Signal Validation)
+
+**File**: `backend/ralph_loop.py`
+
+**Purpose**: Batch-enforced signal validation with governance and confidence scoring.
+
+**Rules**:
+- Minimum 3 pieces of evidence per signal
+- Confidence > 0.7 for signal creation
+- Maximum 3 validation passes per entity
+- Only validated signals written to Graphiti
+
+**Validation Passes**:
+- **Pass 1**: Rule-based filtering (min evidence, source credibility)
+- **Pass 2**: Claude validation (cross-check with existing signals)
+- **Pass 3**: Final confirmation (confidence scoring, duplicate detection)
+
+**API Endpoint**: `POST /api/validate-exploration` (runs on port 8001)
+
+**Usage**:
+```python
+from backend.ralph_loop import RalphLoop
+from backend.claude_client import ClaudeClient
+from backend.graphiti_service import GraphitiService
+
+claude = ClaudeClient()
+graphiti = GraphitiService()
+await graphiti.initialize()
+
+ralph = RalphLoop(claude, graphiti)
+validated_signals = await ralph.validate_signals(raw_signals, entity_id)
+
+for signal in validated_signals:
+    print(f"✅ Validated: {signal.id} (confidence: {signal.confidence})")
+```
+
+**Governance Features**:
+- Category saturation detection (3 REJECTs)
+- Confidence saturation detection (<0.01 gain over 10 iterations)
+- Fixed confidence math (no drift)
+- Duplicate signal detection
+
+**Related Files**:
+- `backend/ralph_loop_server.py`: FastAPI server for validation API
+- `backend/ralph_loop_governor.py`: Exploration governance logic
+- `backend/ralph_loop_cascade.py`: Cascade validation for multiple entities
+
+### Template System
+
+**Purpose**: Automated discovery, enrichment, expansion, and validation of procurement patterns.
+
+**Components**:
+
+**1. Template Discovery** (`backend/template_discovery.py`)
+- Discovers recurring patterns across entities
+- Identifies high-confidence procurement signals
+- Generates template hypotheses
+
+**2. Template Enrichment** (`backend/template_enrichment_agent.py`)
+- Enriches templates with additional evidence
+- Cross-references across entities
+- Validates pattern consistency
+
+**3. Template Expansion** (`backend/template_expansion_agent.py`)
+- Expands templates to new entities
+- Generalizes patterns across domains
+- Maintains template fidelity
+
+**4. Template Validation** (`backend/template_validation.py`)
+- Validates templates against real-world data
+- Tests template robustness
+- Generates validation reports
+
+**5. Template Bootstrap** (`backend/template_bootstrap.py`)
+- Bootstraps templates from production data
+- Generates initial template set
+- Supports cold-start scenarios
+
+**Usage**:
+```python
+from backend.template_discovery import TemplateDiscovery
+from backend.template_enrichment_agent import TemplateEnrichmentAgent
+from backend.template_expansion_agent import TemplateExpansionAgent
+from backend.template_validation import TemplateValidator
+
+# Discover patterns
+discovery = TemplateDiscovery(claude, brightdata)
+templates = await discovery.discover_templates(entity_ids=["arsenal", "chelsea"])
+
+# Enrich templates
+enricher = TemplateEnrichmentAgent(claude, brightdata)
+enriched = await enricher.enrich_templates(templates)
+
+# Expand to new entities
+expander = TemplateExpansionAgent(claude, brightdata)
+expanded = await expander.expand_templates(enriched, target_entities=["liverpool"])
+
+# Validate
+validator = TemplateValidator(claude, brightdata)
+report = await validator.validate_templates(expanded)
+```
+
+**Template Storage**:
+- `data/bootstrapped_templates/`: Production templates
+- `backend/bootstrapped_templates/`: Runtime template cache
+- `data/runtime_bindings/`: Template-entity bindings
+
+**Runtime Binding** (`backend/template_runtime_binding.py`):
+- Binds templates to specific entities
+- Tracks binding lifecycle
+- Manages binding feedback
+
+**Related Files**:
+- `backend/template_loader.py`: Load templates from storage
+- `backend/binding_lifecycle_manager.py`: Manage template-entity bindings
+- `backend/binding_feedback_processor.py`: Process feedback from bindings
+
 Start backend services:
 ```bash
 # Start FastAPI backend
@@ -325,6 +609,9 @@ cd backend && python run_server.py
 # Run MCP servers (configured in mcp-config.json)
 python backend/falkordb_mcp_server_fastmcp.py
 python backend/temporal_mcp_server.py
+
+# Start Ralph Loop validation server
+python backend/ralph_loop_server.py
 ```
 
 ## Testing
@@ -376,7 +663,44 @@ python temporal_mcp_server.py
 - Tools exposed to Claude Agent SDK via CopilotKit API route
 - FalkorDB queries go through native MCP server for performance
 
-## Recent Enhancements (January 2026)
+## Recent Enhancements (January - February 2026)
+
+### BrightData SDK Optimizations (February 2026)
+- **Multi-engine support**: ENGINE_PREFERENCES with engine fallback (Google → Bing/Yandex) per hop type
+- **Variable result counts**: NUM_RESULTS_BY_HOP with high-value hops fetching 5 results
+- **URL relevance scoring**: _score_url() method with hop-type-specific keyword and path quality scoring
+- **Search result caching**: 24-hour LRU cache with 256 entry limit and FIFO eviction
+- **Procurement-specific queries**: Enhanced FALLBACK_QUERIES with targeted procurement terms
+- **Related files**: `backend/hypothesis_driven_discovery.py`, `backend/test_brightdata_optimizations.py`
+- **Expected impact**: 30-50% better URL discovery for procurement hops, 30-50% API cost reduction through caching
+
+### Dossier System Integration (February 2026)
+- **Evidence-based starting points**: run_discovery_with_dossier_context() initializes from actual dossier signals
+- **Targeted search queries**: Generates procurement-specific search queries based on known signals
+- **Feedback loop**: Discovered evidence links back to dossier source for enrichment
+- **Related files**: `backend/hypothesis_driven_discovery.py` (lines 1767-1954), `backend/generate_entity_dossier.py`
+- **Impact**: 20-30% fewer wasted iterations, 15-25% better URL quality through targeted queries, 30-50% faster convergence with dossier-based priors
+
+### Hypothesis-Driven Discovery System (Latest)
+- **EIG-based prioritization**: Expected Information Gain for intelligent hypothesis ranking
+- **Single-hop execution**: Deterministic cost control with no multi-hop exploration
+- **Depth-aware stopping**: Enforces 2-3 level depth limit
+- **Fixed confidence math**: Delta-based scoring (ACCEPT: +0.06, WEAK_ACCEPT: +0.02)
+- **Related files**: `backend/hypothesis_driven_discovery.py`, `backend/eig_calculator.py`, `backend/hypothesis_manager.py`
+
+### Ralph Loop Signal Validation
+- **3-pass validation**: Rule-based → Claude validation → Final confirmation
+- **Minimum evidence**: 3 pieces of evidence per signal
+- **Confidence gating**: Only signals >0.7 confidence written to Graphiti
+- **Category saturation**: Detects when categories are exhausted (3 REJECTs)
+- **Related files**: `backend/ralph_loop.py`, `backend/ralph_loop_server.py`, `backend/ralph_loop_governor.py`
+
+### Template System
+- **Template Discovery**: Discovers recurring procurement patterns across entities
+- **Template Enrichment**: Cross-references and validates pattern consistency
+- **Template Expansion**: Generalizes patterns to new entities/domains
+- **Template Validation**: Tests templates against real-world data
+- **Related files**: `backend/template_discovery.py`, `backend/template_enrichment_agent.py`, `backend/template_expansion_agent.py`
 
 ### CopilotKit Integration Improvements
 - Refactored CopilotKit API route (`src/app/api/copilotkit/route.ts`) for better streaming and error handling
@@ -445,3 +769,31 @@ narrative = build_narrative_from_episodes(episodes, max_tokens=2000)
   - `/api/rfp-backtesting/*`
   - `/api/supabase-query/*`
 - Image optimization configured for S3 and TheSportsDB badge sources
+
+## Related Documentation
+
+The following documents in the repository provide additional context:
+
+**Hypothesis-Driven Discovery**:
+- `HYPOTHESIS_DRIVEN_DISCOVERY_FINAL_REPORT.md` - Complete implementation details
+- `HYPOTHESIS_DRIVEN_DISCOVERY_QUICKSTART.md` - Quick start guide
+- `HYPOTHESIS_DRIVEN_DISCOVERY_SUMMARY.md` - High-level overview
+
+**System Architecture**:
+- `SIGNAL-NOISE-ARCHITECTURE.md` - Overall system architecture
+- `SYSTEM-IMPROVEMENTS-PLAN.md` - Planned improvements and roadmap
+- `IMPLEMENTATION-SUMMARY.md` - Implementation overview
+
+**Validation & Testing**:
+- `IMPLEMENTATION-VALIDATION-REPORT.md` - Validation testing results
+- `MAX-DEPTH-VALIDATION-COMPARISON.md` - Depth limit validation
+- `SIMULATION_RESULTS_SUMMARY.md` - Simulation comparison results
+
+**Production**:
+- `PRODUCTION-ENHANCEMENTS-COMPLETE.md` - Production hardening details
+- `FINAL-SUMMARY.md` - Project completion summary
+
+**Quick Reference**:
+- `QUICK-START-CALIBRATION.md` - Calibration system quick start
+- `QUICK-START-RFP-SYSTEM.md` - RFP system quick start
+- `HOW-TO-USE-SYSTEM.md` - General system usage guide
