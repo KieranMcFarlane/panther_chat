@@ -500,6 +500,15 @@ class HypothesisDrivenDiscovery:
             except Exception as e:
                 logger.warning(f"⚠️ PDF extractor initialization failed: {e}")
 
+        # Initialize search result validator for post-search validation
+        self.search_validator = None
+        try:
+            from search_result_validator import SearchResultValidator
+            self.search_validator = SearchResultValidator(claude_client)
+            logger.info("✅ Search result validator initialized")
+        except ImportError:
+            logger.warning("⚠️ search_result_validator not available - post-search validation disabled")
+
         # Initialize search cache (24-hour TTL)
         self._search_cache = OrderedDict()
         self._cache_ttl = timedelta(hours=24)
@@ -684,6 +693,13 @@ class HypothesisDrivenDiscovery:
 
         state.active_hypotheses = hypotheses
 
+        # Store context for post-search validation
+        self.current_entity_name = entity_name
+        self.current_entity_id = entity_id
+        # Extract entity type from template ID or hypotheses
+        self.current_entity_type = self._extract_entity_type_from_template(template_id)
+        self.current_hypothesis_context = f"Searching for procurement signals and RFP opportunities"
+
         # Main iteration loop
         for iteration in range(1, max_iterations + 1):
             logger.info(f"\n--- Iteration {iteration} ---")
@@ -708,6 +724,12 @@ class HypothesisDrivenDiscovery:
             hop_type = self._choose_next_hop(top_hypothesis, state)
 
             logger.info(f"   Hop type: {hop_type} (depth: {state.current_depth})")
+
+            # Update hypothesis context for post-search validation
+            self.current_hypothesis_context = (
+                f"Testing hypothesis: {top_hypothesis.statement} "
+                f"(category: {top_hypothesis.category}, hop: {hop_type.value})"
+            )
 
             # Phase D: Execute hop (scrape + evaluate)
             result = await self._execute_hop(
@@ -1132,11 +1154,10 @@ class HypothesisDrivenDiscovery:
             if search_result.get('status') == 'success' and search_result.get('results'):
                 results = search_result['results']
 
-                # For high-value hops, score all results and return best
+                # For high-value hops with multiple results, apply post-search validation
                 if hop_type in HIGH_VALUE_HOPS and len(results) > 1:
-                    best_url = None
-                    best_score = -1
-
+                    # First pass: URL scoring to filter obviously irrelevant results
+                    scored_results = []
                     for item in results:
                         url = item.get('url', '')
                         if not url:
@@ -1149,11 +1170,38 @@ class HypothesisDrivenDiscovery:
                             snippet=item.get('snippet', '')
                         )
                         logger.debug(f"URL score: {score} for {url}")
-                        if score > best_score:
-                            best_score = score
-                            best_url = url
+                        # Keep results with minimum threshold
+                        if score >= 0.3:
+                            item['_url_score'] = score
+                            scored_results.append(item)
 
-                    if best_url:
+                    # Second pass: Claude validation if we have multiple candidates
+                    if len(scored_results) > 1 and self.search_validator:
+                        valid_results, rejected_results = await self._validate_search_results(
+                            results=scored_results,
+                            entity_name=entity_name,
+                            entity_type=getattr(self, 'current_entity_type', 'ORG'),
+                            search_query=primary_query,
+                            hypothesis_context=getattr(self, 'current_hypothesis_context', None)
+                        )
+
+                        # Return best valid result by URL score
+                        if valid_results:
+                            # Sort by URL score if available
+                            valid_results.sort(key=lambda x: x.get('_url_score', 0), reverse=True)
+                            best_url = valid_results[0].get('url')
+                            best_score = valid_results[0].get('_url_score', 0)
+                            logger.info(
+                                f"✅ {engine} search found best URL after validation "
+                                f"(score {best_score}): {best_url}"
+                            )
+                            return best_url
+
+                    # Fallback: return best scored result without validation
+                    if scored_results:
+                        scored_results.sort(key=lambda x: x.get('_url_score', 0), reverse=True)
+                        best_url = scored_results[0].get('url')
+                        best_score = scored_results[0].get('_url_score', 0)
                         logger.info(f"✅ {engine} search found best URL (score {best_score}): {best_url}")
                         return best_url
                 else:
@@ -1186,6 +1234,82 @@ class HypothesisDrivenDiscovery:
 
         logger.error(f"❌ All search queries failed for {hop_type}")
         return None
+
+    async def _validate_search_results(
+        self,
+        results: List[Dict[str, Any]],
+        entity_name: str,
+        entity_type: str,
+        search_query: str,
+        hypothesis_context: Optional[str] = None
+    ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+        """
+        Validate search results using Claude to filter false positives
+
+        Args:
+            results: List of search results with 'title', 'url', 'snippet'
+            entity_name: Name of the entity
+            entity_type: Type of entity (SPORT_CLUB, SPORT_FEDERATION, etc.)
+            search_query: The original search query
+            hypothesis_context: Optional context about the hypothesis
+
+        Returns:
+            Tuple of (valid_results, rejected_results)
+        """
+        if not self.search_validator:
+            # Validator not available, return all results as valid
+            logger.debug("Search result validator not configured, skipping validation")
+            return results, []
+
+        if not results:
+            return [], []
+
+        try:
+            valid, rejected = await self.search_validator.validate_search_results(
+                results=results,
+                entity_name=entity_name,
+                entity_type=entity_type,
+                search_query=search_query,
+                hypothesis_context=hypothesis_context
+            )
+
+            logger.info(
+                f"🔍 Post-search validation: {len(valid)}/{len(results)} valid, "
+                f"{len(rejected)}/{len(results)} rejected"
+            )
+
+            # Log rejected results for analysis
+            if rejected:
+                for r in rejected:
+                    validation = r.get('validation', {})
+                    logger.debug(f"  ❌ Rejected: {r.get('title', 'N/A')[:60]} - {validation.get('reason', 'No reason')}")
+
+            return valid, rejected
+
+        except Exception as e:
+            logger.warning(f"⚠️ Search result validation failed: {e}, using all results")
+            return results, []
+
+    def _extract_entity_type_from_template(self, template_id: str) -> str:
+        """
+        Extract entity type from template ID
+
+        Args:
+            template_id: Template identifier (e.g., "tier_1_club_centralized_procurement")
+
+        Returns:
+            Entity type string (SPORT_CLUB, SPORT_FEDERATION, SPORT_LEAGUE, or ORG as default)
+        """
+        template_lower = template_id.lower()
+
+        if 'club' in template_lower or 'arsenal' in template_lower or 'real madrid' in template_lower:
+            return 'SPORT_CLUB'
+        elif 'federation' in template_lower or 'icf' in template_lower or 'fiba' in template_lower:
+            return 'SPORT_FEDERATION'
+        elif 'league' in template_lower or 'premier' in template_lower or 'laliga' in template_lower:
+            return 'SPORT_LEAGUE'
+        else:
+            return 'ORG'  # Default generic type
 
     async def _search_pdfs_optimized(
         self,
