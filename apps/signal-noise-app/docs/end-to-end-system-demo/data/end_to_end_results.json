@@ -1,0 +1,482 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-02-17T11:54:34.636306",
+  "total_duration_ms": 45000,
+  "total_cost_usd": 0.35,
+  "entities": [
+    {
+      "entity_id": "arsenal-fc",
+      "entity_name": "Arsenal FC",
+      "entity_type": "SPORT_CLUB",
+      "started_at": "2026-02-17T11:54:34.636132",
+      "completed_at": "2026-02-17T11:54:34.636139",
+      "duration_ms": 15000,
+      "cost_usd": 0.15,
+      "steps": [
+        {
+          "step_number": 1,
+          "step_name": "Question-First Dossier",
+          "entity_id": "arsenal-fc",
+          "entity_name": "Arsenal FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T11:54:34.636148",
+          "completed_at": "2026-02-17T11:54:34.636153",
+          "duration_ms": 2500,
+          "cost_usd": 0.025,
+          "status": "success",
+          "input_data": {
+            "entity_id": "arsenal-fc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 1",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 2,
+          "step_name": "Hypothesis-Driven Discovery",
+          "entity_id": "arsenal-fc",
+          "entity_name": "Arsenal FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T11:54:34.636159",
+          "completed_at": "2026-02-17T11:54:34.636160",
+          "duration_ms": 2500,
+          "cost_usd": 0.025,
+          "status": "success",
+          "input_data": {
+            "entity_id": "arsenal-fc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 2",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 3,
+          "step_name": "Ralph Loop",
+          "entity_id": "arsenal-fc",
+          "entity_name": "Arsenal FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T11:54:34.636163",
+          "completed_at": "2026-02-17T11:54:34.636165",
+          "duration_ms": 2500,
+          "cost_usd": 0.025,
+          "status": "success",
+          "input_data": {
+            "entity_id": "arsenal-fc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 3",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 4,
+          "step_name": "Temporal Intelligence",
+          "entity_id": "arsenal-fc",
+          "entity_name": "Arsenal FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T11:54:34.636167",
+          "completed_at": "2026-02-17T11:54:34.636168",
+          "duration_ms": 2500,
+          "cost_usd": 0.025,
+          "status": "success",
+          "input_data": {
+            "entity_id": "arsenal-fc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 4",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 5,
+          "step_name": "Narrative Builder",
+          "entity_id": "arsenal-fc",
+          "entity_name": "Arsenal FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T11:54:34.636170",
+          "completed_at": "2026-02-17T11:54:34.636171",
+          "duration_ms": 2500,
+          "cost_usd": 0.025,
+          "status": "success",
+          "input_data": {
+            "entity_id": "arsenal-fc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 5",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 6,
+          "step_name": "Yellow Panther Scoring",
+          "entity_id": "arsenal-fc",
+          "entity_name": "Arsenal FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T11:54:34.636173",
+          "completed_at": "2026-02-17T11:54:34.636174",
+          "duration_ms": 2500,
+          "cost_usd": 0.025,
+          "status": "success",
+          "input_data": {
+            "entity_id": "arsenal-fc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 6",
+          "logs": [],
+          "metrics": {}
+        }
+      ],
+      "final_confidence": 0.78,
+      "total_signals": 5,
+      "procurement_signals": 3,
+      "capability_signals": 2,
+      "confidence_band": "CONFIDENT",
+      "estimated_value": "\u00a3200K-\u00a3500K",
+      "recommendations": [
+        "Target Juliet Slot (Commercial Director) with next-gen fan experiences",
+        "Pursue official kit supplier partnership for 2026-2027 season",
+        "Position mobile fan engagement platform for summer 2026 RFP"
+      ]
+    },
+    {
+      "entity_id": "icf",
+      "entity_name": "International Canoe Federation",
+      "entity_type": "SPORT_FEDERATION",
+      "started_at": "2026-02-17T11:54:34.636180",
+      "completed_at": "2026-02-17T11:54:34.636184",
+      "duration_ms": 12000,
+      "cost_usd": 0.1,
+      "steps": [
+        {
+          "step_number": 1,
+          "step_name": "Question-First Dossier",
+          "entity_id": "icf",
+          "entity_name": "International Canoe Federation",
+          "entity_type": "SPORT_FEDERATION",
+          "started_at": "2026-02-17T11:54:34.636190",
+          "completed_at": "2026-02-17T11:54:34.636194",
+          "duration_ms": 2000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "icf"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 1",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 2,
+          "step_name": "Hypothesis-Driven Discovery",
+          "entity_id": "icf",
+          "entity_name": "International Canoe Federation",
+          "entity_type": "SPORT_FEDERATION",
+          "started_at": "2026-02-17T11:54:34.636197",
+          "completed_at": "2026-02-17T11:54:34.636199",
+          "duration_ms": 2000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "icf"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 2",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 3,
+          "step_name": "Ralph Loop",
+          "entity_id": "icf",
+          "entity_name": "International Canoe Federation",
+          "entity_type": "SPORT_FEDERATION",
+          "started_at": "2026-02-17T11:54:34.636201",
+          "completed_at": "2026-02-17T11:54:34.636202",
+          "duration_ms": 2000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "icf"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 3",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 4,
+          "step_name": "Temporal Intelligence",
+          "entity_id": "icf",
+          "entity_name": "International Canoe Federation",
+          "entity_type": "SPORT_FEDERATION",
+          "started_at": "2026-02-17T11:54:34.636204",
+          "completed_at": "2026-02-17T11:54:34.636206",
+          "duration_ms": 2000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "icf"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 4",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 5,
+          "step_name": "Narrative Builder",
+          "entity_id": "icf",
+          "entity_name": "International Canoe Federation",
+          "entity_type": "SPORT_FEDERATION",
+          "started_at": "2026-02-17T11:54:34.636208",
+          "completed_at": "2026-02-17T11:54:34.636209",
+          "duration_ms": 2000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "icf"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 5",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 6,
+          "step_name": "Yellow Panther Scoring",
+          "entity_id": "icf",
+          "entity_name": "International Canoe Federation",
+          "entity_type": "SPORT_FEDERATION",
+          "started_at": "2026-02-17T11:54:34.636211",
+          "completed_at": "2026-02-17T11:54:34.636212",
+          "duration_ms": 2000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "icf"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 6",
+          "logs": [],
+          "metrics": {}
+        }
+      ],
+      "final_confidence": 0.65,
+      "total_signals": 3,
+      "procurement_signals": 2,
+      "capability_signals": 1,
+      "confidence_band": "CONFIDENT",
+      "estimated_value": "\u00a3150K-\u00a3300K",
+      "recommendations": [
+        "Target digital transformation of member federation platform"
+      ]
+    },
+    {
+      "entity_id": "mlc",
+      "entity_name": "Major League Cricket",
+      "entity_type": "SPORT_LEAGUE",
+      "started_at": "2026-02-17T11:54:34.636218",
+      "completed_at": "2026-02-17T11:54:34.636222",
+      "duration_ms": 18000,
+      "cost_usd": 0.1,
+      "steps": [
+        {
+          "step_number": 1,
+          "step_name": "Question-First Dossier",
+          "entity_id": "mlc",
+          "entity_name": "Major League Cricket",
+          "entity_type": "SPORT_LEAGUE",
+          "started_at": "2026-02-17T11:54:34.636228",
+          "completed_at": "2026-02-17T11:54:34.636232",
+          "duration_ms": 3000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "mlc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 1",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 2,
+          "step_name": "Hypothesis-Driven Discovery",
+          "entity_id": "mlc",
+          "entity_name": "Major League Cricket",
+          "entity_type": "SPORT_LEAGUE",
+          "started_at": "2026-02-17T11:54:34.636235",
+          "completed_at": "2026-02-17T11:54:34.636236",
+          "duration_ms": 3000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "mlc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 2",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 3,
+          "step_name": "Ralph Loop",
+          "entity_id": "mlc",
+          "entity_name": "Major League Cricket",
+          "entity_type": "SPORT_LEAGUE",
+          "started_at": "2026-02-17T11:54:34.636239",
+          "completed_at": "2026-02-17T11:54:34.636240",
+          "duration_ms": 3000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "mlc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 3",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 4,
+          "step_name": "Temporal Intelligence",
+          "entity_id": "mlc",
+          "entity_name": "Major League Cricket",
+          "entity_type": "SPORT_LEAGUE",
+          "started_at": "2026-02-17T11:54:34.636243",
+          "completed_at": "2026-02-17T11:54:34.636245",
+          "duration_ms": 3000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "mlc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 4",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 5,
+          "step_name": "Narrative Builder",
+          "entity_id": "mlc",
+          "entity_name": "Major League Cricket",
+          "entity_type": "SPORT_LEAGUE",
+          "started_at": "2026-02-17T11:54:34.636247",
+          "completed_at": "2026-02-17T11:54:34.636248",
+          "duration_ms": 3000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "mlc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 5",
+          "logs": [],
+          "metrics": {}
+        },
+        {
+          "step_number": 6,
+          "step_name": "Yellow Panther Scoring",
+          "entity_id": "mlc",
+          "entity_name": "Major League Cricket",
+          "entity_type": "SPORT_LEAGUE",
+          "started_at": "2026-02-17T11:54:34.636251",
+          "completed_at": "2026-02-17T11:54:34.636252",
+          "duration_ms": 3000,
+          "cost_usd": 0.017,
+          "status": "success",
+          "input_data": {
+            "entity_id": "mlc"
+          },
+          "output_data": {
+            "result": "mock_data"
+          },
+          "details": "Mock details for step 6",
+          "logs": [],
+          "metrics": {}
+        }
+      ],
+      "final_confidence": 0.52,
+      "total_signals": 2,
+      "procurement_signals": 1,
+      "capability_signals": 1,
+      "confidence_band": "INFORMED",
+      "estimated_value": "\u00a380K-\u00a3200K",
+      "recommendations": [
+        "Monitor for analytics platform RFP in Q2 2026"
+      ]
+    }
+  ],
+  "summary": {
+    "total_entities": 3,
+    "entity_types_tested": [
+      "SPORT_CLUB",
+      "SPORT_FEDERATION",
+      "SPORT_LEAGUE"
+    ],
+    "total_steps_executed": 18,
+    "successful_steps": 18,
+    "avg_confidence": 0.65,
+    "entity_results": [
+      {
+        "entity": "Arsenal FC",
+        "confidence": 0.78,
+        "band": "CONFIDENT",
+        "signals": 5,
+        "value": "\u00a3200K-\u00a3500K"
+      },
+      {
+        "entity": "International Canoe Federation",
+        "confidence": 0.65,
+        "band": "CONFIDENT",
+        "signals": 3,
+        "value": "\u00a3150K-\u00a3300K"
+      },
+      {
+        "entity": "Major League Cricket",
+        "confidence": 0.52,
+        "band": "INFORMED",
+        "signals": 2,
+        "value": "\u00a380K-\u00a3200K"
+      }
+    ]
+  }
+}
