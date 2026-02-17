@@ -195,7 +195,7 @@ SPORT_CLUB_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will issue mobile app RFP (£80K-£300K budget) within 6-18 months",
         next_signals=[
             "Job postings: Mobile Developer, iOS Developer, Product Manager - Mobile",
-            "RFP keywords: mobile app, fan app, official app, React Native",
+            "RFP keywords: mobile app, fan app, official app, React Native, RFP, Request for Proposal, tender, procurement, EOI, RFI",
             "Announcements: Digital transformation initiatives, fan engagement strategy"
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
@@ -212,10 +212,11 @@ SPORT_CLUB_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} is seeking digital transformation partner (£150K-£500K) for modernization project",
         next_signals=[
             "Job postings: CTO, CIO, Digital Transformation Manager, Cloud Architect",
+            "RFP keywords: digital transformation, cloud migration, modernization, RFP, Request for Proposal, tender, ITT, procurement, vendor portal",
             "Strategic announcements: Digital modernization, cloud migration, legacy system refresh",
             "Partnership announcements: Technology consulting partners"
         ],
-        hop_types=["CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
+        hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
         accept_criteria="Mentions of modernization, cloud migration, or technology overhaul initiatives",
         confidence_boost=0.20
     ),
@@ -230,6 +231,7 @@ SPORT_CLUB_QUESTIONS: List[QuestionTemplate] = [
         next_signals=[
             "Fan complaints: Ticketing issues, checkout problems, mobile ticketing",
             "Job postings: E-commerce Manager, Head of Ticketing, CRM Manager",
+            "RFP keywords: ticketing system, e-commerce platform, POS system, RFP, Request for Proposal, tender, RFQ, supplier portal",
             "Partnership changes: New ticketing provider partnerships"
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
@@ -246,10 +248,11 @@ SPORT_CLUB_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will invest in analytics/data platform (£100K-£400K) for performance/fan insights",
         next_signals=[
             "Job postings: Data Analyst, Data Engineer, BI Developer, Analytics Manager",
+            "RFP keywords: analytics platform, BI system, data warehouse, CRM analytics, RFP, Request for Proposal, tender, RFQ",
             "Partnerships: Analytics providers, BI platform announcements",
             "Strategic mentions: Data-driven decisions, fan insights, performance analytics"
         ],
-        hop_types=["CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
+        hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
         accept_criteria="Job postings for analytics roles or data platform announcements",
         confidence_boost=0.12
     ),
@@ -264,9 +267,10 @@ SPORT_CLUB_QUESTIONS: List[QuestionTemplate] = [
         next_signals=[
             "Season ticket holder feedback: Engagement complaints, communication issues",
             "Job postings: Fan Engagement Manager, Head of Supporter Services",
+            "RFP keywords: fan engagement platform, CRM system, loyalty platform, RFP, Request for Proposal, tender, EOI",
             "Initiatives: Fan experience programs, loyalty scheme launches"
         ],
-        hop_types=["CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
+        hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
         accept_criteria="Fan engagement initiatives or related job postings",
         confidence_boost=0.10
     ),
@@ -281,9 +285,10 @@ SPORT_CLUB_QUESTIONS: List[QuestionTemplate] = [
         next_signals=[
             "Stadium announcements: WiFi upgrades, mobile ordering, seat upgrades",
             "Job postings: Stadium Technology Manager, Venue Operations Director",
+            "RFP keywords: stadium technology, venue WiFi, mobile ordering, RFP, Request for Proposal, tender, ITT, supplier portal",
             "Partnerships: Stadium technology providers, connectivity partners"
         ],
-        hop_types=["PRESS_RELEASE", "CAREERS_PAGE", "RFP_PAGE"],
+        hop_types=["RFP_PAGE", "PRESS_RELEASE", "CAREERS_PAGE"],
         accept_criteria="Stadium technology initiatives or related partnerships",
         confidence_boost=0.12
     ),
@@ -298,9 +303,10 @@ SPORT_CLUB_QUESTIONS: List[QuestionTemplate] = [
         next_signals=[
             "Partnership changes: Ending vendor relationships",
             "Strategic announcements: System modernization, platform migration",
+            "RFP keywords: system migration, legacy replacement, platform modernization, RFP, Request for Proposal, tender, ITT, RFQ",
             "Job postings: Migration specialists, system architects"
         ],
-        hop_types=["PRESS_RELEASE", "RFP_PAGE", "CAREERS_PAGE"],
+        hop_types=["RFP_PAGE", "PRESS_RELEASE", "CAREERS_PAGE"],
         accept_criteria="Evidence of vendor changes or modernization initiatives",
         confidence_boost=0.18
     )
@@ -322,7 +328,7 @@ SPORT_FEDERATION_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will seek member database/platform RFP (£150K-£500K) for federation management",
         next_signals=[
             "Job postings: CRM Manager, Member Services Director, Digital Platform Manager",
-            "RFP keywords: member database, federation platform, CRM system",
+            "RFP keywords: member database, federation platform, CRM system, RFP, Request for Proposal, tender, EOI, ITT, procurement",
             "Announcements: Strategic plan mentions, digital initiative announcements"
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
@@ -339,6 +345,7 @@ SPORT_FEDERATION_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will issue AI officiating/platform RFP (£200K-£500K) before next major event",
         next_signals=[
             "Job postings: Officiating Technology Manager, Event Technology Director",
+            "RFP keywords: officiating system, VAR, video referee, AI officiating, RFP, Request for Proposal, tender, ITT, procurement",
             "Event announcements: Technology trials, officiating system upgrades",
             "Partnerships: Technology providers for officiating/VAR systems"
         ],
@@ -357,7 +364,7 @@ SPORT_FEDERATION_QUESTIONS: List[QuestionTemplate] = [
         next_signals=[
             "Job postings: Certification Manager, Assessment System Lead",
             "Initiatives: Digital assessment programs, online certification launches",
-            "RFP mentions: Certification system, assessment platform"
+            "RFP keywords: certification system, assessment platform, digital testing, RFP, Request for Proposal, tender, RFQ, EOI"
         ],
         hop_types=["RFP_PAGE", "CAREERS_PAGE", "OFFICIAL_SITE"],
         accept_criteria="Digital certification or assessment system initiatives",
@@ -373,6 +380,7 @@ SPORT_FEDERATION_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will seek event management platform (£100K-£400K) for championship operations",
         next_signals=[
             "Job postings: Event Technology Manager, Championship Operations Lead",
+            "RFP keywords: event management, championship platform, competition system, RFP, Request for Proposal, tender, ITT, procurement",
             "Event announcements: New event formats, digital ticketing for events",
             "Partnerships: Event technology providers"
         ],
@@ -390,10 +398,11 @@ SPORT_FEDERATION_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will implement member communication platform (£80K-£250K) for federation engagement",
         next_signals=[
             "Job postings: Communication Manager, Member Engagement Lead",
+            "RFP keywords: member communication, federation portal, engagement platform, RFP, Request for Proposal, tender, EOI, ITT",
             "Initiatives: Member portal launches, communication strategy updates",
             "Platform announcements: Member apps, communication tools"
         ],
-        hop_types=["CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
+        hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
         accept_criteria="Member communication or engagement platform initiatives",
         confidence_boost=0.12
     ),
@@ -407,10 +416,11 @@ SPORT_FEDERATION_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will invest in federation analytics platform (£150K-£400K) for member insights",
         next_signals=[
             "Job postings: Data Analyst, Analytics Manager, Performance Data Lead",
+            "RFP keywords: analytics platform, data warehouse, federation BI, RFP, Request for Proposal, tender, RFQ, ITT",
             "Strategic mentions: Data-driven member support, performance insights",
             "Partnerships: Analytics platform providers"
         ],
-        hop_types=["CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
+        hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE", "OFFICIAL_SITE"],
         accept_criteria="Analytics platform initiatives or related job postings",
         confidence_boost=0.15
     )
@@ -432,6 +442,7 @@ SPORT_LEAGUE_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will develop league-wide mobile platform (£200K-£500K) for fan engagement",
         next_signals=[
             "Job postings: Mobile Product Manager, League Digital Director",
+            "RFP keywords: mobile app, league platform, fan app, React Native, RFP, Request for Proposal, tender, ITT, EOI, procurement",
             "League announcements: Mobile strategy, digital fan experience",
             "Club initiatives: Coordinated mobile efforts across clubs"
         ],
@@ -449,6 +460,7 @@ SPORT_LEAGUE_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will seek digital operations transformation (£200K-£500K) for league efficiency",
         next_signals=[
             "Job postings: League Operations Director, Digital Transformation Lead",
+            "RFP keywords: digital transformation, CRM system, data warehouse, RFP, Request for Proposal, tender, ITT, procurement",
             "Strategic announcements: Operations modernization, digital league management",
             "Club mandates: Digital requirements for member clubs"
         ],
@@ -466,10 +478,11 @@ SPORT_LEAGUE_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will invest in centralized analytics platform (£150K-£400K) for league-wide insights",
         next_signals=[
             "Job postings: Head of Analytics, Data Platform Manager",
+            "RFP keywords: analytics platform, data warehouse, league BI, centralized data, RFP, Request for Proposal, tender, RFQ, ITT",
             "League initiatives: Data sharing, analytics for member clubs",
             "Partnerships: Analytics platform providers"
         ],
-        hop_types=["CAREERS_PAGE", "PRESS_RELEASE", "RFP_PAGE"],
+        hop_types=["RFP_PAGE", "CAREERS_PAGE", "PRESS_RELEASE"],
         accept_criteria="Centralized analytics or data platform initiatives",
         confidence_boost=0.15
     ),
@@ -483,6 +496,7 @@ SPORT_LEAGUE_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will create unified e-commerce platform (£150K-£400K) for league merchandise/ticketing",
         next_signals=[
             "Job postings: E-commerce Director, Head of League Commerce",
+            "RFP keywords: e-commerce platform, ticketing system, league merchandise, RFP, Request for Proposal, tender, RFQ, ITT, supplier portal",
             "League announcements: Unified shopping, league ticketing platform",
             "Club alignment: Standardized e-commerce across clubs"
         ],
@@ -500,6 +514,7 @@ SPORT_LEAGUE_QUESTIONS: List[QuestionTemplate] = [
         hypothesis_template="{entity} will enhance broadcast/streaming platform (£200K-£500K) for digital content",
         next_signals=[
             "Job postings: Streaming Product Manager, Digital Content Lead",
+            "RFP keywords: streaming platform, OTT, video delivery, broadcast, RFP, Request for Proposal, tender, ITT, media procurement",
             "Media announcements: OTT platform, direct-to-consumer streaming",
             "Partnerships: Streaming technology providers"
         ],
@@ -882,8 +897,70 @@ __all__ = [
     'get_yp_service_summary',
     'validate_contact_data',
     'get_question_first_prompt_context',
-    'generate_hypothesis_batch'
+    'generate_hypothesis_batch',
+
+    # Entity Aliases
+    'ENTITY_ALIASES',
+    'get_entity_aliases'
 ]
+
+
+
+# =============================================================================
+# Entity Aliases for Discovery
+# =============================================================================
+
+ENTITY_ALIASES = {
+    "major-league-cricket": ["American Cricket Enterprises", "ACE", "MLC"],
+    "major-league-cricket-mlc": ["American Cricket Enterprises", "ACE", "Major League Cricket"],
+    "international-canoe-federation": ["ICF", "Canoe ICF"],
+    "premier-league": ["EPL", "English Premier League"],
+    "real-madrid": ["Real Madrid CF"],
+    "arsenal-fc": ["Arsenal", "Arsenal Football Club"],
+    "barcelona-fc": ["FC Barcelona", "Barca"],
+}
+
+
+def get_entity_aliases(entity_id: str, entity_name: str = None) -> List[str]:
+    """
+    Get search aliases for an entity to improve discovery
+
+    Args:
+        entity_id: Entity identifier (e.g., "major-league-cricket")
+        entity_name: Optional entity name
+
+    Returns:
+        List of alias names to search for
+    """
+    # First check predefined aliases
+    entity_key = entity_id.lower().replace(" ", "-")
+    if entity_key in ENTITY_ALIASES:
+        return ENTITY_ALIASES[entity_key]
+
+    # Generate basic aliases from entity name
+    if not entity_name:
+        return []
+
+    aliases = []
+    name_lower = entity_name.lower()
+
+    # Common variations
+    if "cricket" in name_lower and "league" in name_lower:
+        # Extract league name
+        base = entity_name.replace("Cricket", "").replace("League", "").strip()
+        aliases.extend([
+            base + " Cricket",
+            base,
+        ])
+
+    if "federation" in name_lower:
+        # Extract federation name
+        base = entity_name.replace("Federation", "").replace("International", "").strip()
+        if "International" in entity_name:
+            initials = "".join([w[0] for w in entity_name.split() if w[0].isupper()])
+            aliases.append(initials)
+
+    return aliases
 
 
 # =============================================================================
