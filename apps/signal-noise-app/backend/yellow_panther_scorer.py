@@ -10,7 +10,7 @@ Yellow Panther Business Profile:
 - Major clients: Team GB, Premier Padel, LNB, ISU, FIBA 3×3
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from datetime import datetime
 from enum import Enum
 import re
@@ -128,6 +128,218 @@ class YellowPantherFitScorer:
             "fiba_3x3": "FIBA 3×3 Basketball",
             "bnpp_paribas": "BNP Paribas Open"
         }
+
+        # Load entity-type questions for enhanced scoring
+        self.entity_type_questions = {}
+        try:
+            from entity_type_dossier_questions import ENTITY_TYPE_QUESTIONS
+            self.entity_type_questions = ENTITY_TYPE_QUESTIONS
+        except ImportError:
+            pass
+
+    def score_from_question_template(
+        self,
+        entity_type: str,
+        question_id: str,
+        signal_evidence: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Score a signal based on entity-type question template
+
+        Uses the predefined question templates which include:
+        - YP service fit
+        - Budget range
+        - Positioning strategy
+        - Validation criteria
+
+        Args:
+            entity_type: Type of entity (SPORT_CLUB, SPORT_FEDERATION, SPORT_LEAGUE)
+            question_id: Question identifier (e.g., "sc_mobile_fan_platform")
+            signal_evidence: Evidence collected from discovery
+
+        Returns:
+            Scoring results with fit score, positioning, and recommendations
+        """
+        if not self.entity_type_questions:
+            return self._get_default_score()
+
+        # Get questions for entity type
+        questions = self.entity_type_questions.get(entity_type, [])
+        if not questions:
+            return self._get_default_score()
+
+        # Find matching question
+        matched_question = None
+        for q in questions:
+            if q.question_id == question_id:
+                matched_question = q
+                break
+
+        if not matched_question:
+            return self._get_default_score()
+
+        # Score based on evidence against next_signals
+        evidence_text = str(signal_evidence).lower()
+        matched_signals = []
+
+        for signal in matched_question.next_signals:
+            signal_lower = signal.lower()
+            # Check for keyword matches
+            keywords = signal_lower.split()[:3]  # First 3 words
+            if any(keyword in evidence_text for keyword in keywords):
+                matched_signals.append(signal)
+
+        # Calculate fit score
+        match_ratio = len(matched_signals) / len(matched_question.next_signals) if matched_question.next_signals else 0
+        fit_score = min(100, match_ratio * 100)
+
+        # Generate recommendations
+        return {
+            "fit_score": round(fit_score, 1),
+            "positioning": matched_question.positioning_strategy.value,
+            "yp_services": [s.value for s in matched_question.yp_service_fit],
+            "budget_range": matched_question.budget_range,
+            "matched_signals": matched_signals,
+            "recommendations": self._generate_question_based_recommendations(
+                fit_score,
+                matched_question.positioning_strategy,
+                matched_question.yp_advantage
+            ),
+            "yp_advantage": matched_question.yp_advantage,
+            "confidence_boost": matched_question.confidence_boost,
+            "hop_types": matched_question.hop_types,
+            "accept_criteria": matched_question.accept_criteria
+        }
+
+    def _generate_question_based_recommendations(
+        self,
+        fit_score: float,
+        positioning_strategy: Any,
+        yp_advantage: str
+    ) -> List[str]:
+        """Generate recommendations based on question template scoring"""
+        recommendations = []
+
+        if fit_score >= 70:
+            recommendations.append("Immediate outreach recommended")
+            recommendations.append(f"Lead with: {yp_advantage}")
+            recommendations.append(f"Positioning: {positioning_strategy.value}")
+        elif fit_score >= 40:
+            recommendations.append("Add to watch list")
+            recommendations.append(f"Monitor for validation signals")
+            recommendations.append(f"Prepare: {positioning_strategy.value} approach")
+        else:
+            recommendations.append("Low fit - monitor only")
+            recommendations.append("Wait for additional signals")
+
+        return recommendations
+
+    def _get_default_score(self) -> Dict[str, Any]:
+        """Return default scoring when question templates unavailable"""
+        return {
+            "fit_score": 30.0,
+            "positioning": "UNKNOWN",
+            "yp_services": [],
+            "recommendations": ["Monitor for additional signals"]
+        }
+
+    def get_entity_type_questions(
+        self,
+        entity_type: str
+    ) -> List[Dict[str, Any]]:
+        """
+        Get question templates for a specific entity type
+
+        Args:
+            entity_type: Type of entity (SPORT_CLUB, SPORT_FEDERATION, SPORT_LEAGUE)
+
+        Returns:
+            List of question dictionaries with YP metadata
+        """
+        if not self.entity_type_questions:
+            return []
+
+        questions = self.entity_type_questions.get(entity_type, [])
+        return [q.to_dict() for q in questions]
+
+    def get_positioning_strategy_for_signal(
+        self,
+        signal_type: str
+    ) -> str:
+        """
+        Determine YP positioning strategy based on signal type
+
+        Args:
+            signal_type: Type of signal (RFP_DETECTED, DIGITAL_INITIATIVE, etc.)
+
+        Returns:
+            Positioning strategy (SOLUTION_PROVIDER, STRATEGIC_PARTNER, etc.)
+        """
+        signal_type = signal_type.lower()
+
+        if 'rfp' in signal_type or 'tender' in signal_type or 'procurement' in signal_type:
+            return "SOLUTION_PROVIDER"  # Direct procurement response
+        elif 'digital' in signal_type or 'transformation' in signal_type:
+            return "STRATEGIC_PARTNER"  # Advisory relationship
+        elif 'hiring' in signal_type or 'job' in signal_type:
+            return "CAPABILITY_PARTNER"  # Tool timing
+        elif 'partnership' in signal_type:
+            return "INNOVATION_PARTNER"  # Co-creation
+        elif 'connection' in signal_type or 'referral' in signal_type:
+            return "TRUSTED_ADVISOR"  # Warm intro
+        else:
+            return "STRATEGIC_PARTNER"  # Default
+
+    def score_with_question_context(
+        self,
+        signal: Dict,
+        entity_type: str,
+        entity_name: str
+    ) -> Dict:
+        """
+        Score opportunity with entity-type question context
+
+        Combines standard scoring with question template intelligence.
+
+        Args:
+            signal: RFP signal with category, evidence, confidence
+            entity_type: Type of entity
+            entity_name: Name of entity
+
+        Returns:
+            Enhanced scoring results with question-based insights
+        """
+        # Get standard score
+        standard_score = self.score_opportunity(signal, {"name": entity_name})
+
+        # Enhance with question template data
+        questions = self.get_entity_type_questions(entity_type)
+
+        if questions:
+            # Find relevant questions based on signal category
+            signal_category = signal.get('signal_category', '').lower()
+
+            relevant_questions = []
+            for q in questions:
+                # Check if question relates to signal category
+                if any(cat in signal_category for cat in
+                       ['mobile', 'digital', 'fan', 'analytics', 'ecommerce', 'ticketing']):
+                    if cat in q['question'].lower():
+                        relevant_questions.append(q)
+
+            # Add question-based recommendations
+            if relevant_questions:
+                standard_score['question_based_insights'] = {
+                    'relevant_questions': len(relevant_questions),
+                    'yp_services_from_questions': list(set(
+                        svc for q in relevant_questions for svc in q['yp_service_fit']
+                    )),
+                    'positioning_from_questions': self.get_positioning_strategy_for_signal(
+                        signal.get('signal_category', '')
+                    )
+                }
+
+        return standard_score
 
     def score_opportunity(
         self,

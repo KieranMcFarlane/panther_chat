@@ -1764,6 +1764,98 @@ Return JSON:
     # Dossier Integration Methods
     # =============================================================================
 
+    async def initialize_from_question_templates(
+        self,
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+        max_questions: int = 10
+    ) -> int:
+        """
+        Initialize discovery system with entity-type-specific question templates
+
+        Each question template generates a hypothesis with:
+        - YP service fit
+        - Budget range
+        - Positioning strategy
+        - Validation strategy (next_signals, hop_types)
+
+        Args:
+            entity_id: Entity identifier
+            entity_name: Human-readable entity name
+            entity_type: Type of entity (SPORT_CLUB, SPORT_FEDERATION, SPORT_LEAGUE)
+            max_questions: Maximum number of questions/hypotheses to generate
+
+        Returns:
+            Number of hypotheses successfully added
+        """
+        try:
+            from entity_type_dossier_questions import (
+                generate_hypothesis_batch,
+                validate_contact_data
+            )
+        except ImportError:
+            logger.warning("entity_type_dossier_questions not available - question initialization skipped")
+            return 0
+
+        from hypothesis_manager import Hypothesis
+
+        # Generate hypotheses from question templates
+        hypotheses = generate_hypothesis_batch(
+            entity_type=entity_type,
+            entity_name=entity_name,
+            entity_id=entity_id,
+            max_questions=max_questions
+        )
+
+        added_count = 0
+        for hyp_dict in hypotheses:
+            try:
+                # Create Hypothesis object with YP metadata
+                hypothesis = Hypothesis(
+                    hypothesis_id=hyp_dict['hypothesis_id'],
+                    entity_id=entity_id,
+                    statement=hyp_dict['statement'],
+                    category=hyp_dict['category'],
+                    prior_probability=hyp_dict['confidence'],
+                    confidence=hyp_dict['confidence'],
+                    status='ACTIVE',
+                    metadata={
+                        'source': 'entity_type_question_template',
+                        'question_id': hyp_dict['metadata']['question_id'],
+                        'yp_service_fit': hyp_dict['metadata']['yp_service_fit'],
+                        'budget_range': hyp_dict['metadata']['budget_range'],
+                        'yp_advantage': hyp_dict['metadata']['yp_advantage'],
+                        'positioning_strategy': hyp_dict['metadata']['positioning_strategy'],
+                        'next_signals': hyp_dict['metadata']['next_signals'],
+                        'hop_types': hyp_dict['metadata']['hop_types'],
+                        'accept_criteria': hyp_dict['metadata']['accept_criteria'],
+                        'confidence_boost': hyp_dict['metadata']['confidence_boost']
+                    }
+                )
+
+                # Store in instance cache
+                if not hasattr(self, '_dossier_hypotheses_cache'):
+                    self._dossier_hypotheses_cache = {}
+                if entity_id not in self._dossier_hypotheses_cache:
+                    self._dossier_hypotheses_cache[entity_id] = []
+                self._dossier_hypotheses_cache[entity_id].append(hypothesis)
+
+                added_count += 1
+
+                logger.info(
+                    f"✅ Added question-based hypothesis: {hypothesis.hypothesis_id} "
+                    f"(confidence: {hypothesis.confidence:.2f}, "
+                    f"YP services: {', '.join(hyp_dict['metadata']['yp_service_fit'])})"
+                )
+
+            except Exception as e:
+                logger.error(f"❌ Failed to add question-based hypothesis: {e}")
+                continue
+
+        logger.info(f"📋 Question initialization complete: {added_count}/{len(hypotheses)} hypotheses added")
+        return added_count
+
     async def initialize_from_dossier(
         self,
         entity_id: str,
@@ -1775,6 +1867,9 @@ Return JSON:
         Converts dossier hypotheses to internal Hypothesis format and adds
         to hypothesis_manager. Maps signal types to categories and sets
         prior_confidence from dossier confidence scores.
+
+        Enhanced with YP integration - includes YP service fit and positioning
+        in hypothesis metadata.
 
         Args:
             entity_id: Entity identifier
@@ -1795,6 +1890,25 @@ Return JSON:
                 signal_type = hyp_dict.get('signal_type', '')
                 category = self._map_signal_to_category(signal_type)
 
+                # Enhanced metadata with YP info if available
+                metadata = {
+                    'source': 'dossier_generation',
+                    'dossier_confidence': hyp_dict.get('confidence', 0.50),
+                    'original_category': hyp_dict.get('category', 'unknown'),
+                    'signal_type': signal_type,
+                    'pattern_name': hyp_dict.get('pattern', 'dossier_pattern')
+                }
+
+                # Add YP metadata if present
+                if 'yp_service_fit' in hyp_dict:
+                    metadata['yp_service_fit'] = hyp_dict['yp_service_fit']
+                if 'positioning_strategy' in hyp_dict:
+                    metadata['positioning_strategy'] = hyp_dict['positioning_strategy']
+                if 'hop_types' in hyp_dict:
+                    metadata['hop_types'] = hyp_dict['hop_types']
+                if 'next_signals' in hyp_dict:
+                    metadata['next_signals'] = hyp_dict['next_signals']
+
                 # Create Hypothesis object
                 hypothesis = Hypothesis(
                     hypothesis_id=f"{entity_id}_{category}_{hyp_dict.get('category', 'unknown')}",
@@ -1804,13 +1918,7 @@ Return JSON:
                     prior_probability=hyp_dict.get('confidence', 0.50),
                     confidence=hyp_dict.get('confidence', 0.50),
                     status='ACTIVE',
-                    metadata={
-                        'source': 'dossier_generation',
-                        'dossier_confidence': hyp_dict.get('confidence', 0.50),
-                        'original_category': hyp_dict.get('category', 'unknown'),
-                        'signal_type': signal_type,
-                        'pattern_name': hyp_dict.get('pattern', 'dossier_pattern')  # Store in metadata
-                    }
+                    metadata=metadata
                 )
 
                 # Store in instance cache for retrieval
@@ -1833,6 +1941,103 @@ Return JSON:
 
         logger.info(f"📋 Dossier initialization complete: {added_count}/{len(dossier_hypotheses)} hypotheses added")
         return added_count
+
+    def plan_hops_from_hypothesis(
+        self,
+        hypothesis: 'Hypothesis',
+        entity_name: str
+    ) -> List[Dict[str, Any]]:
+        """
+        Plan discovery hops based on hypothesis metadata
+
+        Maps hypothesis validation strategies to specific hop types:
+        - Job postings → CAREERS_PAGE hop
+        - RFP mentions → RFP_PAGE, TENDERS_PAGE hops
+        - Strategic announcements → PRESS_RELEASE hop
+        - Technology info → OFFICIAL_SITE hop
+
+        Args:
+            hypothesis: Hypothesis object with metadata
+            entity_name: Name of entity for query generation
+
+        Returns:
+            List of hop plans with hop_type and query
+        """
+        hop_plans = []
+
+        # Get validation metadata
+        metadata = hypothesis.metadata or {}
+        next_signals = metadata.get('next_signals', [])
+        hop_types = metadata.get('hop_types', [])
+
+        # If hop_types specified, use them
+        if hop_types:
+            for hop_type_str in hop_types:
+                try:
+                    hop_type = HopType(hop_type_str)
+                    query = self._generate_query_for_hop(hop_type, hypothesis.statement, entity_name)
+                    hop_plans.append({
+                        'hop_type': hop_type,
+                        'query': query,
+                        'priority': 'high' if 'RFP' in hop_type_str or 'TENDER' in hop_type_str else 'medium'
+                    })
+                except ValueError:
+                    logger.warning(f"Invalid hop type: {hop_type_str}")
+                    continue
+
+        # Otherwise, infer from next_signals
+        elif next_signals:
+            for signal in next_signals:
+                signal_lower = signal.lower()
+
+                if 'job' in signal_lower:
+                    hop_type = HopType.CAREERS_PAGE
+                    query = f'"{entity_name}" job posting'
+                elif 'rfp' in signal_lower or 'tender' in signal_lower:
+                    hop_type = HopType.RFP_PAGE
+                    query = f'"{entity_name}" RFP tender'
+                elif 'announcement' in signal_lower or 'strategic' in signal_lower:
+                    hop_type = HopType.PRESS_RELEASE
+                    query = f'"{entity_name}" press release'
+                else:
+                    hop_type = HopType.OFFICIAL_SITE
+                    query = f'"{entity_name}" official site'
+
+                hop_plans.append({
+                    'hop_type': hop_type,
+                    'query': query,
+                    'priority': 'medium'
+                })
+
+        # Default to official site if no plan
+        if not hop_plans:
+            hop_plans.append({
+                'hop_type': HopType.OFFICIAL_SITE,
+                'query': f'"{entity_name}" official site',
+                'priority': 'low'
+            })
+
+        return hop_plans
+
+    def _generate_query_for_hop(
+        self,
+        hop_type: HopType,
+        statement: str,
+        entity_name: str
+    ) -> str:
+        """Generate search query for a specific hop type"""
+        # Extract keywords from hypothesis statement
+        keywords = statement.lower().split()
+        relevant_keywords = [k for k in keywords if len(k) > 4][:3]
+
+        if hop_type == HopType.RFP_PAGE:
+            return f'"{entity_name}" RFP tender procurement {" ".join(relevant_keywords)}'
+        elif hop_type == HopType.CAREERS_PAGE:
+            return f'"{entity_name}" job posting {" ".join(relevant_keywords)}'
+        elif hop_type == HopType.PRESS_RELEASE:
+            return f'"{entity_name}" press release announcement {" ".join(relevant_keywords)}'
+        else:
+            return f'"{entity_name}" {" ".join(relevant_keywords)}'
 
     async def run_discovery_with_dossier_context(
         self,
