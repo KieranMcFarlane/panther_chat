@@ -379,6 +379,157 @@ class GraphitiService:
             'status': 'created'
         }
 
+    async def add_discovery_episode(
+        self,
+        entity_id: str,
+        entity_name: str,
+        entity_type: str,
+        episode_type: str,
+        description: str,
+        source: str = "discovery",
+        url: Optional[str] = None,
+        confidence: float = 0.5,
+        evidence_date: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Add a discovery result as a temporal episode
+
+        This stores any discovered signal/evidence as a temporal episode that
+        contributes to the entity's temporal intelligence profile.
+
+        Args:
+            entity_id: Entity identifier
+            entity_name: Human-readable entity name
+            entity_type: Type of entity
+            episode_type: Type of episode (RFP_DETECTED, CRM_ANALYTICS, etc.)
+            description: Description of the discovery
+            source: Source of the discovery
+            url: URL where discovery was made
+            confidence: Confidence score (0-1)
+            evidence_date: When the evidence was originally published (ISO format string)
+                           If None, defaults to discovery_date (now)
+            metadata: Additional metadata
+
+        Returns:
+            Created episode data
+        """
+        discovery_date = datetime.now(timezone.utc).isoformat()
+        metadata = metadata or {}
+
+        # Use evidence_date if provided, otherwise default to discovery_date
+        episode_timestamp = evidence_date if evidence_date else discovery_date
+
+        if self.use_supabase and self.supabase_client:
+            # Store in Supabase with separate discovery_date and evidence_date
+            episode_data = {
+                'entity_id': entity_id.lower().replace(' ', '-'),
+                'entity_name': entity_name,
+                'entity_type': entity_type,
+                'episode_type': episode_type,
+                'timestamp': episode_timestamp,  # This is evidence_date for temporal analysis
+                'discovery_date': discovery_date,  # When we discovered it
+                'description': description,
+                'source': source,
+                'url': url,
+                'confidence_score': confidence,
+                'metadata': {
+                    **metadata,
+                    'has_evidence_date': evidence_date is not None
+                }
+            }
+
+            self.supabase_client.table('temporal_episodes').insert(episode_data).execute()
+
+            logger.info(f"✅ Created discovery episode: {episode_type} for {entity_name} (evidence_date: {episode_timestamp[:10]}, discovery_date: {discovery_date[:10]})")
+
+            return {
+                'episode_id': f"{entity_id}_{episode_type}_{int(datetime.now(timezone.utc).timestamp())}",
+                'entity_id': entity_id,
+                'timestamp': episode_timestamp,
+                'discovery_date': discovery_date,
+                'status': 'created'
+            }
+
+        # Fallback to FalkorDB
+        if not self.driver:
+            logger.warning("⚠️ No database available - episode not stored")
+            return {
+                'episode_id': 'temp',
+                'timestamp': episode_timestamp,
+                'status': 'not_stored'
+            }
+
+        with self.driver.session(database=self.graph_name) as session:
+            # Find or create entity
+            entity_result = session.run("""
+                MATCH (n {name: $entity_id})
+                RETURN n
+                LIMIT 1
+            """, entity_id=entity_id)
+
+            entity = entity_result.single()
+
+            if not entity:
+                # Create entity if not found
+                session.run("""
+                    CREATE (n:{entity_type} {{
+                        name: $entity_id,
+                        display_name: $entity_name,
+                        created_at: datetime()
+                    }})
+                    RETURN n
+                """.format(entity_type=entity_type),
+                entity_id=entity_id,
+                entity_name=entity_name
+            )
+
+            # Create episode with timestamp (evidence_date)
+            episode_id = f"{entity_id}_{episode_type}_{int(datetime.now(timezone.utc).timestamp())}"
+            episode_query = """
+                MATCH (e {name: $entity_id})
+                CREATE (ep:Episode {
+                    episode_id: $episode_id,
+                    episode_type: $episode_type,
+                    timestamp: datetime($timestamp),
+                    discovery_date: datetime($discovery_date),
+                    description: $description,
+                    source: $source,
+                    url: $url,
+                    confidence_score: $confidence,
+                    metadata: $metadata,
+                    created_at: datetime()
+                })
+                CREATE (e)-[:HAS_EPISODE]->(ep)
+                RETURN ep
+            """
+
+            session.run(episode_query, {
+                'entity_id': entity_id,
+                'episode_id': episode_id,
+                'episode_type': episode_type,
+                'timestamp': episode_timestamp,
+                'discovery_date': discovery_date,
+                'description': description,
+                'source': source,
+                'url': url,
+                'confidence': confidence,
+                'metadata': {
+                    **metadata,
+                    'has_evidence_date': evidence_date is not None
+                }
+            })
+
+            logger.info(f"✅ Created discovery episode: {episode_type} for {entity_name} (FalkorDB)")
+
+            return {
+                'episode_id': episode_id,
+                'entity_id': entity_id,
+                'timestamp': episode_timestamp,
+                'discovery_date': discovery_date,
+                'status': 'created'
+            }
+
     async def get_entity_timeline(
         self,
         entity_id: str,
@@ -654,6 +805,123 @@ class GraphitiService:
                 'recommendations': recommendations,
                 'analyzed_at': datetime.now(timezone.utc).isoformat()
             }
+
+    async def find_similar_entities(
+        self,
+        entity_id: str,
+        entity_type: Optional[str] = None,
+        limit: int = 5
+    ) -> List[Dict[str, Any]]:
+        """
+        Find entities with similar temporal patterns
+
+        Args:
+            entity_id: Entity identifier
+            entity_type: Optional filter by entity type
+            limit: Maximum number of similar entities to return
+
+        Returns:
+            List of similar entities with similarity scores
+        """
+        if self.use_supabase and self.supabase_client:
+            # Get the target entity's episode types
+            target_response = self.supabase_client.table('temporal_episodes') \
+                .select('episode_type') \
+                .eq('entity_id', entity_id.lower().replace(' ', '-')) \
+                .execute()
+
+            target_types = set()
+            for row in target_response.data:
+                target_types.add(row.get('episode_type'))
+
+            # Find entities with overlapping episode types
+            if not target_types:
+                return []
+
+            # Build query for entities with similar patterns
+            query = self.supabase_client.table('temporal_episodes') \
+                .select('entity_id, entity_name, entity_type, episode_type') \
+                .in_('episode_type', list(target_types)) \
+                .neq('entity_id', entity_id.lower().replace(' ', '-')) \
+                .execute()
+
+            # Count similarity by episode type overlap
+            entity_scores = {}
+            for row in query.data:
+                eid = row.get('entity_id')
+                if eid not in entity_scores:
+                    entity_scores[eid] = {
+                        'entity_id': eid,
+                        'entity_name': row.get('entity_name', eid),
+                        'entity_type': row.get('entity_type'),
+                        'overlap_count': 0,
+                        'episode_types': set()
+                    }
+                entity_scores[eid]['episode_types'].add(row.get('episode_type'))
+                entity_scores[eid]['overlap_count'] += 1
+
+            # Calculate similarity score
+            results = []
+            for eid, data in entity_scores.items():
+                similarity = len(data['overlap_count']) / max(len(target_types), 1)
+                results.append({
+                    'entity_id': data['entity_id'],
+                    'name': data['entity_name'],
+                    'type': data['entity_type'],
+                    'similarity_score': similarity,
+                    'shared_patterns': list(data['episode_types'])
+                })
+
+            # Sort by similarity and return top results
+            results.sort(key=lambda x: x['similarity_score'], reverse=True)
+            return results[:limit]
+
+        # Fallback to FalkorDB
+        if not self.driver:
+            return []
+
+        with self.driver.session(database=self.graph_name) as session:
+            # Get target entity's episode types
+            target_result = session.run("""
+                MATCH (e {name: $entity_id})-[:HAS_EPISODE]->(ap:Episode)
+                RETURN DISTINCT ap.episode_type as episode_type
+            """, entity_id=entity_id)
+
+            target_types = set(record['episode_type'] for record in target_result)
+
+            if not target_types:
+                return []
+
+            # Find entities with similar patterns
+            type_list = list(target_types)
+            cypher = f"""
+                MATCH (e)-[:HAS_EPISODE]->(ap:Episode)
+                WHERE ap.episode_type IN {type_list}
+                AND e.name <> $entity_id
+                RETURN e.name as entity_name, e.type as entity_type,
+                       count(ap) as overlap_count,
+                       collect(DISTINCT ap.episode_type) as episode_types
+                ORDER BY overlap_count DESC
+                LIMIT $limit
+            """
+
+            result = session.run(cypher, entity_id=entity_id, limit=limit)
+
+            similar_entities = []
+            for record in result:
+                overlap_count = record['overlap_count']
+                shared_types = record['episode_types']
+                similarity = overlap_count / len(target_types)
+
+                similar_entities.append({
+                    'entity_id': record['entity_name'].lower().replace(' ', '-'),
+                    'name': record['entity_name'],
+                    'type': record.get('entity_type', 'Entity'),
+                    'similarity_score': similarity,
+                    'shared_patterns': shared_types
+                })
+
+            return similar_entities
 
     async def get_temporal_patterns(
         self,

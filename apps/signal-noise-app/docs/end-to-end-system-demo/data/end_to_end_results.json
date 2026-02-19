@@ -1,17 +1,17 @@
 {
   "version": "1.0.0",
-  "generated_at": "2026-02-17T11:54:34.636306",
-  "total_duration_ms": 45000,
-  "total_cost_usd": 0.35,
+  "generated_at": "2026-02-17T14:39:33.930541",
+  "total_duration_ms": 650232,
+  "total_cost_usd": 0.0,
   "entities": [
     {
       "entity_id": "arsenal-fc",
       "entity_name": "Arsenal FC",
       "entity_type": "SPORT_CLUB",
-      "started_at": "2026-02-17T11:54:34.636132",
-      "completed_at": "2026-02-17T11:54:34.636139",
-      "duration_ms": 15000,
-      "cost_usd": 0.15,
+      "started_at": "2026-02-17T14:28:43.693160+00:00",
+      "completed_at": "2026-02-17T14:31:12.333622+00:00",
+      "duration_ms": 148640,
+      "cost_usd": 0.0,
       "steps": [
         {
           "step_number": 1,
@@ -19,20 +19,382 @@
           "entity_id": "arsenal-fc",
           "entity_name": "Arsenal FC",
           "entity_type": "SPORT_CLUB",
-          "started_at": "2026-02-17T11:54:34.636148",
-          "completed_at": "2026-02-17T11:54:34.636153",
-          "duration_ms": 2500,
-          "cost_usd": 0.025,
+          "started_at": "2026-02-17T14:28:43.693232+00:00",
+          "completed_at": "2026-02-17T14:28:43.695169+00:00",
+          "duration_ms": 1,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "arsenal-fc"
+            "entity_id": "arsenal-fc",
+            "entity_name": "Arsenal FC",
+            "entity_type": "SPORT_CLUB"
           },
           "output_data": {
-            "result": "mock_data"
+            "questions_count": 7,
+            "hypotheses": [
+              {
+                "hypothesis_id": "arsenal-fc_sc_mobile_fan_platform",
+                "entity_id": "arsenal-fc",
+                "entity_name": "Arsenal FC",
+                "statement": "Arsenal FC will issue mobile app RFP (\u00a380K-\u00a3300K budget) within 6-18 months",
+                "category": "mobile",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_mobile_fan_platform",
+                  "yp_service_fit": [
+                    "MOBILE_APPS",
+                    "FAN_ENGAGEMENT"
+                  ],
+                  "budget_range": "\u00a380K-\u00a3300K",
+                  "yp_advantage": "Team GB Olympic mobile app delivery, STA Award 2024 winner",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Job postings: Mobile Developer, iOS Developer, Product Manager - Mobile",
+                    "RFP keywords: mobile app, fan app, official app, React Native, RFP, Request for Proposal, tender, procurement, EOI, RFI",
+                    "Announcements: Digital transformation initiatives, fan engagement strategy"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Any mention of mobile platform development or fan app in official channels",
+                  "confidence_boost": 0.15
+                }
+              },
+              {
+                "hypothesis_id": "arsenal-fc_sc_digital_transformation",
+                "entity_id": "arsenal-fc",
+                "entity_name": "Arsenal FC",
+                "statement": "Arsenal FC is seeking digital transformation partner (\u00a3150K-\u00a3500K) for modernization project",
+                "category": "digital",
+                "prior_probability": 0.7,
+                "confidence": 0.7,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_digital_transformation",
+                  "yp_service_fit": [
+                    "DIGITAL_TRANSFORMATION"
+                  ],
+                  "budget_range": "\u00a3150K-\u00a3500K",
+                  "yp_advantage": "3-year partnership track record (Premier Padel), end-to-end transformation expertise",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Job postings: CTO, CIO, Digital Transformation Manager, Cloud Architect",
+                    "RFP keywords: digital transformation, cloud migration, modernization, RFP, Request for Proposal, tender, ITT, procurement, vendor portal",
+                    "Strategic announcements: Digital modernization, cloud migration, legacy system refresh",
+                    "Partnership announcements: Technology consulting partners"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Mentions of modernization, cloud migration, or technology overhaul initiatives",
+                  "confidence_boost": 0.2
+                }
+              },
+              {
+                "hypothesis_id": "arsenal-fc_sc_ticketing_ecommerce",
+                "entity_id": "arsenal-fc",
+                "entity_name": "Arsenal FC",
+                "statement": "Arsenal FC will replace ticketing/e-commerce platform (\u00a380K-\u00a3250K) within 12 months",
+                "category": "ticketing",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_ticketing_ecommerce",
+                  "yp_service_fit": [
+                    "ECOMMERCE",
+                    "FAN_ENGAGEMENT"
+                  ],
+                  "budget_range": "\u00a380K-\u00a3250K",
+                  "yp_advantage": "BNP Paribas Open ticketing platform experience, high-volume e-commerce delivery",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Fan complaints: Ticketing issues, checkout problems, mobile ticketing",
+                    "Job postings: E-commerce Manager, Head of Ticketing, CRM Manager",
+                    "RFP keywords: ticketing system, e-commerce platform, POS system, RFP, Request for Proposal, tender, RFQ, supplier portal",
+                    "Partnership changes: New ticketing provider partnerships"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Evidence of ticketing issues or job postings for e-commerce roles",
+                  "confidence_boost": 0.15
+                }
+              },
+              {
+                "hypothesis_id": "arsenal-fc_sc_analytics_data_platform",
+                "entity_id": "arsenal-fc",
+                "entity_name": "Arsenal FC",
+                "statement": "Arsenal FC will invest in analytics/data platform (\u00a3100K-\u00a3400K) for performance/fan insights",
+                "category": "analytics",
+                "prior_probability": 0.62,
+                "confidence": 0.62,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_analytics_data_platform",
+                  "yp_service_fit": [
+                    "ANALYTICS"
+                  ],
+                  "budget_range": "\u00a3100K-\u00a3400K",
+                  "yp_advantage": "ISU skating analytics platform, sports analytics expertise",
+                  "positioning_strategy": "CAPABILITY_PARTNER",
+                  "next_signals": [
+                    "Job postings: Data Analyst, Data Engineer, BI Developer, Analytics Manager",
+                    "RFP keywords: analytics platform, BI system, data warehouse, CRM analytics, RFP, Request for Proposal, tender, RFQ",
+                    "Partnerships: Analytics providers, BI platform announcements",
+                    "Strategic mentions: Data-driven decisions, fan insights, performance analytics"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Job postings for analytics roles or data platform announcements",
+                  "confidence_boost": 0.12
+                }
+              },
+              {
+                "hypothesis_id": "arsenal-fc_sc_fan_engagement_gaps",
+                "entity_id": "arsenal-fc",
+                "entity_name": "Arsenal FC",
+                "statement": "Arsenal FC will seek fan engagement solution (\u00a380K-\u00a3300K) to improve supporter experience",
+                "category": "fan",
+                "prior_probability": 0.6,
+                "confidence": 0.6,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_fan_engagement_gaps",
+                  "yp_service_fit": [
+                    "FAN_ENGAGEMENT",
+                    "MOBILE_APPS"
+                  ],
+                  "budget_range": "\u00a380K-\u00a3300K",
+                  "yp_advantage": "FIBA 3\u00d73 fan engagement platform, multi-federation experience",
+                  "positioning_strategy": "INNOVATION_PARTNER",
+                  "next_signals": [
+                    "Season ticket holder feedback: Engagement complaints, communication issues",
+                    "Job postings: Fan Engagement Manager, Head of Supporter Services",
+                    "RFP keywords: fan engagement platform, CRM system, loyalty platform, RFP, Request for Proposal, tender, EOI",
+                    "Initiatives: Fan experience programs, loyalty scheme launches"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Fan engagement initiatives or related job postings",
+                  "confidence_boost": 0.1
+                }
+              },
+              {
+                "hypothesis_id": "arsenal-fc_sc_stadium_technology",
+                "entity_id": "arsenal-fc",
+                "entity_name": "Arsenal FC",
+                "statement": "Arsenal FC will upgrade stadium technology (\u00a3100K-\u00a3400K) for matchday experience",
+                "category": "stadium",
+                "prior_probability": 0.62,
+                "confidence": 0.62,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_stadium_technology",
+                  "yp_service_fit": [
+                    "MOBILE_APPS",
+                    "UI_UX_DESIGN",
+                    "ECOMMERCE"
+                  ],
+                  "budget_range": "\u00a3100K-\u00a3400K",
+                  "yp_advantage": "Olympic venue app experience, large-scale deployment capability",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Stadium announcements: WiFi upgrades, mobile ordering, seat upgrades",
+                    "Job postings: Stadium Technology Manager, Venue Operations Director",
+                    "RFP keywords: stadium technology, venue WiFi, mobile ordering, RFP, Request for Proposal, tender, ITT, supplier portal",
+                    "Partnerships: Stadium technology providers, connectivity partners"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "PRESS_RELEASE",
+                    "CAREERS_PAGE"
+                  ],
+                  "accept_criteria": "Stadium technology initiatives or related partnerships",
+                  "confidence_boost": 0.12
+                }
+              },
+              {
+                "hypothesis_id": "arsenal-fc_sc_legacy_replacement",
+                "entity_id": "arsenal-fc",
+                "entity_name": "Arsenal FC",
+                "statement": "Arsenal FC will initiate legacy system replacement (\u00a3150K-\u00a3500K) within 6-12 months",
+                "category": "legacy",
+                "prior_probability": 0.6799999999999999,
+                "confidence": 0.6799999999999999,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_legacy_replacement",
+                  "yp_service_fit": [
+                    "DIGITAL_TRANSFORMATION",
+                    "ANALYTICS"
+                  ],
+                  "budget_range": "\u00a3150K-\u00a3500K",
+                  "yp_advantage": "End-to-end digital transformation, legacy migration expertise",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Partnership changes: Ending vendor relationships",
+                    "Strategic announcements: System modernization, platform migration",
+                    "RFP keywords: system migration, legacy replacement, platform modernization, RFP, Request for Proposal, tender, ITT, RFQ",
+                    "Job postings: Migration specialists, system architects"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "PRESS_RELEASE",
+                    "CAREERS_PAGE"
+                  ],
+                  "accept_criteria": "Evidence of vendor changes or modernization initiatives",
+                  "confidence_boost": 0.18
+                }
+              }
+            ],
+            "yp_service_mappings": [
+              {
+                "question": "What mobile app or fan engagement platform investments are planned by {entity}?",
+                "services": [
+                  "MOBILE_APPS",
+                  "FAN_ENGAGEMENT"
+                ]
+              },
+              {
+                "question": "What digital transformation initiatives is {entity} undertaking or planning?",
+                "services": [
+                  "DIGITAL_TRANSFORMATION"
+                ]
+              },
+              {
+                "question": "What ticketing or e-commerce pain points indicate replacement needs at {entity}?",
+                "services": [
+                  "ECOMMERCE",
+                  "FAN_ENGAGEMENT"
+                ]
+              },
+              {
+                "question": "What analytics or data platform needs does {entity} have for performance or fan insights?",
+                "services": [
+                  "ANALYTICS"
+                ]
+              },
+              {
+                "question": "What fan engagement strategy gaps or opportunities exist at {entity}?",
+                "services": [
+                  "FAN_ENGAGEMENT",
+                  "MOBILE_APPS"
+                ]
+              },
+              {
+                "question": "What stadium or venue technology upgrades is {entity} planning?",
+                "services": [
+                  "MOBILE_APPS",
+                  "UI_UX_DESIGN",
+                  "ECOMMERCE"
+                ]
+              },
+              {
+                "question": "What legacy system replacement signals is {entity} showing?",
+                "services": [
+                  "DIGITAL_TRANSFORMATION",
+                  "ANALYTICS"
+                ]
+              }
+            ],
+            "budget_ranges": [],
+            "starting_confidence": 0.55,
+            "yp_profile": {
+              "ideal_budget_range": "\u00a380K-\u00a3500K",
+              "ideal_timeline": "3-12 months",
+              "team_size": "2-8 developers",
+              "case_studies": {
+                "team_gb": {
+                  "service": "MOBILE_APPS",
+                  "description": "Olympic mobile app delivery",
+                  "achievement": "STA Award 2024 winner",
+                  "budget": "~\u00a3300K",
+                  "relevance": "Shows Olympic-scale delivery capability"
+                },
+                "premier_padel": {
+                  "service": "DIGITAL_TRANSFORMATION",
+                  "description": "3-year strategic partnership",
+                  "achievement": "End-to-end digital transformation",
+                  "budget": "~\u00a3500K/year",
+                  "relevance": "Long-term federation partnership model"
+                },
+                "fiba_3x3": {
+                  "service": "FAN_ENGAGEMENT",
+                  "description": "FIBA 3\u00d73 Basketball platform",
+                  "achievement": "Multi-federation engagement platform",
+                  "budget": "~\u00a3200K",
+                  "relevance": "Federation member management experience"
+                },
+                "isu": {
+                  "service": "ANALYTICS",
+                  "description": "International Skating Union data platform",
+                  "achievement": "Sports analytics implementation",
+                  "budget": "~\u00a3150K",
+                  "relevance": "International federation analytics"
+                },
+                "lnb": {
+                  "service": "MOBILE_APPS",
+                  "description": "Ligue Nationale de Basket mobile platform",
+                  "achievement": "French basketball federation app",
+                  "budget": "~\u00a3250K",
+                  "relevance": "Federation-wide mobile deployment"
+                },
+                "bnpp_paribas": {
+                  "service": "ECOMMERCE",
+                  "description": "BNP Paribas Open ticketing platform",
+                  "achievement": "Major event e-commerce delivery",
+                  "budget": "~\u00a3200K",
+                  "relevance": "High-volume ticketing/e-commerce"
+                }
+              },
+              "competitive_differentiators": [
+                "Wild Creativity \u00d7 Boundless Technology approach",
+                "Agile 2-8 developer team structure",
+                "Proven sports industry experience",
+                "Multi-federation partnership track record",
+                "Olympic-scale delivery capability (Team GB)",
+                "End-to-end digital transformation expertise"
+              ]
+            }
           },
-          "details": "Mock details for step 1",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 1: Question-First Dossier Generation\n\nEntity: Arsenal FC (arsenal-fc)\nType: SPORT_CLUB\n\nGenerated 7 questions:\n\n1. What mobile app or fan engagement platform investments are planned by {entity}?...\n2. What digital transformation initiatives is {entity} undertaking or planning?...\n3. What ticketing or e-commerce pain points indicate replacement needs at {entity}?...\n4. What analytics or data platform needs does {entity} have for performance or fan insights?...\n5. What fan engagement strategy gaps or opportunities exist at {entity}?...\n6. What stadium or venue technology upgrades is {entity} planning?...\n7. What legacy system replacement signals is {entity} showing?...\n\nYP Service Mappings: 7\nBudget Indicators: 0\nStarting Confidence: 0.55\n\nYP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnpp_paribas']\n",
+          "logs": [
+            "Importing entity_type_dossier_questions module...",
+            "Generating questions for entity type: SPORT_CLUB",
+            "Generated 7 questions",
+            "Generated 7 hypotheses",
+            "Question-first dossier generation completed successfully"
+          ],
+          "metrics": {
+            "questions_generated": 7,
+            "hypotheses_created": 7,
+            "starting_confidence": 0.55
+          }
         },
         {
           "step_number": 2,
@@ -40,41 +402,230 @@
           "entity_id": "arsenal-fc",
           "entity_name": "Arsenal FC",
           "entity_type": "SPORT_CLUB",
-          "started_at": "2026-02-17T11:54:34.636159",
-          "completed_at": "2026-02-17T11:54:34.636160",
-          "duration_ms": 2500,
-          "cost_usd": 0.025,
+          "started_at": "2026-02-17T14:28:43.695731+00:00",
+          "completed_at": "2026-02-17T14:31:11.592211+00:00",
+          "duration_ms": 147896,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "arsenal-fc"
+            "entity_id": "arsenal-fc",
+            "entity_name": "Arsenal FC",
+            "entity_type": "SPORT_CLUB",
+            "hypotheses_count": 7,
+            "max_iterations": 10
           },
           "output_data": {
-            "result": "mock_data"
+            "final_confidence": 0.7608066945818626,
+            "iterations_completed": 3,
+            "validated_signals": [
+              {
+                "id": "sim_signal_0",
+                "type": "JOB_POSTING",
+                "subtype": "GENERAL",
+                "confidence": 0.6221543840479292,
+                "evidence_count": 5,
+                "first_seen": "2026-02-17T14:31:11.592148+00:00"
+              },
+              {
+                "id": "sim_signal_1",
+                "type": "RFP_DETECTED",
+                "subtype": "GENERAL",
+                "confidence": 0.8450116623725119,
+                "evidence_count": 6,
+                "first_seen": "2026-02-17T14:31:11.592153+00:00"
+              },
+              {
+                "id": "sim_signal_2",
+                "type": "CRM_ANALYTICS",
+                "subtype": "GENERAL",
+                "confidence": 0.710799025330625,
+                "evidence_count": 3,
+                "first_seen": "2026-02-17T14:31:11.592156+00:00"
+              },
+              {
+                "id": "sim_signal_3",
+                "type": "RFP_DETECTED",
+                "subtype": "GENERAL",
+                "confidence": 0.7228461770728678,
+                "evidence_count": 4,
+                "first_seen": "2026-02-17T14:31:11.592158+00:00"
+              },
+              {
+                "id": "sim_signal_4",
+                "type": "PRESS_RELEASE",
+                "subtype": "GENERAL",
+                "confidence": 0.8668367861624882,
+                "evidence_count": 6,
+                "first_seen": "2026-02-17T14:31:11.592159+00:00"
+              }
+            ],
+            "total_cost_usd": 0.045,
+            "hops_executed": [
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              }
+            ],
+            "confidence_progression": [
+              0.5,
+              0.5,
+              0.56,
+              0.6200000000000001
+            ],
+            "decisions": [
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.5
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.56
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.6200000000000001
+              }
+            ]
           },
-          "details": "Mock details for step 2",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: Arsenal FC\nTemplate: tier_1_club_centralized_procurement\nIterations: 3\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.76\nTotal Cost: $0.0450\n\nValidated Signals: 5\n\n  - JOB_POSTING: 0.62\n  - RFP_DETECTED: 0.85\n  - CRM_ANALYTICS: 0.71\n  - RFP_DETECTED: 0.72\n  - PRESS_RELEASE: 0.87\n\nConfidence Progression:\n  0.50 \u2192 0.50 \u2192 0.56 \u2192 0.62",
+          "logs": [
+            "Importing hypothesis_driven_discovery module...",
+            "Initializing HypothesisDrivenDiscovery...",
+            "Running discovery for Arsenal FC (max 10 iterations)...",
+            "Discovery execution error: 'RalphState' object has no attribute 'globally_saturated' - falling back to simulated mode",
+            "Running in SIMULATED mode (mock data)",
+            "Simulated hypothesis-driven discovery completed"
+          ],
+          "metrics": {
+            "final_confidence": 0.7608066945818626,
+            "iterations": 3,
+            "signals_validated": 5,
+            "total_cost_usd": 0.045
+          }
         },
         {
           "step_number": 3,
-          "step_name": "Ralph Loop",
+          "step_name": "Ralph Loop Validation",
           "entity_id": "arsenal-fc",
           "entity_name": "Arsenal FC",
           "entity_type": "SPORT_CLUB",
-          "started_at": "2026-02-17T11:54:34.636163",
-          "completed_at": "2026-02-17T11:54:34.636165",
-          "duration_ms": 2500,
-          "cost_usd": 0.025,
+          "started_at": "2026-02-17T14:31:11.593091+00:00",
+          "completed_at": "2026-02-17T14:31:11.593271+00:00",
+          "duration_ms": 0,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "arsenal-fc"
+            "entity_id": "arsenal-fc",
+            "entity_name": "Arsenal FC",
+            "entity_type": "SPORT_CLUB",
+            "signals_count": 5
           },
           "output_data": {
-            "result": "mock_data"
+            "pass_1_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_2",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_3",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_4",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              }
+            ],
+            "pass_2_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "confidence": 0.6221543840479292
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "confidence": 0.8450116623725119
+              },
+              {
+                "signal_id": "sim_signal_2",
+                "decision": "REJECT",
+                "confidence": 0.710799025330625
+              },
+              {
+                "signal_id": "sim_signal_3",
+                "decision": "REJECT",
+                "confidence": 0.7228461770728678
+              },
+              {
+                "signal_id": "sim_signal_4",
+                "decision": "REJECT",
+                "confidence": 0.8668367861624882
+              }
+            ],
+            "pass_3_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.62"
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.85"
+              },
+              {
+                "signal_id": "sim_signal_2",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.71"
+              },
+              {
+                "signal_id": "sim_signal_3",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.72"
+              },
+              {
+                "signal_id": "sim_signal_4",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.87"
+              }
+            ],
+            "validated_signals": [],
+            "rejected_count": 5,
+            "validation_rate": 0.0
           },
-          "details": "Mock details for step 3",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 3: Ralph Loop Validation\n\nEntity: Arsenal FC\nSignals Processed: 5\n\nPass 1 (Rule-based Filtering): 5 results\n  - ACCEPT: 0\n  - WEAK_ACCEPT: 0\n  - REJECT: 5\n\nPass 2 (Claude Validation): 5 results\n  - Signals forwarded to Pass 3: 0\n\nPass 3 (Final Confirmation): 5 results\n  - Validated: 0\n  - Rejected: 5\n\nValidated Signals: 0\nRejected: 5\nValidation Rate: 0.0%\n",
+          "logs": [
+            "Running Ralph Loop validation for 5 signals...",
+            "Validation complete: 0/5 signals validated",
+            "Ralph Loop validation completed successfully"
+          ],
+          "metrics": {
+            "signals_input": 5,
+            "signals_validated": 0,
+            "signals_rejected": 5,
+            "validation_rate": 0.0
+          }
         },
         {
           "step_number": 4,
@@ -82,20 +633,49 @@
           "entity_id": "arsenal-fc",
           "entity_name": "Arsenal FC",
           "entity_type": "SPORT_CLUB",
-          "started_at": "2026-02-17T11:54:34.636167",
-          "completed_at": "2026-02-17T11:54:34.636168",
-          "duration_ms": 2500,
-          "cost_usd": 0.025,
+          "started_at": "2026-02-17T14:31:11.595099+00:00",
+          "completed_at": "2026-02-17T14:31:12.235123+00:00",
+          "duration_ms": 640,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "arsenal-fc"
+            "entity_id": "arsenal-fc",
+            "entity_name": "Arsenal FC",
+            "entity_type": "SPORT_CLUB"
           },
           "output_data": {
-            "result": "mock_data"
+            "timeline_episodes": 7,
+            "time_span_days": 0,
+            "patterns_detected": [
+              "RFP Activity",
+              "Hiring Activity",
+              "Partnership Activity"
+            ],
+            "episode_types": {
+              "RFP_DETECTED": 1,
+              "HIRING": 3,
+              "PARTNERSHIP": 2,
+              "TECHNOLOGY_ADOPTED": 1,
+              "EXECUTIVE_CHANGE": 0
+            },
+            "similar_entities": [],
+            "temporal_fit_score": 0.7999999999999999
           },
-          "details": "Mock details for step 4",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 4: Temporal Intelligence Analysis (SIMULATED MODE)\n\nEntity: Arsenal FC\nTimeline Episodes: 7 (simulated)\nTime Span: 0 days\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real temporal intelligence requires:\n   - FalkorDB/Neo4j database connection\n   - Graphiti service initialized\n   - Historical episode data stored in graph\n\nPatterns Detected:\n  - RFP Activity\n  - Hiring Activity\n  - Partnership Activity\n\nEpisode Types:\n  - RFP_DETECTED: 1\n  - HIRING: 3\n  - PARTNERSHIP: 2\n  - TECHNOLOGY_ADOPTED: 1\n  - EXECUTIVE_CHANGE: 0\n\nTemporal Fit Score: 0.80\n  (Based on RFP history, timeline depth, and pattern diversity)",
+          "logs": [
+            "Fetching entity timeline from Graphiti...",
+            "Retrieved 2 timeline episodes",
+            "Temporal analysis error: 'GraphitiService' object has no attribute 'find_similar_entities' - falling back to simulated mode",
+            "Running in SIMULATED mode (mock temporal data)",
+            "Simulated temporal analysis complete: fit_score=0.80",
+            "Simulated temporal intelligence analysis completed"
+          ],
+          "metrics": {
+            "timeline_episodes": 7,
+            "time_span_days": 0,
+            "patterns_detected": 3,
+            "temporal_fit_score": 0.7999999999999999
+          }
         },
         {
           "step_number": 5,
@@ -103,20 +683,37 @@
           "entity_id": "arsenal-fc",
           "entity_name": "Arsenal FC",
           "entity_type": "SPORT_CLUB",
-          "started_at": "2026-02-17T11:54:34.636170",
-          "completed_at": "2026-02-17T11:54:34.636171",
-          "duration_ms": 2500,
-          "cost_usd": 0.025,
+          "started_at": "2026-02-17T14:31:12.235700+00:00",
+          "completed_at": "2026-02-17T14:31:12.318621+00:00",
+          "duration_ms": 82,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "arsenal-fc"
+            "entity_id": "arsenal-fc",
+            "entity_name": "Arsenal FC",
+            "entity_type": "SPORT_CLUB",
+            "max_tokens": 2000
           },
           "output_data": {
-            "result": "mock_data"
+            "narrative": "# Temporal Narrative (2 episodes: 2026-01-18T22:08:30.853128+00:00 to 2026-01-18T22:14:51.765532+00:00)\n\n## Other\n\n- **2026-01-18** (Unknown): Request for AI-powered analytics\n- **2026-01-18** (Unknown): Digital Transformation RFP\n",
+            "episode_count": 2,
+            "total_episodes": 2,
+            "estimated_tokens": 57,
+            "truncated": false
           },
-          "details": "Mock details for step 5",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 5: Narrative Builder\n\nEntity: Arsenal FC\nEpisodes Available: 2\nEpisodes Included: 2\nEstimated Tokens: 57\nTruncated: False\n\nNarrative Preview (first 500 chars):\n# Temporal Narrative (2 episodes: 2026-01-18T22:08:30.853128+00:00 to 2026-01-18T22:14:51.765532+00:00)\n\n## Other\n\n- **2026-01-18** (Unknown): Request for AI-powered analytics\n- **2026-01-18** (Unknown): Digital Transformation RFP\n...\n",
+          "logs": [
+            "Fetching episodes for narrative building...",
+            "Retrieved 2 episodes",
+            "Narrative built: 57 tokens",
+            "Narrative builder completed successfully"
+          ],
+          "metrics": {
+            "episodes_available": 2,
+            "episodes_included": 2,
+            "estimated_tokens": 57,
+            "truncated": false
+          }
         },
         {
           "step_number": 6,
@@ -124,42 +721,76 @@
           "entity_id": "arsenal-fc",
           "entity_name": "Arsenal FC",
           "entity_type": "SPORT_CLUB",
-          "started_at": "2026-02-17T11:54:34.636173",
-          "completed_at": "2026-02-17T11:54:34.636174",
-          "duration_ms": 2500,
-          "cost_usd": 0.025,
+          "started_at": "2026-02-17T14:31:12.319661+00:00",
+          "completed_at": "2026-02-17T14:31:12.333169+00:00",
+          "duration_ms": 13,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "arsenal-fc"
+            "entity_id": "arsenal-fc",
+            "entity_name": "Arsenal FC",
+            "entity_type": "SPORT_CLUB",
+            "signals_count": 0,
+            "temporal_fit": 0.7999999999999999
           },
           "output_data": {
-            "result": "mock_data"
+            "fit_score": 35.0,
+            "priority": "TIER_4",
+            "budget_alignment": "MARGINAL",
+            "service_alignment": [],
+            "positioning_strategy": "Position based on signal type and entity",
+            "recommendations": [
+              "Monitor for additional signals",
+              "Add to watch list for future opportunities"
+            ],
+            "scoring_breakdown": {
+              "service_match": 0.0,
+              "budget": 12.5,
+              "timeline": 7.5,
+              "entity_size": 8.0,
+              "geographic": 7.0
+            }
           },
-          "details": "Mock details for step 6",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 6: Yellow Panther Fit Scoring\n\nEntity: Arsenal FC\nEntity Type: SPORT_CLUB\n\nYP Fit Score: 35.0/100\nPriority Tier: PriorityTier.TIER_4\nBudget Alignment: BudgetAlignment.MARGINAL\n\nService Alignment:\n\nRecommendations:\n  - Monitor for additional signals\n  - Add to watch list for future opportunities\n\nScoring Breakdown:\n  - service_match: 0.0 points\n  - budget: 12.5 points\n  - timeline: 7.5 points\n  - entity_size: 8.0 points\n  - geographic: 7.0 points\n",
+          "logs": [
+            "Importing yellow_panther_scorer module...",
+            "Scoring entity against YP profile...",
+            "YP Fit Score: 35.0/100",
+            "Priority: PriorityTier.TIER_4",
+            "Yellow Panther scoring completed successfully"
+          ],
+          "metrics": {
+            "fit_score": 35.0,
+            "priority": "TIER_4",
+            "budget_alignment": "MARGINAL",
+            "service_alignment_count": 0,
+            "recommendations_count": 2
+          }
         }
       ],
-      "final_confidence": 0.78,
-      "total_signals": 5,
-      "procurement_signals": 3,
-      "capability_signals": 2,
+      "final_confidence": 0.7608066945818626,
+      "total_signals": 0,
+      "procurement_signals": 0,
+      "capability_signals": 0,
       "confidence_band": "CONFIDENT",
-      "estimated_value": "\u00a3200K-\u00a3500K",
+      "estimated_value": "$2,000/entity/month",
       "recommendations": [
-        "Target Juliet Slot (Commercial Director) with next-gen fan experiences",
-        "Pursue official kit supplier partnership for 2026-2027 season",
-        "Position mobile fan engagement platform for summer 2026 RFP"
+        {
+          "text": "Monitor for additional signals"
+        },
+        {
+          "text": "Add to watch list for future opportunities"
+        }
       ]
     },
     {
       "entity_id": "icf",
       "entity_name": "International Canoe Federation",
       "entity_type": "SPORT_FEDERATION",
-      "started_at": "2026-02-17T11:54:34.636180",
-      "completed_at": "2026-02-17T11:54:34.636184",
-      "duration_ms": 12000,
-      "cost_usd": 0.1,
+      "started_at": "2026-02-17T14:31:12.333636+00:00",
+      "completed_at": "2026-02-17T14:31:25.427816+00:00",
+      "duration_ms": 13094,
+      "cost_usd": 0.0,
       "steps": [
         {
           "step_number": 1,
@@ -167,20 +798,339 @@
           "entity_id": "icf",
           "entity_name": "International Canoe Federation",
           "entity_type": "SPORT_FEDERATION",
-          "started_at": "2026-02-17T11:54:34.636190",
-          "completed_at": "2026-02-17T11:54:34.636194",
-          "duration_ms": 2000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:31:12.333663+00:00",
+          "completed_at": "2026-02-17T14:31:12.333785+00:00",
+          "duration_ms": 0,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "icf"
+            "entity_id": "icf",
+            "entity_name": "International Canoe Federation",
+            "entity_type": "SPORT_FEDERATION"
           },
           "output_data": {
-            "result": "mock_data"
+            "questions_count": 6,
+            "hypotheses": [
+              {
+                "hypothesis_id": "icf_sf_member_platform",
+                "entity_id": "icf",
+                "entity_name": "International Canoe Federation",
+                "statement": "International Canoe Federation will seek member database/platform RFP (\u00a3150K-\u00a3500K) for federation management",
+                "category": "member",
+                "prior_probability": 0.6799999999999999,
+                "confidence": 0.6799999999999999,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sf_member_platform",
+                  "yp_service_fit": [
+                    "MOBILE_APPS",
+                    "DIGITAL_TRANSFORMATION"
+                  ],
+                  "budget_range": "\u00a3150K-\u00a3500K",
+                  "yp_advantage": "Multi-federation partnerships (FIBA 3\u00d73, ISU, LNB), Olympic scalability (170+ federations)",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Job postings: CRM Manager, Member Services Director, Digital Platform Manager",
+                    "RFP keywords: member database, federation platform, CRM system, RFP, Request for Proposal, tender, EOI, ITT, procurement",
+                    "Announcements: Strategic plan mentions, digital initiative announcements"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Any mention of member system modernization or digital platform",
+                  "confidence_boost": 0.18
+                }
+              },
+              {
+                "hypothesis_id": "icf_sf_officiating_tech",
+                "entity_id": "icf",
+                "entity_name": "International Canoe Federation",
+                "statement": "International Canoe Federation will issue AI officiating/platform RFP (\u00a3200K-\u00a3500K) before next major event",
+                "category": "officiating",
+                "prior_probability": 0.7,
+                "confidence": 0.7,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sf_officiating_tech",
+                  "yp_service_fit": [
+                    "ANALYTICS",
+                    "MOBILE_APPS"
+                  ],
+                  "budget_range": "\u00a3200K-\u00a3500K",
+                  "yp_advantage": "International federation experience (ISU officiating platform), event tech delivery",
+                  "positioning_strategy": "INNOVATION_PARTNER",
+                  "next_signals": [
+                    "Job postings: Officiating Technology Manager, Event Technology Director",
+                    "RFP keywords: officiating system, VAR, video referee, AI officiating, RFP, Request for Proposal, tender, ITT, procurement",
+                    "Event announcements: Technology trials, officiating system upgrades",
+                    "Partnerships: Technology providers for officiating/VAR systems"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Job postings or announcements about officiating technology",
+                  "confidence_boost": 0.2
+                }
+              },
+              {
+                "hypothesis_id": "icf_sf_certification_modernization",
+                "entity_id": "icf",
+                "entity_name": "International Canoe Federation",
+                "statement": "International Canoe Federation will seek digital certification platform (\u00a3100K-\u00a3300K) for assessment modernization",
+                "category": "certification",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sf_certification_modernization",
+                  "yp_service_fit": [
+                    "DIGITAL_TRANSFORMATION",
+                    "UI_UX_DESIGN"
+                  ],
+                  "budget_range": "\u00a3100K-\u00a3300K",
+                  "yp_advantage": "Federation certification platform experience, multi-language capability",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Job postings: Certification Manager, Assessment System Lead",
+                    "Initiatives: Digital assessment programs, online certification launches",
+                    "RFP keywords: certification system, assessment platform, digital testing, RFP, Request for Proposal, tender, RFQ, EOI"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Digital certification or assessment system initiatives",
+                  "confidence_boost": 0.15
+                }
+              },
+              {
+                "hypothesis_id": "icf_sf_event_management",
+                "entity_id": "icf",
+                "entity_name": "International Canoe Federation",
+                "statement": "International Canoe Federation will seek event management platform (\u00a3100K-\u00a3400K) for championship operations",
+                "category": "event",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sf_event_management",
+                  "yp_service_fit": [
+                    "ECOMMERCE",
+                    "MOBILE_APPS"
+                  ],
+                  "budget_range": "\u00a3100K-\u00a3400K",
+                  "yp_advantage": "Major event platform delivery (Olympic-scale), multi-event management",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Job postings: Event Technology Manager, Championship Operations Lead",
+                    "RFP keywords: event management, championship platform, competition system, RFP, Request for Proposal, tender, ITT, procurement",
+                    "Event announcements: New event formats, digital ticketing for events",
+                    "Partnerships: Event technology providers"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Event management technology initiatives or partnerships",
+                  "confidence_boost": 0.15
+                }
+              },
+              {
+                "hypothesis_id": "icf_sf_member_communication",
+                "entity_id": "icf",
+                "entity_name": "International Canoe Federation",
+                "statement": "International Canoe Federation will implement member communication platform (\u00a380K-\u00a3250K) for federation engagement",
+                "category": "member",
+                "prior_probability": 0.62,
+                "confidence": 0.62,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sf_member_communication",
+                  "yp_service_fit": [
+                    "FAN_ENGAGEMENT",
+                    "MOBILE_APPS"
+                  ],
+                  "budget_range": "\u00a380K-\u00a3250K",
+                  "yp_advantage": "FIBA 3\u00d73 member engagement platform, federation communication tools",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Job postings: Communication Manager, Member Engagement Lead",
+                    "RFP keywords: member communication, federation portal, engagement platform, RFP, Request for Proposal, tender, EOI, ITT",
+                    "Initiatives: Member portal launches, communication strategy updates",
+                    "Platform announcements: Member apps, communication tools"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Member communication or engagement platform initiatives",
+                  "confidence_boost": 0.12
+                }
+              },
+              {
+                "hypothesis_id": "icf_sf_analytics_platform",
+                "entity_id": "icf",
+                "entity_name": "International Canoe Federation",
+                "statement": "International Canoe Federation will invest in federation analytics platform (\u00a3150K-\u00a3400K) for member insights",
+                "category": "analytics",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sf_analytics_platform",
+                  "yp_service_fit": [
+                    "ANALYTICS"
+                  ],
+                  "budget_range": "\u00a3150K-\u00a3400K",
+                  "yp_advantage": "ISU analytics platform, international federation data systems",
+                  "positioning_strategy": "CAPABILITY_PARTNER",
+                  "next_signals": [
+                    "Job postings: Data Analyst, Analytics Manager, Performance Data Lead",
+                    "RFP keywords: analytics platform, data warehouse, federation BI, RFP, Request for Proposal, tender, RFQ, ITT",
+                    "Strategic mentions: Data-driven member support, performance insights",
+                    "Partnerships: Analytics platform providers"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Analytics platform initiatives or related job postings",
+                  "confidence_boost": 0.15
+                }
+              }
+            ],
+            "yp_service_mappings": [
+              {
+                "question": "What member federation management platform or mobile app initiatives are underway at {entity}?",
+                "services": [
+                  "MOBILE_APPS",
+                  "DIGITAL_TRANSFORMATION"
+                ]
+              },
+              {
+                "question": "What officiating or technology projects is {entity} planning for major events?",
+                "services": [
+                  "ANALYTICS",
+                  "MOBILE_APPS"
+                ]
+              },
+              {
+                "question": "What digital certification or assessment systems is {entity} modernizing?",
+                "services": [
+                  "DIGITAL_TRANSFORMATION",
+                  "UI_UX_DESIGN"
+                ]
+              },
+              {
+                "question": "What event management platform needs does {entity} have for competitions/championships?",
+                "services": [
+                  "ECOMMERCE",
+                  "MOBILE_APPS"
+                ]
+              },
+              {
+                "question": "What digital member communication or engagement platforms is {entity} implementing?",
+                "services": [
+                  "FAN_ENGAGEMENT",
+                  "MOBILE_APPS"
+                ]
+              },
+              {
+                "question": "What analytics or performance data platform is {entity} seeking for member federations?",
+                "services": [
+                  "ANALYTICS"
+                ]
+              }
+            ],
+            "budget_ranges": [],
+            "starting_confidence": 0.6,
+            "yp_profile": {
+              "ideal_budget_range": "\u00a380K-\u00a3500K",
+              "ideal_timeline": "3-12 months",
+              "team_size": "2-8 developers",
+              "case_studies": {
+                "team_gb": {
+                  "service": "MOBILE_APPS",
+                  "description": "Olympic mobile app delivery",
+                  "achievement": "STA Award 2024 winner",
+                  "budget": "~\u00a3300K",
+                  "relevance": "Shows Olympic-scale delivery capability"
+                },
+                "premier_padel": {
+                  "service": "DIGITAL_TRANSFORMATION",
+                  "description": "3-year strategic partnership",
+                  "achievement": "End-to-end digital transformation",
+                  "budget": "~\u00a3500K/year",
+                  "relevance": "Long-term federation partnership model"
+                },
+                "fiba_3x3": {
+                  "service": "FAN_ENGAGEMENT",
+                  "description": "FIBA 3\u00d73 Basketball platform",
+                  "achievement": "Multi-federation engagement platform",
+                  "budget": "~\u00a3200K",
+                  "relevance": "Federation member management experience"
+                },
+                "isu": {
+                  "service": "ANALYTICS",
+                  "description": "International Skating Union data platform",
+                  "achievement": "Sports analytics implementation",
+                  "budget": "~\u00a3150K",
+                  "relevance": "International federation analytics"
+                },
+                "lnb": {
+                  "service": "MOBILE_APPS",
+                  "description": "Ligue Nationale de Basket mobile platform",
+                  "achievement": "French basketball federation app",
+                  "budget": "~\u00a3250K",
+                  "relevance": "Federation-wide mobile deployment"
+                },
+                "bnpp_paribas": {
+                  "service": "ECOMMERCE",
+                  "description": "BNP Paribas Open ticketing platform",
+                  "achievement": "Major event e-commerce delivery",
+                  "budget": "~\u00a3200K",
+                  "relevance": "High-volume ticketing/e-commerce"
+                }
+              },
+              "competitive_differentiators": [
+                "Wild Creativity \u00d7 Boundless Technology approach",
+                "Agile 2-8 developer team structure",
+                "Proven sports industry experience",
+                "Multi-federation partnership track record",
+                "Olympic-scale delivery capability (Team GB)",
+                "End-to-end digital transformation expertise"
+              ]
+            }
           },
-          "details": "Mock details for step 1",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 1: Question-First Dossier Generation\n\nEntity: International Canoe Federation (icf)\nType: SPORT_FEDERATION\n\nGenerated 6 questions:\n\n1. What member federation management platform or mobile app initiatives are underway at {entity}?...\n2. What officiating or technology projects is {entity} planning for major events?...\n3. What digital certification or assessment systems is {entity} modernizing?...\n4. What event management platform needs does {entity} have for competitions/championships?...\n5. What digital member communication or engagement platforms is {entity} implementing?...\n6. What analytics or performance data platform is {entity} seeking for member federations?...\n\nYP Service Mappings: 6\nBudget Indicators: 0\nStarting Confidence: 0.60\n\nYP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnpp_paribas']\n",
+          "logs": [
+            "Importing entity_type_dossier_questions module...",
+            "Generating questions for entity type: SPORT_FEDERATION",
+            "Generated 6 questions",
+            "Generated 6 hypotheses",
+            "Question-first dossier generation completed successfully"
+          ],
+          "metrics": {
+            "questions_generated": 6,
+            "hypotheses_created": 6,
+            "starting_confidence": 0.6
+          }
         },
         {
           "step_number": 2,
@@ -188,41 +1138,225 @@
           "entity_id": "icf",
           "entity_name": "International Canoe Federation",
           "entity_type": "SPORT_FEDERATION",
-          "started_at": "2026-02-17T11:54:34.636197",
-          "completed_at": "2026-02-17T11:54:34.636199",
-          "duration_ms": 2000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:31:12.336624+00:00",
+          "completed_at": "2026-02-17T14:31:25.108059+00:00",
+          "duration_ms": 12771,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "icf"
+            "entity_id": "icf",
+            "entity_name": "International Canoe Federation",
+            "entity_type": "SPORT_FEDERATION",
+            "hypotheses_count": 6,
+            "max_iterations": 10
           },
           "output_data": {
-            "result": "mock_data"
+            "final_confidence": 0.6900533977805516,
+            "iterations_completed": 5,
+            "validated_signals": [
+              {
+                "id": "sim_signal_0",
+                "type": "PRESS_RELEASE",
+                "subtype": "GENERAL",
+                "confidence": 0.704166500525473,
+                "evidence_count": 4,
+                "first_seen": "2026-02-17T14:31:25.107910+00:00"
+              },
+              {
+                "id": "sim_signal_1",
+                "type": "DIGITAL_TRANSFORMATION",
+                "subtype": "GENERAL",
+                "confidence": 0.6926989412531376,
+                "evidence_count": 5,
+                "first_seen": "2026-02-17T14:31:25.107927+00:00"
+              },
+              {
+                "id": "sim_signal_2",
+                "type": "CRM_ANALYTICS",
+                "subtype": "GENERAL",
+                "confidence": 0.7489189432788331,
+                "evidence_count": 5,
+                "first_seen": "2026-02-17T14:31:25.107938+00:00"
+              },
+              {
+                "id": "sim_signal_3",
+                "type": "PRESS_RELEASE",
+                "subtype": "GENERAL",
+                "confidence": 0.7455623004255854,
+                "evidence_count": 6,
+                "first_seen": "2026-02-17T14:31:25.107950+00:00"
+              }
+            ],
+            "total_cost_usd": 0.075,
+            "hops_executed": [
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              }
+            ],
+            "confidence_progression": [
+              0.5,
+              0.5,
+              0.5,
+              0.48,
+              0.54,
+              0.54
+            ],
+            "decisions": [
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.5
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.5
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.48
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.54
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.54
+              }
+            ]
           },
-          "details": "Mock details for step 2",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: International Canoe Federation\nTemplate: tier_1_club_centralized_procurement\nIterations: 5\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.69\nTotal Cost: $0.0750\n\nValidated Signals: 4\n\n  - PRESS_RELEASE: 0.70\n  - DIGITAL_TRANSFORMATION: 0.69\n  - CRM_ANALYTICS: 0.75\n  - PRESS_RELEASE: 0.75\n\nConfidence Progression:\n  0.50 \u2192 0.50 \u2192 0.50 \u2192 0.48 \u2192 0.54 \u2192 0.54",
+          "logs": [
+            "Importing hypothesis_driven_discovery module...",
+            "Initializing HypothesisDrivenDiscovery...",
+            "Running discovery for International Canoe Federation (max 10 iterations)...",
+            "Discovery execution error: 'RalphState' object has no attribute 'globally_saturated' - falling back to simulated mode",
+            "Running in SIMULATED mode (mock data)",
+            "Simulated hypothesis-driven discovery completed"
+          ],
+          "metrics": {
+            "final_confidence": 0.6900533977805516,
+            "iterations": 5,
+            "signals_validated": 4,
+            "total_cost_usd": 0.075
+          }
         },
         {
           "step_number": 3,
-          "step_name": "Ralph Loop",
+          "step_name": "Ralph Loop Validation",
           "entity_id": "icf",
           "entity_name": "International Canoe Federation",
           "entity_type": "SPORT_FEDERATION",
-          "started_at": "2026-02-17T11:54:34.636201",
-          "completed_at": "2026-02-17T11:54:34.636202",
-          "duration_ms": 2000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:31:25.110043+00:00",
+          "completed_at": "2026-02-17T14:31:25.110407+00:00",
+          "duration_ms": 0,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "icf"
+            "entity_id": "icf",
+            "entity_name": "International Canoe Federation",
+            "entity_type": "SPORT_FEDERATION",
+            "signals_count": 4
           },
           "output_data": {
-            "result": "mock_data"
+            "pass_1_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_2",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_3",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              }
+            ],
+            "pass_2_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "confidence": 0.704166500525473
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "confidence": 0.6926989412531376
+              },
+              {
+                "signal_id": "sim_signal_2",
+                "decision": "REJECT",
+                "confidence": 0.7489189432788331
+              },
+              {
+                "signal_id": "sim_signal_3",
+                "decision": "REJECT",
+                "confidence": 0.7455623004255854
+              }
+            ],
+            "pass_3_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.70"
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.69"
+              },
+              {
+                "signal_id": "sim_signal_2",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.75"
+              },
+              {
+                "signal_id": "sim_signal_3",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.75"
+              }
+            ],
+            "validated_signals": [],
+            "rejected_count": 4,
+            "validation_rate": 0.0
           },
-          "details": "Mock details for step 3",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 3: Ralph Loop Validation\n\nEntity: International Canoe Federation\nSignals Processed: 4\n\nPass 1 (Rule-based Filtering): 4 results\n  - ACCEPT: 0\n  - WEAK_ACCEPT: 0\n  - REJECT: 4\n\nPass 2 (Claude Validation): 4 results\n  - Signals forwarded to Pass 3: 0\n\nPass 3 (Final Confirmation): 4 results\n  - Validated: 0\n  - Rejected: 4\n\nValidated Signals: 0\nRejected: 4\nValidation Rate: 0.0%\n",
+          "logs": [
+            "Running Ralph Loop validation for 4 signals...",
+            "Validation complete: 0/4 signals validated",
+            "Ralph Loop validation completed successfully"
+          ],
+          "metrics": {
+            "signals_input": 4,
+            "signals_validated": 0,
+            "signals_rejected": 4,
+            "validation_rate": 0.0
+          }
         },
         {
           "step_number": 4,
@@ -230,20 +1364,37 @@
           "entity_id": "icf",
           "entity_name": "International Canoe Federation",
           "entity_type": "SPORT_FEDERATION",
-          "started_at": "2026-02-17T11:54:34.636204",
-          "completed_at": "2026-02-17T11:54:34.636206",
-          "duration_ms": 2000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:31:25.111377+00:00",
+          "completed_at": "2026-02-17T14:31:25.336900+00:00",
+          "duration_ms": 225,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "icf"
+            "entity_id": "icf",
+            "entity_name": "International Canoe Federation",
+            "entity_type": "SPORT_FEDERATION"
           },
           "output_data": {
-            "result": "mock_data"
+            "timeline_episodes": 0,
+            "time_span_days": 0,
+            "patterns_detected": [],
+            "episode_types": {},
+            "similar_entities": [],
+            "temporal_fit_score": 0.0
           },
-          "details": "Mock details for step 4",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 4: Temporal Intelligence Analysis\n\nEntity: International Canoe Federation\nTimeline Episodes: 0\nTime Span: 0 days\n\nPatterns Detected:\n\nEpisode Types:\n\nTemporal Fit Score: 0.00\n  (Based on RFP history, timeline depth, and pattern diversity)",
+          "logs": [
+            "Fetching entity timeline from Graphiti...",
+            "Retrieved 0 timeline episodes",
+            "Temporal analysis complete: fit_score=0.00",
+            "Temporal intelligence analysis completed successfully"
+          ],
+          "metrics": {
+            "timeline_episodes": 0,
+            "time_span_days": 0,
+            "patterns_detected": 0,
+            "temporal_fit_score": 0.0
+          }
         },
         {
           "step_number": 5,
@@ -251,20 +1402,37 @@
           "entity_id": "icf",
           "entity_name": "International Canoe Federation",
           "entity_type": "SPORT_FEDERATION",
-          "started_at": "2026-02-17T11:54:34.636208",
-          "completed_at": "2026-02-17T11:54:34.636209",
-          "duration_ms": 2000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:31:25.338203+00:00",
+          "completed_at": "2026-02-17T14:31:25.424125+00:00",
+          "duration_ms": 85,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "icf"
+            "entity_id": "icf",
+            "entity_name": "International Canoe Federation",
+            "entity_type": "SPORT_FEDERATION",
+            "max_tokens": 2000
           },
           "output_data": {
-            "result": "mock_data"
+            "narrative": "No episodes found for the specified criteria.",
+            "episode_count": 0,
+            "total_episodes": 0,
+            "estimated_tokens": 0,
+            "truncated": false
           },
-          "details": "Mock details for step 5",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 5: Narrative Builder\n\nEntity: International Canoe Federation\nEpisodes Available: 0\nEpisodes Included: 0\nEstimated Tokens: 0\nTruncated: False\n\nNarrative Preview (first 500 chars):\nNo episodes found for the specified criteria....\n",
+          "logs": [
+            "Fetching episodes for narrative building...",
+            "Retrieved 0 episodes",
+            "Narrative built: 0 tokens",
+            "Narrative builder completed successfully"
+          ],
+          "metrics": {
+            "episodes_available": 0,
+            "episodes_included": 0,
+            "estimated_tokens": 0,
+            "truncated": false
+          }
         },
         {
           "step_number": 6,
@@ -272,40 +1440,76 @@
           "entity_id": "icf",
           "entity_name": "International Canoe Federation",
           "entity_type": "SPORT_FEDERATION",
-          "started_at": "2026-02-17T11:54:34.636211",
-          "completed_at": "2026-02-17T11:54:34.636212",
-          "duration_ms": 2000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:31:25.426126+00:00",
+          "completed_at": "2026-02-17T14:31:25.426495+00:00",
+          "duration_ms": 0,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "icf"
+            "entity_id": "icf",
+            "entity_name": "International Canoe Federation",
+            "entity_type": "SPORT_FEDERATION",
+            "signals_count": 0,
+            "temporal_fit": 0.0
           },
           "output_data": {
-            "result": "mock_data"
+            "fit_score": 35.0,
+            "priority": "TIER_4",
+            "budget_alignment": "MARGINAL",
+            "service_alignment": [],
+            "positioning_strategy": "Position based on signal type and entity",
+            "recommendations": [
+              "Monitor for additional signals",
+              "Add to watch list for future opportunities"
+            ],
+            "scoring_breakdown": {
+              "service_match": 0.0,
+              "budget": 12.5,
+              "timeline": 7.5,
+              "entity_size": 8.0,
+              "geographic": 7.0
+            }
           },
-          "details": "Mock details for step 6",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 6: Yellow Panther Fit Scoring\n\nEntity: International Canoe Federation\nEntity Type: SPORT_FEDERATION\n\nYP Fit Score: 35.0/100\nPriority Tier: PriorityTier.TIER_4\nBudget Alignment: BudgetAlignment.MARGINAL\n\nService Alignment:\n\nRecommendations:\n  - Monitor for additional signals\n  - Add to watch list for future opportunities\n\nScoring Breakdown:\n  - service_match: 0.0 points\n  - budget: 12.5 points\n  - timeline: 7.5 points\n  - entity_size: 8.0 points\n  - geographic: 7.0 points\n",
+          "logs": [
+            "Importing yellow_panther_scorer module...",
+            "Scoring entity against YP profile...",
+            "YP Fit Score: 35.0/100",
+            "Priority: PriorityTier.TIER_4",
+            "Yellow Panther scoring completed successfully"
+          ],
+          "metrics": {
+            "fit_score": 35.0,
+            "priority": "TIER_4",
+            "budget_alignment": "MARGINAL",
+            "service_alignment_count": 0,
+            "recommendations_count": 2
+          }
         }
       ],
-      "final_confidence": 0.65,
-      "total_signals": 3,
-      "procurement_signals": 2,
-      "capability_signals": 1,
+      "final_confidence": 0.6900533977805516,
+      "total_signals": 0,
+      "procurement_signals": 0,
+      "capability_signals": 0,
       "confidence_band": "CONFIDENT",
-      "estimated_value": "\u00a3150K-\u00a3300K",
+      "estimated_value": "$2,000/entity/month",
       "recommendations": [
-        "Target digital transformation of member federation platform"
+        {
+          "text": "Monitor for additional signals"
+        },
+        {
+          "text": "Add to watch list for future opportunities"
+        }
       ]
     },
     {
       "entity_id": "mlc",
       "entity_name": "Major League Cricket",
       "entity_type": "SPORT_LEAGUE",
-      "started_at": "2026-02-17T11:54:34.636218",
-      "completed_at": "2026-02-17T11:54:34.636222",
-      "duration_ms": 18000,
-      "cost_usd": 0.1,
+      "started_at": "2026-02-17T14:31:25.427864+00:00",
+      "completed_at": "2026-02-17T14:33:53.052330+00:00",
+      "duration_ms": 147624,
+      "cost_usd": 0.0,
       "steps": [
         {
           "step_number": 1,
@@ -313,20 +1517,294 @@
           "entity_id": "mlc",
           "entity_name": "Major League Cricket",
           "entity_type": "SPORT_LEAGUE",
-          "started_at": "2026-02-17T11:54:34.636228",
-          "completed_at": "2026-02-17T11:54:34.636232",
-          "duration_ms": 3000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:31:25.427949+00:00",
+          "completed_at": "2026-02-17T14:31:25.428472+00:00",
+          "duration_ms": 0,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "mlc"
+            "entity_id": "mlc",
+            "entity_name": "Major League Cricket",
+            "entity_type": "SPORT_LEAGUE"
           },
           "output_data": {
-            "result": "mock_data"
+            "questions_count": 5,
+            "hypotheses": [
+              {
+                "hypothesis_id": "mlc_sl_league_mobile_app",
+                "entity_id": "mlc",
+                "entity_name": "Major League Cricket",
+                "statement": "Major League Cricket will develop league-wide mobile platform (\u00a3200K-\u00a3500K) for fan engagement",
+                "category": "league",
+                "prior_probability": 0.7,
+                "confidence": 0.7,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sl_league_mobile_app",
+                  "yp_service_fit": [
+                    "MOBILE_APPS",
+                    "FAN_ENGAGEMENT"
+                  ],
+                  "budget_range": "\u00a3200K-\u00a3500K",
+                  "yp_advantage": "Olympic mobile app experience, multi-club deployment capability",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Job postings: Mobile Product Manager, League Digital Director",
+                    "RFP keywords: mobile app, league platform, fan app, React Native, RFP, Request for Proposal, tender, ITT, EOI, procurement",
+                    "League announcements: Mobile strategy, digital fan experience",
+                    "Club initiatives: Coordinated mobile efforts across clubs"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "League-wide mobile or digital platform announcements",
+                  "confidence_boost": 0.2
+                }
+              },
+              {
+                "hypothesis_id": "mlc_sl_digital_operations",
+                "entity_id": "mlc",
+                "entity_name": "Major League Cricket",
+                "statement": "Major League Cricket will seek digital operations transformation (\u00a3200K-\u00a3500K) for league efficiency",
+                "category": "digital",
+                "prior_probability": 0.6799999999999999,
+                "confidence": 0.6799999999999999,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sl_digital_operations",
+                  "yp_service_fit": [
+                    "DIGITAL_TRANSFORMATION"
+                  ],
+                  "budget_range": "\u00a3200K-\u00a3500K",
+                  "yp_advantage": "Premier Padel 3-year transformation model, league operations expertise",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Job postings: League Operations Director, Digital Transformation Lead",
+                    "RFP keywords: digital transformation, CRM system, data warehouse, RFP, Request for Proposal, tender, ITT, procurement",
+                    "Strategic announcements: Operations modernization, digital league management",
+                    "Club mandates: Digital requirements for member clubs"
+                  ],
+                  "hop_types": [
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "RFP_PAGE"
+                  ],
+                  "accept_criteria": "League operations modernization initiatives",
+                  "confidence_boost": 0.18
+                }
+              },
+              {
+                "hypothesis_id": "mlc_sl_centralized_analytics",
+                "entity_id": "mlc",
+                "entity_name": "Major League Cricket",
+                "statement": "Major League Cricket will invest in centralized analytics platform (\u00a3150K-\u00a3400K) for league-wide insights",
+                "category": "centralized",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sl_centralized_analytics",
+                  "yp_service_fit": [
+                    "ANALYTICS"
+                  ],
+                  "budget_range": "\u00a3150K-\u00a3400K",
+                  "yp_advantage": "ISU federation analytics, multi-club data platform experience",
+                  "positioning_strategy": "CAPABILITY_PARTNER",
+                  "next_signals": [
+                    "Job postings: Head of Analytics, Data Platform Manager",
+                    "RFP keywords: analytics platform, data warehouse, league BI, centralized data, RFP, Request for Proposal, tender, RFQ, ITT",
+                    "League initiatives: Data sharing, analytics for member clubs",
+                    "Partnerships: Analytics platform providers"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Centralized analytics or data platform initiatives",
+                  "confidence_boost": 0.15
+                }
+              },
+              {
+                "hypothesis_id": "mlc_sl_ecommerce_platform",
+                "entity_id": "mlc",
+                "entity_name": "Major League Cricket",
+                "statement": "Major League Cricket will create unified e-commerce platform (\u00a3150K-\u00a3400K) for league merchandise/ticketing",
+                "category": "ecommerce",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sl_ecommerce_platform",
+                  "yp_service_fit": [
+                    "ECOMMERCE"
+                  ],
+                  "budget_range": "\u00a3150K-\u00a3400K",
+                  "yp_advantage": "BNP Paribas Open ticketing experience, league-wide commerce",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Job postings: E-commerce Director, Head of League Commerce",
+                    "RFP keywords: e-commerce platform, ticketing system, league merchandise, RFP, Request for Proposal, tender, RFQ, ITT, supplier portal",
+                    "League announcements: Unified shopping, league ticketing platform",
+                    "Club alignment: Standardized e-commerce across clubs"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "League-wide e-commerce or ticketing initiatives",
+                  "confidence_boost": 0.15
+                }
+              },
+              {
+                "hypothesis_id": "mlc_sl_broadcast_streaming",
+                "entity_id": "mlc",
+                "entity_name": "Major League Cricket",
+                "statement": "Major League Cricket will enhance broadcast/streaming platform (\u00a3200K-\u00a3500K) for digital content",
+                "category": "broadcast",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sl_broadcast_streaming",
+                  "yp_service_fit": [
+                    "MOBILE_APPS",
+                    "UI_UX_DESIGN"
+                  ],
+                  "budget_range": "\u00a3200K-\u00a3500K",
+                  "yp_advantage": "Streaming platform experience, mobile video delivery",
+                  "positioning_strategy": "INNOVATION_PARTNER",
+                  "next_signals": [
+                    "Job postings: Streaming Product Manager, Digital Content Lead",
+                    "RFP keywords: streaming platform, OTT, video delivery, broadcast, RFP, Request for Proposal, tender, ITT, media procurement",
+                    "Media announcements: OTT platform, direct-to-consumer streaming",
+                    "Partnerships: Streaming technology providers"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Streaming or broadcast platform initiatives",
+                  "confidence_boost": 0.15
+                }
+              }
+            ],
+            "yp_service_mappings": [
+              {
+                "question": "What league-wide mobile app or digital platform initiatives is {entity} pursuing?",
+                "services": [
+                  "MOBILE_APPS",
+                  "FAN_ENGAGEMENT"
+                ]
+              },
+              {
+                "question": "What digital transformation of league operations is {entity} undertaking?",
+                "services": [
+                  "DIGITAL_TRANSFORMATION"
+                ]
+              },
+              {
+                "question": "What centralized analytics or data platform is {entity} building for league and clubs?",
+                "services": [
+                  "ANALYTICS"
+                ]
+              },
+              {
+                "question": "What league-wide e-commerce or ticketing platform is {entity} developing?",
+                "services": [
+                  "ECOMMERCE"
+                ]
+              },
+              {
+                "question": "What broadcast or streaming enhancements is {entity} planning for content distribution?",
+                "services": [
+                  "MOBILE_APPS",
+                  "UI_UX_DESIGN"
+                ]
+              }
+            ],
+            "budget_ranges": [],
+            "starting_confidence": 0.5,
+            "yp_profile": {
+              "ideal_budget_range": "\u00a380K-\u00a3500K",
+              "ideal_timeline": "3-12 months",
+              "team_size": "2-8 developers",
+              "case_studies": {
+                "team_gb": {
+                  "service": "MOBILE_APPS",
+                  "description": "Olympic mobile app delivery",
+                  "achievement": "STA Award 2024 winner",
+                  "budget": "~\u00a3300K",
+                  "relevance": "Shows Olympic-scale delivery capability"
+                },
+                "premier_padel": {
+                  "service": "DIGITAL_TRANSFORMATION",
+                  "description": "3-year strategic partnership",
+                  "achievement": "End-to-end digital transformation",
+                  "budget": "~\u00a3500K/year",
+                  "relevance": "Long-term federation partnership model"
+                },
+                "fiba_3x3": {
+                  "service": "FAN_ENGAGEMENT",
+                  "description": "FIBA 3\u00d73 Basketball platform",
+                  "achievement": "Multi-federation engagement platform",
+                  "budget": "~\u00a3200K",
+                  "relevance": "Federation member management experience"
+                },
+                "isu": {
+                  "service": "ANALYTICS",
+                  "description": "International Skating Union data platform",
+                  "achievement": "Sports analytics implementation",
+                  "budget": "~\u00a3150K",
+                  "relevance": "International federation analytics"
+                },
+                "lnb": {
+                  "service": "MOBILE_APPS",
+                  "description": "Ligue Nationale de Basket mobile platform",
+                  "achievement": "French basketball federation app",
+                  "budget": "~\u00a3250K",
+                  "relevance": "Federation-wide mobile deployment"
+                },
+                "bnpp_paribas": {
+                  "service": "ECOMMERCE",
+                  "description": "BNP Paribas Open ticketing platform",
+                  "achievement": "Major event e-commerce delivery",
+                  "budget": "~\u00a3200K",
+                  "relevance": "High-volume ticketing/e-commerce"
+                }
+              },
+              "competitive_differentiators": [
+                "Wild Creativity \u00d7 Boundless Technology approach",
+                "Agile 2-8 developer team structure",
+                "Proven sports industry experience",
+                "Multi-federation partnership track record",
+                "Olympic-scale delivery capability (Team GB)",
+                "End-to-end digital transformation expertise"
+              ]
+            }
           },
-          "details": "Mock details for step 1",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 1: Question-First Dossier Generation\n\nEntity: Major League Cricket (mlc)\nType: SPORT_LEAGUE\n\nGenerated 5 questions:\n\n1. What league-wide mobile app or digital platform initiatives is {entity} pursuing?...\n2. What digital transformation of league operations is {entity} undertaking?...\n3. What centralized analytics or data platform is {entity} building for league and clubs?...\n4. What league-wide e-commerce or ticketing platform is {entity} developing?...\n5. What broadcast or streaming enhancements is {entity} planning for content distribution?...\n\nYP Service Mappings: 5\nBudget Indicators: 0\nStarting Confidence: 0.50\n\nYP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnpp_paribas']\n",
+          "logs": [
+            "Importing entity_type_dossier_questions module...",
+            "Generating questions for entity type: SPORT_LEAGUE",
+            "Generated 5 questions",
+            "Generated 5 hypotheses",
+            "Question-first dossier generation completed successfully"
+          ],
+          "metrics": {
+            "questions_generated": 5,
+            "hypotheses_created": 5,
+            "starting_confidence": 0.5
+          }
         },
         {
           "step_number": 2,
@@ -334,41 +1812,179 @@
           "entity_id": "mlc",
           "entity_name": "Major League Cricket",
           "entity_type": "SPORT_LEAGUE",
-          "started_at": "2026-02-17T11:54:34.636235",
-          "completed_at": "2026-02-17T11:54:34.636236",
-          "duration_ms": 3000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:31:25.430734+00:00",
+          "completed_at": "2026-02-17T14:33:52.475780+00:00",
+          "duration_ms": 147045,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "mlc"
+            "entity_id": "mlc",
+            "entity_name": "Major League Cricket",
+            "entity_type": "SPORT_LEAGUE",
+            "hypotheses_count": 5,
+            "max_iterations": 10
           },
           "output_data": {
-            "result": "mock_data"
+            "final_confidence": 0.5965732951393213,
+            "iterations_completed": 5,
+            "validated_signals": [
+              {
+                "id": "sim_signal_0",
+                "type": "CRM_ANALYTICS",
+                "subtype": "GENERAL",
+                "confidence": 0.6483541504792336,
+                "evidence_count": 3,
+                "first_seen": "2026-02-17T14:33:52.475596+00:00"
+              },
+              {
+                "id": "sim_signal_1",
+                "type": "PRESS_RELEASE",
+                "subtype": "GENERAL",
+                "confidence": 0.6343783953813162,
+                "evidence_count": 5,
+                "first_seen": "2026-02-17T14:33:52.475632+00:00"
+              }
+            ],
+            "total_cost_usd": 0.075,
+            "hops_executed": [
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              }
+            ],
+            "confidence_progression": [
+              0.5,
+              0.5,
+              0.52,
+              0.52,
+              0.54,
+              0.52
+            ],
+            "decisions": [
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.5
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.52
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.52
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.54
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.52
+              }
+            ]
           },
-          "details": "Mock details for step 2",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: Major League Cricket\nTemplate: tier_1_club_centralized_procurement\nIterations: 5\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.60\nTotal Cost: $0.0750\n\nValidated Signals: 2\n\n  - CRM_ANALYTICS: 0.65\n  - PRESS_RELEASE: 0.63\n\nConfidence Progression:\n  0.50 \u2192 0.50 \u2192 0.52 \u2192 0.52 \u2192 0.54 \u2192 0.52",
+          "logs": [
+            "Importing hypothesis_driven_discovery module...",
+            "Initializing HypothesisDrivenDiscovery...",
+            "Running discovery for Major League Cricket (max 10 iterations)...",
+            "Discovery execution error: 'RalphState' object has no attribute 'globally_saturated' - falling back to simulated mode",
+            "Running in SIMULATED mode (mock data)",
+            "Simulated hypothesis-driven discovery completed"
+          ],
+          "metrics": {
+            "final_confidence": 0.5965732951393213,
+            "iterations": 5,
+            "signals_validated": 2,
+            "total_cost_usd": 0.075
+          }
         },
         {
           "step_number": 3,
-          "step_name": "Ralph Loop",
+          "step_name": "Ralph Loop Validation",
           "entity_id": "mlc",
           "entity_name": "Major League Cricket",
           "entity_type": "SPORT_LEAGUE",
-          "started_at": "2026-02-17T11:54:34.636239",
-          "completed_at": "2026-02-17T11:54:34.636240",
-          "duration_ms": 3000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:33:52.479578+00:00",
+          "completed_at": "2026-02-17T14:33:52.479933+00:00",
+          "duration_ms": 0,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "mlc"
+            "entity_id": "mlc",
+            "entity_name": "Major League Cricket",
+            "entity_type": "SPORT_LEAGUE",
+            "signals_count": 2
           },
           "output_data": {
-            "result": "mock_data"
+            "pass_1_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              }
+            ],
+            "pass_2_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "confidence": 0.6483541504792336
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "confidence": 0.6343783953813162
+              }
+            ],
+            "pass_3_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.65"
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.63"
+              }
+            ],
+            "validated_signals": [],
+            "rejected_count": 2,
+            "validation_rate": 0.0
           },
-          "details": "Mock details for step 3",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 3: Ralph Loop Validation\n\nEntity: Major League Cricket\nSignals Processed: 2\n\nPass 1 (Rule-based Filtering): 2 results\n  - ACCEPT: 0\n  - WEAK_ACCEPT: 0\n  - REJECT: 2\n\nPass 2 (Claude Validation): 2 results\n  - Signals forwarded to Pass 3: 0\n\nPass 3 (Final Confirmation): 2 results\n  - Validated: 0\n  - Rejected: 2\n\nValidated Signals: 0\nRejected: 2\nValidation Rate: 0.0%\n",
+          "logs": [
+            "Running Ralph Loop validation for 2 signals...",
+            "Validation complete: 0/2 signals validated",
+            "Ralph Loop validation completed successfully"
+          ],
+          "metrics": {
+            "signals_input": 2,
+            "signals_validated": 0,
+            "signals_rejected": 2,
+            "validation_rate": 0.0
+          }
         },
         {
           "step_number": 4,
@@ -376,20 +1992,37 @@
           "entity_id": "mlc",
           "entity_name": "Major League Cricket",
           "entity_type": "SPORT_LEAGUE",
-          "started_at": "2026-02-17T11:54:34.636243",
-          "completed_at": "2026-02-17T11:54:34.636245",
-          "duration_ms": 3000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:33:52.480640+00:00",
+          "completed_at": "2026-02-17T14:33:52.979850+00:00",
+          "duration_ms": 499,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "mlc"
+            "entity_id": "mlc",
+            "entity_name": "Major League Cricket",
+            "entity_type": "SPORT_LEAGUE"
           },
           "output_data": {
-            "result": "mock_data"
+            "timeline_episodes": 0,
+            "time_span_days": 0,
+            "patterns_detected": [],
+            "episode_types": {},
+            "similar_entities": [],
+            "temporal_fit_score": 0.0
           },
-          "details": "Mock details for step 4",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 4: Temporal Intelligence Analysis\n\nEntity: Major League Cricket\nTimeline Episodes: 0\nTime Span: 0 days\n\nPatterns Detected:\n\nEpisode Types:\n\nTemporal Fit Score: 0.00\n  (Based on RFP history, timeline depth, and pattern diversity)",
+          "logs": [
+            "Fetching entity timeline from Graphiti...",
+            "Retrieved 0 timeline episodes",
+            "Temporal analysis complete: fit_score=0.00",
+            "Temporal intelligence analysis completed successfully"
+          ],
+          "metrics": {
+            "timeline_episodes": 0,
+            "time_span_days": 0,
+            "patterns_detected": 0,
+            "temporal_fit_score": 0.0
+          }
         },
         {
           "step_number": 5,
@@ -397,20 +2030,37 @@
           "entity_id": "mlc",
           "entity_name": "Major League Cricket",
           "entity_type": "SPORT_LEAGUE",
-          "started_at": "2026-02-17T11:54:34.636247",
-          "completed_at": "2026-02-17T11:54:34.636248",
-          "duration_ms": 3000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:33:52.981275+00:00",
+          "completed_at": "2026-02-17T14:33:53.037360+00:00",
+          "duration_ms": 56,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "mlc"
+            "entity_id": "mlc",
+            "entity_name": "Major League Cricket",
+            "entity_type": "SPORT_LEAGUE",
+            "max_tokens": 2000
           },
           "output_data": {
-            "result": "mock_data"
+            "narrative": "No episodes found for the specified criteria.",
+            "episode_count": 0,
+            "total_episodes": 0,
+            "estimated_tokens": 0,
+            "truncated": false
           },
-          "details": "Mock details for step 5",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 5: Narrative Builder\n\nEntity: Major League Cricket\nEpisodes Available: 0\nEpisodes Included: 0\nEstimated Tokens: 0\nTruncated: False\n\nNarrative Preview (first 500 chars):\nNo episodes found for the specified criteria....\n",
+          "logs": [
+            "Fetching episodes for narrative building...",
+            "Retrieved 0 episodes",
+            "Narrative built: 0 tokens",
+            "Narrative builder completed successfully"
+          ],
+          "metrics": {
+            "episodes_available": 0,
+            "episodes_included": 0,
+            "estimated_tokens": 0,
+            "truncated": false
+          }
         },
         {
           "step_number": 6,
@@ -418,65 +2068,869 @@
           "entity_id": "mlc",
           "entity_name": "Major League Cricket",
           "entity_type": "SPORT_LEAGUE",
-          "started_at": "2026-02-17T11:54:34.636251",
-          "completed_at": "2026-02-17T11:54:34.636252",
-          "duration_ms": 3000,
-          "cost_usd": 0.017,
+          "started_at": "2026-02-17T14:33:53.050262+00:00",
+          "completed_at": "2026-02-17T14:33:53.050949+00:00",
+          "duration_ms": 0,
+          "cost_usd": 0.0,
           "status": "success",
           "input_data": {
-            "entity_id": "mlc"
+            "entity_id": "mlc",
+            "entity_name": "Major League Cricket",
+            "entity_type": "SPORT_LEAGUE",
+            "signals_count": 0,
+            "temporal_fit": 0.0
           },
           "output_data": {
-            "result": "mock_data"
+            "fit_score": 35.0,
+            "priority": "TIER_4",
+            "budget_alignment": "MARGINAL",
+            "service_alignment": [],
+            "positioning_strategy": "Position based on signal type and entity",
+            "recommendations": [
+              "Monitor for additional signals",
+              "Add to watch list for future opportunities"
+            ],
+            "scoring_breakdown": {
+              "service_match": 0.0,
+              "budget": 12.5,
+              "timeline": 7.5,
+              "entity_size": 8.0,
+              "geographic": 7.0
+            }
           },
-          "details": "Mock details for step 6",
-          "logs": [],
-          "metrics": {}
+          "details": "Step 6: Yellow Panther Fit Scoring\n\nEntity: Major League Cricket\nEntity Type: SPORT_LEAGUE\n\nYP Fit Score: 35.0/100\nPriority Tier: PriorityTier.TIER_4\nBudget Alignment: BudgetAlignment.MARGINAL\n\nService Alignment:\n\nRecommendations:\n  - Monitor for additional signals\n  - Add to watch list for future opportunities\n\nScoring Breakdown:\n  - service_match: 0.0 points\n  - budget: 12.5 points\n  - timeline: 7.5 points\n  - entity_size: 8.0 points\n  - geographic: 7.0 points\n",
+          "logs": [
+            "Importing yellow_panther_scorer module...",
+            "Scoring entity against YP profile...",
+            "YP Fit Score: 35.0/100",
+            "Priority: PriorityTier.TIER_4",
+            "Yellow Panther scoring completed successfully"
+          ],
+          "metrics": {
+            "fit_score": 35.0,
+            "priority": "TIER_4",
+            "budget_alignment": "MARGINAL",
+            "service_alignment_count": 0,
+            "recommendations_count": 2
+          }
         }
       ],
-      "final_confidence": 0.52,
-      "total_signals": 2,
-      "procurement_signals": 1,
-      "capability_signals": 1,
+      "final_confidence": 0.5965732951393213,
+      "total_signals": 0,
+      "procurement_signals": 0,
+      "capability_signals": 0,
       "confidence_band": "INFORMED",
-      "estimated_value": "\u00a380K-\u00a3200K",
+      "estimated_value": "$500/entity/month",
       "recommendations": [
-        "Monitor for analytics platform RFP in Q2 2026"
+        {
+          "text": "Monitor for additional signals"
+        },
+        {
+          "text": "Add to watch list for future opportunities"
+        }
+      ]
+    },
+    {
+      "entity_id": "fulham-fc",
+      "entity_name": "Fulham FC",
+      "entity_type": "SPORT_CLUB",
+      "started_at": "2026-02-17T14:33:53.052400+00:00",
+      "completed_at": "2026-02-17T14:39:33.925106+00:00",
+      "duration_ms": 340872,
+      "cost_usd": 0.0,
+      "steps": [
+        {
+          "step_number": 1,
+          "step_name": "Question-First Dossier",
+          "entity_id": "fulham-fc",
+          "entity_name": "Fulham FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T14:33:53.052482+00:00",
+          "completed_at": "2026-02-17T14:33:53.053528+00:00",
+          "duration_ms": 1,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "fulham-fc",
+            "entity_name": "Fulham FC",
+            "entity_type": "SPORT_CLUB"
+          },
+          "output_data": {
+            "questions_count": 7,
+            "hypotheses": [
+              {
+                "hypothesis_id": "fulham-fc_sc_mobile_fan_platform",
+                "entity_id": "fulham-fc",
+                "entity_name": "Fulham FC",
+                "statement": "Fulham FC will issue mobile app RFP (\u00a380K-\u00a3300K budget) within 6-18 months",
+                "category": "mobile",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_mobile_fan_platform",
+                  "yp_service_fit": [
+                    "MOBILE_APPS",
+                    "FAN_ENGAGEMENT"
+                  ],
+                  "budget_range": "\u00a380K-\u00a3300K",
+                  "yp_advantage": "Team GB Olympic mobile app delivery, STA Award 2024 winner",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Job postings: Mobile Developer, iOS Developer, Product Manager - Mobile",
+                    "RFP keywords: mobile app, fan app, official app, React Native, RFP, Request for Proposal, tender, procurement, EOI, RFI",
+                    "Announcements: Digital transformation initiatives, fan engagement strategy"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Any mention of mobile platform development or fan app in official channels",
+                  "confidence_boost": 0.15
+                }
+              },
+              {
+                "hypothesis_id": "fulham-fc_sc_digital_transformation",
+                "entity_id": "fulham-fc",
+                "entity_name": "Fulham FC",
+                "statement": "Fulham FC is seeking digital transformation partner (\u00a3150K-\u00a3500K) for modernization project",
+                "category": "digital",
+                "prior_probability": 0.7,
+                "confidence": 0.7,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_digital_transformation",
+                  "yp_service_fit": [
+                    "DIGITAL_TRANSFORMATION"
+                  ],
+                  "budget_range": "\u00a3150K-\u00a3500K",
+                  "yp_advantage": "3-year partnership track record (Premier Padel), end-to-end transformation expertise",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Job postings: CTO, CIO, Digital Transformation Manager, Cloud Architect",
+                    "RFP keywords: digital transformation, cloud migration, modernization, RFP, Request for Proposal, tender, ITT, procurement, vendor portal",
+                    "Strategic announcements: Digital modernization, cloud migration, legacy system refresh",
+                    "Partnership announcements: Technology consulting partners"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Mentions of modernization, cloud migration, or technology overhaul initiatives",
+                  "confidence_boost": 0.2
+                }
+              },
+              {
+                "hypothesis_id": "fulham-fc_sc_ticketing_ecommerce",
+                "entity_id": "fulham-fc",
+                "entity_name": "Fulham FC",
+                "statement": "Fulham FC will replace ticketing/e-commerce platform (\u00a380K-\u00a3250K) within 12 months",
+                "category": "ticketing",
+                "prior_probability": 0.65,
+                "confidence": 0.65,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_ticketing_ecommerce",
+                  "yp_service_fit": [
+                    "ECOMMERCE",
+                    "FAN_ENGAGEMENT"
+                  ],
+                  "budget_range": "\u00a380K-\u00a3250K",
+                  "yp_advantage": "BNP Paribas Open ticketing platform experience, high-volume e-commerce delivery",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Fan complaints: Ticketing issues, checkout problems, mobile ticketing",
+                    "Job postings: E-commerce Manager, Head of Ticketing, CRM Manager",
+                    "RFP keywords: ticketing system, e-commerce platform, POS system, RFP, Request for Proposal, tender, RFQ, supplier portal",
+                    "Partnership changes: New ticketing provider partnerships"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE"
+                  ],
+                  "accept_criteria": "Evidence of ticketing issues or job postings for e-commerce roles",
+                  "confidence_boost": 0.15
+                }
+              },
+              {
+                "hypothesis_id": "fulham-fc_sc_analytics_data_platform",
+                "entity_id": "fulham-fc",
+                "entity_name": "Fulham FC",
+                "statement": "Fulham FC will invest in analytics/data platform (\u00a3100K-\u00a3400K) for performance/fan insights",
+                "category": "analytics",
+                "prior_probability": 0.62,
+                "confidence": 0.62,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_analytics_data_platform",
+                  "yp_service_fit": [
+                    "ANALYTICS"
+                  ],
+                  "budget_range": "\u00a3100K-\u00a3400K",
+                  "yp_advantage": "ISU skating analytics platform, sports analytics expertise",
+                  "positioning_strategy": "CAPABILITY_PARTNER",
+                  "next_signals": [
+                    "Job postings: Data Analyst, Data Engineer, BI Developer, Analytics Manager",
+                    "RFP keywords: analytics platform, BI system, data warehouse, CRM analytics, RFP, Request for Proposal, tender, RFQ",
+                    "Partnerships: Analytics providers, BI platform announcements",
+                    "Strategic mentions: Data-driven decisions, fan insights, performance analytics"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Job postings for analytics roles or data platform announcements",
+                  "confidence_boost": 0.12
+                }
+              },
+              {
+                "hypothesis_id": "fulham-fc_sc_fan_engagement_gaps",
+                "entity_id": "fulham-fc",
+                "entity_name": "Fulham FC",
+                "statement": "Fulham FC will seek fan engagement solution (\u00a380K-\u00a3300K) to improve supporter experience",
+                "category": "fan",
+                "prior_probability": 0.6,
+                "confidence": 0.6,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_fan_engagement_gaps",
+                  "yp_service_fit": [
+                    "FAN_ENGAGEMENT",
+                    "MOBILE_APPS"
+                  ],
+                  "budget_range": "\u00a380K-\u00a3300K",
+                  "yp_advantage": "FIBA 3\u00d73 fan engagement platform, multi-federation experience",
+                  "positioning_strategy": "INNOVATION_PARTNER",
+                  "next_signals": [
+                    "Season ticket holder feedback: Engagement complaints, communication issues",
+                    "Job postings: Fan Engagement Manager, Head of Supporter Services",
+                    "RFP keywords: fan engagement platform, CRM system, loyalty platform, RFP, Request for Proposal, tender, EOI",
+                    "Initiatives: Fan experience programs, loyalty scheme launches"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "CAREERS_PAGE",
+                    "PRESS_RELEASE",
+                    "OFFICIAL_SITE"
+                  ],
+                  "accept_criteria": "Fan engagement initiatives or related job postings",
+                  "confidence_boost": 0.1
+                }
+              },
+              {
+                "hypothesis_id": "fulham-fc_sc_stadium_technology",
+                "entity_id": "fulham-fc",
+                "entity_name": "Fulham FC",
+                "statement": "Fulham FC will upgrade stadium technology (\u00a3100K-\u00a3400K) for matchday experience",
+                "category": "stadium",
+                "prior_probability": 0.62,
+                "confidence": 0.62,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_stadium_technology",
+                  "yp_service_fit": [
+                    "MOBILE_APPS",
+                    "UI_UX_DESIGN",
+                    "ECOMMERCE"
+                  ],
+                  "budget_range": "\u00a3100K-\u00a3400K",
+                  "yp_advantage": "Olympic venue app experience, large-scale deployment capability",
+                  "positioning_strategy": "STRATEGIC_PARTNER",
+                  "next_signals": [
+                    "Stadium announcements: WiFi upgrades, mobile ordering, seat upgrades",
+                    "Job postings: Stadium Technology Manager, Venue Operations Director",
+                    "RFP keywords: stadium technology, venue WiFi, mobile ordering, RFP, Request for Proposal, tender, ITT, supplier portal",
+                    "Partnerships: Stadium technology providers, connectivity partners"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "PRESS_RELEASE",
+                    "CAREERS_PAGE"
+                  ],
+                  "accept_criteria": "Stadium technology initiatives or related partnerships",
+                  "confidence_boost": 0.12
+                }
+              },
+              {
+                "hypothesis_id": "fulham-fc_sc_legacy_replacement",
+                "entity_id": "fulham-fc",
+                "entity_name": "Fulham FC",
+                "statement": "Fulham FC will initiate legacy system replacement (\u00a3150K-\u00a3500K) within 6-12 months",
+                "category": "legacy",
+                "prior_probability": 0.6799999999999999,
+                "confidence": 0.6799999999999999,
+                "status": "ACTIVE",
+                "metadata": {
+                  "source": "entity_type_question_template",
+                  "question_id": "sc_legacy_replacement",
+                  "yp_service_fit": [
+                    "DIGITAL_TRANSFORMATION",
+                    "ANALYTICS"
+                  ],
+                  "budget_range": "\u00a3150K-\u00a3500K",
+                  "yp_advantage": "End-to-end digital transformation, legacy migration expertise",
+                  "positioning_strategy": "SOLUTION_PROVIDER",
+                  "next_signals": [
+                    "Partnership changes: Ending vendor relationships",
+                    "Strategic announcements: System modernization, platform migration",
+                    "RFP keywords: system migration, legacy replacement, platform modernization, RFP, Request for Proposal, tender, ITT, RFQ",
+                    "Job postings: Migration specialists, system architects"
+                  ],
+                  "hop_types": [
+                    "RFP_PAGE",
+                    "PRESS_RELEASE",
+                    "CAREERS_PAGE"
+                  ],
+                  "accept_criteria": "Evidence of vendor changes or modernization initiatives",
+                  "confidence_boost": 0.18
+                }
+              }
+            ],
+            "yp_service_mappings": [
+              {
+                "question": "What mobile app or fan engagement platform investments are planned by {entity}?",
+                "services": [
+                  "MOBILE_APPS",
+                  "FAN_ENGAGEMENT"
+                ]
+              },
+              {
+                "question": "What digital transformation initiatives is {entity} undertaking or planning?",
+                "services": [
+                  "DIGITAL_TRANSFORMATION"
+                ]
+              },
+              {
+                "question": "What ticketing or e-commerce pain points indicate replacement needs at {entity}?",
+                "services": [
+                  "ECOMMERCE",
+                  "FAN_ENGAGEMENT"
+                ]
+              },
+              {
+                "question": "What analytics or data platform needs does {entity} have for performance or fan insights?",
+                "services": [
+                  "ANALYTICS"
+                ]
+              },
+              {
+                "question": "What fan engagement strategy gaps or opportunities exist at {entity}?",
+                "services": [
+                  "FAN_ENGAGEMENT",
+                  "MOBILE_APPS"
+                ]
+              },
+              {
+                "question": "What stadium or venue technology upgrades is {entity} planning?",
+                "services": [
+                  "MOBILE_APPS",
+                  "UI_UX_DESIGN",
+                  "ECOMMERCE"
+                ]
+              },
+              {
+                "question": "What legacy system replacement signals is {entity} showing?",
+                "services": [
+                  "DIGITAL_TRANSFORMATION",
+                  "ANALYTICS"
+                ]
+              }
+            ],
+            "budget_ranges": [],
+            "starting_confidence": 0.55,
+            "yp_profile": {
+              "ideal_budget_range": "\u00a380K-\u00a3500K",
+              "ideal_timeline": "3-12 months",
+              "team_size": "2-8 developers",
+              "case_studies": {
+                "team_gb": {
+                  "service": "MOBILE_APPS",
+                  "description": "Olympic mobile app delivery",
+                  "achievement": "STA Award 2024 winner",
+                  "budget": "~\u00a3300K",
+                  "relevance": "Shows Olympic-scale delivery capability"
+                },
+                "premier_padel": {
+                  "service": "DIGITAL_TRANSFORMATION",
+                  "description": "3-year strategic partnership",
+                  "achievement": "End-to-end digital transformation",
+                  "budget": "~\u00a3500K/year",
+                  "relevance": "Long-term federation partnership model"
+                },
+                "fiba_3x3": {
+                  "service": "FAN_ENGAGEMENT",
+                  "description": "FIBA 3\u00d73 Basketball platform",
+                  "achievement": "Multi-federation engagement platform",
+                  "budget": "~\u00a3200K",
+                  "relevance": "Federation member management experience"
+                },
+                "isu": {
+                  "service": "ANALYTICS",
+                  "description": "International Skating Union data platform",
+                  "achievement": "Sports analytics implementation",
+                  "budget": "~\u00a3150K",
+                  "relevance": "International federation analytics"
+                },
+                "lnb": {
+                  "service": "MOBILE_APPS",
+                  "description": "Ligue Nationale de Basket mobile platform",
+                  "achievement": "French basketball federation app",
+                  "budget": "~\u00a3250K",
+                  "relevance": "Federation-wide mobile deployment"
+                },
+                "bnpp_paribas": {
+                  "service": "ECOMMERCE",
+                  "description": "BNP Paribas Open ticketing platform",
+                  "achievement": "Major event e-commerce delivery",
+                  "budget": "~\u00a3200K",
+                  "relevance": "High-volume ticketing/e-commerce"
+                }
+              },
+              "competitive_differentiators": [
+                "Wild Creativity \u00d7 Boundless Technology approach",
+                "Agile 2-8 developer team structure",
+                "Proven sports industry experience",
+                "Multi-federation partnership track record",
+                "Olympic-scale delivery capability (Team GB)",
+                "End-to-end digital transformation expertise"
+              ]
+            }
+          },
+          "details": "Step 1: Question-First Dossier Generation\n\nEntity: Fulham FC (fulham-fc)\nType: SPORT_CLUB\n\nGenerated 7 questions:\n\n1. What mobile app or fan engagement platform investments are planned by {entity}?...\n2. What digital transformation initiatives is {entity} undertaking or planning?...\n3. What ticketing or e-commerce pain points indicate replacement needs at {entity}?...\n4. What analytics or data platform needs does {entity} have for performance or fan insights?...\n5. What fan engagement strategy gaps or opportunities exist at {entity}?...\n6. What stadium or venue technology upgrades is {entity} planning?...\n7. What legacy system replacement signals is {entity} showing?...\n\nYP Service Mappings: 7\nBudget Indicators: 0\nStarting Confidence: 0.55\n\nYP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnpp_paribas']\n",
+          "logs": [
+            "Importing entity_type_dossier_questions module...",
+            "Generating questions for entity type: SPORT_CLUB",
+            "Generated 7 questions",
+            "Generated 7 hypotheses",
+            "Question-first dossier generation completed successfully"
+          ],
+          "metrics": {
+            "questions_generated": 7,
+            "hypotheses_created": 7,
+            "starting_confidence": 0.55
+          }
+        },
+        {
+          "step_number": 2,
+          "step_name": "Hypothesis-Driven Discovery",
+          "entity_id": "fulham-fc",
+          "entity_name": "Fulham FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T14:33:53.058033+00:00",
+          "completed_at": "2026-02-17T14:39:33.646145+00:00",
+          "duration_ms": 340588,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "fulham-fc",
+            "entity_name": "Fulham FC",
+            "entity_type": "SPORT_CLUB",
+            "hypotheses_count": 7,
+            "max_iterations": 10
+          },
+          "output_data": {
+            "final_confidence": 0.7622935801067862,
+            "iterations_completed": 7,
+            "validated_signals": [
+              {
+                "id": "sim_signal_0",
+                "type": "DIGITAL_TRANSFORMATION",
+                "subtype": "GENERAL",
+                "confidence": 0.8717905909287451,
+                "evidence_count": 4,
+                "first_seen": "2026-02-17T14:39:33.646006+00:00"
+              },
+              {
+                "id": "sim_signal_1",
+                "type": "JOB_POSTING",
+                "subtype": "GENERAL",
+                "confidence": 0.7612254105198333,
+                "evidence_count": 7,
+                "first_seen": "2026-02-17T14:39:33.646029+00:00"
+              },
+              {
+                "id": "sim_signal_2",
+                "type": "JOB_POSTING",
+                "subtype": "GENERAL",
+                "confidence": 0.6486313192496045,
+                "evidence_count": 8,
+                "first_seen": "2026-02-17T14:39:33.646036+00:00"
+              },
+              {
+                "id": "sim_signal_3",
+                "type": "JOB_POSTING",
+                "subtype": "GENERAL",
+                "confidence": 0.830160265380649,
+                "evidence_count": 8,
+                "first_seen": "2026-02-17T14:39:33.646042+00:00"
+              }
+            ],
+            "total_cost_usd": 0.105,
+            "hops_executed": [
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              },
+              {
+                "hop_type": "OFFICIAL_SITE",
+                "url": "https://example.com"
+              }
+            ],
+            "confidence_progression": [
+              0.5,
+              0.56,
+              0.6200000000000001,
+              0.6400000000000001,
+              0.7000000000000002,
+              0.7600000000000002,
+              0.7400000000000002,
+              0.8000000000000003
+            ],
+            "decisions": [
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.56
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.6200000000000001
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.6400000000000001
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.7000000000000002
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.7600000000000002
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.7400000000000002
+              },
+              {
+                "decision": "ACCEPT",
+                "confidence_after": 0.8000000000000003
+              }
+            ]
+          },
+          "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: Fulham FC\nTemplate: tier_1_club_centralized_procurement\nIterations: 7\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.76\nTotal Cost: $0.1050\n\nValidated Signals: 4\n\n  - DIGITAL_TRANSFORMATION: 0.87\n  - JOB_POSTING: 0.76\n  - JOB_POSTING: 0.65\n  - JOB_POSTING: 0.83\n\nConfidence Progression:\n  0.50 \u2192 0.56 \u2192 0.62 \u2192 0.64 \u2192 0.70 \u2192 0.76 \u2192 0.74 \u2192 0.80",
+          "logs": [
+            "Importing hypothesis_driven_discovery module...",
+            "Initializing HypothesisDrivenDiscovery...",
+            "Running discovery for Fulham FC (max 10 iterations)...",
+            "Discovery completed: 0 iterations",
+            "Discovery execution error: name 'decision' is not defined - falling back to simulated mode",
+            "Running in SIMULATED mode (mock data)",
+            "Simulated hypothesis-driven discovery completed"
+          ],
+          "metrics": {
+            "final_confidence": 0.7622935801067862,
+            "iterations": 7,
+            "signals_validated": 4,
+            "total_cost_usd": 0.105
+          }
+        },
+        {
+          "step_number": 3,
+          "step_name": "Ralph Loop Validation",
+          "entity_id": "fulham-fc",
+          "entity_name": "Fulham FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T14:39:33.648990+00:00",
+          "completed_at": "2026-02-17T14:39:33.649344+00:00",
+          "duration_ms": 0,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "fulham-fc",
+            "entity_name": "Fulham FC",
+            "entity_type": "SPORT_CLUB",
+            "signals_count": 4
+          },
+          "output_data": {
+            "pass_1_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_2",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              },
+              {
+                "signal_id": "sim_signal_3",
+                "decision": "REJECT",
+                "reason": "Insufficient evidence: 0 < 3"
+              }
+            ],
+            "pass_2_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "confidence": 0.8717905909287451
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "confidence": 0.7612254105198333
+              },
+              {
+                "signal_id": "sim_signal_2",
+                "decision": "REJECT",
+                "confidence": 0.6486313192496045
+              },
+              {
+                "signal_id": "sim_signal_3",
+                "decision": "REJECT",
+                "confidence": 0.830160265380649
+              }
+            ],
+            "pass_3_results": [
+              {
+                "signal_id": "sim_signal_0",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.87"
+              },
+              {
+                "signal_id": "sim_signal_1",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.76"
+              },
+              {
+                "signal_id": "sim_signal_2",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.65"
+              },
+              {
+                "signal_id": "sim_signal_3",
+                "decision": "REJECT",
+                "reason": "Confidence too low: 0.83"
+              }
+            ],
+            "validated_signals": [],
+            "rejected_count": 4,
+            "validation_rate": 0.0
+          },
+          "details": "Step 3: Ralph Loop Validation\n\nEntity: Fulham FC\nSignals Processed: 4\n\nPass 1 (Rule-based Filtering): 4 results\n  - ACCEPT: 0\n  - WEAK_ACCEPT: 0\n  - REJECT: 4\n\nPass 2 (Claude Validation): 4 results\n  - Signals forwarded to Pass 3: 0\n\nPass 3 (Final Confirmation): 4 results\n  - Validated: 0\n  - Rejected: 4\n\nValidated Signals: 0\nRejected: 4\nValidation Rate: 0.0%\n",
+          "logs": [
+            "Running Ralph Loop validation for 4 signals...",
+            "Validation complete: 0/4 signals validated",
+            "Ralph Loop validation completed successfully"
+          ],
+          "metrics": {
+            "signals_input": 4,
+            "signals_validated": 0,
+            "signals_rejected": 4,
+            "validation_rate": 0.0
+          }
+        },
+        {
+          "step_number": 4,
+          "step_name": "Temporal Intelligence",
+          "entity_id": "fulham-fc",
+          "entity_name": "Fulham FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T14:39:33.654425+00:00",
+          "completed_at": "2026-02-17T14:39:33.859640+00:00",
+          "duration_ms": 205,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "fulham-fc",
+            "entity_name": "Fulham FC",
+            "entity_type": "SPORT_CLUB"
+          },
+          "output_data": {
+            "timeline_episodes": 0,
+            "time_span_days": 0,
+            "patterns_detected": [],
+            "episode_types": {},
+            "similar_entities": [],
+            "temporal_fit_score": 0.0
+          },
+          "details": "Step 4: Temporal Intelligence Analysis\n\nEntity: Fulham FC\nTimeline Episodes: 0\nTime Span: 0 days\n\nPatterns Detected:\n\nEpisode Types:\n\nTemporal Fit Score: 0.00\n  (Based on RFP history, timeline depth, and pattern diversity)",
+          "logs": [
+            "Fetching entity timeline from Graphiti...",
+            "Retrieved 0 timeline episodes",
+            "Temporal analysis complete: fit_score=0.00",
+            "Temporal intelligence analysis completed successfully"
+          ],
+          "metrics": {
+            "timeline_episodes": 0,
+            "time_span_days": 0,
+            "patterns_detected": 0,
+            "temporal_fit_score": 0.0
+          }
+        },
+        {
+          "step_number": 5,
+          "step_name": "Narrative Builder",
+          "entity_id": "fulham-fc",
+          "entity_name": "Fulham FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T14:39:33.865089+00:00",
+          "completed_at": "2026-02-17T14:39:33.919328+00:00",
+          "duration_ms": 54,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "fulham-fc",
+            "entity_name": "Fulham FC",
+            "entity_type": "SPORT_CLUB",
+            "max_tokens": 2000
+          },
+          "output_data": {
+            "narrative": "No episodes found for the specified criteria.",
+            "episode_count": 0,
+            "total_episodes": 0,
+            "estimated_tokens": 0,
+            "truncated": false
+          },
+          "details": "Step 5: Narrative Builder\n\nEntity: Fulham FC\nEpisodes Available: 0\nEpisodes Included: 0\nEstimated Tokens: 0\nTruncated: False\n\nNarrative Preview (first 500 chars):\nNo episodes found for the specified criteria....\n",
+          "logs": [
+            "Fetching episodes for narrative building...",
+            "Retrieved 0 episodes",
+            "Narrative built: 0 tokens",
+            "Narrative builder completed successfully"
+          ],
+          "metrics": {
+            "episodes_available": 0,
+            "episodes_included": 0,
+            "estimated_tokens": 0,
+            "truncated": false
+          }
+        },
+        {
+          "step_number": 6,
+          "step_name": "Yellow Panther Scoring",
+          "entity_id": "fulham-fc",
+          "entity_name": "Fulham FC",
+          "entity_type": "SPORT_CLUB",
+          "started_at": "2026-02-17T14:39:33.921382+00:00",
+          "completed_at": "2026-02-17T14:39:33.922050+00:00",
+          "duration_ms": 0,
+          "cost_usd": 0.0,
+          "status": "success",
+          "input_data": {
+            "entity_id": "fulham-fc",
+            "entity_name": "Fulham FC",
+            "entity_type": "SPORT_CLUB",
+            "signals_count": 0,
+            "temporal_fit": 0.0
+          },
+          "output_data": {
+            "fit_score": 35.0,
+            "priority": "TIER_4",
+            "budget_alignment": "MARGINAL",
+            "service_alignment": [],
+            "positioning_strategy": "Position based on signal type and entity",
+            "recommendations": [
+              "Monitor for additional signals",
+              "Add to watch list for future opportunities"
+            ],
+            "scoring_breakdown": {
+              "service_match": 0.0,
+              "budget": 12.5,
+              "timeline": 7.5,
+              "entity_size": 8.0,
+              "geographic": 7.0
+            }
+          },
+          "details": "Step 6: Yellow Panther Fit Scoring\n\nEntity: Fulham FC\nEntity Type: SPORT_CLUB\n\nYP Fit Score: 35.0/100\nPriority Tier: PriorityTier.TIER_4\nBudget Alignment: BudgetAlignment.MARGINAL\n\nService Alignment:\n\nRecommendations:\n  - Monitor for additional signals\n  - Add to watch list for future opportunities\n\nScoring Breakdown:\n  - service_match: 0.0 points\n  - budget: 12.5 points\n  - timeline: 7.5 points\n  - entity_size: 8.0 points\n  - geographic: 7.0 points\n",
+          "logs": [
+            "Importing yellow_panther_scorer module...",
+            "Scoring entity against YP profile...",
+            "YP Fit Score: 35.0/100",
+            "Priority: PriorityTier.TIER_4",
+            "Yellow Panther scoring completed successfully"
+          ],
+          "metrics": {
+            "fit_score": 35.0,
+            "priority": "TIER_4",
+            "budget_alignment": "MARGINAL",
+            "service_alignment_count": 0,
+            "recommendations_count": 2
+          }
+        }
+      ],
+      "final_confidence": 0.7622935801067862,
+      "total_signals": 0,
+      "procurement_signals": 0,
+      "capability_signals": 0,
+      "confidence_band": "CONFIDENT",
+      "estimated_value": "$2,000/entity/month",
+      "recommendations": [
+        {
+          "text": "Monitor for additional signals"
+        },
+        {
+          "text": "Add to watch list for future opportunities"
+        }
       ]
     }
   ],
   "summary": {
-    "total_entities": 3,
-    "entity_types_tested": [
-      "SPORT_CLUB",
-      "SPORT_FEDERATION",
-      "SPORT_LEAGUE"
-    ],
-    "total_steps_executed": 18,
-    "successful_steps": 18,
-    "avg_confidence": 0.65,
-    "entity_results": [
-      {
-        "entity": "Arsenal FC",
-        "confidence": 0.78,
-        "band": "CONFIDENT",
-        "signals": 5,
-        "value": "\u00a3200K-\u00a3500K"
-      },
-      {
-        "entity": "International Canoe Federation",
-        "confidence": 0.65,
-        "band": "CONFIDENT",
-        "signals": 3,
-        "value": "\u00a3150K-\u00a3300K"
-      },
-      {
-        "entity": "Major League Cricket",
-        "confidence": 0.52,
-        "band": "INFORMED",
-        "signals": 2,
-        "value": "\u00a380K-\u00a3200K"
-      }
-    ]
+    "total_entities": 4,
+    "successful_entities": 4,
+    "total_steps": 24,
+    "successful_steps": 24,
+    "success_rate": 1.0,
+    "avg_confidence": 0.7024317419021304,
+    "max_confidence": 0.7622935801067862,
+    "min_confidence": 0.5965732951393213,
+    "total_cost_usd": 0.0,
+    "avg_cost_usd": 0.0,
+    "total_signals": 0,
+    "procurement_signals": 0,
+    "capability_signals": 0,
+    "avg_duration_ms": 162557.5,
+    "total_duration_ms": 650230,
+    "confidence_bands": {
+      "CONFIDENT": 3,
+      "INFORMED": 1
+    }
   }
 }

@@ -45,13 +45,27 @@ class BrightDataSDKClient:
         """
         from brightdata import BrightDataClient
         from dotenv import load_dotenv
+        from pathlib import Path
+        import os
 
-        load_dotenv()
+        # Try current directory first, then parent directory
+        env_loaded = load_dotenv()  # Current directory
 
-        # Store token for later use in async context
+        # Also try parent directory explicitly (for backend/ scripts)
+        parent_env = Path(__file__).parent.parent / '.env'
+        if parent_env.exists():
+            load_dotenv(parent_env, override=True)
+            logger.info(f"✅ Loaded .env from parent directory: {parent_env}")
+
+        # Store token from environment if not provided
+        if token is None:
+            token = os.getenv('BRIGHTDATA_API_TOKEN')
+
         self.token = token
         self._client = None
-        logger.info("✅ BrightDataSDKClient initialized (async context)")
+
+        if not self.token:
+            logger.warning("⚠️ BRIGHTDATA_API_TOKEN not found in environment")
 
     async def _get_client(self):
         """Get or create async client context"""
@@ -232,14 +246,20 @@ class BrightDataSDKClient:
 
             logger.info(f"✅ Scraped {len(content)} characters")
 
+            # Extract publication date from HTML metadata
+            publication_date = self._extract_publication_date(soup, html_content, url)
+
             return {
                 "status": "success",
                 "url": url,
                 "content": content,
+                "raw_html": html_content,  # Include raw HTML for PDF link extraction
                 "timestamp": datetime.now().isoformat(),
+                "publication_date": publication_date.isoformat() if publication_date else None,
                 "metadata": {
                     "word_count": len(content.split()),
-                    "source": "brightdata_sdk"
+                    "source": "brightdata_sdk",
+                    "has_publication_date": publication_date is not None
                 }
             }
 
@@ -454,15 +474,21 @@ class BrightDataSDKClient:
 
                 logger.info(f"✅ Fallback scraped {len(content)} characters")
 
+                # Extract publication date from HTML metadata
+                publication_date = self._extract_publication_date(soup, response.text, url)
+
                 return {
                     "status": "success",
                     "url": url,
                     "content": content,
+                    "raw_html": response.text,  # Include raw HTML for PDF link extraction
                     "timestamp": datetime.now().isoformat(),
+                    "publication_date": publication_date.isoformat() if publication_date else None,
                     "metadata": {
                         "word_count": len(content.split()),
                         "source": "fallback_httpx",
-                        "warning": "BrightData SDK unavailable, using httpx"
+                        "warning": "BrightData SDK unavailable, using httpx",
+                        "has_publication_date": publication_date is not None
                     }
                 }
 
@@ -569,6 +595,162 @@ class BrightDataSDKClient:
                     lines.append(f"[{text}]({href})")
 
         return '\n\n'.join(lines) if lines else element.get_text(separator='\n', strip=True)
+
+    def _extract_publication_date(
+        self,
+        soup,
+        html_content: str,
+        url: str
+    ) -> Optional[datetime]:
+        """
+        Extract publication date from HTML metadata
+
+        Looks for publication dates in common locations:
+        - <meta property="article:published_time">
+        - <meta property="article:modified_time">
+        - <meta name="date" content="...">
+        - <meta name="pubdate" content="...">
+        - <time datetime="...">
+        - JSON-LD schema.org datePublished
+        - Open Graph article:published_time
+        - URL patterns (e.g., /2024/01/15/)
+
+        Args:
+            soup: BeautifulSoup parsed HTML
+            html_content: Raw HTML content
+            url: Page URL (for fallback date extraction)
+
+        Returns:
+            datetime object if found, None otherwise
+        """
+        from datetime import datetime
+        import re
+        from dateutil import parser as date_parser
+
+        date_formats = [
+            # ISO 8601 formats
+            r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}',
+            r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}',
+            r'\d{4}-\d{2}-\d{2}',
+            # Common date formats
+            r'\d{1,2}/\d{1,2}/\d{4}',
+            r'\d{4}/\d{1,2}/\d{1,2}',
+            r'\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}',
+            r'(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}',
+        ]
+
+        # 1. Check meta tags for article published time
+        for meta_name in ['article:published_time', 'article:modified_time', 'article:published', 'pubdate', 'date', 'publish-date', 'publish_date']:
+            meta = soup.find('meta', property=meta_name) or soup.find('meta', attrs={'name': meta_name})
+            if meta:
+                content = meta.get('content', '')
+                if content:
+                    try:
+                        dt = date_parser.parse(content)
+                        logger.debug(f"Found publication date in {meta_name}: {dt}")
+                        return dt
+                    except:
+                        continue
+
+        # 2. Check <time> tags
+        for time_tag in soup.find_all('time'):
+            datetime_attr = time_tag.get('datetime')
+            if datetime_attr:
+                try:
+                    dt = date_parser.parse(datetime_attr)
+                    logger.debug(f"Found publication date in <time>: {dt}")
+                    return dt
+                except:
+                    continue
+
+        # 3. Check JSON-LD schema.org data
+        for script in soup.find_all('script', type='application/ld+json'):
+            try:
+                import json
+                data = json.loads(script.string)
+                # Handle both single object and array
+                items = data if isinstance(data, list) else [data]
+                for item in items:
+                    if isinstance(item, dict):
+                        # Check for datePublished or dateModified
+                        for date_field in ['datePublished', 'dateModified', 'uploadDate', 'publicationDate']:
+                            if date_field in item:
+                                try:
+                                    dt = date_parser.parse(item[date_field])
+                                    logger.debug(f"Found publication date in JSON-LD {date_field}: {dt}")
+                                    return dt
+                                except:
+                                    continue
+            except:
+                continue
+
+        # 4. Check Open Graph meta tags
+        og_article = soup.find('meta', property='article:published_time')
+        if og_article:
+            content = og_article.get('content', '')
+            if content:
+                try:
+                    dt = date_parser.parse(content)
+                    logger.debug(f"Found publication date in OG article:published_time: {dt}")
+                    return dt
+                except:
+                    pass
+
+        # 5. Extract date from URL patterns (e.g., /2024/01/15/article-slug)
+        url_date_match = re.search(r'/(\d{4})/(\d{1,2})/(\d{1,2})/', url)
+        if url_date_match:
+            year, month, day = url_date_match.groups()
+            try:
+                dt = datetime(int(year), int(month), int(day))
+                logger.debug(f"Found publication date in URL: {dt}")
+                return dt
+            except:
+                pass
+
+        # 5b. Check for date patterns in URL path like /news/2024/january/article
+        url_date_match2 = re.search(r'/(\d{4})/(january|february|march|april|may|june|july|august|september|october|november|december)/', url, re.IGNORECASE)
+        if url_date_match2:
+            year, month_name = url_date_match2.groups()
+            try:
+                month_num = {
+                    'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
+                    'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12
+                }[month_name.lower()]
+                dt = datetime(int(year), month_num, 1)
+                logger.debug(f"Found publication date in URL (month name): {dt}")
+                return dt
+            except:
+                pass
+
+        # 5c. Check for common sports news URL patterns like /news/20250115/
+        url_date_match3 = re.search(r'/(news|posts|article)/(\d{8})/', url)
+        if url_date_match3:
+            date_str = url_date_match3.group(2)
+            try:
+                dt = datetime.strptime(date_str, '%Y%m%d')
+                logger.debug(f"Found publication date in URL (YYYYMMDD): {dt}")
+                return dt
+            except:
+                pass
+
+        # 6. Look for common date patterns in the content (last resort)
+        # Check for dates in heading elements near the title
+        for tag in soup.find_all(['h1', 'h2', 'h3']):
+            text = tag.get_text(strip=True)
+            # Pattern: "Published January 15, 2024" or similar
+            date_match = re.search(r'(?:published|posted|updated|on)\s+([A-Za-z]+\s+\d{1,2},?\s+\d{4})', text, re.IGNORECASE)
+            if date_match:
+                try:
+                    dt = date_parser.parse(date_match.group(1))
+                    # Sanity check: date shouldn't be in the future
+                    if dt.year <= datetime.now().year + 1:  # Allow for timezone differences
+                        logger.debug(f"Found publication date in heading: {dt}")
+                        return dt
+                except:
+                    pass
+
+        logger.debug("No publication date found in HTML")
+        return None
 
 
 # Test client instantiation

@@ -1,6 +1,6 @@
 # Signal Noise App: End-to-End System Demonstration
 
-**Generated:** 2026-02-17T15:23:56.940557
+**Generated:** 2026-02-19T09:09:05.591518
 **Version:** 1.0.0
 **Purpose:** Complete system validation across all entity types
 
@@ -12,35 +12,35 @@ This document demonstrates the complete Signal Noise system functionality
 by executing all 6 system steps across three different entity types:
 
 - **Arsenal FC** (SPORT_CLUB)
-  - Final Confidence: 0.20
-  - Confidence Band: EXPLORATORY
+  - Final Confidence: 0.56
+  - Confidence Band: INFORMED
   - Total Signals: 0
-  - Estimated Value: $0
-  - Duration: 160.6s
+  - Estimated Value: $500/entity/month
+  - Duration: 87.3s
   - Cost: $0.00
 
 - **International Canoe Federation** (SPORT_FEDERATION)
-  - Final Confidence: 0.50
+  - Final Confidence: 0.52
   - Confidence Band: INFORMED
   - Total Signals: 0
   - Estimated Value: $500/entity/month
-  - Duration: 53.0s
+  - Duration: 35.9s
   - Cost: $0.00
 
 - **Major League Cricket** (SPORT_LEAGUE)
+  - Final Confidence: 0.52
+  - Confidence Band: INFORMED
+  - Total Signals: 0
+  - Estimated Value: $500/entity/month
+  - Duration: 16.5s
+  - Cost: $0.00
+
+- **Fulham FC** (SPORT_CLUB)
   - Final Confidence: 0.50
   - Confidence Band: INFORMED
   - Total Signals: 0
   - Estimated Value: $500/entity/month
-  - Duration: 204.3s
-  - Cost: $0.00
-
-- **Fulham FC** (SPORT_CLUB)
-  - Final Confidence: 0.20
-  - Confidence Band: EXPLORATORY
-  - Total Signals: 0
-  - Estimated Value: $0
-  - Duration: 174.5s
+  - Duration: 280.4s
   - Cost: $0.00
 
 ### Overall Metrics
@@ -49,8 +49,8 @@ by executing all 6 system steps across three different entity types:
 - **Entity Types Tested:** 
 - **Total Steps Executed:** 0
 - **Successful Steps:** 24
-- **Average Confidence:** 0.35
-- **Total Duration:** 592.3 seconds
+- **Average Confidence:** 0.53
+- **Total Duration:** 420.1 seconds
 - **Total Cost:** $0.00
 
 ---
@@ -99,21 +99,21 @@ by executing all 6 system steps across three different entity types:
 
 - **Entity ID:** arsenal-fc
 - **Entity Type:** SPORT_CLUB
-- **Started:** 2026-02-17T15:14:04.597316+00:00
-- **Completed:** 2026-02-17T15:16:45.177386+00:00
-- **Duration:** 160.58 seconds
+- **Started:** 2026-02-19T09:02:05.512956+00:00
+- **Completed:** 2026-02-19T09:03:32.766446+00:00
+- **Duration:** 87.25 seconds
 - **Total Cost:** $0.00
-- **Final Confidence:** 0.20
-- **Confidence Band:** EXPLORATORY
+- **Final Confidence:** 0.56
+- **Confidence Band:** INFORMED
 - **Total Signals:** 0
   - Procurement Signals: 0
   - Capability Signals: 0
-- **Estimated Value:** $0
+- **Estimated Value:** $500/entity/month
 
 ### Step 1: Question-First Dossier ✅
 
-**Started:** 2026-02-17T15:14:04.597372+00:00
-**Completed:** 2026-02-17T15:14:04.599268+00:00
+**Started:** 2026-02-19T09:02:05.513017+00:00
+**Completed:** 2026-02-19T09:02:05.514981+00:00
 **Duration:** 1ms
 **Cost:** $0.00
 **Status:** SUCCESS
@@ -165,9 +165,9 @@ YP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnp
 
 ### Step 2: Hypothesis-Driven Discovery ✅
 
-**Started:** 2026-02-17T15:14:04.602086+00:00
-**Completed:** 2026-02-17T15:16:44.644197+00:00
-**Duration:** 160042ms
+**Started:** 2026-02-19T09:02:05.515551+00:00
+**Completed:** 2026-02-19T09:03:32.516211+00:00
+**Duration:** 87000ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -176,14 +176,14 @@ YP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnp
   - `entity_name`: Arsenal FC
   - `entity_type`: SPORT_CLUB
   - `hypotheses_count`: 7
-  - `max_iterations`: 5
+  - `max_iterations`: 10
 
 **Output:**
-  - `final_confidence`: 0.2
-  - `iterations_completed`: 0
-  - `validated_signals`: []
-  - `total_cost_usd`: 0.0
-  - `hops_executed`: {'1': 5}
+  - `final_confidence`: 0.56
+  - `iterations_completed`: 2
+  - `validated_signals`: [{'id': 'arsenal-fc_design_20260219090331_0', 'type': 'TECHNOLOGY_ADOPTED', 'subtype': None, 'confidence': 0.52, 'evidence_count': 1, 'first_seen': '2026-02-19T09:03:31.839181+00:00', 'entity_id': 'arsenal-fc', 'metadata': {'hypothesis_id': 'arsenal-fc_ui/ux_design_project', 'hypothesis_statement': 'Arsenal FC is preparing procurement related to UI/UX Design Project', 'hypothesis_category': 'design', 'decision': 'WEAK_ACCEPT', 'confidence_delta': 0.02, 'justification': 'The content shows a procurement role (Procurement Manager) at Arsenal FC, indicating general procurement capability but no specific UI/UX project intent.', 'hop_type': 'rfp_page', 'source_url': 'https://uk.linkedin.com/in/isaac-ainsworth-358a0b1a1', 'entity_name': 'Arsenal FC', 'yp_service_fit': [], 'budget_range': '', 'positioning_strategy': ''}, 'evidence': [{'id': 'arsenal-fc_design_20260219090331_0_evidence_0', 'source': 'https://uk.linkedin.com/in/isaac-ainsworth-358a0b1a1', 'url': 'https://uk.linkedin.com/in/isaac-ainsworth-358a0b1a1', 'content': 'Currently working as a Procurement Manager at Arsenal Football Club', 'confidence': 0.52, 'collected_at': '2026-02-19T09:03:31.839148+00:00'}]}]
+  - `total_cost_usd`: 0.002
+  - `hops_executed`: {'1': 1, '2': 2}
   - `confidence_progression`: []
   - `decisions`: []
 
@@ -193,33 +193,36 @@ Step 2: Hypothesis-Driven Discovery
 
 Entity: Arsenal FC
 Template: yellow_panther_agency
-Iterations: 0
+Iterations: 2
 Max Depth: 3
 
-Final Confidence: 0.20
-Total Cost: $0.0000
+Final Confidence: 0.56
+Total Cost: $0.0020
 
-Validated Signals: 0
+Validated Signals: 1
+Raw Signal Objects: 1
 
+  - TECHNOLOGY_ADOPTED: 0.52
 
 Hypotheses Generated: 10
 
 Depth Statistics:
-  Depth 1: 5 iterations
+  Depth 1: 1 iterations
+  Depth 2: 2 iterations
 
 
 **Logs:**
 
   - Importing hypothesis_driven_discovery module...
   - Initializing HypothesisDrivenDiscovery...
-  - Running discovery for Arsenal FC (max 5 iterations)...
-  - Discovery completed: 0 iterations
+  - Running discovery for Arsenal FC (max 10 iterations)...
+  - Discovery completed: 2 iterations
   - Hypothesis-driven discovery completed successfully
 
 ### Step 3: Ralph Loop Validation ✅
 
-**Started:** 2026-02-17T15:16:44.649978+00:00
-**Completed:** 2026-02-17T15:16:44.650328+00:00
+**Started:** 2026-02-19T09:03:32.518081+00:00
+**Completed:** 2026-02-19T09:03:32.518390+00:00
 **Duration:** 0ms
 **Cost:** $0.00
 **Status:** SUCCESS
@@ -228,51 +231,51 @@ Depth Statistics:
   - `entity_id`: arsenal-fc
   - `entity_name`: Arsenal FC
   - `entity_type`: SPORT_CLUB
-  - `signals_count`: 0
+  - `signals_count`: 1
 
 **Output:**
-  - `pass_1_results`: []
-  - `pass_2_results`: []
-  - `pass_3_results`: []
+  - `pass_1_results`: [{'signal_id': 'arsenal-fc_design_20260219090331_0', 'decision': 'REJECT', 'reason': 'Insufficient evidence: 1 < 3'}]
+  - `pass_2_results`: [{'signal_id': 'arsenal-fc_design_20260219090331_0', 'decision': 'REJECT', 'confidence': 0.52}]
+  - `pass_3_results`: [{'signal_id': 'arsenal-fc_design_20260219090331_0', 'decision': 'REJECT', 'reason': 'Confidence too low: 0.52'}]
   - `validated_signals`: []
-  - `rejected_count`: 0
-  - `validation_rate`: 0
+  - `rejected_count`: 1
+  - `validation_rate`: 0.0
 
 **Details:**
 
 Step 3: Ralph Loop Validation
 
 Entity: Arsenal FC
-Signals Processed: 0
+Signals Processed: 1
 
-Pass 1 (Rule-based Filtering): 0 results
+Pass 1 (Rule-based Filtering): 1 results
   - ACCEPT: 0
   - WEAK_ACCEPT: 0
-  - REJECT: 0
+  - REJECT: 1
 
-Pass 2 (Claude Validation): 0 results
+Pass 2 (Claude Validation): 1 results
   - Signals forwarded to Pass 3: 0
 
-Pass 3 (Final Confirmation): 0 results
+Pass 3 (Final Confirmation): 1 results
   - Validated: 0
-  - Rejected: 0
+  - Rejected: 1
 
 Validated Signals: 0
-Rejected: 0
+Rejected: 1
 Validation Rate: 0.0%
 
 
 **Logs:**
 
-  - Running Ralph Loop validation for 0 signals...
-  - Validation complete: 0/0 signals validated
+  - Running Ralph Loop validation for 1 signals...
+  - Validation complete: 0/1 signals validated
   - Ralph Loop validation completed successfully
 
 ### Step 4: Temporal Intelligence ✅
 
-**Started:** 2026-02-17T15:16:44.651114+00:00
-**Completed:** 2026-02-17T15:16:45.066302+00:00
-**Duration:** 415ms
+**Started:** 2026-02-19T09:03:32.519432+00:00
+**Completed:** 2026-02-19T09:03:32.681005+00:00
+**Duration:** 161ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -282,55 +285,41 @@ Validation Rate: 0.0%
   - `entity_type`: SPORT_CLUB
 
 **Output:**
-  - `timeline_episodes`: 10
+  - `timeline_episodes`: 4
   - `time_span_days`: 0
-  - `patterns_detected`: ['RFP Activity', 'Hiring Activity', 'Partnership Activity']
-  - `episode_types`: {'RFP_DETECTED': 3, 'HIRING': 2, 'PARTNERSHIP': 1, 'TECHNOLOGY_ADOPTED': 3, 'EXECUTIVE_CHANGE': 1}
+  - `patterns_detected`: []
+  - `episode_types`: {'OTHER': 4}
   - `similar_entities`: []
-  - `temporal_fit_score`: 0.7999999999999999
+  - `temporal_fit_score`: 0.5
 
 **Details:**
 
-Step 4: Temporal Intelligence Analysis (SIMULATED MODE)
+Step 4: Temporal Intelligence Analysis
 
 Entity: Arsenal FC
-Timeline Episodes: 10 (simulated)
+Timeline Episodes: 4
 Time Span: 0 days
 
-⚠️ NOTE: This is SIMULATED data. Real temporal intelligence requires:
-   - FalkorDB/Neo4j database connection
-   - Graphiti service initialized
-   - Historical episode data stored in graph
-
 Patterns Detected:
-  - RFP Activity
-  - Hiring Activity
-  - Partnership Activity
 
 Episode Types:
-  - RFP_DETECTED: 3
-  - HIRING: 2
-  - PARTNERSHIP: 1
-  - TECHNOLOGY_ADOPTED: 3
-  - EXECUTIVE_CHANGE: 1
+  - OTHER: 4
 
-Temporal Fit Score: 0.80
+Temporal Fit Score: 0.50
   (Based on RFP history, timeline depth, and pattern diversity)
 
 **Logs:**
 
   - Fetching entity timeline from Graphiti...
-  - Retrieved 2 timeline episodes
-  - Temporal analysis error: 'GraphitiService' object has no attribute 'find_similar_entities' - falling back to simulated mode
-  - Running in SIMULATED mode (mock temporal data)
-  - Simulated temporal analysis complete: fit_score=0.80
-  - Simulated temporal intelligence analysis completed
+  - Retrieved 4 timeline episodes
+  - Temporal analysis complete: fit_score=0.50
+  - Temporal intelligence analysis completed successfully
 
 ### Step 5: Narrative Builder ✅
 
-**Started:** 2026-02-17T15:16:45.066949+00:00
-**Completed:** 2026-02-17T15:16:45.172872+00:00
-**Duration:** 105ms
+**Started:** 2026-02-19T09:03:32.681645+00:00
+**Completed:** 2026-02-19T09:03:32.756316+00:00
+**Duration:** 74ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -341,16 +330,18 @@ Temporal Fit Score: 0.80
   - `max_tokens`: 2000
 
 **Output:**
-  - `narrative`: # Temporal Narrative (2 episodes: 2026-01-18T22:08:30.853128+00:00 to 2026-01-18T22:14:51.765532+00:00)
+  - `narrative`: # Temporal Narrative (4 episodes: 2026-01-18T22:08:30.853128+00:00 to 2026-02-19T09:03:31.840519+00:00)
 
 ## Other
 
+- **2026-02-19** (Unknown): Discovery run found 1 signal(s). Final confidence: 0.56. Signals: TECHNOLOGY_ADOPTED
+- **2026-02-19** (Unknown): Discovery run completed with 7 iterations. Final confidence: 0.50. No signals detected.
 - **2026-01-18** (Unknown): Request for AI-powered analytics
 - **2026-01-18** (Unknown): Digital Transformation RFP
 
-  - `episode_count`: 2
-  - `total_episodes`: 2
-  - `estimated_tokens`: 57
+  - `episode_count`: 4
+  - `total_episodes`: 4
+  - `estimated_tokens`: 115
   - `truncated`: False
 
 **Details:**
@@ -358,16 +349,18 @@ Temporal Fit Score: 0.80
 Step 5: Narrative Builder
 
 Entity: Arsenal FC
-Episodes Available: 2
-Episodes Included: 2
-Estimated Tokens: 57
+Episodes Available: 4
+Episodes Included: 4
+Estimated Tokens: 115
 Truncated: False
 
 Narrative Preview (first 500 chars):
-# Temporal Narrative (2 episodes: 2026-01-18T22:08:30.853128+00:00 to 2026-01-18T22:14:51.765532+00:00)
+# Temporal Narrative (4 episodes: 2026-01-18T22:08:30.853128+00:00 to 2026-02-19T09:03:31.840519+00:00)
 
 ## Other
 
+- **2026-02-19** (Unknown): Discovery run found 1 signal(s). Final confidence: 0.56. Signals: TECHNOLOGY_ADOPTED
+- **2026-02-19** (Unknown): Discovery run completed with 7 iterations. Final confidence: 0.50. No signals detected.
 - **2026-01-18** (Unknown): Request for AI-powered analytics
 - **2026-01-18** (Unknown): Digital Transformation RFP
 ...
@@ -376,15 +369,15 @@ Narrative Preview (first 500 chars):
 **Logs:**
 
   - Fetching episodes for narrative building...
-  - Retrieved 2 episodes
-  - Narrative built: 57 tokens
+  - Retrieved 4 episodes
+  - Narrative built: 115 tokens
   - Narrative builder completed successfully
 
 ### Step 6: Yellow Panther Scoring ✅
 
-**Started:** 2026-02-17T15:16:45.173397+00:00
-**Completed:** 2026-02-17T15:16:45.177015+00:00
-**Duration:** 3ms
+**Started:** 2026-02-19T09:03:32.757080+00:00
+**Completed:** 2026-02-19T09:03:32.766049+00:00
+**Duration:** 8ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -393,7 +386,7 @@ Narrative Preview (first 500 chars):
   - `entity_name`: Arsenal FC
   - `entity_type`: SPORT_CLUB
   - `signals_count`: 0
-  - `temporal_fit`: 0.7999999999999999
+  - `temporal_fit`: 0.5
 
 **Output:**
   - `fit_score`: 35.0
@@ -451,11 +444,11 @@ Scoring Breakdown:
 
 - **Entity ID:** icf
 - **Entity Type:** SPORT_FEDERATION
-- **Started:** 2026-02-17T15:16:45.177402+00:00
-- **Completed:** 2026-02-17T15:17:38.202793+00:00
-- **Duration:** 53.02 seconds
+- **Started:** 2026-02-19T09:03:32.766460+00:00
+- **Completed:** 2026-02-19T09:04:08.646880+00:00
+- **Duration:** 35.88 seconds
 - **Total Cost:** $0.00
-- **Final Confidence:** 0.50
+- **Final Confidence:** 0.52
 - **Confidence Band:** INFORMED
 - **Total Signals:** 0
   - Procurement Signals: 0
@@ -464,8 +457,8 @@ Scoring Breakdown:
 
 ### Step 1: Question-First Dossier ✅
 
-**Started:** 2026-02-17T15:16:45.177439+00:00
-**Completed:** 2026-02-17T15:16:45.177605+00:00
+**Started:** 2026-02-19T09:03:32.766501+00:00
+**Completed:** 2026-02-19T09:03:32.766651+00:00
 **Duration:** 0ms
 **Cost:** $0.00
 **Status:** SUCCESS
@@ -516,9 +509,9 @@ YP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnp
 
 ### Step 2: Hypothesis-Driven Discovery ✅
 
-**Started:** 2026-02-17T15:16:45.178163+00:00
-**Completed:** 2026-02-17T15:17:37.932084+00:00
-**Duration:** 52753ms
+**Started:** 2026-02-19T09:03:32.767407+00:00
+**Completed:** 2026-02-19T09:04:08.389135+00:00
+**Duration:** 35621ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -527,14 +520,14 @@ YP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnp
   - `entity_name`: International Canoe Federation
   - `entity_type`: SPORT_FEDERATION
   - `hypotheses_count`: 6
-  - `max_iterations`: 5
+  - `max_iterations`: 10
 
 **Output:**
-  - `final_confidence`: 0.5
-  - `iterations_completed`: 5
-  - `validated_signals`: []
-  - `total_cost_usd`: 0.005
-  - `hops_executed`: {'1': 5}
+  - `final_confidence`: 0.52
+  - `iterations_completed`: 2
+  - `validated_signals`: [{'id': 'icf_design_20260219090408_0', 'type': 'TECHNOLOGY_ADOPTED', 'subtype': None, 'confidence': 0.56, 'evidence_count': 1, 'first_seen': '2026-02-19T09:04:08.204675+00:00', 'entity_id': 'icf', 'metadata': {'hypothesis_id': 'icf_ui/ux_design_project', 'hypothesis_statement': 'International Canoe Federation is preparing procurement related to UI/UX Design Project', 'hypothesis_category': 'design', 'decision': 'ACCEPT', 'confidence_delta': 0.06, 'justification': 'The content contains an active RFP for an OTT platform development project issued by ICF, which includes UI/UX design requirements as part of the end-to-end solution. This is a direct and explicit procurement signal.', 'hop_type': 'rfp_page', 'source_url': 'https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf', 'entity_name': 'International Canoe Federation', 'yp_service_fit': [], 'budget_range': '', 'positioning_strategy': ''}, 'evidence': [{'id': 'icf_design_20260219090408_0_evidence_0', 'source': 'https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf', 'url': 'https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf', 'content': 'REQUEST FOR PROPOSAL (RFP): ICF OTT Platform Development...This RFP seeks proposals from qualified OTT technology providers to design, develop, launch, and operate this platform.', 'confidence': 0.56, 'collected_at': '2026-02-19T09:04:08.204583+00:00'}]}, {'id': 'icf_data engineering_20260219090408_1', 'type': 'TECHNOLOGY_ADOPTED', 'subtype': None, 'confidence': 0.52, 'evidence_count': 1, 'first_seen': '2026-02-19T09:04:08.205039+00:00', 'entity_id': 'icf', 'metadata': {'hypothesis_id': 'icf_python_data_processing_project', 'hypothesis_statement': 'International Canoe Federation is preparing procurement related to Python Data Processing Project', 'hypothesis_category': 'data engineering', 'decision': 'WEAK_ACCEPT', 'confidence_delta': 0.02, 'justification': 'The document contains an active RFP for an OTT platform development project issued by ICF, indicating a clear procurement intent. However, the RFP is focused on OTT platform development rather than a Python Data Processing Project specifically. While the platform may involve data processing capabilities, the primary scope is video streaming and content monetization, not the data engineering patterns mentioned in the hypothesis.', 'hop_type': 'rfp_page', 'source_url': 'https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf', 'entity_name': 'International Canoe Federation', 'yp_service_fit': [], 'budget_range': '', 'positioning_strategy': ''}, 'evidence': [{'id': 'icf_data engineering_20260219090408_1_evidence_0', 'source': 'https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf', 'url': 'https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf', 'content': 'REQUEST FOR PROPOSAL (RFP): ICF OTT Platform Development\nIssued by: International Canoe Federation (ICF)\nDate of Issue: 1st December 2025. Deadline for Submissions: 13th January 2026', 'confidence': 0.52, 'collected_at': '2026-02-19T09:04:08.205006+00:00'}]}]
+  - `total_cost_usd`: 0.002
+  - `hops_executed`: {'1': 1, '2': 1}
   - `confidence_progression`: []
   - `decisions`: []
 
@@ -544,33 +537,37 @@ Step 2: Hypothesis-Driven Discovery
 
 Entity: International Canoe Federation
 Template: yellow_panther_agency
-Iterations: 5
+Iterations: 2
 Max Depth: 3
 
-Final Confidence: 0.50
-Total Cost: $0.0050
+Final Confidence: 0.52
+Total Cost: $0.0020
 
-Validated Signals: 0
+Validated Signals: 2
+Raw Signal Objects: 2
 
+  - TECHNOLOGY_ADOPTED: 0.56
+  - TECHNOLOGY_ADOPTED: 0.52
 
 Hypotheses Generated: 10
 
 Depth Statistics:
-  Depth 1: 5 iterations
+  Depth 1: 1 iterations
+  Depth 2: 1 iterations
 
 
 **Logs:**
 
   - Importing hypothesis_driven_discovery module...
   - Initializing HypothesisDrivenDiscovery...
-  - Running discovery for International Canoe Federation (max 5 iterations)...
-  - Discovery completed: 5 iterations
+  - Running discovery for International Canoe Federation (max 10 iterations)...
+  - Discovery completed: 2 iterations
   - Hypothesis-driven discovery completed successfully
 
 ### Step 3: Ralph Loop Validation ✅
 
-**Started:** 2026-02-17T15:17:37.935556+00:00
-**Completed:** 2026-02-17T15:17:37.935916+00:00
+**Started:** 2026-02-19T09:04:08.391227+00:00
+**Completed:** 2026-02-19T09:04:08.391648+00:00
 **Duration:** 0ms
 **Cost:** $0.00
 **Status:** SUCCESS
@@ -579,51 +576,51 @@ Depth Statistics:
   - `entity_id`: icf
   - `entity_name`: International Canoe Federation
   - `entity_type`: SPORT_FEDERATION
-  - `signals_count`: 0
+  - `signals_count`: 2
 
 **Output:**
-  - `pass_1_results`: []
-  - `pass_2_results`: []
-  - `pass_3_results`: []
+  - `pass_1_results`: [{'signal_id': 'icf_design_20260219090408_0', 'decision': 'REJECT', 'reason': 'Insufficient evidence: 1 < 3'}, {'signal_id': 'icf_data engineering_20260219090408_1', 'decision': 'REJECT', 'reason': 'Insufficient evidence: 1 < 3'}]
+  - `pass_2_results`: [{'signal_id': 'icf_design_20260219090408_0', 'decision': 'REJECT', 'confidence': 0.56}, {'signal_id': 'icf_data engineering_20260219090408_1', 'decision': 'REJECT', 'confidence': 0.52}]
+  - `pass_3_results`: [{'signal_id': 'icf_design_20260219090408_0', 'decision': 'REJECT', 'reason': 'Confidence too low: 0.56'}, {'signal_id': 'icf_data engineering_20260219090408_1', 'decision': 'REJECT', 'reason': 'Confidence too low: 0.52'}]
   - `validated_signals`: []
-  - `rejected_count`: 0
-  - `validation_rate`: 0
+  - `rejected_count`: 2
+  - `validation_rate`: 0.0
 
 **Details:**
 
 Step 3: Ralph Loop Validation
 
 Entity: International Canoe Federation
-Signals Processed: 0
+Signals Processed: 2
 
-Pass 1 (Rule-based Filtering): 0 results
+Pass 1 (Rule-based Filtering): 2 results
   - ACCEPT: 0
   - WEAK_ACCEPT: 0
-  - REJECT: 0
+  - REJECT: 2
 
-Pass 2 (Claude Validation): 0 results
+Pass 2 (Claude Validation): 2 results
   - Signals forwarded to Pass 3: 0
 
-Pass 3 (Final Confirmation): 0 results
+Pass 3 (Final Confirmation): 2 results
   - Validated: 0
-  - Rejected: 0
+  - Rejected: 2
 
 Validated Signals: 0
-Rejected: 0
+Rejected: 2
 Validation Rate: 0.0%
 
 
 **Logs:**
 
-  - Running Ralph Loop validation for 0 signals...
-  - Validation complete: 0/0 signals validated
+  - Running Ralph Loop validation for 2 signals...
+  - Validation complete: 0/2 signals validated
   - Ralph Loop validation completed successfully
 
 ### Step 4: Temporal Intelligence ✅
 
-**Started:** 2026-02-17T15:17:37.937019+00:00
-**Completed:** 2026-02-17T15:17:38.133400+00:00
-**Duration:** 196ms
+**Started:** 2026-02-19T09:04:08.392628+00:00
+**Completed:** 2026-02-19T09:04:08.593822+00:00
+**Duration:** 201ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -633,40 +630,41 @@ Validation Rate: 0.0%
   - `entity_type`: SPORT_FEDERATION
 
 **Output:**
-  - `timeline_episodes`: 0
+  - `timeline_episodes`: 2
   - `time_span_days`: 0
   - `patterns_detected`: []
-  - `episode_types`: {}
+  - `episode_types`: {'OTHER': 2}
   - `similar_entities`: []
-  - `temporal_fit_score`: 0.0
+  - `temporal_fit_score`: 0.5
 
 **Details:**
 
 Step 4: Temporal Intelligence Analysis
 
 Entity: International Canoe Federation
-Timeline Episodes: 0
+Timeline Episodes: 2
 Time Span: 0 days
 
 Patterns Detected:
 
 Episode Types:
+  - OTHER: 2
 
-Temporal Fit Score: 0.00
+Temporal Fit Score: 0.50
   (Based on RFP history, timeline depth, and pattern diversity)
 
 **Logs:**
 
   - Fetching entity timeline from Graphiti...
-  - Retrieved 0 timeline episodes
-  - Temporal analysis complete: fit_score=0.00
+  - Retrieved 2 timeline episodes
+  - Temporal analysis complete: fit_score=0.50
   - Temporal intelligence analysis completed successfully
 
 ### Step 5: Narrative Builder ✅
 
-**Started:** 2026-02-17T15:17:38.135024+00:00
-**Completed:** 2026-02-17T15:17:38.196979+00:00
-**Duration:** 61ms
+**Started:** 2026-02-19T09:04:08.595826+00:00
+**Completed:** 2026-02-19T09:04:08.641590+00:00
+**Duration:** 45ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -677,10 +675,16 @@ Temporal Fit Score: 0.00
   - `max_tokens`: 2000
 
 **Output:**
-  - `narrative`: No episodes found for the specified criteria.
-  - `episode_count`: 0
-  - `total_episodes`: 0
-  - `estimated_tokens`: 0
+  - `narrative`: # Temporal Narrative (2 episodes: 2026-02-19T08:58:00.661865+00:00 to 2026-02-19T09:04:08.205687+00:00)
+
+## Other
+
+- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...
+- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...
+
+  - `episode_count`: 2
+  - `total_episodes`: 2
+  - `estimated_tokens`: 93
   - `truncated`: False
 
 **Details:**
@@ -688,26 +692,32 @@ Temporal Fit Score: 0.00
 Step 5: Narrative Builder
 
 Entity: International Canoe Federation
-Episodes Available: 0
-Episodes Included: 0
-Estimated Tokens: 0
+Episodes Available: 2
+Episodes Included: 2
+Estimated Tokens: 93
 Truncated: False
 
 Narrative Preview (first 500 chars):
-No episodes found for the specified criteria....
+# Temporal Narrative (2 episodes: 2026-02-19T08:58:00.661865+00:00 to 2026-02-19T09:04:08.205687+00:00)
+
+## Other
+
+- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...
+- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...
+...
 
 
 **Logs:**
 
   - Fetching episodes for narrative building...
-  - Retrieved 0 episodes
-  - Narrative built: 0 tokens
+  - Retrieved 2 episodes
+  - Narrative built: 93 tokens
   - Narrative builder completed successfully
 
 ### Step 6: Yellow Panther Scoring ✅
 
-**Started:** 2026-02-17T15:17:38.198288+00:00
-**Completed:** 2026-02-17T15:17:38.201087+00:00
+**Started:** 2026-02-19T09:04:08.642550+00:00
+**Completed:** 2026-02-19T09:04:08.644861+00:00
 **Duration:** 2ms
 **Cost:** $0.00
 **Status:** SUCCESS
@@ -717,7 +727,7 @@ No episodes found for the specified criteria....
   - `entity_name`: International Canoe Federation
   - `entity_type`: SPORT_FEDERATION
   - `signals_count`: 0
-  - `temporal_fit`: 0.0
+  - `temporal_fit`: 0.5
 
 **Output:**
   - `fit_score`: 35.0
@@ -775,11 +785,11 @@ Scoring Breakdown:
 
 - **Entity ID:** mlc
 - **Entity Type:** SPORT_LEAGUE
-- **Started:** 2026-02-17T15:17:38.202922+00:00
-- **Completed:** 2026-02-17T15:21:02.462394+00:00
-- **Duration:** 204.26 seconds
+- **Started:** 2026-02-19T09:04:08.646952+00:00
+- **Completed:** 2026-02-19T09:04:25.159974+00:00
+- **Duration:** 16.51 seconds
 - **Total Cost:** $0.00
-- **Final Confidence:** 0.50
+- **Final Confidence:** 0.52
 - **Confidence Band:** INFORMED
 - **Total Signals:** 0
   - Procurement Signals: 0
@@ -788,8 +798,8 @@ Scoring Breakdown:
 
 ### Step 1: Question-First Dossier ✅
 
-**Started:** 2026-02-17T15:17:38.203010+00:00
-**Completed:** 2026-02-17T15:17:38.203388+00:00
+**Started:** 2026-02-19T09:04:08.647131+00:00
+**Completed:** 2026-02-19T09:04:08.647656+00:00
 **Duration:** 0ms
 **Cost:** $0.00
 **Status:** SUCCESS
@@ -839,9 +849,9 @@ YP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnp
 
 ### Step 2: Hypothesis-Driven Discovery ✅
 
-**Started:** 2026-02-17T15:17:38.205319+00:00
-**Completed:** 2026-02-17T15:21:02.120912+00:00
-**Duration:** 203915ms
+**Started:** 2026-02-19T09:04:08.649714+00:00
+**Completed:** 2026-02-19T09:04:24.766278+00:00
+**Duration:** 16116ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -850,14 +860,14 @@ YP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnp
   - `entity_name`: Major League Cricket
   - `entity_type`: SPORT_LEAGUE
   - `hypotheses_count`: 5
-  - `max_iterations`: 5
+  - `max_iterations`: 10
 
 **Output:**
-  - `final_confidence`: 0.5
-  - `iterations_completed`: 5
-  - `validated_signals`: []
-  - `total_cost_usd`: 0.005
-  - `hops_executed`: {'1': 5}
+  - `final_confidence`: 0.52
+  - `iterations_completed`: 2
+  - `validated_signals`: [{'id': 'mlc_design_20260219090424_0', 'type': 'TECHNOLOGY_ADOPTED', 'subtype': None, 'confidence': 0.56, 'evidence_count': 1, 'first_seen': '2026-02-19T09:04:24.465575+00:00', 'entity_id': 'mlc', 'metadata': {'hypothesis_id': 'mlc_ui/ux_design_project', 'hypothesis_statement': 'Major League Cricket is preparing procurement related to UI/UX Design Project', 'hypothesis_category': 'design', 'decision': 'ACCEPT', 'confidence_delta': 0.06, 'justification': 'The content provides a clear, active RFP for a Digital Transformation Project from American Cricket Enterprises, which is directly related to the UI/UX Design Project hypothesis. This meets the HIGH CONFIDENCE criteria for an active procurement signal.', 'hop_type': 'rfp_page', 'source_url': 'https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6', 'entity_name': 'Major League Cricket', 'yp_service_fit': [], 'budget_range': '', 'positioning_strategy': ''}, 'evidence': [{'id': 'mlc_design_20260219090424_0_evidence_0', 'source': 'https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6', 'url': 'https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6', 'content': 'American Cricket Enterprises has issued an RFP for a Digital Transformation Project. This solution will improve the fan experience, optimize commercial opportunities and integrate with existing and new systems for ticketing, merchandise, email marketing, and more whilst also maintaining compliance with relevant data protection and privacy laws. Proposals due on 10 October, 2025.', 'confidence': 0.56, 'collected_at': '2026-02-19T09:04:24.465567+00:00'}]}, {'id': 'mlc_data engineering_20260219090424_1', 'type': 'TECHNOLOGY_ADOPTED', 'subtype': None, 'confidence': 0.52, 'evidence_count': 1, 'first_seen': '2026-02-19T09:04:24.465682+00:00', 'entity_id': 'mlc', 'metadata': {'hypothesis_id': 'mlc_python_data_processing_project', 'hypothesis_statement': 'Major League Cricket is preparing procurement related to Python Data Processing Project', 'hypothesis_category': 'data engineering', 'decision': 'WEAK_ACCEPT', 'confidence_delta': 0.02, 'justification': "The content describes an active RFP for a 'Digital Transformation Project' that includes data processing, analytics, and integration with marketing systems. While this indicates a general digital maturity and technology investment (WEAK_ACCEPT criteria), it does not explicitly mention Python data processing, ETL pipelines, or specific data engineering procurement. The RFP is current and open, meeting temporal requirements.", 'hop_type': 'rfp_page', 'source_url': 'https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6', 'entity_name': 'Major League Cricket', 'yp_service_fit': [], 'budget_range': '', 'positioning_strategy': ''}, 'evidence': [{'id': 'mlc_data engineering_20260219090424_1_evidence_0', 'source': 'https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6', 'url': 'https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6', 'content': 'This solution will improve the fan experience, optimize commercial opportunities and integrate with existing and new systems for ticketing, merchandise, email marketing, and more whilst also maintaining compliance with relevant data protection and privacy laws.', 'confidence': 0.52, 'collected_at': '2026-02-19T09:04:24.465676+00:00'}]}]
+  - `total_cost_usd`: 0.002
+  - `hops_executed`: {'1': 1, '2': 1}
   - `confidence_progression`: []
   - `decisions`: []
 
@@ -867,34 +877,38 @@ Step 2: Hypothesis-Driven Discovery
 
 Entity: Major League Cricket
 Template: yellow_panther_agency
-Iterations: 5
+Iterations: 2
 Max Depth: 3
 
-Final Confidence: 0.50
-Total Cost: $0.0050
+Final Confidence: 0.52
+Total Cost: $0.0020
 
-Validated Signals: 0
+Validated Signals: 2
+Raw Signal Objects: 2
 
+  - TECHNOLOGY_ADOPTED: 0.56
+  - TECHNOLOGY_ADOPTED: 0.52
 
 Hypotheses Generated: 10
 
 Depth Statistics:
-  Depth 1: 5 iterations
+  Depth 1: 1 iterations
+  Depth 2: 1 iterations
 
 
 **Logs:**
 
   - Importing hypothesis_driven_discovery module...
   - Initializing HypothesisDrivenDiscovery...
-  - Running discovery for Major League Cricket (max 5 iterations)...
-  - Discovery completed: 5 iterations
+  - Running discovery for Major League Cricket (max 10 iterations)...
+  - Discovery completed: 2 iterations
   - Hypothesis-driven discovery completed successfully
 
 ### Step 3: Ralph Loop Validation ✅
 
-**Started:** 2026-02-17T15:21:02.126884+00:00
-**Completed:** 2026-02-17T15:21:02.129102+00:00
-**Duration:** 2ms
+**Started:** 2026-02-19T09:04:24.769377+00:00
+**Completed:** 2026-02-19T09:04:24.769582+00:00
+**Duration:** 0ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -902,51 +916,51 @@ Depth Statistics:
   - `entity_id`: mlc
   - `entity_name`: Major League Cricket
   - `entity_type`: SPORT_LEAGUE
-  - `signals_count`: 0
+  - `signals_count`: 2
 
 **Output:**
-  - `pass_1_results`: []
-  - `pass_2_results`: []
-  - `pass_3_results`: []
+  - `pass_1_results`: [{'signal_id': 'mlc_design_20260219090424_0', 'decision': 'REJECT', 'reason': 'Insufficient evidence: 1 < 3'}, {'signal_id': 'mlc_data engineering_20260219090424_1', 'decision': 'REJECT', 'reason': 'Insufficient evidence: 1 < 3'}]
+  - `pass_2_results`: [{'signal_id': 'mlc_design_20260219090424_0', 'decision': 'REJECT', 'confidence': 0.56}, {'signal_id': 'mlc_data engineering_20260219090424_1', 'decision': 'REJECT', 'confidence': 0.52}]
+  - `pass_3_results`: [{'signal_id': 'mlc_design_20260219090424_0', 'decision': 'REJECT', 'reason': 'Confidence too low: 0.56'}, {'signal_id': 'mlc_data engineering_20260219090424_1', 'decision': 'REJECT', 'reason': 'Confidence too low: 0.52'}]
   - `validated_signals`: []
-  - `rejected_count`: 0
-  - `validation_rate`: 0
+  - `rejected_count`: 2
+  - `validation_rate`: 0.0
 
 **Details:**
 
 Step 3: Ralph Loop Validation
 
 Entity: Major League Cricket
-Signals Processed: 0
+Signals Processed: 2
 
-Pass 1 (Rule-based Filtering): 0 results
+Pass 1 (Rule-based Filtering): 2 results
   - ACCEPT: 0
   - WEAK_ACCEPT: 0
-  - REJECT: 0
+  - REJECT: 2
 
-Pass 2 (Claude Validation): 0 results
+Pass 2 (Claude Validation): 2 results
   - Signals forwarded to Pass 3: 0
 
-Pass 3 (Final Confirmation): 0 results
+Pass 3 (Final Confirmation): 2 results
   - Validated: 0
-  - Rejected: 0
+  - Rejected: 2
 
 Validated Signals: 0
-Rejected: 0
+Rejected: 2
 Validation Rate: 0.0%
 
 
 **Logs:**
 
-  - Running Ralph Loop validation for 0 signals...
-  - Validation complete: 0/0 signals validated
+  - Running Ralph Loop validation for 2 signals...
+  - Validation complete: 0/2 signals validated
   - Ralph Loop validation completed successfully
 
 ### Step 4: Temporal Intelligence ✅
 
-**Started:** 2026-02-17T15:21:02.133266+00:00
-**Completed:** 2026-02-17T15:21:02.401797+00:00
-**Duration:** 268ms
+**Started:** 2026-02-19T09:04:24.770346+00:00
+**Completed:** 2026-02-19T09:04:25.109455+00:00
+**Duration:** 339ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -956,40 +970,41 @@ Validation Rate: 0.0%
   - `entity_type`: SPORT_LEAGUE
 
 **Output:**
-  - `timeline_episodes`: 0
+  - `timeline_episodes`: 2
   - `time_span_days`: 0
   - `patterns_detected`: []
-  - `episode_types`: {}
+  - `episode_types`: {'OTHER': 2}
   - `similar_entities`: []
-  - `temporal_fit_score`: 0.0
+  - `temporal_fit_score`: 0.5
 
 **Details:**
 
 Step 4: Temporal Intelligence Analysis
 
 Entity: Major League Cricket
-Timeline Episodes: 0
+Timeline Episodes: 2
 Time Span: 0 days
 
 Patterns Detected:
 
 Episode Types:
+  - OTHER: 2
 
-Temporal Fit Score: 0.00
+Temporal Fit Score: 0.50
   (Based on RFP history, timeline depth, and pattern diversity)
 
 **Logs:**
 
   - Fetching entity timeline from Graphiti...
-  - Retrieved 0 timeline episodes
-  - Temporal analysis complete: fit_score=0.00
+  - Retrieved 2 timeline episodes
+  - Temporal analysis complete: fit_score=0.50
   - Temporal intelligence analysis completed successfully
 
 ### Step 5: Narrative Builder ✅
 
-**Started:** 2026-02-17T15:21:02.403227+00:00
-**Completed:** 2026-02-17T15:21:02.453898+00:00
-**Duration:** 50ms
+**Started:** 2026-02-19T09:04:25.110004+00:00
+**Completed:** 2026-02-19T09:04:25.158692+00:00
+**Duration:** 48ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -1000,10 +1015,16 @@ Temporal Fit Score: 0.00
   - `max_tokens`: 2000
 
 **Output:**
-  - `narrative`: No episodes found for the specified criteria.
-  - `episode_count`: 0
-  - `total_episodes`: 0
-  - `estimated_tokens`: 0
+  - `narrative`: # Temporal Narrative (2 episodes: 2026-02-19T08:58:17.209157+00:00 to 2026-02-19T09:04:24.465965+00:00)
+
+## Other
+
+- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...
+- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...
+
+  - `episode_count`: 2
+  - `total_episodes`: 2
+  - `estimated_tokens`: 93
   - `truncated`: False
 
 **Details:**
@@ -1011,27 +1032,33 @@ Temporal Fit Score: 0.00
 Step 5: Narrative Builder
 
 Entity: Major League Cricket
-Episodes Available: 0
-Episodes Included: 0
-Estimated Tokens: 0
+Episodes Available: 2
+Episodes Included: 2
+Estimated Tokens: 93
 Truncated: False
 
 Narrative Preview (first 500 chars):
-No episodes found for the specified criteria....
+# Temporal Narrative (2 episodes: 2026-02-19T08:58:17.209157+00:00 to 2026-02-19T09:04:24.465965+00:00)
+
+## Other
+
+- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...
+- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...
+...
 
 
 **Logs:**
 
   - Fetching episodes for narrative building...
-  - Retrieved 0 episodes
-  - Narrative built: 0 tokens
+  - Retrieved 2 episodes
+  - Narrative built: 93 tokens
   - Narrative builder completed successfully
 
 ### Step 6: Yellow Panther Scoring ✅
 
-**Started:** 2026-02-17T15:21:02.457637+00:00
-**Completed:** 2026-02-17T15:21:02.461364+00:00
-**Duration:** 3ms
+**Started:** 2026-02-19T09:04:25.159458+00:00
+**Completed:** 2026-02-19T09:04:25.159636+00:00
+**Duration:** 0ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -1040,7 +1067,7 @@ No episodes found for the specified criteria....
   - `entity_name`: Major League Cricket
   - `entity_type`: SPORT_LEAGUE
   - `signals_count`: 0
-  - `temporal_fit`: 0.0
+  - `temporal_fit`: 0.5
 
 **Output:**
   - `fit_score`: 35.0
@@ -1098,22 +1125,22 @@ Scoring Breakdown:
 
 - **Entity ID:** fulham-fc
 - **Entity Type:** SPORT_CLUB
-- **Started:** 2026-02-17T15:21:02.462450+00:00
-- **Completed:** 2026-02-17T15:23:56.932392+00:00
-- **Duration:** 174.47 seconds
+- **Started:** 2026-02-19T09:04:25.159997+00:00
+- **Completed:** 2026-02-19T09:09:05.590977+00:00
+- **Duration:** 280.43 seconds
 - **Total Cost:** $0.00
-- **Final Confidence:** 0.20
-- **Confidence Band:** EXPLORATORY
+- **Final Confidence:** 0.50
+- **Confidence Band:** INFORMED
 - **Total Signals:** 0
   - Procurement Signals: 0
   - Capability Signals: 0
-- **Estimated Value:** $0
+- **Estimated Value:** $500/entity/month
 
 ### Step 1: Question-First Dossier ✅
 
-**Started:** 2026-02-17T15:21:02.462510+00:00
-**Completed:** 2026-02-17T15:21:02.464045+00:00
-**Duration:** 1ms
+**Started:** 2026-02-19T09:04:25.160028+00:00
+**Completed:** 2026-02-19T09:04:25.160193+00:00
+**Duration:** 0ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -1164,9 +1191,9 @@ YP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnp
 
 ### Step 2: Hypothesis-Driven Discovery ✅
 
-**Started:** 2026-02-17T15:21:02.466218+00:00
-**Completed:** 2026-02-17T15:23:56.629807+00:00
-**Duration:** 174163ms
+**Started:** 2026-02-19T09:04:25.162151+00:00
+**Completed:** 2026-02-19T09:09:05.339173+00:00
+**Duration:** 280177ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -1175,14 +1202,14 @@ YP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnp
   - `entity_name`: Fulham FC
   - `entity_type`: SPORT_CLUB
   - `hypotheses_count`: 7
-  - `max_iterations`: 5
+  - `max_iterations`: 10
 
 **Output:**
-  - `final_confidence`: 0.2
-  - `iterations_completed`: 0
+  - `final_confidence`: 0.5
+  - `iterations_completed`: 4
   - `validated_signals`: []
-  - `total_cost_usd`: 0.0
-  - `hops_executed`: {'1': 5}
+  - `total_cost_usd`: 0.004
+  - `hops_executed`: {'1': 5, '2': 5}
   - `confidence_progression`: []
   - `decisions`: []
 
@@ -1192,33 +1219,35 @@ Step 2: Hypothesis-Driven Discovery
 
 Entity: Fulham FC
 Template: yellow_panther_agency
-Iterations: 0
+Iterations: 4
 Max Depth: 3
 
-Final Confidence: 0.20
-Total Cost: $0.0000
+Final Confidence: 0.50
+Total Cost: $0.0040
 
 Validated Signals: 0
+Raw Signal Objects: 0
 
 
 Hypotheses Generated: 10
 
 Depth Statistics:
   Depth 1: 5 iterations
+  Depth 2: 5 iterations
 
 
 **Logs:**
 
   - Importing hypothesis_driven_discovery module...
   - Initializing HypothesisDrivenDiscovery...
-  - Running discovery for Fulham FC (max 5 iterations)...
-  - Discovery completed: 0 iterations
+  - Running discovery for Fulham FC (max 10 iterations)...
+  - Discovery completed: 4 iterations
   - Hypothesis-driven discovery completed successfully
 
 ### Step 3: Ralph Loop Validation ✅
 
-**Started:** 2026-02-17T15:23:56.634207+00:00
-**Completed:** 2026-02-17T15:23:56.634442+00:00
+**Started:** 2026-02-19T09:09:05.341605+00:00
+**Completed:** 2026-02-19T09:09:05.341727+00:00
 **Duration:** 0ms
 **Cost:** $0.00
 **Status:** SUCCESS
@@ -1269,9 +1298,9 @@ Validation Rate: 0.0%
 
 ### Step 4: Temporal Intelligence ✅
 
-**Started:** 2026-02-17T15:23:56.635923+00:00
-**Completed:** 2026-02-17T15:23:56.846485+00:00
-**Duration:** 210ms
+**Started:** 2026-02-19T09:09:05.342148+00:00
+**Completed:** 2026-02-19T09:09:05.528015+00:00
+**Duration:** 185ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -1281,40 +1310,41 @@ Validation Rate: 0.0%
   - `entity_type`: SPORT_CLUB
 
 **Output:**
-  - `timeline_episodes`: 0
+  - `timeline_episodes`: 5
   - `time_span_days`: 0
   - `patterns_detected`: []
-  - `episode_types`: {}
+  - `episode_types`: {'OTHER': 5}
   - `similar_entities`: []
-  - `temporal_fit_score`: 0.0
+  - `temporal_fit_score`: 0.5
 
 **Details:**
 
 Step 4: Temporal Intelligence Analysis
 
 Entity: Fulham FC
-Timeline Episodes: 0
+Timeline Episodes: 5
 Time Span: 0 days
 
 Patterns Detected:
 
 Episode Types:
+  - OTHER: 5
 
-Temporal Fit Score: 0.00
+Temporal Fit Score: 0.50
   (Based on RFP history, timeline depth, and pattern diversity)
 
 **Logs:**
 
   - Fetching entity timeline from Graphiti...
-  - Retrieved 0 timeline episodes
-  - Temporal analysis complete: fit_score=0.00
+  - Retrieved 5 timeline episodes
+  - Temporal analysis complete: fit_score=0.50
   - Temporal intelligence analysis completed successfully
 
 ### Step 5: Narrative Builder ✅
 
-**Started:** 2026-02-17T15:23:56.849519+00:00
-**Completed:** 2026-02-17T15:23:56.924365+00:00
-**Duration:** 74ms
+**Started:** 2026-02-19T09:09:05.531974+00:00
+**Completed:** 2026-02-19T09:09:05.584398+00:00
+**Duration:** 52ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -1325,10 +1355,19 @@ Temporal Fit Score: 0.00
   - `max_tokens`: 2000
 
 **Output:**
-  - `narrative`: No episodes found for the specified criteria.
-  - `episode_count`: 0
-  - `total_episodes`: 0
-  - `estimated_tokens`: 0
+  - `narrative`: # Temporal Narrative (5 episodes: 2026-02-19T03:23:59.444084+00:00 to 2026-02-19T09:09:03.764241+00:00)
+
+## Other
+
+- **2026-02-19** (Unknown): Discovery run completed with 4 iterations. Final confidence: 0.50. No signals detected.
+- **2026-02-19** (Unknown): Discovery run completed with 6 iterations. Final confidence: 0.53. No signals detected.
+- **2026-02-19** (Unknown): Discovery run completed with 6 iterations. Final confidence: 0.53. No signals detected.
+- **2026-02-19** (Unknown): Discovery run completed with 0 iterations. Final confidence: 0.20. No signals detected.
+- **2026-02-19** (Unknown): Discovery run completed with 3 iterations. Final confidence: 0.53. No signals detected.
+
+  - `episode_count`: 5
+  - `total_episodes`: 5
+  - `estimated_tokens`: 173
   - `truncated`: False
 
 **Details:**
@@ -1336,27 +1375,34 @@ Temporal Fit Score: 0.00
 Step 5: Narrative Builder
 
 Entity: Fulham FC
-Episodes Available: 0
-Episodes Included: 0
-Estimated Tokens: 0
+Episodes Available: 5
+Episodes Included: 5
+Estimated Tokens: 173
 Truncated: False
 
 Narrative Preview (first 500 chars):
-No episodes found for the specified criteria....
+# Temporal Narrative (5 episodes: 2026-02-19T03:23:59.444084+00:00 to 2026-02-19T09:09:03.764241+00:00)
+
+## Other
+
+- **2026-02-19** (Unknown): Discovery run completed with 4 iterations. Final confidence: 0.50. No signals detected.
+- **2026-02-19** (Unknown): Discovery run completed with 6 iterations. Final confidence: 0.53. No signals detected.
+- **2026-02-19** (Unknown): Discovery run completed with 6 iterations. Final confidence: 0.53. No signals detected.
+- **2026-02-19** (Unknown): Discovery...
 
 
 **Logs:**
 
   - Fetching episodes for narrative building...
-  - Retrieved 0 episodes
-  - Narrative built: 0 tokens
+  - Retrieved 5 episodes
+  - Narrative built: 173 tokens
   - Narrative builder completed successfully
 
 ### Step 6: Yellow Panther Scoring ✅
 
-**Started:** 2026-02-17T15:23:56.927639+00:00
-**Completed:** 2026-02-17T15:23:56.929415+00:00
-**Duration:** 1ms
+**Started:** 2026-02-19T09:09:05.585548+00:00
+**Completed:** 2026-02-19T09:09:05.586406+00:00
+**Duration:** 0ms
 **Cost:** $0.00
 **Status:** SUCCESS
 
@@ -1365,7 +1411,7 @@ No episodes found for the specified criteria....
   - `entity_name`: Fulham FC
   - `entity_type`: SPORT_CLUB
   - `signals_count`: 0
-  - `temporal_fit`: 0.0
+  - `temporal_fit`: 0.5
 
 **Output:**
   - `fit_score`: 35.0
@@ -1423,31 +1469,31 @@ Scoring Breakdown:
 
 | Entity | Type | Confidence | Band | Signals | Duration | Cost |
 |--------|------|------------|------|---------|----------|------|
-| Arsenal FC | SPORT_CLUB | 0.20 | EXPLORATORY | 0 | 160.6s | $0.00 |
-| International Canoe Federation | SPORT_FEDERATION | 0.50 | INFORMED | 0 | 53.0s | $0.00 |
-| Major League Cricket | SPORT_LEAGUE | 0.50 | INFORMED | 0 | 204.3s | $0.00 |
-| Fulham FC | SPORT_CLUB | 0.20 | EXPLORATORY | 0 | 174.5s | $0.00 |
+| Arsenal FC | SPORT_CLUB | 0.56 | INFORMED | 0 | 87.3s | $0.00 |
+| International Canoe Federation | SPORT_FEDERATION | 0.52 | INFORMED | 0 | 35.9s | $0.00 |
+| Major League Cricket | SPORT_LEAGUE | 0.52 | INFORMED | 0 | 16.5s | $0.00 |
+| Fulham FC | SPORT_CLUB | 0.50 | INFORMED | 0 | 280.4s | $0.00 |
 
 ### Entity Type Breakdown
 
 #### SPORT_CLUB
 
 - **Count:** 2
-- **Avg Confidence:** 0.20
+- **Avg Confidence:** 0.53
 - **Total Signals:** 0
 - **Total Cost:** $0.00
 
 #### SPORT_FEDERATION
 
 - **Count:** 1
-- **Avg Confidence:** 0.50
+- **Avg Confidence:** 0.52
 - **Total Signals:** 0
 - **Total Cost:** $0.00
 
 #### SPORT_LEAGUE
 
 - **Count:** 1
-- **Avg Confidence:** 0.50
+- **Avg Confidence:** 0.52
 - **Total Signals:** 0
 - **Total Cost:** $0.00
 

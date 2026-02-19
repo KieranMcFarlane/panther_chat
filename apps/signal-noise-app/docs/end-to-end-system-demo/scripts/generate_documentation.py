@@ -403,9 +403,9 @@ def generate_business_metrics(results: dict) -> list:
 def main():
     """Generate documentation from captured results"""
 
-    # Setup paths
+    # Setup paths - use the data directory where run_end_to_end_demo.py writes results
     script_dir = Path(__file__).parent
-    data_dir = script_dir / '../data'
+    data_dir = script_dir / '../../data'  # Go up to docs/data where results are written
     docs_dir = script_dir / '..'
 
     print("Loading execution results...")

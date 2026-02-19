@@ -17,6 +17,7 @@ class StepStatus(str, Enum):
     PARTIAL = "partial"
     FAILED = "failed"
     SKIPPED = "skipped"
+    PENDING = "pending"
 
 
 @dataclass

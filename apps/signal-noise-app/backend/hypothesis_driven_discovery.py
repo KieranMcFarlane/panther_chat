@@ -324,7 +324,14 @@ FALLBACK_QUERIES = {
     HopType.PRESS_RELEASE: [
         '{entity} recent news press release',
         '{entity} press releases',
-        '{entity} news'
+        '{entity} news',
+        # LinkedIn RFP/procurement announcements (ACE RFP was found on LinkedIn)
+        '{entity} RFP site:linkedin.com',
+        '{entity} "request for proposal" site:linkedin.com',
+        '{entity} "digital transformation" site:linkedin.com',
+        '{entity} procurement site:linkedin.com',
+        '{entity} tender site:linkedin.com',
+        '{entity} "request for quotations" site:linkedin.com'
     ],
     HopType.LINKEDIN_JOB: [
         '{entity} jobs careers site:linkedin.com',
@@ -338,7 +345,29 @@ FALLBACK_QUERIES = {
         '{entity} "vendor requirements"',
         '{entity} procurement official',
         '{entity} procurement rfp documents',
-        '{entity} request for proposal tender'
+        '{entity} request for proposal tender',
+        # News section targeting (RFPs often announced in news - ACE/MLC RFP was at /news/241)
+        '{entity} "request for proposal" news press',
+        '{entity} RFP announcement news',
+        '{entity} tender announcement press release',
+        # Digital transformation specific searches
+        '{entity} "digital transformation" RFP',
+        '{entity} "digital transformation" request for proposal',
+        '{entity} "digital transformation" tender',
+        # Technology-specific RFP searches
+        '{entity} "CRM" RFP procurement',
+        '{entity} "data warehouse" RFP',
+        '{entity} "business intelligence" request for proposal',
+        '{entity} "SSO" "single sign-on" RFP',
+        '{entity} "email marketing" RFP procurement',
+        '{entity} "mobile app" RFP development',
+        '{entity} "website" RFP redesign',
+        # LinkedIn RFP announcements (ACE RFP was found on LinkedIn)
+        '{entity} RFP site:linkedin.com',
+        '{entity} "request for proposal" site:linkedin.com',
+        '{entity} "digital transformation" site:linkedin.com',
+        '{entity} procurement site:linkedin.com',
+        '{entity} tender site:linkedin.com'
     ],
     HopType.TENDERS_PAGE: [
         '{entity} tenders',
@@ -393,6 +422,7 @@ class DiscoveryResult:
     - Hypothesis states
     - Depth statistics
     - Signals discovered
+    - Raw Signal objects (for Ralph Loop)
     """
     entity_id: str
     entity_name: str
@@ -404,6 +434,7 @@ class DiscoveryResult:
     hypotheses: List[Any]  # List of Hypothesis objects
     depth_stats: Dict[int, int]  # depth -> iteration count
     signals_discovered: List[Dict[str, Any]]
+    raw_signals: List[Any] = field(default_factory=list)  # Signal objects for Ralph Loop
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -419,6 +450,7 @@ class DiscoveryResult:
             'hypotheses': [h.to_dict() if hasattr(h, 'to_dict') else h for h in self.hypotheses],
             'depth_stats': self.depth_stats,
             'signals_discovered': self.signals_discovered,
+            'raw_signals_count': len(self.raw_signals),  # Include count for wrapper
             'timestamp': self.timestamp.isoformat()
         }
 
@@ -443,6 +475,7 @@ class HypothesisDrivenDiscovery:
         claude_client,
         brightdata_client,
         falkordb_client=None,
+        graphiti_service=None,
         config: ParameterConfig = None,
         cache_enabled: bool = True
     ):
@@ -453,6 +486,7 @@ class HypothesisDrivenDiscovery:
             claude_client: ClaudeClient for AI inference
             brightdata_client: BrightDataSDKClient for web scraping
             falkordb_client: Optional FalkorDB client for persistence
+            graphiti_service: Optional GraphitiService for temporal episode storage
             config: Optional ParameterConfig for Phase 6 parameter tuning
             cache_enabled: Enable Phase 5 LRU cache (default: True)
         """
@@ -462,6 +496,7 @@ class HypothesisDrivenDiscovery:
         self.claude_client = claude_client
         self.brightdata_client = brightdata_client
         self.falkordb_client = falkordb_client
+        self.graphiti_service = graphiti_service  # For storing discovery episodes
 
         # Load or create default config
         self.config = config
@@ -513,6 +548,12 @@ class HypothesisDrivenDiscovery:
         self._search_cache = OrderedDict()
         self._cache_ttl = timedelta(hours=24)
 
+        # Log temporal tracking availability
+        if self.graphiti_service:
+            logger.info("🕰️ GraphitiService available - discovery will be stored as temporal episodes")
+        else:
+            logger.info("⚠️ No GraphitiService - discovery episodes will not be stored temporally")
+
         # Load config parameters if available
         if self.config:
             self.max_iterations = self.config.max_iterations
@@ -563,6 +604,17 @@ class HypothesisDrivenDiscovery:
         if entity_slug in url_lower:
             score += 0.2
 
+        # LinkedIn bonus for RFP/procurement hops (ACE RFP was found on LinkedIn)
+        if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
+            if 'linkedin.com' in url_lower:
+                # Check if it's a company post (not a job posting)
+                if '/posts/' in url_lower or '/activity/' in url_lower:
+                    # Give LinkedIn a baseline score since it's a high-value source for RFP announcements
+                    score += 0.3
+                    # Additional bonus if RFP-related keywords are in title
+                    if any(kw in title_lower for kw in ['rfp', 'request for proposal', 'procurement', 'tender', 'digital transformation']):
+                        score += 0.3
+
         # Hop-type-specific scoring
         if hop_type == HopType.RFP_PAGE:
             keywords = {'rfp': 0.5, 'procurement': 0.3, 'tender': 0.3, 'vendor': 0.2, 'supplier': 0.2}
@@ -589,10 +641,11 @@ class HypothesisDrivenDiscovery:
             if 'procurement' in snippet_lower or 'vendor' in snippet_lower:
                 score += 0.1
 
-        # Penalty for generic/low-value paths
-        avoid_paths = {'/news/', '/blog/', '/about/', '/contact/', '/events/', '/media/'}
-        if any(path in url_lower for path in avoid_paths):
-            score -= 0.5
+        # Penalty for generic/low-value paths (but not for LinkedIn posts)
+        if 'linkedin.com' not in url_lower:
+            avoid_paths = {'/news/', '/blog/', '/about/', '/contact/', '/events/', '/media/'}
+            if any(path in url_lower for path in avoid_paths):
+                score -= 0.5
 
         # Bonus for corporate/official paths
         good_paths = {'/procurement/', '/vendors/', '/suppliers/', '/rfp/', '/tenders/'}
@@ -766,7 +819,7 @@ class HypothesisDrivenDiscovery:
                 break
 
         # Build final result
-        return self._build_final_result(state, hypotheses)
+        return await self._build_final_result(state, hypotheses)
 
     async def _rescore_hypotheses_by_eig(self, hypotheses: List):
         """
@@ -996,6 +1049,48 @@ class HypothesisDrivenDiscovery:
                     'char_count': len(content)
                 }
 
+                # ENHANCEMENT: Extract PDF links from tender pages
+                # This addresses the ICF case where /tenders page contained links to multiple RFP PDFs
+                if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
+                    pdf_links = self._extract_pdf_links_from_content(
+                        html_content=content_result.get('raw_html', ''),
+                        base_url=url
+                    )
+                    if pdf_links:
+                        logger.info(f"📄 Found {len(pdf_links)} PDF links on tender page")
+
+                        # Prioritize PDFs with RFP/digital keywords in filename
+                        prioritized_pdfs = self._prioritize_pdf_links(pdf_links, hypothesis)
+
+                        if prioritized_pdfs:
+                            # Extract and evaluate the most relevant PDF
+                            best_pdf_url = prioritized_pdfs[0]['url']
+                            logger.info(f"🎯 Prioritizing PDF: {best_pdf_url}")
+
+                            # Extract PDF content
+                            if self.pdf_extractor:
+                                extract_result = await self.pdf_extractor.extract(best_pdf_url)
+                                if extract_result.get('status') == 'success':
+                                    content = extract_result.get('content', '')
+                                    method = extract_result.get('method', 'unknown')
+                                    char_count = extract_result.get('char_count', 0)
+                                    page_count = extract_result.get('page_count', 0)
+
+                                    logger.info(f"✅ Tender PDF extracted: {char_count} chars from {page_count} pages")
+
+                                    # Update metadata
+                                    content_metadata = {
+                                        'content_type': 'application/pdf',
+                                        'extraction_method': method,
+                                        'char_count': char_count,
+                                        'page_count': page_count,
+                                        'source_url': best_pdf_url,
+                                        'discovered_via': 'tender_page_scan'
+                                    }
+
+                                    # Update URL for tracking
+                                    url = best_pdf_url
+
             # Evaluate content with Claude
             evaluation = await self._evaluate_content_with_claude(
                 content=content,
@@ -1023,7 +1118,13 @@ class HypothesisDrivenDiscovery:
                 'confidence_delta': evaluation.get('confidence_delta', 0.0),
                 'justification': evaluation.get('justification', ''),
                 'evidence_found': evaluation.get('evidence_found', ''),
-                'cost_usd': hop_cost
+                'cost_usd': hop_cost,
+                'scrape_data': {
+                    'publication_date': content_result.get('publication_date'),
+                    'timestamp': content_result.get('timestamp'),
+                    'url': content_result.get('url'),
+                    'word_count': content_result.get('metadata', {}).get('word_count')
+                }
             }
 
         except Exception as e:
@@ -1072,6 +1173,167 @@ class HypothesisDrivenDiscovery:
                 return True
 
         return False
+
+    def _extract_pdf_links_from_content(
+        self,
+        html_content: str,
+        base_url: str
+    ) -> List[Dict[str, Any]]:
+        """
+        Extract PDF links from HTML content
+
+        This addresses cases where tender pages list multiple RFP PDFs
+        (e.g., ICF /tenders page with links to DXP, OTT, and other RFPs).
+
+        Args:
+            html_content: Raw HTML content
+            base_url: Base URL for resolving relative links
+
+        Returns:
+            List of dicts with 'url' and 'filename' keys
+        """
+        import re
+        from urllib.parse import urljoin, urlparse
+
+        if not html_content:
+            return []
+
+        pdf_links = []
+
+        # Pattern 1: Direct href links to .pdf files
+        pdf_pattern = r'href=\"([^\"]*\.pdf[^\"]*)\"'
+        for match in re.finditer(pdf_pattern, html_content, re.IGNORECASE):
+            pdf_url = match.group(1)
+            # Clean up URL (remove query strings if needed)
+            pdf_url = pdf_url.split('?')[0].split('#')[0]
+
+            # Resolve relative URLs
+            if not pdf_url.startswith('http'):
+                pdf_url = urljoin(base_url, pdf_url)
+
+            # Extract filename
+            filename = pdf_url.split('/')[-1]
+
+            pdf_links.append({
+                'url': pdf_url,
+                'filename': filename,
+                'source': 'href'
+            })
+
+        # Pattern 2: Look for PDFs in /sites/default/files/ pattern (common in Drupal/CMS)
+        files_pattern = r'/(sites/default/files/[^\"]*\.pdf)'
+        for match in re.finditer(files_pattern, html_content, re.IGNORECASE):
+            pdf_path = match.group(1)
+            # Resolve to full URL
+            parsed_base = urlparse(base_url)
+            pdf_url = f"{parsed_base.scheme}://{parsed_base.netloc}{pdf_path}"
+
+            filename = pdf_path.split('/')[-1]
+
+            # Avoid duplicates
+            if not any(p['url'] == pdf_url for p in pdf_links):
+                pdf_links.append({
+                    'url': pdf_url,
+                    'filename': filename,
+                    'source': 'files_pattern'
+                })
+
+        return pdf_links
+
+    def _prioritize_pdf_links(
+        self,
+        pdf_links: List[Dict[str, Any]],
+        hypothesis
+    ) -> List[Dict[str, Any]]:
+        """
+        Prioritize PDF links based on relevance to hypothesis
+
+        Higher priority for PDFs with:
+        - RFP/tender/procurement keywords in filename
+        - Digital/tech keywords matching hypothesis category
+        - Excludes obvious non-relevant files (uniforms, apparel, etc.)
+
+        Args:
+            pdf_links: List of PDF link dicts with 'url' and 'filename'
+            hypothesis: Current hypothesis being tested
+
+        Returns:
+            Prioritized list of PDF links (highest score first)
+        """
+        if not pdf_links:
+            return []
+
+        # Keywords that indicate high relevance (digital RFPs)
+        high_priority_keywords = [
+            'dxp', 'digital', 'ecosystem', 'crm', 'analytics', 'platform',
+            'ott', 'streaming', 'video', 'data', 'lake', 'api',
+            'transformation', 'modernization', 'headless', 'cms'
+        ]
+
+        # Keywords that indicate medium relevance
+        medium_priority_keywords = [
+            'rfp', 'tender', 'proposal', 'procurement', 'itt', 'rfq',
+            'vendor', 'supplier', 'service', 'system'
+        ]
+
+        # Keywords that indicate low relevance (not digital/tech)
+        low_priority_keywords = [
+            'uniform', 'apparel', 'clothing', 'merchandise', 'kit',
+            'equipment', 'office', 'furniture', 'catering', 'travel',
+            'insurance', 'cleaning', 'maintenance'
+        ]
+
+        scored_pdfs = []
+
+        for pdf in pdf_links:
+            filename_lower = pdf['filename'].lower()
+            url_lower = pdf['url'].lower()
+
+            score = 0
+
+            # High priority keywords
+            for keyword in high_priority_keywords:
+                if keyword in filename_lower or keyword in url_lower:
+                    score += 10
+
+            # Medium priority keywords
+            for keyword in medium_priority_keywords:
+                if keyword in filename_lower or keyword in url_lower:
+                    score += 5
+
+            # Low priority penalty
+            for keyword in low_priority_keywords:
+                if keyword in filename_lower or keyword in url_lower:
+                    score -= 20
+
+            # Bonus for matching hypothesis category
+            if hypothesis:
+                category = hypothesis.category.lower()
+                if category == 'analytics' and any(k in filename_lower for k in ['analytics', 'data', 'bi', 'intelligence']):
+                    score += 8
+                elif category == 'member' and any(k in filename_lower for k in ['crm', 'member', 'platform', 'portal']):
+                    score += 8
+                elif category == 'event' and any(k in filename_lower for k in ['event', 'ticketing', 'platform']):
+                    score += 8
+                elif category == 'officiating' and any(k in filename_lower for k in ['ott', 'video', 'streaming']):
+                    score += 8
+
+            # Bonus for "paddle worldwide" (ICF rebrand)
+            if 'paddle' in filename_lower or 'paddle' in url_lower:
+                score += 7
+
+            scored_pdfs.append({
+                **pdf,
+                'priority_score': score
+            })
+
+        # Sort by score descending
+        scored_pdfs.sort(key=lambda x: x['priority_score'], reverse=True)
+
+        # Filter out PDFs with very low scores (likely irrelevant)
+        filtered_pdfs = [p for p in scored_pdfs if p['priority_score'] > -15]
+
+        return filtered_pdfs
 
     async def _get_url_for_hop(
         self,
@@ -1195,6 +1457,17 @@ class HypothesisDrivenDiscovery:
                                 f"✅ {engine} search found best URL after validation "
                                 f"(score {best_score}): {best_url}"
                             )
+
+                            # ENHANCEMENT: If best URL is a PDF, check if there's a tender page
+                            # that might contain multiple RFPs (like ICF's /tenders page)
+                            if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
+                                if self._is_pdf_url(best_url):
+                                    logger.info("📄 Best URL is a PDF, checking for tender page...")
+                                    tender_page_url = await self._try_find_tender_page(entity_name, best_url)
+                                    if tender_page_url:
+                                        logger.info(f"🎯 Found tender page, using instead of direct PDF: {tender_page_url}")
+                                        return tender_page_url
+
                             return best_url
 
                     # Fallback: return best scored result without validation
@@ -1203,6 +1476,17 @@ class HypothesisDrivenDiscovery:
                         best_url = scored_results[0].get('url')
                         best_score = scored_results[0].get('_url_score', 0)
                         logger.info(f"✅ {engine} search found best URL (score {best_score}): {best_url}")
+
+                        # ENHANCEMENT: If best URL is a PDF, check if there's a tender page
+                        # that might contain multiple RFPs (like ICF's /tenders page)
+                        if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
+                            if self._is_pdf_url(best_url):
+                                logger.info("📄 Best URL is a PDF, checking for tender page...")
+                                tender_page_url = await self._try_find_tender_page(entity_name, best_url)
+                                if tender_page_url:
+                                    logger.info(f"🎯 Found tender page, using instead of direct PDF: {tender_page_url}")
+                                    return tender_page_url
+
                         return best_url
                 else:
                     # For low-value hops, return first result
@@ -1232,8 +1516,215 @@ class HypothesisDrivenDiscovery:
                         logger.info(f"✅ Fallback {i} ({engine}) found URL: {url}")
                         return url
 
+        # FINAL FALLBACK: Try site-specific search for RFP-related hops
+        # This addresses cases like ACE/MLC where RFP was on entity's own domain
+        if hop_type in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
+            logger.info("🔄 Trying site-specific search as final fallback...")
+            site_url = await self._try_site_specific_search(entity_name, hop_type)
+            if site_url:
+                return site_url
+
         logger.error(f"❌ All search queries failed for {hop_type}")
         return None
+
+    async def _try_site_specific_search(
+        self,
+        entity_name: str,
+        hop_type: HopType
+    ) -> Optional[str]:
+        """
+        Try site-specific search as a last resort for RFP/procurement hops
+
+        This addresses cases like ACE/MLC where the RFP was on the entity's own
+        domain (majorleaguecricket.com/news/241) but generic searches didn't find it.
+
+        Strategy:
+        1. First find the official site domain
+        2. Then search site:domain.com for RFP/procurement content
+
+        Args:
+            entity_name: Name of entity
+            hop_type: Type of hop (RFP_PAGE, TENDERS_PAGE, PROCUREMENT_PAGE)
+
+        Returns:
+            URL to scrape or None
+        """
+        if hop_type not in [HopType.RFP_PAGE, HopType.TENDERS_PAGE, HopType.PROCUREMENT_PAGE]:
+            return None
+
+        logger.info(f"🔍 Trying site-specific search for {entity_name}...")
+
+        # Step 1: Find official site domain
+        try:
+            official_site_result = await self.brightdata_client.search_engine(
+                query=f'"{entity_name}" official website',
+                engine='google',
+                num_results=1
+            )
+
+            if official_site_result.get('status') != 'success' or not official_site_result.get('results'):
+                logger.warning("Could not find official site for site-specific search")
+                return None
+
+            official_url = official_site_result['results'][0].get('url', '')
+            if not official_url:
+                return None
+
+            # Extract domain from URL
+            from urllib.parse import urlparse
+            parsed = urlparse(official_url)
+            domain = parsed.netloc
+
+            # Remove www. if present
+            if domain.startswith('www.'):
+                domain = domain[4:]
+
+            logger.info(f"📍 Found official domain: {domain}")
+
+        except Exception as e:
+            logger.warning(f"Error finding official site: {e}")
+            return None
+
+        # Step 2: Search the entity's own domain for RFP content
+        site_search_queries = [
+            f'site:{domain} "request for proposal"',
+            f'site:{domain} RFP tender',
+            f'site:{domain} procurement',
+            f'site:{domain} "request for quotations"',
+            f'site:{domain} "digital transformation" RFP',
+            f'site:{domain} "CRM" RFP',
+            f'site:{domain} "vendor"',
+            f'site:{domain} tender',
+            f'site:{domain} "supplier"',
+            # Also try news section (ACE RFP was at /news/241)
+            f'site:{domain}/news/ RFP',
+            f'site:{domain}/news/ "request for proposal"',
+            f'site:{domain}/news/ tender',
+            f'site:{domain}/press/ RFP',
+            f'site:{domain}/press/ "request for proposal"'
+        ]
+
+        for query in site_search_queries:
+            try:
+                logger.debug(f"Site search: {query}")
+
+                search_result = await self.brightdata_client.search_engine(
+                    query=query,
+                    engine='google',
+                    num_results=3  # Get more results for site-specific search
+                )
+
+                if search_result.get('status') == 'success' and search_result.get('results'):
+                    results = search_result['results']
+
+                    # Score each result
+                    for result in results:
+                        url = result.get('url', '')
+                        title = result.get('title', '')
+                        snippet = result.get('snippet', '')
+
+                        score = self._score_url(
+                            url=url,
+                            hop_type=hop_type,
+                            entity_name=entity_name,
+                            title=title,
+                            snippet=snippet
+                        )
+
+                        result['_url_score'] = score
+
+                    # Sort by score
+                    results.sort(key=lambda x: x.get('_url_score', 0), reverse=True)
+
+                    # Return best result if score is reasonable
+                    best_result = results[0]
+                    best_score = best_result.get('_url_score', 0)
+                    best_url = best_result.get('url')
+
+                    if best_score >= 0.4:  # Slightly lower threshold for site-specific
+                        logger.info(f"✅ Site-specific search found: {best_url} (score: {best_score:.2f})")
+                        return best_url
+                    else:
+                        logger.debug(f"Site-specific result score too low: {best_score:.2f}")
+
+            except Exception as e:
+                logger.debug(f"Site search query failed: {e}")
+                continue
+
+        logger.info("Site-specific search found no suitable results")
+        return None
+
+    async def _try_find_tender_page(
+        self,
+        entity_name: str,
+        pdf_url: str
+    ) -> Optional[str]:
+        """
+        Try to find a tender page when a PDF URL is found
+
+        This addresses cases like ICF where search finds a PDF (e.g., rfp_-_uniform.pdf)
+        but the actual tender page (/tenders) contains multiple RFPs including
+        more relevant ones (e.g., DXP, OTT Platform).
+
+        Strategy:
+        1. Extract domain from PDF URL
+        2. Check common tender page paths (/tenders, /procurement, /rfp, etc.)
+        3. Return the tender page URL if found and accessible
+
+        Args:
+            entity_name: Name of entity
+            pdf_url: URL of the PDF that was found
+
+        Returns:
+            Tender page URL or None
+        """
+        from urllib.parse import urlparse
+
+        try:
+            parsed = urlparse(pdf_url)
+            domain = parsed.netloc
+
+            # Common tender page paths to try
+            tender_paths = [
+                '/tenders',
+                '/procurement',
+                '/rfp',
+                '/tender',
+                '/opportunities',
+                '/suppliers',
+                '/vendor-opportunities'
+            ]
+
+            for path in tender_paths:
+                tender_url = f"{parsed.scheme}://{domain}{path}"
+
+                logger.debug(f"Checking for tender page: {tender_url}")
+
+                # Quick check without full scrape
+                try:
+                    check_result = await self.brightdata_client.scrape_as_markdown(tender_url)
+                    if check_result.get('status') == 'success':
+                        content = check_result.get('content', '').lower()
+
+                        # Check if page has tender-related content
+                        tender_indicators = ['tender', 'rfp', 'request for proposal', 'procurement', 'vendor']
+                        if any(indicator in content for indicator in tender_indicators):
+                            # Check if it has multiple PDFs (good sign it's a tender index page)
+                            pdf_count = content.count('.pdf')
+                            if pdf_count >= 2:  # Multiple PDFs indicates it's a tender index page
+                                logger.info(f"✅ Found tender page with {pdf_count} PDFs: {tender_url}")
+                                return tender_url
+
+                except Exception as e:
+                    logger.debug(f"Tender page check failed for {tender_url}: {e}")
+                    continue
+
+            logger.debug("No suitable tender page found")
+            return None
+
+        except Exception as e:
+            logger.warning(f"Error finding tender page: {e}")
+            return None
 
     async def _validate_search_results(
         self,
@@ -1627,7 +2118,8 @@ Return JSON:
             )
 
             # Extract text from response
-            response_text = response.get('text', '')
+            # ClaudeClient.query() returns 'content' key, not 'text'
+            response_text = response.get('content', '') or response.get('text', '')
 
             # Parse JSON response (existing code)
             import json
@@ -1637,6 +2129,11 @@ Return JSON:
 
             if json_match:
                 result = json.loads(json_match.group(0))
+
+                # Ensure result has required 'decision' key
+                if 'decision' not in result:
+                    logger.warning(f"Parsed JSON missing 'decision' key: {result}")
+                    return self._fallback_result()
 
                 # Enhance with MCP-derived confidence if not provided
                 if mcp_matches and result.get('confidence_delta', 0) == 0.0:
@@ -1650,8 +2147,25 @@ Return JSON:
             else:
                 logger.warning(f"Could not parse Claude response: {response_text}")
                 return self._fallback_result()
+        except json.JSONDecodeError as e:
+            logger.error(f"JSON parsing error: {e}")
+            logger.debug(f"Response text that failed to parse: {response_text[:500]}")
+            # Try to extract decision with simpler regex
+            simple_match = re.search(r'"decision"\s*:\s*"(\w+)"', response_text)
+            if simple_match:
+                decision = simple_match.group(1)
+                logger.info(f"Fallback extracted decision: {decision}")
+                return {
+                    'decision': decision,
+                    'confidence_delta': 0.05 if decision == 'ACCEPT' else 0.0,
+                    'justification': 'Extracted via fallback parsing',
+                    'evidence_found': '',
+                    'evidence_type': 'fallback'
+                }
+            return self._fallback_result()
         except Exception as e:
             logger.error(f"Claude evaluation error: {e}")
+            logger.debug(f"Response text: {response_text[:500] if response_text else 'empty'}")
             return self._fallback_result()
 
     async def _update_hypothesis_state(
@@ -1675,13 +2189,18 @@ Return JSON:
         """
         from sources.mcp_source_priorities import SourceType
 
+        # Ensure result has required keys
+        if 'decision' not in result:
+            logger.error(f"Result missing 'decision' key: {result.keys() if hasattr(result, 'keys') else 'not a dict'}")
+            return
+
         # Update hypothesis via manager
         updated_hypothesis = await self.hypothesis_manager.update_hypothesis(
             hypothesis_id=hypothesis.hypothesis_id,
             entity_id=state.entity_id,
-            decision=result['decision'],
-            confidence_delta=result['confidence_delta'],
-            evidence_ref=result['url']
+            decision=result.get('decision', 'NO_PROGRESS'),
+            confidence_delta=result.get('confidence_delta', 0.0),
+            evidence_ref=result.get('url', '')
         )
 
         # Update state confidence
@@ -1708,7 +2227,7 @@ Return JSON:
 
             if source_type:
                 # Record success or failure
-                decision = result['decision']
+                decision = result.get('decision', 'NO_PROGRESS')
                 if decision in ['ACCEPT', 'WEAK_ACCEPT']:
                     state.channel_blacklist.record_success(source_type)
                     logger.debug(f"Recorded SUCCESS for {source_type.value}")
@@ -1724,10 +2243,158 @@ Return JSON:
             logger.info(f"Digging deeper: depth {state.current_depth}")
 
         logger.info(
-            f"   Iteration complete: {result['decision']} "
-            f"(+{result['confidence_delta']:.2f}) → "
+            f"   Iteration complete: {result.get('decision', 'NO_PROGRESS')} "
+            f"(+{result.get('confidence_delta', 0.0):.2f}) → "
             f"{updated_hypothesis.confidence:.2f}"
         )
+
+        # Create Signal object for Ralph Loop validation (bridge Step 2 → Step 3)
+        signal = self._create_signal_from_hop_result(
+            result=result,
+            hypothesis=hypothesis,
+            entity_id=state.entity_id,
+            entity_name=state.entity_name
+        )
+        if signal:
+            # Add signal to state for Ralph Loop
+            if not hasattr(state, 'raw_signals'):
+                state.raw_signals = []
+            state.raw_signals.append(signal)
+            logger.info(f"   ✅ Created signal: {signal.id} (type: {signal.type.value}, confidence: {signal.confidence:.2f})")
+
+    def _create_signal_from_hop_result(
+        self,
+        result: Dict[str, Any],
+        hypothesis,
+        entity_id: str,
+        entity_name: str
+    ) -> Optional['Signal']:
+        """
+        Create Signal object from hop execution result (bridges Step 2 → Step 3)
+
+        Only creates signals for ACCEPT or WEAK_ACCEPT decisions with sufficient evidence.
+        Signals are the input format expected by Ralph Loop validation.
+
+        Args:
+            result: Hop execution result with decision, confidence_delta, etc.
+            hypothesis: The hypothesis being evaluated
+            entity_id: Entity identifier
+            entity_name: Entity display name
+
+        Returns:
+            Signal object if criteria met, None otherwise
+        """
+        from schemas import Signal, Evidence, SignalType, SignalSubtype
+
+        decision = result.get('decision', 'NO_PROGRESS')
+
+        # Only create signals for positive decisions
+        if decision not in ['ACCEPT', 'WEAK_ACCEPT']:
+            return None
+
+        # Map hypothesis category to signal type
+        signal_type_mapping = {
+            'member': SignalType.PARTNERSHIP_FORMED,  # Member platform = partnership
+            'officiating': SignalType.TECHNOLOGY_ADOPTED,  # Officiating tech = technology
+            'certification': SignalType.TECHNOLOGY_ADOPTED,  # Certification platform = technology
+            'event': SignalType.TECHNOLOGY_ADOPTED,  # Event platform = technology
+            'analytics': SignalType.TECHNOLOGY_ADOPTED,  # Analytics = technology
+            'partnership': SignalType.PARTNERSHIP_FORMED,
+            'procurement': SignalType.RFP_DETECTED,
+            'rfp': SignalType.RFP_DETECTED,
+        }
+
+        # Map to signal subtypes
+        signal_subtype_mapping = {
+            'member': SignalSubtype.FAN_ENGAGEMENT_PLATFORM,
+            'officiating': SignalSubtype.AI_ADOPTION,
+            'certification': SignalSubtype.CLOUD_MIGRATION,  # Close match for platform
+            'event': SignalSubtype.FAN_ENGAGEMENT_PLATFORM,
+            'analytics': SignalSubtype.DATA_ANALYTICS_SUITE,
+        }
+
+        category = hypothesis.category.lower() if hypothesis.category else ''
+        signal_type = signal_type_mapping.get(category, SignalType.TECHNOLOGY_ADOPTED)
+        signal_subtype = signal_subtype_mapping.get(category)
+
+        # Calculate confidence from hypothesis confidence
+        confidence = hypothesis.confidence
+
+        # Skip if confidence too low for Ralph Loop (< 0.7)
+        if confidence < 0.5:  # Minimum threshold for signal creation
+            logger.debug(f"Skipping signal creation: confidence {confidence:.2f} below threshold 0.5")
+            return None
+
+        # Generate unique signal ID
+        timestamp = datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')
+        signal_id = f"{entity_id}_{hypothesis.category}_{timestamp}"
+
+        # Extract content for evidence
+        url = result.get('url', '')
+        content_snippet = result.get('evidence_found', '')[:500]  # First 500 chars
+
+        # Create evidence object
+        evidence_id = f"{signal_id}_evidence_0"
+        evidence = Evidence(
+            id=evidence_id,
+            source=url or 'web_scrape',
+            date=datetime.now(timezone.utc),
+            signal_id=signal_id,
+            url=url,
+            extracted_text=content_snippet,
+            metadata={
+                'hop_type': result.get('hop_type', ''),
+                'decision': decision,
+                'confidence_delta': result.get('confidence_delta', 0.0),
+                'justification': result.get('justification', ''),
+                'entity_name': entity_name,
+                'hypothesis_id': hypothesis.hypothesis_id,
+                'hypothesis_statement': hypothesis.statement
+            }
+        )
+
+        # Build signal metadata
+        signal_metadata = {
+            'hypothesis_id': hypothesis.hypothesis_id,
+            'hypothesis_statement': hypothesis.statement,
+            'hypothesis_category': hypothesis.category,
+            'decision': decision,
+            'confidence_delta': result.get('confidence_delta', 0.0),
+            'justification': result.get('justification', ''),
+            'hop_type': result.get('hop_type', ''),
+            'source_url': url,
+            'entity_name': entity_name,
+            'yp_service_fit': hypothesis.metadata.get('yp_service_fit', []),
+            'budget_range': hypothesis.metadata.get('budget_range', ''),
+            'positioning_strategy': hypothesis.metadata.get('positioning_strategy', ''),
+        }
+
+        # Add MCP matches if present
+        if 'mcp_matches' in result:
+            signal_metadata['mcp_matches'] = result['mcp_matches']
+            signal_metadata['mcp_confidence'] = result.get('mcp_confidence', 0.0)
+
+        # Create signal
+        signal = Signal(
+            id=signal_id,
+            type=signal_type,
+            confidence=confidence,
+            first_seen=datetime.now(timezone.utc),
+            entity_id=entity_id,
+            subtype=signal_subtype,
+            metadata=signal_metadata
+        )
+
+        # Store evidence with signal (for Ralph Loop access)
+        signal.evidence = [evidence]  # Add as list for Ralph Loop compatibility
+
+        logger.debug(
+            f"Created Signal: id={signal_id}, type={signal_type.value}, "
+            f"subtype={signal_subtype.value if signal_subtype else 'None'}, "
+            f"confidence={confidence:.2f}"
+        )
+
+        return signal
 
     def _should_stop(
         self,
@@ -1755,7 +2422,7 @@ Return JSON:
             return True
 
         # Stop if globally saturated
-        if state.globally_saturated:
+        if state.global_saturated:
             logger.info("Global saturation reached")
             return True
 
@@ -1788,13 +2455,30 @@ Return JSON:
         Converts ACCEPT and WEAK_ACCEPT decisions into signal objects
         with full metadata from the evaluation results.
 
+        Also populates state.raw_signals with Signal objects for Ralph Loop.
+
         Args:
             state: RalphState with iteration_results
 
         Returns:
-            List of signal dictionaries
+            List of signal dictionaries (for DiscoveryResult output)
         """
+        from schemas import Signal, Evidence, SignalType, SignalSubtype
+
         signals = []
+        raw_signals = []
+
+        # Signal type mapping
+        signal_type_mapping = {
+            'member': (SignalType.PARTNERSHIP_FORMED, SignalSubtype.FAN_ENGAGEMENT_PLATFORM),
+            'officiating': (SignalType.TECHNOLOGY_ADOPTED, SignalSubtype.AI_ADOPTION),
+            'certification': (SignalType.TECHNOLOGY_ADOPTED, SignalSubtype.CLOUD_MIGRATION),
+            'event': (SignalType.TECHNOLOGY_ADOPTED, SignalSubtype.FAN_ENGAGEMENT_PLATFORM),
+            'analytics': (SignalType.TECHNOLOGY_ADOPTED, SignalSubtype.DATA_ANALYTICS_SUITE),
+            'partnership': (SignalType.PARTNERSHIP_FORMED, None),
+            'procurement': (SignalType.RFP_DETECTED, None),
+            'rfp': (SignalType.RFP_DETECTED, None),
+        }
 
         for iteration_record in state.iteration_results:
             result = iteration_record.get('result', {})
@@ -1804,40 +2488,230 @@ Return JSON:
             if decision not in ['ACCEPT', 'WEAK_ACCEPT']:
                 continue
 
-            # Build signal object
-            signal = {
-                'entity_id': state.entity_id,
-                'entity_name': state.entity_name,
-                'hypothesis_id': iteration_record.get('hypothesis_id'),
-                'signal_type': decision,
+            hypothesis_id = iteration_record.get('hypothesis_id', '')
+
+            # Get hypothesis to determine category
+            hypothesis = None
+            for h in state.active_hypotheses:
+                if h.hypothesis_id == hypothesis_id:
+                    hypothesis = h
+                    break
+
+            if not hypothesis:
+                logger.warning(f"Hypothesis not found: {hypothesis_id}")
+                continue
+
+            category = hypothesis.category.lower() if hypothesis.category else ''
+            signal_type, signal_subtype = signal_type_mapping.get(
+                category,
+                (SignalType.TECHNOLOGY_ADOPTED, None)
+            )
+
+            # Calculate confidence
+            confidence = hypothesis.confidence
+
+            # Skip if confidence too low
+            if confidence < 0.5:
+                logger.debug(f"Skipping signal: confidence {confidence:.2f} below threshold 0.5")
+                continue
+
+            # Generate unique signal ID
+            timestamp = datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')
+            signal_id = f"{state.entity_id}_{category}_{timestamp}_{len(signals)}"
+
+            # Extract content for evidence
+            url = result.get('url', '')
+            content_snippet = result.get('evidence_found', '')[:500]
+
+            # Create evidence object
+            evidence_id = f"{signal_id}_evidence_0"
+            evidence = Evidence(
+                id=evidence_id,
+                source=url or 'web_scrape',
+                date=datetime.now(timezone.utc),
+                signal_id=signal_id,
+                url=url,
+                extracted_text=content_snippet,
+                metadata={
+                    'hop_type': result.get('hop_type', ''),
+                    'decision': decision,
+                    'confidence_delta': result.get('confidence_delta', 0.0),
+                    'justification': result.get('justification', ''),
+                    'entity_name': state.entity_name,
+                    'hypothesis_id': hypothesis_id,
+                    'hypothesis_statement': hypothesis.statement
+                }
+            )
+
+            # Build signal metadata
+            signal_metadata = {
+                'hypothesis_id': hypothesis_id,
+                'hypothesis_statement': hypothesis.statement,
+                'hypothesis_category': category,
+                'decision': decision,
                 'confidence_delta': result.get('confidence_delta', 0.0),
-                'evidence_type': result.get('evidence_type'),
-                'evidence_found': result.get('evidence_found', ''),
                 'justification': result.get('justification', ''),
-                'source_url': result.get('url', ''),
-                'hop_type': iteration_record.get('hop_type'),
-                'depth': iteration_record.get('depth'),
-                'iteration': iteration_record.get('iteration'),
-                'timestamp': iteration_record.get('timestamp')
+                'hop_type': result.get('hop_type', ''),
+                'source_url': url,
+                'entity_name': state.entity_name,
+                'yp_service_fit': hypothesis.metadata.get('yp_service_fit', []),
+                'budget_range': hypothesis.metadata.get('budget_range', ''),
+                'positioning_strategy': hypothesis.metadata.get('positioning_strategy', ''),
             }
 
             # Add MCP metadata if available
             if 'mcp_matches' in result:
-                signal['mcp_matches'] = result['mcp_matches']
-            if 'mcp_confidence' in result:
-                signal['mcp_confidence'] = result['mcp_confidence']
+                signal_metadata['mcp_matches'] = result['mcp_matches']
+                signal_metadata['mcp_confidence'] = result.get('mcp_confidence', 0.0)
 
-            signals.append(signal)
+            # Create Signal object for Ralph Loop
+            signal_obj = Signal(
+                id=signal_id,
+                type=signal_type,
+                confidence=confidence,
+                first_seen=datetime.now(timezone.utc),
+                entity_id=state.entity_id,
+                subtype=signal_subtype,
+                metadata=signal_metadata
+            )
+
+            # Attach evidence to signal
+            signal_obj.evidence = [evidence]
+
+            # Add to raw_signals for Ralph Loop
+            raw_signals.append(signal_obj)
+
+            # Build dict for output
+            # Include evidence as a list for Ralph Loop compatibility
+            signal_dict = {
+                'id': signal_id,
+                'type': signal_type.value,
+                'subtype': signal_subtype.value if signal_subtype else None,
+                'confidence': confidence,
+                'entity_id': state.entity_id,
+                'hypothesis_id': hypothesis_id,
+                'decision': decision,
+                'justification': result.get('justification', ''),
+                'evidence_found': content_snippet,
+                'source_url': url,
+                'hop_type': result.get('hop_type', ''),
+                'depth': iteration_record.get('depth'),
+                'iteration': iteration_record.get('iteration'),
+                'timestamp': datetime.now(timezone.utc).isoformat(),
+                'first_seen': datetime.now(timezone.utc).isoformat(),
+                # Add evidence list for Ralph Loop validation
+                'evidence': [{
+                    'id': evidence_id,
+                    'source': url or 'web_scrape',
+                    'url': url,
+                    'content': content_snippet,
+                    'confidence': confidence,
+                    'collected_at': datetime.now(timezone.utc).isoformat()
+                }]
+            }
+
+            signals.append(signal_dict)
+            logger.info(f"✅ Extracted signal: {signal_id} (type: {signal_type.value}, confidence: {confidence:.2f})")
+
+        # Store raw_signals on state for Ralph Loop access
+        state.raw_signals = raw_signals
+
+        logger.info(f"Extracted {len(signals)} signals from {len(state.iteration_results)} iterations")
+        if raw_signals:
+            logger.info(f"Created {len(raw_signals)} Signal objects for Ralph Loop validation")
 
         return signals
 
-    def _build_final_result(
+        return signals
+
+    async def _store_discovery_episode(
+        self,
+        state,
+        signals_discovered: List[Dict[str, Any]]
+    ):
+        """
+        Store discovery run as a temporal episode for future temporal intelligence
+
+        This ensures that each discovery run contributes to the entity's temporal history,
+        allowing the system to learn patterns over time and improve future predictions.
+
+        Args:
+            state: Final RalphState
+            signals_discovered: List of discovered signals
+        """
+        if not self.graphiti_service:
+            return
+
+        try:
+            # Extract earliest evidence_date from iteration results (scrapes)
+            earliest_evidence_date = None
+            for iteration_record in getattr(state, 'iteration_results', []):
+                result = iteration_record.get('result', {})
+                scrape_data = result.get('scrape_data', {})
+                pub_date = scrape_data.get('publication_date')
+                if pub_date:
+                    try:
+                        from dateutil import parser as date_parser
+                        parsed_date = date_parser.parse(pub_date)
+                        # Use the earliest (oldest) evidence date
+                        if earliest_evidence_date is None or parsed_date < earliest_evidence_date:
+                            earliest_evidence_date = parsed_date
+                            logger.debug(f"Found evidence date: {parsed_date} from iteration {iteration_record.get('iteration')}")
+                    except Exception as e:
+                        logger.debug(f"Could not parse evidence date {pub_date}: {e}")
+
+            # Determine episode type based on discovery results
+            if signals_discovered:
+                # Has signals - mark as discovery with signals
+                episode_type = "DISCOVERY_SUCCESS"
+                description = (
+                    f"Discovery run found {len(signals_discovered)} signal(s). "
+                    f"Final confidence: {state.current_confidence:.2f}. "
+                    f"Signals: {', '.join(s.get('type', 'UNKNOWN') for s in signals_discovered[:3])}"
+                )
+            else:
+                # No signals found - mark as discovery attempt
+                episode_type = "DISCOVERY_RUN"
+                description = (
+                    f"Discovery run completed with {state.iterations_completed} iterations. "
+                    f"Final confidence: {state.current_confidence:.2f}. "
+                    f"No signals detected."
+                )
+
+            # Store the episode with evidence_date
+            evidence_date_iso = earliest_evidence_date.isoformat() if earliest_evidence_date else None
+
+            await self.graphiti_service.add_discovery_episode(
+                entity_id=state.entity_id,
+                entity_name=state.entity_name,
+                entity_type=getattr(state, 'entity_type', 'Entity'),
+                episode_type=episode_type,
+                description=description,
+                source="hypothesis_driven_discovery",
+                confidence=state.current_confidence,
+                evidence_date=evidence_date_iso,
+                metadata={
+                    'iterations_completed': state.iterations_completed,
+                    'max_depth': state.max_depth_reached if hasattr(state, 'max_depth_reached') else 0,
+                    'signals_count': len(signals_discovered),
+                    'signal_types': [s.get('type') for s in signals_discovered],
+                    'template_id': getattr(state, 'template_id', None),
+                    'evidence_date_source': 'scraped_content' if earliest_evidence_date else None
+                }
+            )
+
+            logger.info(f"🕰️ Stored discovery episode: {episode_type} for {state.entity_name} (evidence_date: {evidence_date_iso[:10] if evidence_date_iso else 'N/A'})")
+
+        except Exception as e:
+            logger.warning(f"⚠️ Could not store discovery episode: {e}")
+
+    async def _build_final_result(
         self,
         state,
         hypotheses: List
     ) -> DiscoveryResult:
         """
-        Build final discovery result
+        Build final discovery result (async to support episode storage)
 
         Args:
             state: Final RalphState
@@ -1849,6 +2723,9 @@ Return JSON:
         # Extract signals from iteration results
         signals_discovered = self._extract_signals_from_iterations(state)
 
+        # Store discovery as temporal episode for future temporal intelligence
+        await self._store_discovery_episode(state, signals_discovered)
+
         return DiscoveryResult(
             entity_id=state.entity_id,
             entity_name=state.entity_name,
@@ -1859,7 +2736,8 @@ Return JSON:
             total_cost_usd=self.total_cost_usd,
             hypotheses=hypotheses,
             depth_stats=state.depth_counts,
-            signals_discovered=signals_discovered,  # FIXED: Now extracts from iterations
+            signals_discovered=signals_discovered,
+            raw_signals=getattr(state, 'raw_signals', []),  # Signal objects for Ralph Loop
             timestamp=datetime.now(timezone.utc)
         )
 
@@ -2392,7 +3270,7 @@ Return JSON:
                 logger.info(f"Stopping condition met at iteration {iteration}")
                 break
 
-        return self._build_final_result(state, hypotheses)
+        return await self._build_final_result(state, hypotheses)
 
     def _map_signal_to_category(self, signal_type: str) -> str:
         """

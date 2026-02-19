@@ -70,6 +70,11 @@ ENTITIES = [
         "entity_id": "mlc",
         "entity_name": "Major League Cricket",
         "entity_type": "SPORT_LEAGUE"
+    },
+    {
+        "entity_id": "fulham-fc",
+        "entity_name": "Fulham FC",
+        "entity_type": "SPORT_CLUB"
     }
 ]
 
