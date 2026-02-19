@@ -1,0 +1,41 @@
+{
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "timestamp": "2026-02-19T15:46:25.577928+00:00",
+  "total_signals": 21,
+  "capability_count": 9,
+  "procurement_indicator_count": 9,
+  "validated_rfp_count": 3,
+  "hypothesis_states": {
+    "CRM_UPGRADE": {
+      "maturity_score": 0.8999999999999999,
+      "activity_score": 0.0,
+      "state": "WARM",
+      "last_updated": "2026-02-19T15:46:24.833709+00:00"
+    },
+    "ANALYTICS_PLATFORM": {
+      "maturity_score": 0.44999999999999996,
+      "activity_score": 0.75,
+      "state": "ENGAGE",
+      "last_updated": "2026-02-19T15:46:24.833820+00:00"
+    },
+    "TICKETING_SYSTEM": {
+      "maturity_score": 0.0,
+      "activity_score": 0.75,
+      "state": "ENGAGE",
+      "last_updated": "2026-02-19T15:46:24.833880+00:00"
+    },
+    "DIGITAL_TRANSFORMATION": {
+      "maturity_score": 0.3,
+      "activity_score": 0.75,
+      "state": "ENGAGE",
+      "last_updated": "2026-02-19T15:46:24.833917+00:00"
+    },
+    "VENDOR_MANAGEMENT": {
+      "maturity_score": 0.0,
+      "activity_score": 1.0,
+      "state": "ENGAGE",
+      "last_updated": "2026-02-19T15:46:24.833958+00:00"
+    }
+  }
+}
