@@ -1,0 +1,49 @@
+{
+  "step_number": 4,
+  "step_name": "Temporal Intelligence",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-17T12:27:10.234495+00:00",
+  "completed_at": "2026-02-17T12:27:11.392036+00:00",
+  "duration_ms": 1157,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "arsenal-fc",
+    "entity_name": "Arsenal FC",
+    "entity_type": "SPORT_CLUB"
+  },
+  "output_data": {
+    "timeline_episodes": 6,
+    "time_span_days": 0,
+    "patterns_detected": [
+      "RFP Activity",
+      "Partnership Activity"
+    ],
+    "episode_types": {
+      "RFP_DETECTED": 1,
+      "HIRING": 0,
+      "PARTNERSHIP": 2,
+      "TECHNOLOGY_ADOPTED": 1,
+      "EXECUTIVE_CHANGE": 2
+    },
+    "similar_entities": [],
+    "temporal_fit_score": 0.7999999999999999
+  },
+  "details": "Step 4: Temporal Intelligence Analysis (SIMULATED MODE)\n\nEntity: Arsenal FC\nTimeline Episodes: 6 (simulated)\nTime Span: 0 days\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real temporal intelligence requires:\n   - FalkorDB/Neo4j database connection\n   - Graphiti service initialized\n   - Historical episode data stored in graph\n\nPatterns Detected:\n  - RFP Activity\n  - Partnership Activity\n\nEpisode Types:\n  - RFP_DETECTED: 1\n  - HIRING: 0\n  - PARTNERSHIP: 2\n  - TECHNOLOGY_ADOPTED: 1\n  - EXECUTIVE_CHANGE: 2\n\nTemporal Fit Score: 0.80\n  (Based on RFP history, timeline depth, and pattern diversity)",
+  "logs": [
+    "Fetching entity timeline from Graphiti...",
+    "Retrieved 2 timeline episodes",
+    "Temporal analysis error: 'GraphitiService' object has no attribute 'find_similar_entities' - falling back to simulated mode",
+    "Running in SIMULATED mode (mock temporal data)",
+    "Simulated temporal analysis complete: fit_score=0.80",
+    "Simulated temporal intelligence analysis completed"
+  ],
+  "metrics": {
+    "timeline_episodes": 6,
+    "time_span_days": 0,
+    "patterns_detected": 2,
+    "temporal_fit_score": 0.7999999999999999
+  }
+}

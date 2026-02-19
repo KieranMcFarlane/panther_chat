@@ -1,0 +1,38 @@
+{
+  "step_number": 5,
+  "step_name": "Narrative Builder",
+  "entity_id": "mlc",
+  "entity_name": "Major League Cricket",
+  "entity_type": "SPORT_LEAGUE",
+  "started_at": "2026-02-19T08:58:17.657127+00:00",
+  "completed_at": "2026-02-19T08:58:17.725967+00:00",
+  "duration_ms": 68,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "mlc",
+    "entity_name": "Major League Cricket",
+    "entity_type": "SPORT_LEAGUE",
+    "max_tokens": 2000
+  },
+  "output_data": {
+    "narrative": "# Temporal Narrative (1 episodes: 2026-02-19T08:58:17.209157+00:00 to 2026-02-19T08:58:17.209157+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...\n",
+    "episode_count": 1,
+    "total_episodes": 1,
+    "estimated_tokens": 61,
+    "truncated": false
+  },
+  "details": "Step 5: Narrative Builder\n\nEntity: Major League Cricket\nEpisodes Available: 1\nEpisodes Included: 1\nEstimated Tokens: 61\nTruncated: False\n\nNarrative Preview (first 500 chars):\n# Temporal Narrative (1 episodes: 2026-02-19T08:58:17.209157+00:00 to 2026-02-19T08:58:17.209157+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...\n...\n",
+  "logs": [
+    "Fetching episodes for narrative building...",
+    "Retrieved 1 episodes",
+    "Narrative built: 61 tokens",
+    "Narrative builder completed successfully"
+  ],
+  "metrics": {
+    "episodes_available": 1,
+    "episodes_included": 1,
+    "estimated_tokens": 61,
+    "truncated": false
+  }
+}

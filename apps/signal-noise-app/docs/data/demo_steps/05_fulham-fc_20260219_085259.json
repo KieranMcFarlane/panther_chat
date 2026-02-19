@@ -1,0 +1,38 @@
+{
+  "step_number": 5,
+  "step_name": "Narrative Builder",
+  "entity_id": "fulham-fc",
+  "entity_name": "Fulham FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-19T08:52:59.621289+00:00",
+  "completed_at": "2026-02-19T08:52:59.690270+00:00",
+  "duration_ms": 68,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "fulham-fc",
+    "entity_name": "Fulham FC",
+    "entity_type": "SPORT_CLUB",
+    "max_tokens": 2000
+  },
+  "output_data": {
+    "narrative": "# Temporal Narrative (3 episodes: 2026-02-19T03:23:59.444084+00:00 to 2026-02-19T08:52:57.85754+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run completed with 6 iterations. Final confidence: 0.53. No signals detected.\n- **2026-02-19** (Unknown): Discovery run completed with 0 iterations. Final confidence: 0.20. No signals detected.\n- **2026-02-19** (Unknown): Discovery run completed with 3 iterations. Final confidence: 0.53. No signals detected.\n",
+    "episode_count": 3,
+    "total_episodes": 3,
+    "estimated_tokens": 115,
+    "truncated": false
+  },
+  "details": "Step 5: Narrative Builder\n\nEntity: Fulham FC\nEpisodes Available: 3\nEpisodes Included: 3\nEstimated Tokens: 115\nTruncated: False\n\nNarrative Preview (first 500 chars):\n# Temporal Narrative (3 episodes: 2026-02-19T03:23:59.444084+00:00 to 2026-02-19T08:52:57.85754+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run completed with 6 iterations. Final confidence: 0.53. No signals detected.\n- **2026-02-19** (Unknown): Discovery run completed with 0 iterations. Final confidence: 0.20. No signals detected.\n- **2026-02-19** (Unknown): Discovery run completed with 3 iterations. Final confidence: 0.53. No signals detected.\n...\n",
+  "logs": [
+    "Fetching episodes for narrative building...",
+    "Retrieved 3 episodes",
+    "Narrative built: 115 tokens",
+    "Narrative builder completed successfully"
+  ],
+  "metrics": {
+    "episodes_available": 3,
+    "episodes_included": 3,
+    "estimated_tokens": 115,
+    "truncated": false
+  }
+}

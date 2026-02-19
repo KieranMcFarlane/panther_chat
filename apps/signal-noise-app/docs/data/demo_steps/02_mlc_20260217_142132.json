@@ -1,0 +1,106 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "mlc",
+  "entity_name": "Major League Cricket",
+  "entity_type": "SPORT_LEAGUE",
+  "started_at": "2026-02-17T14:19:02.861578+00:00",
+  "completed_at": "2026-02-17T14:21:32.349241+00:00",
+  "duration_ms": 149487,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "mlc",
+    "entity_name": "Major League Cricket",
+    "entity_type": "SPORT_LEAGUE",
+    "hypotheses_count": 5,
+    "max_iterations": 2
+  },
+  "output_data": {
+    "final_confidence": 0.7476992610181646,
+    "iteration_count": 2,
+    "validated_signals": [
+      {
+        "id": "sim_signal_0",
+        "type": "DIGITAL_TRANSFORMATION",
+        "subtype": "GENERAL",
+        "confidence": 0.6294650512602119,
+        "evidence_count": 8,
+        "first_seen": "2026-02-17T14:21:32.349133+00:00"
+      },
+      {
+        "id": "sim_signal_1",
+        "type": "CRM_ANALYTICS",
+        "subtype": "GENERAL",
+        "confidence": 0.6599202564678859,
+        "evidence_count": 4,
+        "first_seen": "2026-02-17T14:21:32.349144+00:00"
+      },
+      {
+        "id": "sim_signal_2",
+        "type": "RFP_DETECTED",
+        "subtype": "GENERAL",
+        "confidence": 0.7796960482364753,
+        "evidence_count": 3,
+        "first_seen": "2026-02-17T14:21:32.349149+00:00"
+      },
+      {
+        "id": "sim_signal_3",
+        "type": "DIGITAL_TRANSFORMATION",
+        "subtype": "GENERAL",
+        "confidence": 0.7706557836238156,
+        "evidence_count": 7,
+        "first_seen": "2026-02-17T14:21:32.349153+00:00"
+      },
+      {
+        "id": "sim_signal_4",
+        "type": "DIGITAL_TRANSFORMATION",
+        "subtype": "GENERAL",
+        "confidence": 0.7134547475817028,
+        "evidence_count": 6,
+        "first_seen": "2026-02-17T14:21:32.349158+00:00"
+      }
+    ],
+    "total_cost_usd": 0.03,
+    "hops_executed": [
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      }
+    ],
+    "confidence_progression": [
+      0.5,
+      0.48,
+      0.45999999999999996
+    ],
+    "decisions": [
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.48
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.45999999999999996
+      }
+    ]
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: Major League Cricket\nTemplate: tier_1_club_centralized_procurement\nIterations: 2\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.75\nTotal Cost: $0.0300\n\nValidated Signals: 5\n\n  - DIGITAL_TRANSFORMATION: 0.63\n  - CRM_ANALYTICS: 0.66\n  - RFP_DETECTED: 0.78\n  - DIGITAL_TRANSFORMATION: 0.77\n  - DIGITAL_TRANSFORMATION: 0.71\n\nConfidence Progression:\n  0.50 \u2192 0.48 \u2192 0.46",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for Major League Cricket (max 2 iterations)...",
+    "Discovery execution error: 'RalphState' object has no attribute 'globally_saturated' - falling back to simulated mode",
+    "Running in SIMULATED mode (mock data)",
+    "Simulated hypothesis-driven discovery completed"
+  ],
+  "metrics": {
+    "final_confidence": 0.7476992610181646,
+    "iterations": 2,
+    "signals_validated": 5,
+    "total_cost_usd": 0.03
+  }
+}

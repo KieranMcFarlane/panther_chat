@@ -1,0 +1,50 @@
+{
+  "step_number": 4,
+  "step_name": "Temporal Intelligence",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-18T12:59:40.955144+00:00",
+  "completed_at": "2026-02-18T12:59:43.176667+00:00",
+  "duration_ms": 2221,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "arsenal-fc",
+    "entity_name": "Arsenal FC",
+    "entity_type": "SPORT_CLUB"
+  },
+  "output_data": {
+    "timeline_episodes": 10,
+    "time_span_days": 0,
+    "patterns_detected": [
+      "RFP Activity",
+      "Hiring Activity",
+      "Partnership Activity"
+    ],
+    "episode_types": {
+      "RFP_DETECTED": 2,
+      "HIRING": 2,
+      "PARTNERSHIP": 1,
+      "TECHNOLOGY_ADOPTED": 4,
+      "EXECUTIVE_CHANGE": 1
+    },
+    "similar_entities": [],
+    "temporal_fit_score": 0.7999999999999999
+  },
+  "details": "Step 4: Temporal Intelligence Analysis (SIMULATED MODE)\n\nEntity: Arsenal FC\nTimeline Episodes: 10 (simulated)\nTime Span: 0 days\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real temporal intelligence requires:\n   - FalkorDB/Neo4j database connection\n   - Graphiti service initialized\n   - Historical episode data stored in graph\n\nPatterns Detected:\n  - RFP Activity\n  - Hiring Activity\n  - Partnership Activity\n\nEpisode Types:\n  - RFP_DETECTED: 2\n  - HIRING: 2\n  - PARTNERSHIP: 1\n  - TECHNOLOGY_ADOPTED: 4\n  - EXECUTIVE_CHANGE: 1\n\nTemporal Fit Score: 0.80\n  (Based on RFP history, timeline depth, and pattern diversity)",
+  "logs": [
+    "Fetching entity timeline from Graphiti...",
+    "Retrieved 2 timeline episodes",
+    "Temporal analysis error: 'GraphitiService' object has no attribute 'find_similar_entities' - falling back to simulated mode",
+    "Running in SIMULATED mode (mock temporal data)",
+    "Simulated temporal analysis complete: fit_score=0.80",
+    "Simulated temporal intelligence analysis completed"
+  ],
+  "metrics": {
+    "timeline_episodes": 10,
+    "time_span_days": 0,
+    "patterns_detected": 3,
+    "temporal_fit_score": 0.7999999999999999
+  }
+}

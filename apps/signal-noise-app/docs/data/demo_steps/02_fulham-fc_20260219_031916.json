@@ -1,0 +1,150 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "fulham-fc",
+  "entity_name": "Fulham FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-19T03:19:14.763516+00:00",
+  "completed_at": "2026-02-19T03:19:16.298030+00:00",
+  "duration_ms": 1534,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "fulham-fc",
+    "entity_name": "Fulham FC",
+    "entity_type": "SPORT_CLUB",
+    "hypotheses_count": 7,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.6640555898477963,
+    "iterations_completed": 8,
+    "validated_signals": [
+      {
+        "id": "sim_signal_0",
+        "type": "DIGITAL_TRANSFORMATION",
+        "subtype": "GENERAL",
+        "confidence": 0.884377237066787,
+        "evidence_count": 3,
+        "first_seen": "2026-02-19T03:19:16.297991+00:00"
+      },
+      {
+        "id": "sim_signal_1",
+        "type": "RFP_DETECTED",
+        "subtype": "GENERAL",
+        "confidence": 0.6646368821047892,
+        "evidence_count": 7,
+        "first_seen": "2026-02-19T03:19:16.298000+00:00"
+      },
+      {
+        "id": "sim_signal_2",
+        "type": "PRESS_RELEASE",
+        "subtype": "GENERAL",
+        "confidence": 0.7380582482902067,
+        "evidence_count": 6,
+        "first_seen": "2026-02-19T03:19:16.298003+00:00"
+      },
+      {
+        "id": "sim_signal_3",
+        "type": "JOB_POSTING",
+        "subtype": "GENERAL",
+        "confidence": 0.7106986353010738,
+        "evidence_count": 3,
+        "first_seen": "2026-02-19T03:19:16.298005+00:00"
+      }
+    ],
+    "total_cost_usd": 0.12,
+    "hops_executed": [
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      }
+    ],
+    "confidence_progression": [
+      0.5,
+      0.56,
+      0.54,
+      0.6000000000000001,
+      0.6000000000000001,
+      0.5800000000000001,
+      0.6400000000000001,
+      0.6200000000000001,
+      0.6200000000000001
+    ],
+    "decisions": [
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.56
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.54
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.6000000000000001
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.6000000000000001
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.5800000000000001
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.6400000000000001
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.6200000000000001
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.6200000000000001
+      }
+    ]
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: Fulham FC\nTemplate: tier_1_club_centralized_procurement\nIterations: 8\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.66\nTotal Cost: $0.1200\n\nValidated Signals: 4\n\n  - DIGITAL_TRANSFORMATION: 0.88\n  - RFP_DETECTED: 0.66\n  - PRESS_RELEASE: 0.74\n  - JOB_POSTING: 0.71\n\nConfidence Progression:\n  0.50 \u2192 0.56 \u2192 0.54 \u2192 0.60 \u2192 0.60 \u2192 0.58 \u2192 0.64 \u2192 0.62 \u2192 0.62",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Discovery execution error: 'await' outside async function (hypothesis_driven_discovery.py, line 2700) - falling back to simulated mode",
+    "Running in SIMULATED mode (mock data)",
+    "Simulated hypothesis-driven discovery completed"
+  ],
+  "metrics": {
+    "final_confidence": 0.6640555898477963,
+    "iterations": 8,
+    "signals_validated": 4,
+    "total_cost_usd": 0.12
+  }
+}

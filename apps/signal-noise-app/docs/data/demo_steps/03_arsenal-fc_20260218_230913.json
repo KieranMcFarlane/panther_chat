@@ -1,0 +1,38 @@
+{
+  "step_number": 3,
+  "step_name": "Ralph Loop Validation",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-18T23:09:13.024252+00:00",
+  "completed_at": "2026-02-18T23:09:13.040131+00:00",
+  "duration_ms": 15,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "arsenal-fc",
+    "entity_name": "Arsenal FC",
+    "entity_type": "SPORT_CLUB",
+    "signals_count": 0
+  },
+  "output_data": {
+    "pass_1_results": [],
+    "pass_2_results": [],
+    "pass_3_results": [],
+    "validated_signals": [],
+    "rejected_count": 0,
+    "validation_rate": 0
+  },
+  "details": "Step 3: Ralph Loop Validation\n\nEntity: Arsenal FC\nSignals Processed: 0\n\nPass 1 (Rule-based Filtering): 0 results\n  - ACCEPT: 0\n  - WEAK_ACCEPT: 0\n  - REJECT: 0\n\nPass 2 (Claude Validation): 0 results\n  - Signals forwarded to Pass 3: 0\n\nPass 3 (Final Confirmation): 0 results\n  - Validated: 0\n  - Rejected: 0\n\nValidated Signals: 0\nRejected: 0\nValidation Rate: 0.0%\n",
+  "logs": [
+    "Running Ralph Loop validation for 0 signals...",
+    "Validation complete: 0/0 signals validated",
+    "Ralph Loop validation completed successfully"
+  ],
+  "metrics": {
+    "signals_input": 0,
+    "signals_validated": 0,
+    "signals_rejected": 0,
+    "validation_rate": 0
+  }
+}

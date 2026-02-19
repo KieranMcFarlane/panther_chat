@@ -1,0 +1,52 @@
+{
+  "step_number": 6,
+  "step_name": "Yellow Panther Scoring",
+  "entity_id": "mlc",
+  "entity_name": "Major League Cricket",
+  "entity_type": "SPORT_LEAGUE",
+  "started_at": "2026-02-19T02:03:19.246072+00:00",
+  "completed_at": "2026-02-19T02:03:19.246786+00:00",
+  "duration_ms": 0,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "mlc",
+    "entity_name": "Major League Cricket",
+    "entity_type": "SPORT_LEAGUE",
+    "signals_count": 0,
+    "temporal_fit": 0.0
+  },
+  "output_data": {
+    "fit_score": 35.0,
+    "priority": "TIER_4",
+    "budget_alignment": "MARGINAL",
+    "service_alignment": [],
+    "positioning_strategy": "Position based on signal type and entity",
+    "recommendations": [
+      "Monitor for additional signals",
+      "Add to watch list for future opportunities"
+    ],
+    "scoring_breakdown": {
+      "service_match": 0.0,
+      "budget": 12.5,
+      "timeline": 7.5,
+      "entity_size": 8.0,
+      "geographic": 7.0
+    }
+  },
+  "details": "Step 6: Yellow Panther Fit Scoring\n\nEntity: Major League Cricket\nEntity Type: SPORT_LEAGUE\n\nYP Fit Score: 35.0/100\nPriority Tier: PriorityTier.TIER_4\nBudget Alignment: BudgetAlignment.MARGINAL\n\nService Alignment:\n\nRecommendations:\n  - Monitor for additional signals\n  - Add to watch list for future opportunities\n\nScoring Breakdown:\n  - service_match: 0.0 points\n  - budget: 12.5 points\n  - timeline: 7.5 points\n  - entity_size: 8.0 points\n  - geographic: 7.0 points\n",
+  "logs": [
+    "Importing yellow_panther_scorer module...",
+    "Scoring entity against YP profile...",
+    "YP Fit Score: 35.0/100",
+    "Priority: PriorityTier.TIER_4",
+    "Yellow Panther scoring completed successfully"
+  ],
+  "metrics": {
+    "fit_score": 35.0,
+    "priority": "TIER_4",
+    "budget_alignment": "MARGINAL",
+    "service_alignment_count": 0,
+    "recommendations_count": 2
+  }
+}

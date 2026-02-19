@@ -1,0 +1,92 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "icf",
+  "entity_name": "International Canoe Federation",
+  "entity_type": "SPORT_FEDERATION",
+  "started_at": "2026-02-19T01:25:01.988628+00:00",
+  "completed_at": "2026-02-19T01:25:47.541112+00:00",
+  "duration_ms": 45552,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "icf",
+    "entity_name": "International Canoe Federation",
+    "entity_type": "SPORT_FEDERATION",
+    "hypotheses_count": 6,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.52,
+    "iterations_completed": 2,
+    "validated_signals": [
+      {
+        "id": "icf_design_20260219012547_0",
+        "type": "TECHNOLOGY_ADOPTED",
+        "subtype": null,
+        "confidence": 0.56,
+        "evidence_count": 1,
+        "first_seen": "2026-02-19T01:25:47.540812+00:00",
+        "entity_id": "icf",
+        "metadata": {
+          "hypothesis_id": "icf_ui/ux_design_project",
+          "hypothesis_statement": "International Canoe Federation is preparing procurement related to UI/UX Design Project",
+          "hypothesis_category": "design",
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "justification": "The content contains explicit evidence of an active procurement process for an OTT platform development project, which falls under the UI/UX Design Project category. The RFP is current, issued with a future deadline, and seeks proposals for end-to-end solution development including user experience requirements.",
+          "hop_type": "rfp_page",
+          "source_url": "https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf",
+          "entity_name": "International Canoe Federation",
+          "yp_service_fit": [],
+          "budget_range": "",
+          "positioning_strategy": ""
+        }
+      },
+      {
+        "id": "icf_data engineering_20260219012547_1",
+        "type": "TECHNOLOGY_ADOPTED",
+        "subtype": null,
+        "confidence": 0.52,
+        "evidence_count": 1,
+        "first_seen": "2026-02-19T01:25:47.540881+00:00",
+        "entity_id": "icf",
+        "metadata": {
+          "hypothesis_id": "icf_python_data_processing_project",
+          "hypothesis_statement": "International Canoe Federation is preparing procurement related to Python Data Processing Project",
+          "hypothesis_category": "data engineering",
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "justification": "The document contains an active RFP for an OTT platform development project, which is a procurement signal. However, the RFP is for an OTT platform, not specifically for a Python Data Processing Project. While the OTT platform may involve data processing, the explicit procurement is for a different type of project than hypothesized.",
+          "hop_type": "rfp_page",
+          "source_url": "https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf",
+          "entity_name": "International Canoe Federation",
+          "yp_service_fit": [],
+          "budget_range": "",
+          "positioning_strategy": ""
+        }
+      }
+    ],
+    "total_cost_usd": 0.002,
+    "hops_executed": {
+      "1": 1,
+      "2": 1
+    },
+    "confidence_progression": [],
+    "decisions": []
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery\n\nEntity: International Canoe Federation\nTemplate: yellow_panther_agency\nIterations: 2\nMax Depth: 3\n\nFinal Confidence: 0.52\nTotal Cost: $0.0020\n\nValidated Signals: 2\nRaw Signal Objects: 2\n\n  - TECHNOLOGY_ADOPTED: 0.56\n  - TECHNOLOGY_ADOPTED: 0.52\n\nHypotheses Generated: 10\n\nDepth Statistics:\n  Depth 1: 1 iterations\n  Depth 2: 1 iterations\n",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for International Canoe Federation (max 10 iterations)...",
+    "Discovery completed: 2 iterations",
+    "Hypothesis-driven discovery completed successfully"
+  ],
+  "metrics": {
+    "final_confidence": 0.52,
+    "iterations": 2,
+    "signals_validated": 2,
+    "total_cost_usd": 0.002
+  }
+}

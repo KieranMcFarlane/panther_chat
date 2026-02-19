@@ -1,0 +1,45 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "fulham-fc",
+  "entity_name": "Fulham FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-19T03:20:08.153832+00:00",
+  "completed_at": "2026-02-19T03:23:59.927070+00:00",
+  "duration_ms": 231773,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "fulham-fc",
+    "entity_name": "Fulham FC",
+    "entity_type": "SPORT_CLUB",
+    "hypotheses_count": 7,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.53,
+    "iterations_completed": 3,
+    "validated_signals": [],
+    "total_cost_usd": 0.003,
+    "hops_executed": {
+      "1": 7,
+      "2": 1
+    },
+    "confidence_progression": [],
+    "decisions": []
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery\n\nEntity: Fulham FC\nTemplate: yellow_panther_agency\nIterations: 3\nMax Depth: 3\n\nFinal Confidence: 0.53\nTotal Cost: $0.0030\n\nValidated Signals: 0\nRaw Signal Objects: 0\n\n\nHypotheses Generated: 10\n\nDepth Statistics:\n  Depth 1: 7 iterations\n  Depth 2: 1 iterations\n",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for Fulham FC (max 10 iterations)...",
+    "Discovery completed: 3 iterations",
+    "Hypothesis-driven discovery completed successfully"
+  ],
+  "metrics": {
+    "final_confidence": 0.53,
+    "iterations": 3,
+    "signals_validated": 0,
+    "total_cost_usd": 0.003
+  }
+}

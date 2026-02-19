@@ -1,0 +1,125 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "icf",
+  "entity_name": "International Canoe Federation",
+  "entity_type": "SPORT_FEDERATION",
+  "started_at": "2026-02-17T14:31:12.336624+00:00",
+  "completed_at": "2026-02-17T14:31:25.108059+00:00",
+  "duration_ms": 12771,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "icf",
+    "entity_name": "International Canoe Federation",
+    "entity_type": "SPORT_FEDERATION",
+    "hypotheses_count": 6,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.6900533977805516,
+    "iterations_completed": 5,
+    "validated_signals": [
+      {
+        "id": "sim_signal_0",
+        "type": "PRESS_RELEASE",
+        "subtype": "GENERAL",
+        "confidence": 0.704166500525473,
+        "evidence_count": 4,
+        "first_seen": "2026-02-17T14:31:25.107910+00:00"
+      },
+      {
+        "id": "sim_signal_1",
+        "type": "DIGITAL_TRANSFORMATION",
+        "subtype": "GENERAL",
+        "confidence": 0.6926989412531376,
+        "evidence_count": 5,
+        "first_seen": "2026-02-17T14:31:25.107927+00:00"
+      },
+      {
+        "id": "sim_signal_2",
+        "type": "CRM_ANALYTICS",
+        "subtype": "GENERAL",
+        "confidence": 0.7489189432788331,
+        "evidence_count": 5,
+        "first_seen": "2026-02-17T14:31:25.107938+00:00"
+      },
+      {
+        "id": "sim_signal_3",
+        "type": "PRESS_RELEASE",
+        "subtype": "GENERAL",
+        "confidence": 0.7455623004255854,
+        "evidence_count": 6,
+        "first_seen": "2026-02-17T14:31:25.107950+00:00"
+      }
+    ],
+    "total_cost_usd": 0.075,
+    "hops_executed": [
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      }
+    ],
+    "confidence_progression": [
+      0.5,
+      0.5,
+      0.5,
+      0.48,
+      0.54,
+      0.54
+    ],
+    "decisions": [
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.5
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.5
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.48
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.54
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.54
+      }
+    ]
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: International Canoe Federation\nTemplate: tier_1_club_centralized_procurement\nIterations: 5\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.69\nTotal Cost: $0.0750\n\nValidated Signals: 4\n\n  - PRESS_RELEASE: 0.70\n  - DIGITAL_TRANSFORMATION: 0.69\n  - CRM_ANALYTICS: 0.75\n  - PRESS_RELEASE: 0.75\n\nConfidence Progression:\n  0.50 \u2192 0.50 \u2192 0.50 \u2192 0.48 \u2192 0.54 \u2192 0.54",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for International Canoe Federation (max 10 iterations)...",
+    "Discovery execution error: 'RalphState' object has no attribute 'globally_saturated' - falling back to simulated mode",
+    "Running in SIMULATED mode (mock data)",
+    "Simulated hypothesis-driven discovery completed"
+  ],
+  "metrics": {
+    "final_confidence": 0.6900533977805516,
+    "iterations": 5,
+    "signals_validated": 4,
+    "total_cost_usd": 0.075
+  }
+}

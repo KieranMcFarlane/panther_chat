@@ -1,0 +1,92 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "mlc",
+  "entity_name": "Major League Cricket",
+  "entity_type": "SPORT_LEAGUE",
+  "started_at": "2026-02-18T23:01:32.600275+00:00",
+  "completed_at": "2026-02-18T23:01:59.832171+00:00",
+  "duration_ms": 27231,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "mlc",
+    "entity_name": "Major League Cricket",
+    "entity_type": "SPORT_LEAGUE",
+    "hypotheses_count": 5,
+    "max_iterations": 15
+  },
+  "output_data": {
+    "final_confidence": 0.52,
+    "iterations_completed": 2,
+    "validated_signals": [
+      {
+        "id": "mlc_design_20260218230159_0",
+        "type": "TECHNOLOGY_ADOPTED",
+        "subtype": null,
+        "confidence": 0.56,
+        "evidence_count": 1,
+        "first_seen": "2026-02-18T23:01:59.831633+00:00",
+        "entity_id": "mlc",
+        "metadata": {
+          "hypothesis_id": "mlc_ui/ux_design_project",
+          "hypothesis_statement": "Major League Cricket is preparing procurement related to UI/UX Design Project",
+          "hypothesis_category": "design",
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "justification": "The content contains a direct and explicit Request for Proposal (RFP) for a Digital Transformation Project issued by American Cricket Enterprises (Major League Cricket's parent company). This meets the HIGH CONFIDENCE criteria for active procurement on an RFP_PAGE channel. The RFP includes specific requirements for improving fan experience, integrating systems, and mentions compliance, indicating a formal procurement process.",
+          "hop_type": "rfp_page",
+          "source_url": "https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6",
+          "entity_name": "Major League Cricket",
+          "yp_service_fit": [],
+          "budget_range": "",
+          "positioning_strategy": ""
+        }
+      },
+      {
+        "id": "mlc_data engineering_20260218230159_1",
+        "type": "TECHNOLOGY_ADOPTED",
+        "subtype": null,
+        "confidence": 0.52,
+        "evidence_count": 1,
+        "first_seen": "2026-02-18T23:01:59.831706+00:00",
+        "entity_id": "mlc",
+        "metadata": {
+          "hypothesis_id": "mlc_python_data_processing_project",
+          "hypothesis_statement": "Major League Cricket is preparing procurement related to Python Data Processing Project",
+          "hypothesis_category": "data engineering",
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "justification": "The content shows evidence of digital transformation procurement, which is related to data engineering, but lacks specific details about a Python Data Processing Project. The RFP mentions data processing and analytics as part of a broader digital transformation initiative.",
+          "hop_type": "rfp_page",
+          "source_url": "https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6",
+          "entity_name": "Major League Cricket",
+          "yp_service_fit": [],
+          "budget_range": "",
+          "positioning_strategy": ""
+        }
+      }
+    ],
+    "total_cost_usd": 0.002,
+    "hops_executed": {
+      "1": 1,
+      "2": 1
+    },
+    "confidence_progression": [],
+    "decisions": []
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery\n\nEntity: Major League Cricket\nTemplate: yellow_panther_agency\nIterations: 2\nMax Depth: 3\n\nFinal Confidence: 0.52\nTotal Cost: $0.0020\n\nValidated Signals: 2\nRaw Signal Objects: 2\n\n  - TECHNOLOGY_ADOPTED: 0.56\n  - TECHNOLOGY_ADOPTED: 0.52\n\nHypotheses Generated: 10\n\nDepth Statistics:\n  Depth 1: 1 iterations\n  Depth 2: 1 iterations\n",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for Major League Cricket (max 15 iterations)...",
+    "Discovery completed: 2 iterations",
+    "Hypothesis-driven discovery completed successfully"
+  ],
+  "metrics": {
+    "final_confidence": 0.52,
+    "iterations": 2,
+    "signals_validated": 2,
+    "total_cost_usd": 0.002
+  }
+}

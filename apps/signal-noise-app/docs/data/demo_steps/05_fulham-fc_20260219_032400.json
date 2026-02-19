@@ -1,0 +1,38 @@
+{
+  "step_number": 5,
+  "step_name": "Narrative Builder",
+  "entity_id": "fulham-fc",
+  "entity_name": "Fulham FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-19T03:24:00.305619+00:00",
+  "completed_at": "2026-02-19T03:24:00.409635+00:00",
+  "duration_ms": 104,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "fulham-fc",
+    "entity_name": "Fulham FC",
+    "entity_type": "SPORT_CLUB",
+    "max_tokens": 2000
+  },
+  "output_data": {
+    "narrative": "# Temporal Narrative (1 episodes: 2026-02-19T03:23:59.444084+00:00 to 2026-02-19T03:23:59.444084+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run completed with 3 iterations. Final confidence: 0.53. No signals detected.\n",
+    "episode_count": 1,
+    "total_episodes": 1,
+    "estimated_tokens": 57,
+    "truncated": false
+  },
+  "details": "Step 5: Narrative Builder\n\nEntity: Fulham FC\nEpisodes Available: 1\nEpisodes Included: 1\nEstimated Tokens: 57\nTruncated: False\n\nNarrative Preview (first 500 chars):\n# Temporal Narrative (1 episodes: 2026-02-19T03:23:59.444084+00:00 to 2026-02-19T03:23:59.444084+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run completed with 3 iterations. Final confidence: 0.53. No signals detected.\n...\n",
+  "logs": [
+    "Fetching episodes for narrative building...",
+    "Retrieved 1 episodes",
+    "Narrative built: 57 tokens",
+    "Narrative builder completed successfully"
+  ],
+  "metrics": {
+    "episodes_available": 1,
+    "episodes_included": 1,
+    "estimated_tokens": 57,
+    "truncated": false
+  }
+}

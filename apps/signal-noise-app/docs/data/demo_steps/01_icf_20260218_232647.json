@@ -1,0 +1,340 @@
+{
+  "step_number": 1,
+  "step_name": "Question-First Dossier",
+  "entity_id": "icf",
+  "entity_name": "International Canoe Federation",
+  "entity_type": "SPORT_FEDERATION",
+  "started_at": "2026-02-18T23:26:47.073261+00:00",
+  "completed_at": "2026-02-18T23:26:47.075466+00:00",
+  "duration_ms": 2,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "icf",
+    "entity_name": "International Canoe Federation",
+    "entity_type": "SPORT_FEDERATION"
+  },
+  "output_data": {
+    "questions_count": 6,
+    "hypotheses": [
+      {
+        "hypothesis_id": "icf_sf_member_platform",
+        "entity_id": "icf",
+        "entity_name": "International Canoe Federation",
+        "statement": "International Canoe Federation will seek member database/platform RFP (\u00a3150K-\u00a3500K) for federation management",
+        "category": "member",
+        "prior_probability": 0.6799999999999999,
+        "confidence": 0.6799999999999999,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sf_member_platform",
+          "yp_service_fit": [
+            "MOBILE_APPS",
+            "DIGITAL_TRANSFORMATION"
+          ],
+          "budget_range": "\u00a3150K-\u00a3500K",
+          "yp_advantage": "Multi-federation partnerships (FIBA 3\u00d73, ISU, LNB), Olympic scalability (170+ federations)",
+          "positioning_strategy": "STRATEGIC_PARTNER",
+          "next_signals": [
+            "Job postings: CRM Manager, Member Services Director, Digital Platform Manager",
+            "RFP keywords: member database, federation platform, CRM system, RFP, Request for Proposal, tender, EOI, ITT, procurement",
+            "Announcements: Strategic plan mentions, digital initiative announcements"
+          ],
+          "hop_types": [
+            "RFP_PAGE",
+            "CAREERS_PAGE",
+            "PRESS_RELEASE"
+          ],
+          "accept_criteria": "Any mention of member system modernization or digital platform",
+          "confidence_boost": 0.18
+        }
+      },
+      {
+        "hypothesis_id": "icf_sf_officiating_tech",
+        "entity_id": "icf",
+        "entity_name": "International Canoe Federation",
+        "statement": "International Canoe Federation will issue AI officiating/platform RFP (\u00a3200K-\u00a3500K) before next major event",
+        "category": "officiating",
+        "prior_probability": 0.7,
+        "confidence": 0.7,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sf_officiating_tech",
+          "yp_service_fit": [
+            "ANALYTICS",
+            "MOBILE_APPS"
+          ],
+          "budget_range": "\u00a3200K-\u00a3500K",
+          "yp_advantage": "International federation experience (ISU officiating platform), event tech delivery",
+          "positioning_strategy": "INNOVATION_PARTNER",
+          "next_signals": [
+            "Job postings: Officiating Technology Manager, Event Technology Director",
+            "RFP keywords: officiating system, VAR, video referee, AI officiating, RFP, Request for Proposal, tender, ITT, procurement",
+            "Event announcements: Technology trials, officiating system upgrades",
+            "Partnerships: Technology providers for officiating/VAR systems"
+          ],
+          "hop_types": [
+            "RFP_PAGE",
+            "CAREERS_PAGE",
+            "PRESS_RELEASE"
+          ],
+          "accept_criteria": "Job postings or announcements about officiating technology",
+          "confidence_boost": 0.2
+        }
+      },
+      {
+        "hypothesis_id": "icf_sf_certification_modernization",
+        "entity_id": "icf",
+        "entity_name": "International Canoe Federation",
+        "statement": "International Canoe Federation will seek digital certification platform (\u00a3100K-\u00a3300K) for assessment modernization",
+        "category": "certification",
+        "prior_probability": 0.65,
+        "confidence": 0.65,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sf_certification_modernization",
+          "yp_service_fit": [
+            "DIGITAL_TRANSFORMATION",
+            "UI_UX_DESIGN"
+          ],
+          "budget_range": "\u00a3100K-\u00a3300K",
+          "yp_advantage": "Federation certification platform experience, multi-language capability",
+          "positioning_strategy": "STRATEGIC_PARTNER",
+          "next_signals": [
+            "Job postings: Certification Manager, Assessment System Lead",
+            "Initiatives: Digital assessment programs, online certification launches",
+            "RFP keywords: certification system, assessment platform, digital testing, RFP, Request for Proposal, tender, RFQ, EOI"
+          ],
+          "hop_types": [
+            "RFP_PAGE",
+            "CAREERS_PAGE",
+            "OFFICIAL_SITE"
+          ],
+          "accept_criteria": "Digital certification or assessment system initiatives",
+          "confidence_boost": 0.15
+        }
+      },
+      {
+        "hypothesis_id": "icf_sf_event_management",
+        "entity_id": "icf",
+        "entity_name": "International Canoe Federation",
+        "statement": "International Canoe Federation will seek event management platform (\u00a3100K-\u00a3400K) for championship operations",
+        "category": "event",
+        "prior_probability": 0.65,
+        "confidence": 0.65,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sf_event_management",
+          "yp_service_fit": [
+            "ECOMMERCE",
+            "MOBILE_APPS"
+          ],
+          "budget_range": "\u00a3100K-\u00a3400K",
+          "yp_advantage": "Major event platform delivery (Olympic-scale), multi-event management",
+          "positioning_strategy": "SOLUTION_PROVIDER",
+          "next_signals": [
+            "Job postings: Event Technology Manager, Championship Operations Lead",
+            "RFP keywords: event management, championship platform, competition system, RFP, Request for Proposal, tender, ITT, procurement",
+            "Event announcements: New event formats, digital ticketing for events",
+            "Partnerships: Event technology providers"
+          ],
+          "hop_types": [
+            "RFP_PAGE",
+            "CAREERS_PAGE",
+            "PRESS_RELEASE"
+          ],
+          "accept_criteria": "Event management technology initiatives or partnerships",
+          "confidence_boost": 0.15
+        }
+      },
+      {
+        "hypothesis_id": "icf_sf_member_communication",
+        "entity_id": "icf",
+        "entity_name": "International Canoe Federation",
+        "statement": "International Canoe Federation will implement member communication platform (\u00a380K-\u00a3250K) for federation engagement",
+        "category": "member",
+        "prior_probability": 0.62,
+        "confidence": 0.62,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sf_member_communication",
+          "yp_service_fit": [
+            "FAN_ENGAGEMENT",
+            "MOBILE_APPS"
+          ],
+          "budget_range": "\u00a380K-\u00a3250K",
+          "yp_advantage": "FIBA 3\u00d73 member engagement platform, federation communication tools",
+          "positioning_strategy": "STRATEGIC_PARTNER",
+          "next_signals": [
+            "Job postings: Communication Manager, Member Engagement Lead",
+            "RFP keywords: member communication, federation portal, engagement platform, RFP, Request for Proposal, tender, EOI, ITT",
+            "Initiatives: Member portal launches, communication strategy updates",
+            "Platform announcements: Member apps, communication tools"
+          ],
+          "hop_types": [
+            "RFP_PAGE",
+            "CAREERS_PAGE",
+            "PRESS_RELEASE",
+            "OFFICIAL_SITE"
+          ],
+          "accept_criteria": "Member communication or engagement platform initiatives",
+          "confidence_boost": 0.12
+        }
+      },
+      {
+        "hypothesis_id": "icf_sf_analytics_platform",
+        "entity_id": "icf",
+        "entity_name": "International Canoe Federation",
+        "statement": "International Canoe Federation will invest in federation analytics platform (\u00a3150K-\u00a3400K) for member insights",
+        "category": "analytics",
+        "prior_probability": 0.65,
+        "confidence": 0.65,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sf_analytics_platform",
+          "yp_service_fit": [
+            "ANALYTICS"
+          ],
+          "budget_range": "\u00a3150K-\u00a3400K",
+          "yp_advantage": "ISU analytics platform, international federation data systems",
+          "positioning_strategy": "CAPABILITY_PARTNER",
+          "next_signals": [
+            "Job postings: Data Analyst, Analytics Manager, Performance Data Lead",
+            "RFP keywords: analytics platform, data warehouse, federation BI, RFP, Request for Proposal, tender, RFQ, ITT",
+            "Strategic mentions: Data-driven member support, performance insights",
+            "Partnerships: Analytics platform providers"
+          ],
+          "hop_types": [
+            "RFP_PAGE",
+            "CAREERS_PAGE",
+            "PRESS_RELEASE",
+            "OFFICIAL_SITE"
+          ],
+          "accept_criteria": "Analytics platform initiatives or related job postings",
+          "confidence_boost": 0.15
+        }
+      }
+    ],
+    "yp_service_mappings": [
+      {
+        "question": "What member federation management platform or mobile app initiatives are underway at {entity}?",
+        "services": [
+          "MOBILE_APPS",
+          "DIGITAL_TRANSFORMATION"
+        ]
+      },
+      {
+        "question": "What officiating or technology projects is {entity} planning for major events?",
+        "services": [
+          "ANALYTICS",
+          "MOBILE_APPS"
+        ]
+      },
+      {
+        "question": "What digital certification or assessment systems is {entity} modernizing?",
+        "services": [
+          "DIGITAL_TRANSFORMATION",
+          "UI_UX_DESIGN"
+        ]
+      },
+      {
+        "question": "What event management platform needs does {entity} have for competitions/championships?",
+        "services": [
+          "ECOMMERCE",
+          "MOBILE_APPS"
+        ]
+      },
+      {
+        "question": "What digital member communication or engagement platforms is {entity} implementing?",
+        "services": [
+          "FAN_ENGAGEMENT",
+          "MOBILE_APPS"
+        ]
+      },
+      {
+        "question": "What analytics or performance data platform is {entity} seeking for member federations?",
+        "services": [
+          "ANALYTICS"
+        ]
+      }
+    ],
+    "budget_ranges": [],
+    "starting_confidence": 0.6,
+    "yp_profile": {
+      "ideal_budget_range": "\u00a380K-\u00a3500K",
+      "ideal_timeline": "3-12 months",
+      "team_size": "2-8 developers",
+      "case_studies": {
+        "team_gb": {
+          "service": "MOBILE_APPS",
+          "description": "Olympic mobile app delivery",
+          "achievement": "STA Award 2024 winner",
+          "budget": "~\u00a3300K",
+          "relevance": "Shows Olympic-scale delivery capability"
+        },
+        "premier_padel": {
+          "service": "DIGITAL_TRANSFORMATION",
+          "description": "3-year strategic partnership",
+          "achievement": "End-to-end digital transformation",
+          "budget": "~\u00a3500K/year",
+          "relevance": "Long-term federation partnership model"
+        },
+        "fiba_3x3": {
+          "service": "FAN_ENGAGEMENT",
+          "description": "FIBA 3\u00d73 Basketball platform",
+          "achievement": "Multi-federation engagement platform",
+          "budget": "~\u00a3200K",
+          "relevance": "Federation member management experience"
+        },
+        "isu": {
+          "service": "ANALYTICS",
+          "description": "International Skating Union data platform",
+          "achievement": "Sports analytics implementation",
+          "budget": "~\u00a3150K",
+          "relevance": "International federation analytics"
+        },
+        "lnb": {
+          "service": "MOBILE_APPS",
+          "description": "Ligue Nationale de Basket mobile platform",
+          "achievement": "French basketball federation app",
+          "budget": "~\u00a3250K",
+          "relevance": "Federation-wide mobile deployment"
+        },
+        "bnpp_paribas": {
+          "service": "ECOMMERCE",
+          "description": "BNP Paribas Open ticketing platform",
+          "achievement": "Major event e-commerce delivery",
+          "budget": "~\u00a3200K",
+          "relevance": "High-volume ticketing/e-commerce"
+        }
+      },
+      "competitive_differentiators": [
+        "Wild Creativity \u00d7 Boundless Technology approach",
+        "Agile 2-8 developer team structure",
+        "Proven sports industry experience",
+        "Multi-federation partnership track record",
+        "Olympic-scale delivery capability (Team GB)",
+        "End-to-end digital transformation expertise"
+      ]
+    }
+  },
+  "details": "Step 1: Question-First Dossier Generation\n\nEntity: International Canoe Federation (icf)\nType: SPORT_FEDERATION\n\nGenerated 6 questions:\n\n1. What member federation management platform or mobile app initiatives are underway at {entity}?...\n2. What officiating or technology projects is {entity} planning for major events?...\n3. What digital certification or assessment systems is {entity} modernizing?...\n4. What event management platform needs does {entity} have for competitions/championships?...\n5. What digital member communication or engagement platforms is {entity} implementing?...\n6. What analytics or performance data platform is {entity} seeking for member federations?...\n\nYP Service Mappings: 6\nBudget Indicators: 0\nStarting Confidence: 0.60\n\nYP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnpp_paribas']\n",
+  "logs": [
+    "Importing entity_type_dossier_questions module...",
+    "Generating questions for entity type: SPORT_FEDERATION",
+    "Generated 6 questions",
+    "Generated 6 hypotheses",
+    "Question-first dossier generation completed successfully"
+  ],
+  "metrics": {
+    "questions_generated": 6,
+    "hypotheses_created": 6,
+    "starting_confidence": 0.6
+  }
+}

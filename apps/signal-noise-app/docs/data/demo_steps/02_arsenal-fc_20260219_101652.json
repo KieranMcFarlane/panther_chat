@@ -1,0 +1,112 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-19T10:15:19.188388+00:00",
+  "completed_at": "2026-02-19T10:16:52.681136+00:00",
+  "duration_ms": 93492,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "arsenal-fc",
+    "entity_name": "Arsenal FC",
+    "entity_type": "SPORT_CLUB",
+    "hypotheses_count": 7,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.52,
+    "iterations_completed": 2,
+    "validated_signals": [
+      {
+        "id": "arsenal-fc_design_20260219101651_0",
+        "type": "TECHNOLOGY_ADOPTED",
+        "subtype": null,
+        "confidence": 0.52,
+        "evidence_count": 1,
+        "first_seen": "2026-02-19T10:16:51.956402+00:00",
+        "entity_id": "arsenal-fc",
+        "metadata": {
+          "hypothesis_id": "arsenal-fc_ui/ux_design_project",
+          "hypothesis_statement": "Arsenal FC is preparing procurement related to UI/UX Design Project",
+          "hypothesis_category": "design",
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "justification": "The content shows a procurement role (Procurement Manager) at Arsenal Football Club, which aligns with the hypothesis of procurement readiness signals. However, there is no specific mention of UI/UX design projects or related procurement activities.",
+          "hop_type": "rfp_page",
+          "source_url": "https://uk.linkedin.com/in/isaac-ainsworth-358a0b1a1",
+          "entity_name": "Arsenal FC",
+          "yp_service_fit": [],
+          "budget_range": "",
+          "positioning_strategy": ""
+        },
+        "evidence": [
+          {
+            "id": "arsenal-fc_design_20260219101651_0_evidence_0",
+            "source": "https://uk.linkedin.com/in/isaac-ainsworth-358a0b1a1",
+            "url": "https://uk.linkedin.com/in/isaac-ainsworth-358a0b1a1",
+            "content": "Currently working as a Procurement Manager at Arsenal Football Club",
+            "confidence": 0.52,
+            "collected_at": "2026-02-19T10:16:51.956390+00:00"
+          }
+        ]
+      },
+      {
+        "id": "arsenal-fc_data engineering_20260219101651_1",
+        "type": "TECHNOLOGY_ADOPTED",
+        "subtype": null,
+        "confidence": 0.52,
+        "evidence_count": 1,
+        "first_seen": "2026-02-19T10:16:51.956510+00:00",
+        "entity_id": "arsenal-fc",
+        "metadata": {
+          "hypothesis_id": "arsenal-fc_python_data_processing_project",
+          "hypothesis_statement": "Arsenal FC is preparing procurement related to Python Data Processing Project",
+          "hypothesis_category": "data engineering",
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "justification": "The content shows a procurement role at Arsenal FC, indicating general procurement capability but lacks specific evidence related to Python data processing projects. Isaac Ainsworth's role as Procurement Manager suggests the organization has procurement processes, but there's no mention of technology requirements, job postings, or RFPs related to the hypothesis.",
+          "hop_type": "rfp_page",
+          "source_url": "https://uk.linkedin.com/in/isaac-ainsworth-358a0b1a1",
+          "entity_name": "Arsenal FC",
+          "yp_service_fit": [],
+          "budget_range": "",
+          "positioning_strategy": ""
+        },
+        "evidence": [
+          {
+            "id": "arsenal-fc_data engineering_20260219101651_1_evidence_0",
+            "source": "https://uk.linkedin.com/in/isaac-ainsworth-358a0b1a1",
+            "url": "https://uk.linkedin.com/in/isaac-ainsworth-358a0b1a1",
+            "content": "Currently working as a Procurement Manager at Arsenal Football Club",
+            "confidence": 0.52,
+            "collected_at": "2026-02-19T10:16:51.956503+00:00"
+          }
+        ]
+      }
+    ],
+    "total_cost_usd": 0.002,
+    "hops_executed": {
+      "1": 2,
+      "2": 1
+    },
+    "confidence_progression": [],
+    "decisions": []
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery\n\nEntity: Arsenal FC\nTemplate: yellow_panther_agency\nIterations: 2\nMax Depth: 3\n\nFinal Confidence: 0.52\nTotal Cost: $0.0020\n\nValidated Signals: 2\nRaw Signal Objects: 2\n\n  - TECHNOLOGY_ADOPTED: 0.52\n  - TECHNOLOGY_ADOPTED: 0.52\n\nHypotheses Generated: 10\n\nDepth Statistics:\n  Depth 1: 2 iterations\n  Depth 2: 1 iterations\n",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for Arsenal FC (max 10 iterations)...",
+    "Discovery completed: 2 iterations",
+    "Hypothesis-driven discovery completed successfully"
+  ],
+  "metrics": {
+    "final_confidence": 0.52,
+    "iterations": 2,
+    "signals_validated": 2,
+    "total_cost_usd": 0.002
+  }
+}

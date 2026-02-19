@@ -1,0 +1,44 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "mlc",
+  "entity_name": "Major League Cricket",
+  "entity_type": "SPORT_LEAGUE",
+  "started_at": "2026-02-17T15:17:38.205319+00:00",
+  "completed_at": "2026-02-17T15:21:02.120912+00:00",
+  "duration_ms": 203915,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "mlc",
+    "entity_name": "Major League Cricket",
+    "entity_type": "SPORT_LEAGUE",
+    "hypotheses_count": 5,
+    "max_iterations": 5
+  },
+  "output_data": {
+    "final_confidence": 0.5,
+    "iterations_completed": 5,
+    "validated_signals": [],
+    "total_cost_usd": 0.005,
+    "hops_executed": {
+      "1": 5
+    },
+    "confidence_progression": [],
+    "decisions": []
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery\n\nEntity: Major League Cricket\nTemplate: yellow_panther_agency\nIterations: 5\nMax Depth: 3\n\nFinal Confidence: 0.50\nTotal Cost: $0.0050\n\nValidated Signals: 0\n\n\nHypotheses Generated: 10\n\nDepth Statistics:\n  Depth 1: 5 iterations\n",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for Major League Cricket (max 5 iterations)...",
+    "Discovery completed: 5 iterations",
+    "Hypothesis-driven discovery completed successfully"
+  ],
+  "metrics": {
+    "final_confidence": 0.5,
+    "iterations": 5,
+    "signals_validated": 0,
+    "total_cost_usd": 0.005
+  }
+}

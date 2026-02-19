@@ -1,0 +1,44 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-19T02:55:06.686609+00:00",
+  "completed_at": "2026-02-19T02:59:51.416273+00:00",
+  "duration_ms": 284729,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "arsenal-fc",
+    "entity_name": "Arsenal FC",
+    "entity_type": "SPORT_CLUB",
+    "hypotheses_count": 7,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.5,
+    "iterations_completed": 4,
+    "validated_signals": [],
+    "total_cost_usd": 0.004,
+    "hops_executed": {
+      "1": 10
+    },
+    "confidence_progression": [],
+    "decisions": []
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery\n\nEntity: Arsenal FC\nTemplate: yellow_panther_agency\nIterations: 4\nMax Depth: 3\n\nFinal Confidence: 0.50\nTotal Cost: $0.0040\n\nValidated Signals: 0\nRaw Signal Objects: 0\n\n\nHypotheses Generated: 10\n\nDepth Statistics:\n  Depth 1: 10 iterations\n",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for Arsenal FC (max 10 iterations)...",
+    "Discovery completed: 4 iterations",
+    "Hypothesis-driven discovery completed successfully"
+  ],
+  "metrics": {
+    "final_confidence": 0.5,
+    "iterations": 4,
+    "signals_validated": 0,
+    "total_cost_usd": 0.004
+  }
+}

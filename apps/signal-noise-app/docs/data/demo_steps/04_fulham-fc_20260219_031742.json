@@ -1,0 +1,38 @@
+{
+  "step_number": 4,
+  "step_name": "Temporal Intelligence",
+  "entity_id": "fulham-fc",
+  "entity_name": "Fulham FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-19T03:17:41.803841+00:00",
+  "completed_at": "2026-02-19T03:17:42.044293+00:00",
+  "duration_ms": 240,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "fulham-fc",
+    "entity_name": "Fulham FC",
+    "entity_type": "SPORT_CLUB"
+  },
+  "output_data": {
+    "timeline_episodes": 0,
+    "time_span_days": 0,
+    "patterns_detected": [],
+    "episode_types": {},
+    "similar_entities": [],
+    "temporal_fit_score": 0.0
+  },
+  "details": "Step 4: Temporal Intelligence Analysis\n\nEntity: Fulham FC\nTimeline Episodes: 0\nTime Span: 0 days\n\nPatterns Detected:\n\nEpisode Types:\n\nTemporal Fit Score: 0.00\n  (Based on RFP history, timeline depth, and pattern diversity)",
+  "logs": [
+    "Fetching entity timeline from Graphiti...",
+    "Retrieved 0 timeline episodes",
+    "Temporal analysis complete: fit_score=0.00",
+    "Temporal intelligence analysis completed successfully"
+  ],
+  "metrics": {
+    "timeline_episodes": 0,
+    "time_span_days": 0,
+    "patterns_detected": 0,
+    "temporal_fit_score": 0.0
+  }
+}

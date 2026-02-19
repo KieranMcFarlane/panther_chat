@@ -1,0 +1,112 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "mlc",
+  "entity_name": "Major League Cricket",
+  "entity_type": "SPORT_LEAGUE",
+  "started_at": "2026-02-19T09:30:36.760437+00:00",
+  "completed_at": "2026-02-19T09:30:59.869894+00:00",
+  "duration_ms": 23109,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "mlc",
+    "entity_name": "Major League Cricket",
+    "entity_type": "SPORT_LEAGUE",
+    "hypotheses_count": 5,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.52,
+    "iterations_completed": 2,
+    "validated_signals": [
+      {
+        "id": "mlc_design_20260219093059_0",
+        "type": "TECHNOLOGY_ADOPTED",
+        "subtype": null,
+        "confidence": 0.56,
+        "evidence_count": 1,
+        "first_seen": "2026-02-19T09:30:59.289346+00:00",
+        "entity_id": "mlc",
+        "metadata": {
+          "hypothesis_id": "mlc_ui/ux_design_project",
+          "hypothesis_statement": "Major League Cricket is preparing procurement related to UI/UX Design Project",
+          "hypothesis_category": "design",
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "justification": "The content contains an explicit, active RFP for a Digital Transformation Project from American Cricket Enterprises (Major League Cricket's parent company), which directly matches the hypothesis of procurement readiness for a UI/UX-related project. The RFP includes specific requirements for improving fan experience and integrating systems, with a current submission deadline.",
+          "hop_type": "rfp_page",
+          "source_url": "https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6",
+          "entity_name": "Major League Cricket",
+          "yp_service_fit": [],
+          "budget_range": "",
+          "positioning_strategy": ""
+        },
+        "evidence": [
+          {
+            "id": "mlc_design_20260219093059_0_evidence_0",
+            "source": "https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6",
+            "url": "https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6",
+            "content": "American Cricket Enterprises has issued an RFP for a Digital Transformation Project. This solution will improve the fan experience, optimize commercial opportunities and integrate with existing and new systems for ticketing, merchandise, email marketing, and more whilst also maintaining compliance with relevant data protection and privacy laws. Proposals due on 10 October, 2025.",
+            "confidence": 0.56,
+            "collected_at": "2026-02-19T09:30:59.289337+00:00"
+          }
+        ]
+      },
+      {
+        "id": "mlc_data engineering_20260219093059_1",
+        "type": "TECHNOLOGY_ADOPTED",
+        "subtype": null,
+        "confidence": 0.52,
+        "evidence_count": 1,
+        "first_seen": "2026-02-19T09:30:59.289444+00:00",
+        "entity_id": "mlc",
+        "metadata": {
+          "hypothesis_id": "mlc_python_data_processing_project",
+          "hypothesis_statement": "Major League Cricket is preparing procurement related to Python Data Processing Project",
+          "hypothesis_category": "data engineering",
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "justification": "The content shows an active RFP for a 'Digital Transformation Project' that includes data processing and analytics components, but it is not specifically focused on a Python Data Processing Project. The RFP mentions integrating with existing systems for data and maintaining compliance, which aligns with data engineering capabilities.",
+          "hop_type": "rfp_page",
+          "source_url": "https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6",
+          "entity_name": "Major League Cricket",
+          "yp_service_fit": [],
+          "budget_range": "",
+          "positioning_strategy": ""
+        },
+        "evidence": [
+          {
+            "id": "mlc_data engineering_20260219093059_1_evidence_0",
+            "source": "https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6",
+            "url": "https://www.linkedin.com/posts/majorleaguecricket_american-cricket-enterprises-has-issued-an-activity-7371974338536861696-zCn6",
+            "content": "This solution will improve the fan experience, optimize commercial opportunities and integrate with existing and new systems for ticketing, merchandise, email marketing, and more whilst also maintaining compliance with relevant data protection and privacy laws.",
+            "confidence": 0.52,
+            "collected_at": "2026-02-19T09:30:59.289437+00:00"
+          }
+        ]
+      }
+    ],
+    "total_cost_usd": 0.002,
+    "hops_executed": {
+      "1": 1,
+      "2": 1
+    },
+    "confidence_progression": [],
+    "decisions": []
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery\n\nEntity: Major League Cricket\nTemplate: yellow_panther_agency\nIterations: 2\nMax Depth: 3\n\nFinal Confidence: 0.52\nTotal Cost: $0.0020\n\nValidated Signals: 2\nRaw Signal Objects: 2\n\n  - TECHNOLOGY_ADOPTED: 0.56\n  - TECHNOLOGY_ADOPTED: 0.52\n\nHypotheses Generated: 10\n\nDepth Statistics:\n  Depth 1: 1 iterations\n  Depth 2: 1 iterations\n",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for Major League Cricket (max 10 iterations)...",
+    "Discovery completed: 2 iterations",
+    "Hypothesis-driven discovery completed successfully"
+  ],
+  "metrics": {
+    "final_confidence": 0.52,
+    "iterations": 2,
+    "signals_validated": 2,
+    "total_cost_usd": 0.002
+  }
+}

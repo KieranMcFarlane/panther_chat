@@ -1,0 +1,38 @@
+{
+  "step_number": 5,
+  "step_name": "Narrative Builder",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-19T08:57:09.650491+00:00",
+  "completed_at": "2026-02-19T08:57:09.814509+00:00",
+  "duration_ms": 164,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "arsenal-fc",
+    "entity_name": "Arsenal FC",
+    "entity_type": "SPORT_CLUB",
+    "max_tokens": 2000
+  },
+  "output_data": {
+    "narrative": "# Temporal Narrative (3 episodes: 2026-01-18T22:08:30.853128+00:00 to 2026-02-19T08:57:09.05232+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run completed with 7 iterations. Final confidence: 0.50. No signals detected.\n- **2026-01-18** (Unknown): Request for AI-powered analytics\n- **2026-01-18** (Unknown): Digital Transformation RFP\n",
+    "episode_count": 3,
+    "total_episodes": 3,
+    "estimated_tokens": 86,
+    "truncated": false
+  },
+  "details": "Step 5: Narrative Builder\n\nEntity: Arsenal FC\nEpisodes Available: 3\nEpisodes Included: 3\nEstimated Tokens: 86\nTruncated: False\n\nNarrative Preview (first 500 chars):\n# Temporal Narrative (3 episodes: 2026-01-18T22:08:30.853128+00:00 to 2026-02-19T08:57:09.05232+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run completed with 7 iterations. Final confidence: 0.50. No signals detected.\n- **2026-01-18** (Unknown): Request for AI-powered analytics\n- **2026-01-18** (Unknown): Digital Transformation RFP\n...\n",
+  "logs": [
+    "Fetching episodes for narrative building...",
+    "Retrieved 3 episodes",
+    "Narrative built: 86 tokens",
+    "Narrative builder completed successfully"
+  ],
+  "metrics": {
+    "episodes_available": 3,
+    "episodes_included": 3,
+    "estimated_tokens": 86,
+    "truncated": false
+  }
+}

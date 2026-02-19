@@ -1,0 +1,144 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "fulham-fc",
+  "entity_name": "Fulham FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-17T14:33:53.058033+00:00",
+  "completed_at": "2026-02-17T14:39:33.646145+00:00",
+  "duration_ms": 340588,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "fulham-fc",
+    "entity_name": "Fulham FC",
+    "entity_type": "SPORT_CLUB",
+    "hypotheses_count": 7,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.7622935801067862,
+    "iterations_completed": 7,
+    "validated_signals": [
+      {
+        "id": "sim_signal_0",
+        "type": "DIGITAL_TRANSFORMATION",
+        "subtype": "GENERAL",
+        "confidence": 0.8717905909287451,
+        "evidence_count": 4,
+        "first_seen": "2026-02-17T14:39:33.646006+00:00"
+      },
+      {
+        "id": "sim_signal_1",
+        "type": "JOB_POSTING",
+        "subtype": "GENERAL",
+        "confidence": 0.7612254105198333,
+        "evidence_count": 7,
+        "first_seen": "2026-02-17T14:39:33.646029+00:00"
+      },
+      {
+        "id": "sim_signal_2",
+        "type": "JOB_POSTING",
+        "subtype": "GENERAL",
+        "confidence": 0.6486313192496045,
+        "evidence_count": 8,
+        "first_seen": "2026-02-17T14:39:33.646036+00:00"
+      },
+      {
+        "id": "sim_signal_3",
+        "type": "JOB_POSTING",
+        "subtype": "GENERAL",
+        "confidence": 0.830160265380649,
+        "evidence_count": 8,
+        "first_seen": "2026-02-17T14:39:33.646042+00:00"
+      }
+    ],
+    "total_cost_usd": 0.105,
+    "hops_executed": [
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      }
+    ],
+    "confidence_progression": [
+      0.5,
+      0.56,
+      0.6200000000000001,
+      0.6400000000000001,
+      0.7000000000000002,
+      0.7600000000000002,
+      0.7400000000000002,
+      0.8000000000000003
+    ],
+    "decisions": [
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.56
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.6200000000000001
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.6400000000000001
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.7000000000000002
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.7600000000000002
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.7400000000000002
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.8000000000000003
+      }
+    ]
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: Fulham FC\nTemplate: tier_1_club_centralized_procurement\nIterations: 7\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.76\nTotal Cost: $0.1050\n\nValidated Signals: 4\n\n  - DIGITAL_TRANSFORMATION: 0.87\n  - JOB_POSTING: 0.76\n  - JOB_POSTING: 0.65\n  - JOB_POSTING: 0.83\n\nConfidence Progression:\n  0.50 \u2192 0.56 \u2192 0.62 \u2192 0.64 \u2192 0.70 \u2192 0.76 \u2192 0.74 \u2192 0.80",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for Fulham FC (max 10 iterations)...",
+    "Discovery completed: 0 iterations",
+    "Discovery execution error: name 'decision' is not defined - falling back to simulated mode",
+    "Running in SIMULATED mode (mock data)",
+    "Simulated hypothesis-driven discovery completed"
+  ],
+  "metrics": {
+    "final_confidence": 0.7622935801067862,
+    "iterations": 7,
+    "signals_validated": 4,
+    "total_cost_usd": 0.105
+  }
+}

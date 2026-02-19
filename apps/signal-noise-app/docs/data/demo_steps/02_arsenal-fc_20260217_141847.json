@@ -1,0 +1,82 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-17T14:17:36.334631+00:00",
+  "completed_at": "2026-02-17T14:18:47.623783+00:00",
+  "duration_ms": 71289,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "arsenal-fc",
+    "entity_name": "Arsenal FC",
+    "entity_type": "SPORT_CLUB",
+    "hypotheses_count": 7,
+    "max_iterations": 2
+  },
+  "output_data": {
+    "final_confidence": 0.6209285183721784,
+    "iteration_count": 2,
+    "validated_signals": [
+      {
+        "id": "sim_signal_0",
+        "type": "RFP_DETECTED",
+        "subtype": "GENERAL",
+        "confidence": 0.8550421161304684,
+        "evidence_count": 7,
+        "first_seen": "2026-02-17T14:18:47.623643+00:00"
+      },
+      {
+        "id": "sim_signal_1",
+        "type": "CRM_ANALYTICS",
+        "subtype": "GENERAL",
+        "confidence": 0.7858863399469747,
+        "evidence_count": 6,
+        "first_seen": "2026-02-17T14:18:47.623654+00:00"
+      }
+    ],
+    "total_cost_usd": 0.03,
+    "hops_executed": [
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      }
+    ],
+    "confidence_progression": [
+      0.5,
+      0.48,
+      0.45999999999999996
+    ],
+    "decisions": [
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.48
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.45999999999999996
+      }
+    ]
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: Arsenal FC\nTemplate: tier_1_club_centralized_procurement\nIterations: 2\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.62\nTotal Cost: $0.0300\n\nValidated Signals: 2\n\n  - RFP_DETECTED: 0.86\n  - CRM_ANALYTICS: 0.79\n\nConfidence Progression:\n  0.50 \u2192 0.48 \u2192 0.46",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for Arsenal FC (max 2 iterations)...",
+    "Discovery execution error: 'DiscoveryResult' object has no attribute 'iteration_count' - falling back to simulated mode",
+    "Running in SIMULATED mode (mock data)",
+    "Simulated hypothesis-driven discovery completed"
+  ],
+  "metrics": {
+    "final_confidence": 0.6209285183721784,
+    "iterations": 2,
+    "signals_validated": 2,
+    "total_cost_usd": 0.03
+  }
+}

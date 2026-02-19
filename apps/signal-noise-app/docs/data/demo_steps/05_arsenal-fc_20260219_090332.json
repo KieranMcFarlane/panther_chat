@@ -1,0 +1,38 @@
+{
+  "step_number": 5,
+  "step_name": "Narrative Builder",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-19T09:03:32.681645+00:00",
+  "completed_at": "2026-02-19T09:03:32.756316+00:00",
+  "duration_ms": 74,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "arsenal-fc",
+    "entity_name": "Arsenal FC",
+    "entity_type": "SPORT_CLUB",
+    "max_tokens": 2000
+  },
+  "output_data": {
+    "narrative": "# Temporal Narrative (4 episodes: 2026-01-18T22:08:30.853128+00:00 to 2026-02-19T09:03:31.840519+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run found 1 signal(s). Final confidence: 0.56. Signals: TECHNOLOGY_ADOPTED\n- **2026-02-19** (Unknown): Discovery run completed with 7 iterations. Final confidence: 0.50. No signals detected.\n- **2026-01-18** (Unknown): Request for AI-powered analytics\n- **2026-01-18** (Unknown): Digital Transformation RFP\n",
+    "episode_count": 4,
+    "total_episodes": 4,
+    "estimated_tokens": 115,
+    "truncated": false
+  },
+  "details": "Step 5: Narrative Builder\n\nEntity: Arsenal FC\nEpisodes Available: 4\nEpisodes Included: 4\nEstimated Tokens: 115\nTruncated: False\n\nNarrative Preview (first 500 chars):\n# Temporal Narrative (4 episodes: 2026-01-18T22:08:30.853128+00:00 to 2026-02-19T09:03:31.840519+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run found 1 signal(s). Final confidence: 0.56. Signals: TECHNOLOGY_ADOPTED\n- **2026-02-19** (Unknown): Discovery run completed with 7 iterations. Final confidence: 0.50. No signals detected.\n- **2026-01-18** (Unknown): Request for AI-powered analytics\n- **2026-01-18** (Unknown): Digital Transformation RFP\n...\n",
+  "logs": [
+    "Fetching episodes for narrative building...",
+    "Retrieved 4 episodes",
+    "Narrative built: 115 tokens",
+    "Narrative builder completed successfully"
+  ],
+  "metrics": {
+    "episodes_available": 4,
+    "episodes_included": 4,
+    "estimated_tokens": 115,
+    "truncated": false
+  }
+}

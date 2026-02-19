@@ -1,0 +1,44 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "icf",
+  "entity_name": "International Canoe Federation",
+  "entity_type": "SPORT_FEDERATION",
+  "started_at": "2026-02-18T12:59:43.651009+00:00",
+  "completed_at": "2026-02-18T13:02:21.664169+00:00",
+  "duration_ms": 158013,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "icf",
+    "entity_name": "International Canoe Federation",
+    "entity_type": "SPORT_FEDERATION",
+    "hypotheses_count": 6,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.5,
+    "iterations_completed": 10,
+    "validated_signals": [],
+    "total_cost_usd": 0.010000000000000002,
+    "hops_executed": {
+      "1": 10
+    },
+    "confidence_progression": [],
+    "decisions": []
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery\n\nEntity: International Canoe Federation\nTemplate: yellow_panther_agency\nIterations: 10\nMax Depth: 3\n\nFinal Confidence: 0.50\nTotal Cost: $0.0100\n\nValidated Signals: 0\n\n\nHypotheses Generated: 10\n\nDepth Statistics:\n  Depth 1: 10 iterations\n",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for International Canoe Federation (max 10 iterations)...",
+    "Discovery completed: 10 iterations",
+    "Hypothesis-driven discovery completed successfully"
+  ],
+  "metrics": {
+    "final_confidence": 0.5,
+    "iterations": 10,
+    "signals_validated": 0,
+    "total_cost_usd": 0.010000000000000002
+  }
+}

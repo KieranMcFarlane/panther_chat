@@ -1,0 +1,56 @@
+{
+  "step_number": 3,
+  "step_name": "Ralph Loop Validation",
+  "entity_id": "icf",
+  "entity_name": "International Canoe Federation",
+  "entity_type": "SPORT_FEDERATION",
+  "started_at": "2026-02-18T14:56:02.658251+00:00",
+  "completed_at": "2026-02-18T14:56:02.662006+00:00",
+  "duration_ms": 3,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "icf",
+    "entity_name": "International Canoe Federation",
+    "entity_type": "SPORT_FEDERATION",
+    "signals_count": 1
+  },
+  "output_data": {
+    "pass_1_results": [
+      {
+        "signal_id": "unknown",
+        "decision": "REJECT",
+        "reason": "Insufficient evidence: 0 < 3"
+      }
+    ],
+    "pass_2_results": [
+      {
+        "signal_id": "unknown",
+        "decision": "REJECT",
+        "confidence": 0.5
+      }
+    ],
+    "pass_3_results": [
+      {
+        "signal_id": "unknown",
+        "decision": "REJECT",
+        "reason": "Confidence too low: 0.50"
+      }
+    ],
+    "validated_signals": [],
+    "rejected_count": 1,
+    "validation_rate": 0.0
+  },
+  "details": "Step 3: Ralph Loop Validation\n\nEntity: International Canoe Federation\nSignals Processed: 1\n\nPass 1 (Rule-based Filtering): 1 results\n  - ACCEPT: 0\n  - WEAK_ACCEPT: 0\n  - REJECT: 1\n\nPass 2 (Claude Validation): 1 results\n  - Signals forwarded to Pass 3: 0\n\nPass 3 (Final Confirmation): 1 results\n  - Validated: 0\n  - Rejected: 1\n\nValidated Signals: 0\nRejected: 1\nValidation Rate: 0.0%\n",
+  "logs": [
+    "Running Ralph Loop validation for 1 signals...",
+    "Validation complete: 0/1 signals validated",
+    "Ralph Loop validation completed successfully"
+  ],
+  "metrics": {
+    "signals_input": 1,
+    "signals_validated": 0,
+    "signals_rejected": 1,
+    "validation_rate": 0.0
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "icf",
+  "entity_name": "International Canoe Federation",
+  "entity_type": "SPORT_FEDERATION",
+  "started_at": "2026-02-17T14:47:04.418125+00:00",
+  "completed_at": "2026-02-17T14:51:54.698884+00:00",
+  "duration_ms": 290280,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "icf",
+    "entity_name": "International Canoe Federation",
+    "entity_type": "SPORT_FEDERATION",
+    "hypotheses_count": 6,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.7507050311780461,
+    "iterations_completed": 7,
+    "validated_signals": [
+      {
+        "id": "sim_signal_0",
+        "type": "JOB_POSTING",
+        "subtype": "GENERAL",
+        "confidence": 0.8647700184950275,
+        "evidence_count": 6,
+        "first_seen": "2026-02-17T14:51:54.698833+00:00"
+      },
+      {
+        "id": "sim_signal_1",
+        "type": "JOB_POSTING",
+        "subtype": "GENERAL",
+        "confidence": 0.641450601537824,
+        "evidence_count": 6,
+        "first_seen": "2026-02-17T14:51:54.698841+00:00"
+      },
+      {
+        "id": "sim_signal_2",
+        "type": "JOB_POSTING",
+        "subtype": "GENERAL",
+        "confidence": 0.721199907151842,
+        "evidence_count": 6,
+        "first_seen": "2026-02-17T14:51:54.698843+00:00"
+      },
+      {
+        "id": "sim_signal_3",
+        "type": "RFP_DETECTED",
+        "subtype": "GENERAL",
+        "confidence": 0.6902396338531888,
+        "evidence_count": 8,
+        "first_seen": "2026-02-17T14:51:54.698845+00:00"
+      }
+    ],
+    "total_cost_usd": 0.105,
+    "hops_executed": [
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      }
+    ],
+    "confidence_progression": [
+      0.5,
+      0.48,
+      0.54,
+      0.52,
+      0.5,
+      0.56,
+      0.5800000000000001,
+      0.56
+    ],
+    "decisions": [
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.48
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.54
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.52
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.5
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.56
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.5800000000000001
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.56
+      }
+    ]
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: International Canoe Federation\nTemplate: tier_1_club_centralized_procurement\nIterations: 7\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.75\nTotal Cost: $0.1050\n\nValidated Signals: 4\n\n  - JOB_POSTING: 0.86\n  - JOB_POSTING: 0.64\n  - JOB_POSTING: 0.72\n  - RFP_DETECTED: 0.69\n\nConfidence Progression:\n  0.50 \u2192 0.48 \u2192 0.54 \u2192 0.52 \u2192 0.50 \u2192 0.56 \u2192 0.58 \u2192 0.56",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for International Canoe Federation (max 10 iterations)...",
+    "Discovery completed: 2 iterations",
+    "Discovery execution error: name 'decision' is not defined - falling back to simulated mode",
+    "Running in SIMULATED mode (mock data)",
+    "Simulated hypothesis-driven discovery completed"
+  ],
+  "metrics": {
+    "final_confidence": 0.7507050311780461,
+    "iterations": 7,
+    "signals_validated": 4,
+    "total_cost_usd": 0.105
+  }
+}

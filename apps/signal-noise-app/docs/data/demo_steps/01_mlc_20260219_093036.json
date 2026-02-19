@@ -1,0 +1,295 @@
+{
+  "step_number": 1,
+  "step_name": "Question-First Dossier",
+  "entity_id": "mlc",
+  "entity_name": "Major League Cricket",
+  "entity_type": "SPORT_LEAGUE",
+  "started_at": "2026-02-19T09:30:36.757345+00:00",
+  "completed_at": "2026-02-19T09:30:36.759681+00:00",
+  "duration_ms": 2,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "mlc",
+    "entity_name": "Major League Cricket",
+    "entity_type": "SPORT_LEAGUE"
+  },
+  "output_data": {
+    "questions_count": 5,
+    "hypotheses": [
+      {
+        "hypothesis_id": "mlc_sl_league_mobile_app",
+        "entity_id": "mlc",
+        "entity_name": "Major League Cricket",
+        "statement": "Major League Cricket will develop league-wide mobile platform (\u00a3200K-\u00a3500K) for fan engagement",
+        "category": "league",
+        "prior_probability": 0.7,
+        "confidence": 0.7,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sl_league_mobile_app",
+          "yp_service_fit": [
+            "MOBILE_APPS",
+            "FAN_ENGAGEMENT"
+          ],
+          "budget_range": "\u00a3200K-\u00a3500K",
+          "yp_advantage": "Olympic mobile app experience, multi-club deployment capability",
+          "positioning_strategy": "STRATEGIC_PARTNER",
+          "next_signals": [
+            "Job postings: Mobile Product Manager, League Digital Director",
+            "RFP keywords: mobile app, league platform, fan app, React Native, RFP, Request for Proposal, tender, ITT, EOI, procurement",
+            "League announcements: Mobile strategy, digital fan experience",
+            "Club initiatives: Coordinated mobile efforts across clubs"
+          ],
+          "hop_types": [
+            "RFP_PAGE",
+            "CAREERS_PAGE",
+            "PRESS_RELEASE"
+          ],
+          "accept_criteria": "League-wide mobile or digital platform announcements",
+          "confidence_boost": 0.2
+        }
+      },
+      {
+        "hypothesis_id": "mlc_sl_digital_operations",
+        "entity_id": "mlc",
+        "entity_name": "Major League Cricket",
+        "statement": "Major League Cricket will seek digital operations transformation (\u00a3200K-\u00a3500K) for league efficiency",
+        "category": "digital",
+        "prior_probability": 0.6799999999999999,
+        "confidence": 0.6799999999999999,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sl_digital_operations",
+          "yp_service_fit": [
+            "DIGITAL_TRANSFORMATION"
+          ],
+          "budget_range": "\u00a3200K-\u00a3500K",
+          "yp_advantage": "Premier Padel 3-year transformation model, league operations expertise",
+          "positioning_strategy": "STRATEGIC_PARTNER",
+          "next_signals": [
+            "Job postings: League Operations Director, Digital Transformation Lead",
+            "RFP keywords: digital transformation, CRM system, data warehouse, RFP, Request for Proposal, tender, ITT, procurement",
+            "Strategic announcements: Operations modernization, digital league management",
+            "Club mandates: Digital requirements for member clubs"
+          ],
+          "hop_types": [
+            "CAREERS_PAGE",
+            "PRESS_RELEASE",
+            "RFP_PAGE"
+          ],
+          "accept_criteria": "League operations modernization initiatives",
+          "confidence_boost": 0.18
+        }
+      },
+      {
+        "hypothesis_id": "mlc_sl_centralized_analytics",
+        "entity_id": "mlc",
+        "entity_name": "Major League Cricket",
+        "statement": "Major League Cricket will invest in centralized analytics platform (\u00a3150K-\u00a3400K) for league-wide insights",
+        "category": "centralized",
+        "prior_probability": 0.65,
+        "confidence": 0.65,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sl_centralized_analytics",
+          "yp_service_fit": [
+            "ANALYTICS"
+          ],
+          "budget_range": "\u00a3150K-\u00a3400K",
+          "yp_advantage": "ISU federation analytics, multi-club data platform experience",
+          "positioning_strategy": "CAPABILITY_PARTNER",
+          "next_signals": [
+            "Job postings: Head of Analytics, Data Platform Manager",
+            "RFP keywords: analytics platform, data warehouse, league BI, centralized data, RFP, Request for Proposal, tender, RFQ, ITT",
+            "League initiatives: Data sharing, analytics for member clubs",
+            "Partnerships: Analytics platform providers"
+          ],
+          "hop_types": [
+            "RFP_PAGE",
+            "CAREERS_PAGE",
+            "PRESS_RELEASE"
+          ],
+          "accept_criteria": "Centralized analytics or data platform initiatives",
+          "confidence_boost": 0.15
+        }
+      },
+      {
+        "hypothesis_id": "mlc_sl_ecommerce_platform",
+        "entity_id": "mlc",
+        "entity_name": "Major League Cricket",
+        "statement": "Major League Cricket will create unified e-commerce platform (\u00a3150K-\u00a3400K) for league merchandise/ticketing",
+        "category": "ecommerce",
+        "prior_probability": 0.65,
+        "confidence": 0.65,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sl_ecommerce_platform",
+          "yp_service_fit": [
+            "ECOMMERCE"
+          ],
+          "budget_range": "\u00a3150K-\u00a3400K",
+          "yp_advantage": "BNP Paribas Open ticketing experience, league-wide commerce",
+          "positioning_strategy": "SOLUTION_PROVIDER",
+          "next_signals": [
+            "Job postings: E-commerce Director, Head of League Commerce",
+            "RFP keywords: e-commerce platform, ticketing system, league merchandise, RFP, Request for Proposal, tender, RFQ, ITT, supplier portal",
+            "League announcements: Unified shopping, league ticketing platform",
+            "Club alignment: Standardized e-commerce across clubs"
+          ],
+          "hop_types": [
+            "RFP_PAGE",
+            "CAREERS_PAGE",
+            "PRESS_RELEASE"
+          ],
+          "accept_criteria": "League-wide e-commerce or ticketing initiatives",
+          "confidence_boost": 0.15
+        }
+      },
+      {
+        "hypothesis_id": "mlc_sl_broadcast_streaming",
+        "entity_id": "mlc",
+        "entity_name": "Major League Cricket",
+        "statement": "Major League Cricket will enhance broadcast/streaming platform (\u00a3200K-\u00a3500K) for digital content",
+        "category": "broadcast",
+        "prior_probability": 0.65,
+        "confidence": 0.65,
+        "status": "ACTIVE",
+        "metadata": {
+          "source": "entity_type_question_template",
+          "question_id": "sl_broadcast_streaming",
+          "yp_service_fit": [
+            "MOBILE_APPS",
+            "UI_UX_DESIGN"
+          ],
+          "budget_range": "\u00a3200K-\u00a3500K",
+          "yp_advantage": "Streaming platform experience, mobile video delivery",
+          "positioning_strategy": "INNOVATION_PARTNER",
+          "next_signals": [
+            "Job postings: Streaming Product Manager, Digital Content Lead",
+            "RFP keywords: streaming platform, OTT, video delivery, broadcast, RFP, Request for Proposal, tender, ITT, media procurement",
+            "Media announcements: OTT platform, direct-to-consumer streaming",
+            "Partnerships: Streaming technology providers"
+          ],
+          "hop_types": [
+            "RFP_PAGE",
+            "CAREERS_PAGE",
+            "PRESS_RELEASE"
+          ],
+          "accept_criteria": "Streaming or broadcast platform initiatives",
+          "confidence_boost": 0.15
+        }
+      }
+    ],
+    "yp_service_mappings": [
+      {
+        "question": "What league-wide mobile app or digital platform initiatives is {entity} pursuing?",
+        "services": [
+          "MOBILE_APPS",
+          "FAN_ENGAGEMENT"
+        ]
+      },
+      {
+        "question": "What digital transformation of league operations is {entity} undertaking?",
+        "services": [
+          "DIGITAL_TRANSFORMATION"
+        ]
+      },
+      {
+        "question": "What centralized analytics or data platform is {entity} building for league and clubs?",
+        "services": [
+          "ANALYTICS"
+        ]
+      },
+      {
+        "question": "What league-wide e-commerce or ticketing platform is {entity} developing?",
+        "services": [
+          "ECOMMERCE"
+        ]
+      },
+      {
+        "question": "What broadcast or streaming enhancements is {entity} planning for content distribution?",
+        "services": [
+          "MOBILE_APPS",
+          "UI_UX_DESIGN"
+        ]
+      }
+    ],
+    "budget_ranges": [],
+    "starting_confidence": 0.5,
+    "yp_profile": {
+      "ideal_budget_range": "\u00a380K-\u00a3500K",
+      "ideal_timeline": "3-12 months",
+      "team_size": "2-8 developers",
+      "case_studies": {
+        "team_gb": {
+          "service": "MOBILE_APPS",
+          "description": "Olympic mobile app delivery",
+          "achievement": "STA Award 2024 winner",
+          "budget": "~\u00a3300K",
+          "relevance": "Shows Olympic-scale delivery capability"
+        },
+        "premier_padel": {
+          "service": "DIGITAL_TRANSFORMATION",
+          "description": "3-year strategic partnership",
+          "achievement": "End-to-end digital transformation",
+          "budget": "~\u00a3500K/year",
+          "relevance": "Long-term federation partnership model"
+        },
+        "fiba_3x3": {
+          "service": "FAN_ENGAGEMENT",
+          "description": "FIBA 3\u00d73 Basketball platform",
+          "achievement": "Multi-federation engagement platform",
+          "budget": "~\u00a3200K",
+          "relevance": "Federation member management experience"
+        },
+        "isu": {
+          "service": "ANALYTICS",
+          "description": "International Skating Union data platform",
+          "achievement": "Sports analytics implementation",
+          "budget": "~\u00a3150K",
+          "relevance": "International federation analytics"
+        },
+        "lnb": {
+          "service": "MOBILE_APPS",
+          "description": "Ligue Nationale de Basket mobile platform",
+          "achievement": "French basketball federation app",
+          "budget": "~\u00a3250K",
+          "relevance": "Federation-wide mobile deployment"
+        },
+        "bnpp_paribas": {
+          "service": "ECOMMERCE",
+          "description": "BNP Paribas Open ticketing platform",
+          "achievement": "Major event e-commerce delivery",
+          "budget": "~\u00a3200K",
+          "relevance": "High-volume ticketing/e-commerce"
+        }
+      },
+      "competitive_differentiators": [
+        "Wild Creativity \u00d7 Boundless Technology approach",
+        "Agile 2-8 developer team structure",
+        "Proven sports industry experience",
+        "Multi-federation partnership track record",
+        "Olympic-scale delivery capability (Team GB)",
+        "End-to-end digital transformation expertise"
+      ]
+    }
+  },
+  "details": "Step 1: Question-First Dossier Generation\n\nEntity: Major League Cricket (mlc)\nType: SPORT_LEAGUE\n\nGenerated 5 questions:\n\n1. What league-wide mobile app or digital platform initiatives is {entity} pursuing?...\n2. What digital transformation of league operations is {entity} undertaking?...\n3. What centralized analytics or data platform is {entity} building for league and clubs?...\n4. What league-wide e-commerce or ticketing platform is {entity} developing?...\n5. What broadcast or streaming enhancements is {entity} planning for content distribution?...\n\nYP Service Mappings: 5\nBudget Indicators: 0\nStarting Confidence: 0.50\n\nYP Profile Services: ['team_gb', 'premier_padel', 'fiba_3x3', 'isu', 'lnb', 'bnpp_paribas']\n",
+  "logs": [
+    "Importing entity_type_dossier_questions module...",
+    "Generating questions for entity type: SPORT_LEAGUE",
+    "Generated 5 questions",
+    "Generated 5 hypotheses",
+    "Question-first dossier generation completed successfully"
+  ],
+  "metrics": {
+    "questions_generated": 5,
+    "hypotheses_created": 5,
+    "starting_confidence": 0.5
+  }
+}

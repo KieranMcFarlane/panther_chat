@@ -1,0 +1,112 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "icf",
+  "entity_name": "International Canoe Federation",
+  "entity_type": "SPORT_FEDERATION",
+  "started_at": "2026-02-19T02:48:11.198646+00:00",
+  "completed_at": "2026-02-19T02:48:51.017619+00:00",
+  "duration_ms": 39818,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "icf",
+    "entity_name": "International Canoe Federation",
+    "entity_type": "SPORT_FEDERATION",
+    "hypotheses_count": 6,
+    "max_iterations": 10
+  },
+  "output_data": {
+    "final_confidence": 0.52,
+    "iterations_completed": 2,
+    "validated_signals": [
+      {
+        "id": "icf_design_20260219024851_0",
+        "type": "TECHNOLOGY_ADOPTED",
+        "subtype": null,
+        "confidence": 0.56,
+        "evidence_count": 1,
+        "first_seen": "2026-02-19T02:48:51.017177+00:00",
+        "entity_id": "icf",
+        "metadata": {
+          "hypothesis_id": "icf_ui/ux_design_project",
+          "hypothesis_statement": "International Canoe Federation is preparing procurement related to UI/UX Design Project",
+          "hypothesis_category": "design",
+          "decision": "ACCEPT",
+          "confidence_delta": 0.06,
+          "justification": "The content contains a clear, active RFP for an OTT platform development project issued by ICF with a current deadline (January 2026), which directly signals procurement readiness for a digital platform project that would require UI/UX design services.",
+          "hop_type": "rfp_page",
+          "source_url": "https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf",
+          "entity_name": "International Canoe Federation",
+          "yp_service_fit": [],
+          "budget_range": "",
+          "positioning_strategy": ""
+        },
+        "evidence": [
+          {
+            "id": "icf_design_20260219024851_0_evidence_0",
+            "source": "https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf",
+            "url": "https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf",
+            "content": "REQUEST FOR PROPOSAL (RFP): ICF OTT Platform Development Issued by: International Canoe Federation (ICF) Date of Issue: 1st December 2025. Deadline for Submissions: 13th January 2026",
+            "confidence": 0.56,
+            "collected_at": "2026-02-19T02:48:51.017164+00:00"
+          }
+        ]
+      },
+      {
+        "id": "icf_data engineering_20260219024851_1",
+        "type": "TECHNOLOGY_ADOPTED",
+        "subtype": null,
+        "confidence": 0.52,
+        "evidence_count": 1,
+        "first_seen": "2026-02-19T02:48:51.017306+00:00",
+        "entity_id": "icf",
+        "metadata": {
+          "hypothesis_id": "icf_python_data_processing_project",
+          "hypothesis_statement": "International Canoe Federation is preparing procurement related to Python Data Processing Project",
+          "hypothesis_category": "data engineering",
+          "decision": "WEAK_ACCEPT",
+          "confidence_delta": 0.02,
+          "justification": "The document is an active RFP for an OTT platform development project, which indicates procurement readiness. However, while the project involves data analytics objectives and potentially Python-based data processing, it is not specifically a Python Data Processing Project as hypothesized. The procurement is focused on OTT technology rather than data engineering infrastructure.",
+          "hop_type": "rfp_page",
+          "source_url": "https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf",
+          "entity_name": "International Canoe Federation",
+          "yp_service_fit": [],
+          "budget_range": "",
+          "positioning_strategy": ""
+        },
+        "evidence": [
+          {
+            "id": "icf_data engineering_20260219024851_1_evidence_0",
+            "source": "https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf",
+            "url": "https://www.canoeicf.com/sites/default/files/rfp_-_icf_ott_platform_2026.pdf",
+            "content": "REQUEST FOR PROPOSAL (RFP): ICF OTT Platform Development... Date of Issue: 1st December 2025. Deadline for Submissions: 13th January 2026",
+            "confidence": 0.52,
+            "collected_at": "2026-02-19T02:48:51.017299+00:00"
+          }
+        ]
+      }
+    ],
+    "total_cost_usd": 0.002,
+    "hops_executed": {
+      "1": 1,
+      "2": 1
+    },
+    "confidence_progression": [],
+    "decisions": []
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery\n\nEntity: International Canoe Federation\nTemplate: yellow_panther_agency\nIterations: 2\nMax Depth: 3\n\nFinal Confidence: 0.52\nTotal Cost: $0.0020\n\nValidated Signals: 2\nRaw Signal Objects: 2\n\n  - TECHNOLOGY_ADOPTED: 0.56\n  - TECHNOLOGY_ADOPTED: 0.52\n\nHypotheses Generated: 10\n\nDepth Statistics:\n  Depth 1: 1 iterations\n  Depth 2: 1 iterations\n",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for International Canoe Federation (max 10 iterations)...",
+    "Discovery completed: 2 iterations",
+    "Hypothesis-driven discovery completed successfully"
+  ],
+  "metrics": {
+    "final_confidence": 0.52,
+    "iterations": 2,
+    "signals_validated": 2,
+    "total_cost_usd": 0.002
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "step_number": 2,
+  "step_name": "Hypothesis-Driven Discovery",
+  "entity_id": "fulham-fc",
+  "entity_name": "Fulham FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-17T14:21:32.741757+00:00",
+  "completed_at": "2026-02-17T14:22:40.662558+00:00",
+  "duration_ms": 67920,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "fulham-fc",
+    "entity_name": "Fulham FC",
+    "entity_type": "SPORT_CLUB",
+    "hypotheses_count": 7,
+    "max_iterations": 2
+  },
+  "output_data": {
+    "final_confidence": 0.7205953357655588,
+    "iteration_count": 2,
+    "validated_signals": [
+      {
+        "id": "sim_signal_0",
+        "type": "RFP_DETECTED",
+        "subtype": "GENERAL",
+        "confidence": 0.6833425624454821,
+        "evidence_count": 4,
+        "first_seen": "2026-02-17T14:22:40.662506+00:00"
+      },
+      {
+        "id": "sim_signal_1",
+        "type": "CRM_ANALYTICS",
+        "subtype": "GENERAL",
+        "confidence": 0.7122789305337933,
+        "evidence_count": 5,
+        "first_seen": "2026-02-17T14:22:40.662518+00:00"
+      },
+      {
+        "id": "sim_signal_2",
+        "type": "PRESS_RELEASE",
+        "subtype": "GENERAL",
+        "confidence": 0.7166838785014793,
+        "evidence_count": 7,
+        "first_seen": "2026-02-17T14:22:40.662521+00:00"
+      }
+    ],
+    "total_cost_usd": 0.03,
+    "hops_executed": [
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      },
+      {
+        "hop_type": "OFFICIAL_SITE",
+        "url": "https://example.com"
+      }
+    ],
+    "confidence_progression": [
+      0.5,
+      0.56,
+      0.54
+    ],
+    "decisions": [
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.56
+      },
+      {
+        "decision": "ACCEPT",
+        "confidence_after": 0.54
+      }
+    ]
+  },
+  "details": "Step 2: Hypothesis-Driven Discovery (SIMULATED MODE)\n\nEntity: Fulham FC\nTemplate: tier_1_club_centralized_procurement\nIterations: 2\nMax Depth: 3\n\n\u26a0\ufe0f NOTE: This is SIMULATED data. Real discovery requires:\n   - ANTHROPIC_API_KEY environment variable\n   - BRIGHTDATA_API_TOKEN environment variable\n   - FalkorDB/Neo4j database connection\n\nFinal Confidence: 0.72\nTotal Cost: $0.0300\n\nValidated Signals: 3\n\n  - RFP_DETECTED: 0.68\n  - CRM_ANALYTICS: 0.71\n  - PRESS_RELEASE: 0.72\n\nConfidence Progression:\n  0.50 \u2192 0.56 \u2192 0.54",
+  "logs": [
+    "Importing hypothesis_driven_discovery module...",
+    "Initializing HypothesisDrivenDiscovery...",
+    "Running discovery for Fulham FC (max 2 iterations)...",
+    "Discovery execution error: 'DiscoveryResult' object has no attribute 'iteration_count' - falling back to simulated mode",
+    "Running in SIMULATED mode (mock data)",
+    "Simulated hypothesis-driven discovery completed"
+  ],
+  "metrics": {
+    "final_confidence": 0.7205953357655588,
+    "iterations": 2,
+    "signals_validated": 3,
+    "total_cost_usd": 0.03
+  }
+}

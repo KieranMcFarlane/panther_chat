@@ -1,0 +1,30 @@
+{
+  "step_number": 1,
+  "step_name": "Question-First Dossier",
+  "entity_id": "arsenal-fc",
+  "entity_name": "Arsenal FC",
+  "entity_type": "SPORT_CLUB",
+  "started_at": "2026-02-17T12:25:36.230628+00:00",
+  "completed_at": "2026-02-17T12:25:36.235722+00:00",
+  "duration_ms": 5,
+  "cost_usd": 0.0,
+  "status": "failed",
+  "input_data": {
+    "entity_id": "arsenal-fc",
+    "entity_name": "Arsenal FC",
+    "entity_type": "SPORT_CLUB"
+  },
+  "output_data": {},
+  "details": "Step 1 failed: 'QuestionTemplate' object has no attribute 'text'",
+  "logs": [
+    "Importing entity_type_dossier_questions module...",
+    "Generating questions for entity type: SPORT_CLUB",
+    "Generated 7 questions",
+    "Error: 'QuestionTemplate' object has no attribute 'text'"
+  ],
+  "metrics": {
+    "questions_generated": 0,
+    "hypotheses_created": 0,
+    "starting_confidence": 0.0
+  }
+}

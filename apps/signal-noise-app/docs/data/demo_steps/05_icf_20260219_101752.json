@@ -1,0 +1,38 @@
+{
+  "step_number": 5,
+  "step_name": "Narrative Builder",
+  "entity_id": "icf",
+  "entity_name": "International Canoe Federation",
+  "entity_type": "SPORT_FEDERATION",
+  "started_at": "2026-02-19T10:17:52.417683+00:00",
+  "completed_at": "2026-02-19T10:17:52.525231+00:00",
+  "duration_ms": 107,
+  "cost_usd": 0.0,
+  "status": "success",
+  "input_data": {
+    "entity_id": "icf",
+    "entity_name": "International Canoe Federation",
+    "entity_type": "SPORT_FEDERATION",
+    "max_tokens": 2000
+  },
+  "output_data": {
+    "narrative": "# Temporal Narrative (3 episodes: 2025-11-28T10:42:00+00:00 to 2026-02-19T09:04:08.205687+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...\n- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...\n- **2025-11-28** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...\n",
+    "episode_count": 3,
+    "total_episodes": 3,
+    "estimated_tokens": 123,
+    "truncated": false
+  },
+  "details": "Step 5: Narrative Builder\n\nEntity: International Canoe Federation\nEpisodes Available: 3\nEpisodes Included: 3\nEstimated Tokens: 123\nTruncated: False\n\nNarrative Preview (first 500 chars):\n# Temporal Narrative (3 episodes: 2025-11-28T10:42:00+00:00 to 2026-02-19T09:04:08.205687+00:00)\n\n## Other\n\n- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...\n- **2026-02-19** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...\n- **2025-11-28** (Unknown): Discovery run found 2 signal(s). Final confidence: 0.52. Signals: TECHNOLOGY_ADOPTED, TECHNOLOGY_...\n...\n",
+  "logs": [
+    "Fetching episodes for narrative building...",
+    "Retrieved 3 episodes",
+    "Narrative built: 123 tokens",
+    "Narrative builder completed successfully"
+  ],
+  "metrics": {
+    "episodes_available": 3,
+    "episodes_included": 3,
+    "estimated_tokens": 123,
+    "truncated": false
+  }
+}
