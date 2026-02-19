@@ -100,17 +100,21 @@ class HypothesisRepository:
         try:
             # Parse URI to get host and port
             import urllib.parse
-            parsed = urllib.parse.urlparse(self.uri.replace("rediss://", "http://"))
+            # Handle both redis:// and rediss:// (SSL)
+            uri_to_parse = self.uri.replace("redis://", "http://").replace("rediss://", "http://")
+            parsed = urllib.parse.urlparse(uri_to_parse)
             host = parsed.hostname or "localhost"
             port = parsed.port or 6379
 
             # Connect to FalkorDB
+            # Note: FalkorDB Cloud uses plain Redis protocol, not rediss:// (SSL)
+            # The URI format is misleading - it's redis:// not rediss://
             self.db = FalkorDB(
                 host=host,
                 port=port,
                 username=self.username,
                 password=self.password,
-                ssl=True  # Use SSL for rediss://
+                ssl=False  # FalkorDB Cloud uses plain Redis, not SSL
             )
 
             # Select graph
@@ -118,7 +122,7 @@ class HypothesisRepository:
 
             # Test connection
             result = self.graph.query("RETURN 1 AS test")
-            list(result)  # Consume result
+            result.result_set  # Consume result properly
 
             # Create indexes
             await self._create_indexes()
@@ -245,7 +249,8 @@ class HypothesisRepository:
             RETURN h
             """
 
-            self.graph.query(query, **data)
+            # falkordb expects dict params, not kwargs
+            self.graph.query(query, data)
 
             logger.debug(f"💾 Saved hypothesis: {hypothesis.hypothesis_id}")
             return True
@@ -276,8 +281,8 @@ class HypothesisRepository:
             MATCH (h:Hypothesis {hypothesis_id: $hypothesis_id})
             RETURN h
             """
-            result = self.graph.query(query, hypothesis_id=hypothesis_id)
-            records = list(result)
+            result = self.graph.query(query, {'hypothesis_id': hypothesis_id})
+            records = list(result.result_set)
 
             if records and len(records) > 0:
                 return self._record_to_hypothesis(records[0][0])
@@ -311,8 +316,8 @@ class HypothesisRepository:
             RETURN h
             ORDER BY h.created_at DESC
             """
-            result = self.graph.query(query, entity_id=entity_id)
-            records = list(result)
+            result = self.graph.query(query, {'entity_id': entity_id})
+            records = list(result.result_set)
 
             hypotheses = []
             for record in records:
@@ -351,16 +356,16 @@ class HypothesisRepository:
                 RETURN h
                 ORDER BY h.expected_information_gain DESC
                 """
-                result = self.graph.query(query, entity_id=entity_id, status=status)
+                result = self.graph.query(query, {'entity_id': entity_id, 'status': status})
             else:
                 query = """
                 MATCH (h:Hypothesis {status: $status})
                 RETURN h
                 ORDER BY h.expected_information_gain DESC
                 """
-                result = self.graph.query(query, status=status)
+                result = self.graph.query(query, {'status': status})
 
-            records = list(result)
+            records = list(result.result_set)
 
             hypotheses = []
             for record in records:
@@ -373,6 +378,146 @@ class HypothesisRepository:
         except Exception as e:
             logger.error(f"❌ Failed to get active hypotheses: {e}")
             return []
+
+    # -------------------------------------------------------------------------
+    # HypothesisState Persistence (Temporal Sports Procurement Prediction Engine)
+    # -------------------------------------------------------------------------
+
+    async def save_hypothesis_state(self, hypothesis_state) -> bool:
+        """
+        Save or update hypothesis state to FalkorDB
+
+        Args:
+            hypothesis_state: HypothesisState object with entity_id, category, scores
+
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            if not self._is_connected():
+                logger.warning("⚠️ FalkorDB not connected, cannot save hypothesis state")
+                return False
+
+            # Create unique state_id
+            state_id = f"{hypothesis_state.entity_id}_{hypothesis_state.category}_state"
+
+            query = """
+            MERGE (h:HypothesisState {state_id: $state_id})
+            SET h.entity_id = $entity_id,
+                h.category = $category,
+                h.maturity_score = $maturity_score,
+                h.activity_score = $activity_score,
+                h.state = $state,
+                h.last_updated = $last_updated
+            RETURN h
+            """
+
+            params = {
+                'state_id': state_id,
+                'entity_id': hypothesis_state.entity_id,
+                'category': hypothesis_state.category,
+                'maturity_score': hypothesis_state.maturity_score,
+                'activity_score': hypothesis_state.activity_score,
+                'state': hypothesis_state.state,
+                'last_updated': hypothesis_state.last_updated.isoformat()
+            }
+
+            result = self.graph.query(query, params)
+            return result.has_results()
+
+        except Exception as e:
+            logger.error(f"❌ Failed to save hypothesis state: {e}")
+            return False
+
+    async def get_hypothesis_state(self, entity_id: str, category: str) -> Optional[Any]:
+        """
+        Get hypothesis state for specific entity and category
+
+        Args:
+            entity_id: Entity identifier
+            category: Hypothesis category
+
+        Returns:
+            HypothesisState object or None if not found
+        """
+        try:
+            if not self._is_connected():
+                logger.warning("⚠️ FalkorDB not connected, cannot get hypothesis state")
+                return None
+
+            state_id = f"{entity_id}_{category}_state"
+
+            query = """
+            MATCH (h:HypothesisState {state_id: $state_id})
+            RETURN h
+            """
+
+            result = self.graph.query(query, {'state_id': state_id})
+            records = list(result.result_set)
+
+            if not records:
+                return None
+
+            record = records[0][0]
+            from backend.schemas import HypothesisState
+
+            return HypothesisState(
+                entity_id=record.get('entity_id'),
+                category=record.get('category'),
+                maturity_score=float(record.get('maturity_score', 0.0)),
+                activity_score=float(record.get('activity_score', 0.0)),
+                state=record.get('state', 'MONITOR'),
+                last_updated=datetime.fromisoformat(record.get('last_updated', datetime.now(timezone.utc).isoformat()))
+            )
+
+        except Exception as e:
+            logger.error(f"❌ Failed to get hypothesis state: {e}")
+            return None
+
+    async def get_all_hypothesis_states(self, entity_id: str) -> Dict[str, Any]:
+        """
+        Get all hypothesis states for an entity
+
+        Args:
+            entity_id: Entity identifier
+
+        Returns:
+            Dict mapping category -> HypothesisState
+        """
+        try:
+            if not self._is_connected():
+                logger.warning("⚠️ FalkorDB not connected, cannot get hypothesis states")
+                return {}
+
+            query = """
+            MATCH (h:HypothesisState {entity_id: $entity_id})
+            RETURN h
+            ORDER BY h.category
+            """
+
+            result = self.graph.query(query, {'entity_id': entity_id})
+            records = list(result.result_set)
+
+            from backend.schemas import HypothesisState
+
+            states = {}
+            for record in records:
+                r = record[0]
+                state = HypothesisState(
+                    entity_id=r.get('entity_id'),
+                    category=r.get('category'),
+                    maturity_score=float(r.get('maturity_score', 0.0)),
+                    activity_score=float(r.get('activity_score', 0.0)),
+                    state=r.get('state', 'MONITOR'),
+                    last_updated=datetime.fromisoformat(r.get('last_updated', datetime.now(timezone.utc).isoformat()))
+                )
+                states[state.category] = state
+
+            return states
+
+        except Exception as e:
+            logger.error(f"❌ Failed to get hypothesis states: {e}")
+            return {}
 
     # -------------------------------------------------------------------------
     # Cluster Pattern Persistence
@@ -423,14 +568,15 @@ class HypothesisRepository:
             """
             from datetime import datetime
 
-            self.graph.query(
-                query,
-                id=key,
-                cluster_id=cluster_id,
-                pattern_name=pattern_name,
-                frequency=frequency,
-                last_updated=datetime.now(timezone.utc).isoformat()
-            )
+            # falkordb expects dict params, not kwargs
+            params = {
+                'id': key,
+                'cluster_id': cluster_id,
+                'pattern_name': pattern_name,
+                'frequency': frequency,
+                'last_updated': datetime.now(timezone.utc).isoformat()
+            }
+            self.graph.query(query, params)
 
             logger.debug(f"💾 Updated cluster pattern: {cluster_id}/{pattern_name} = {frequency}")
             return True
@@ -459,8 +605,8 @@ class HypothesisRepository:
             MATCH (p:Pattern {cluster_id: $cluster_id})
             RETURN p.pattern_name AS pattern, p.frequency AS frequency
             """
-            result = self.graph.query(query, cluster_id=cluster_id)
-            records = list(result)
+            result = self.graph.query(query, {'cluster_id': cluster_id})
+            records = list(result.result_set)
 
             frequencies = {}
             for record in records:
@@ -488,8 +634,8 @@ class HypothesisRepository:
             MATCH (p:Pattern {id: $id})
             RETURN p.frequency AS frequency
             """
-            result = self.graph.query(query, id=key)
-            records = list(result)
+            result = self.graph.query(query, {'id': key})
+            records = list(result.result_set)
 
             if records and len(records) > 0:
                 freq = records[0][0]
