@@ -24,9 +24,9 @@ EXPLORATION VALIDATION API:
 - Confidence saturation detection (<0.01 gain over 10 iterations)
 
 Usage (Signal Validation):
-    from backend.ralph_loop import RalphLoop
-    from backend.claude_client import ClaudeClient
-    from backend.graphiti_service import GraphitiService
+    from ralph_loop import RalphLoop
+    from claude_client import ClaudeClient
+    from graphiti_service import GraphitiService
 
     claude = ClaudeClient()
     graphiti = GraphitiService()
@@ -39,7 +39,7 @@ Usage (Signal Validation):
         print(f"✅ Validated: {signal.id} (confidence: {signal.confidence})")
 
 Usage (API Server):
-    from backend.ralph_loop import start_ralph_loop_server
+    from ralph_loop import start_ralph_loop_server
 
     start_ralph_loop_server(host="0.0.0.0", port=8001)
 
@@ -69,7 +69,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 # Import schemas for type checking
-from backend.schemas import RalphDecisionType
+from schemas import RalphDecisionType, SignalClass
 
 # FastAPI imports
 from fastapi import FastAPI, HTTPException
@@ -97,6 +97,54 @@ class RalphLoopConfig:
     enable_confidence_validation: bool = True  # Feature flag for confidence validation
     max_confidence_adjustment: float = 0.15  # Max ± adjustment Claude can make
     confidence_review_threshold: float = 0.2  # Flag for manual review if adjustment > this
+
+
+# =============================================================================
+# SIGNAL CLASSIFICATION
+# =============================================================================
+
+def classify_signal(
+    decision: RalphDecisionType,
+    confidence: float,
+    source_domain: Optional[str] = None
+) -> Optional[SignalClass]:
+    """
+    Classify signals into tiers for predictive intelligence
+
+    Maps Ralph Loop decisions to signal classes:
+    - WEAK_ACCEPT → CAPABILITY: Early indicators (digital capability exists)
+    - ACCEPT + <0.75 confidence → PROCUREMENT_INDICATOR: Active evaluation
+    - ACCEPT + ≥0.75 confidence → VALIDATED_RFP: Confirmed RFP/tender
+    - ACCEPT + tender domain → VALIDATED_RFP: Official tender sources
+
+    Args:
+        decision: RalphDecisionType (ACCEPT, WEAK_ACCEPT, REJECT, etc.)
+        confidence: Signal confidence score (0.0-1.0)
+        source_domain: Optional source domain for tender detection
+
+    Returns:
+        SignalClass or None if decision doesn't map to a class
+    """
+    if decision == RalphDecisionType.WEAK_ACCEPT:
+        return SignalClass.CAPABILITY
+
+    if decision == RalphDecisionType.ACCEPT:
+        # High confidence signals are validated RFPs
+        if confidence >= 0.75:
+            return SignalClass.VALIDATED_RFP
+
+        # Tender/procurment domains are always validated RFPs
+        if source_domain:
+            domain_lower = source_domain.lower()
+            tender_keywords = ['tender', 'bidnet', 'rfp.', 'procurement', 'contract']
+            if any(keyword in domain_lower for keyword in tender_keywords):
+                return SignalClass.VALIDATED_RFP
+
+        # Default ACCEPT to PROCUREMENT_INDICATOR
+        return SignalClass.PROCUREMENT_INDICATOR
+
+    # REJECT, NO_PROGRESS, SATURATED don't classify
+    return None
 
 
 # =============================================================================
@@ -616,7 +664,7 @@ async def run_ralph_iteration_with_state(
     4. Detects category saturation for early stopping
     5. Enforces WEAK_ACCEPT guardrails
     """
-    from backend.schemas import (
+    from schemas import (
         RalphDecisionType,
         RalphIterationOutput,
         RalphState,
@@ -705,7 +753,7 @@ async def run_ralph_iteration_with_state(
     # For now, we create a placeholder entry for the confidence change
     # Full hypothesis tracking will be implemented in future iterations
     from datetime import datetime, timezone
-    from backend.schemas import BeliefLedgerEntry, HypothesisAction
+    from schemas import BeliefLedgerEntry, HypothesisAction
 
     if applied_delta != 0.0:
         # Create a belief ledger entry for this confidence change
@@ -807,7 +855,7 @@ class RalphLoop:
 
         Only signals that survive all 3 passes are returned.
         """
-        from backend.schemas import Signal
+        from schemas import Signal
 
         logger.info(f"🔁 Starting Ralph Loop for {entity_id} with {len(raw_signals)} raw signals")
 
@@ -880,7 +928,7 @@ class RalphLoop:
         - Confidence threshold
         - Basic data validation
         """
-        from backend.schemas import Signal, Evidence, SignalType
+        from schemas import Signal, Evidence, SignalType
 
         filtered = []
 
@@ -1372,8 +1420,8 @@ async def validate_with_ralph_loop(
     Returns:
         List of validated Signal objects
     """
-    from backend.claude_client import ClaudeClient
-    from backend.graphiti_service import GraphitiService
+    from claude_client import ClaudeClient
+    from graphiti_service import GraphitiService
 
     # Initialize clients if not provided
     if not claude_client:
@@ -1409,9 +1457,9 @@ if __name__ == "__main__":
         import asyncio
 
         async def test():
-            from backend.claude_client import ClaudeClient
-            from backend.graphiti_service import GraphitiService
-            from backend.schemas import SignalType
+            from claude_client import ClaudeClient
+            from graphiti_service import GraphitiService
+            from schemas import SignalType
 
             # Initialize
             claude = ClaudeClient()
