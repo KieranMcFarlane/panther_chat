@@ -423,7 +423,9 @@ class HypothesisRepository:
             }
 
             result = self.graph.query(query, params)
-            return result.has_results()
+            # Check if result has any records
+            records = list(result.result_set)
+            return len(records) > 0
 
         except Exception as e:
             logger.error(f"❌ Failed to save hypothesis state: {e}")
@@ -458,12 +460,21 @@ class HypothesisRepository:
             if not records:
                 return None
 
-            record = records[0][0]
+            # FalkorDB returns Node objects - access via .properties
+            node = records[0][0]
+            if hasattr(node, 'properties'):
+                record = node.properties
+            elif hasattr(node, '_properties'):
+                record = node._properties
+            else:
+                # Fallback: try to access as dict
+                record = dict(node) if hasattr(node, '__iter__') else {}
+
             from backend.schemas import HypothesisState
 
             return HypothesisState(
-                entity_id=record.get('entity_id'),
-                category=record.get('category'),
+                entity_id=record.get('entity_id', entity_id),
+                category=record.get('category', category),
                 maturity_score=float(record.get('maturity_score', 0.0)),
                 activity_score=float(record.get('activity_score', 0.0)),
                 state=record.get('state', 'MONITOR'),
@@ -502,10 +513,18 @@ class HypothesisRepository:
 
             states = {}
             for record in records:
-                r = record[0]
+                node = record[0]
+                # Handle FalkorDB Node objects
+                if hasattr(node, 'properties'):
+                    r = node.properties
+                elif hasattr(node, '_properties'):
+                    r = node._properties
+                else:
+                    r = dict(node) if hasattr(node, '__iter__') else {}
+
                 state = HypothesisState(
-                    entity_id=r.get('entity_id'),
-                    category=r.get('category'),
+                    entity_id=r.get('entity_id', entity_id),
+                    category=r.get('category', ''),
                     maturity_score=float(r.get('maturity_score', 0.0)),
                     activity_score=float(r.get('activity_score', 0.0)),
                     state=r.get('state', 'MONITOR'),
