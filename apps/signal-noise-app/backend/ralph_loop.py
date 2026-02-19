@@ -69,7 +69,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 # Import schemas for type checking
-from schemas import RalphDecisionType, SignalClass
+from schemas import RalphDecisionType, SignalClass, HypothesisState
 
 # FastAPI imports
 from fastapi import FastAPI, HTTPException
@@ -145,6 +145,66 @@ def classify_signal(
 
     # REJECT, NO_PROGRESS, SATURATED don't classify
     return None
+
+
+def recalculate_hypothesis_state(
+    entity_id: str,
+    category: str,
+    capability_signals: List[Dict[str, Any]],
+    procurement_indicators: List[Dict[str, Any]],
+    validated_rfps: List[Dict[str, Any]]
+) -> HypothesisState:
+    """
+    Recalculate hypothesis state from all signals
+
+    This is a critical architectural function: we aggregate at the hypothesis
+    level, NOT the signal level. All signals contribute to hypothesis-level scores.
+
+    Signal → Hypothesis mapping:
+    - CAPABILITY signals → increase maturity_score (digital capability)
+    - PROCUREMENT_INDICATOR → increase activity_score (evaluation activity)
+    - VALIDATED_RFP → set state = LIVE (confirmed procurement)
+
+    Args:
+        entity_id: Entity identifier
+        category: Hypothesis category (e.g., "CRM_UPGRADE", "ANALYTICS")
+        capability_signals: List of CAPABILITY-classified signals
+        procurement_indicators: List of PROCUREMENT_INDICATOR signals
+        validated_rfps: List of VALIDATED_RFP signals
+
+    Returns:
+        HypothesisState with calculated scores and state
+    """
+    # Calculate maturity score from CAPABILITY signals
+    # Each CAPABILITY signal contributes 0.15 to maturity
+    maturity_score = min(1.0, len(capability_signals) * 0.15)
+
+    # Calculate activity score from PROCUREMENT_INDICATOR signals
+    # Each indicator contributes 0.25 to activity
+    activity_score = min(1.0, len(procurement_indicators) * 0.25)
+
+    # Determine state based on scores and validated RFPs
+    if len(validated_rfps) >= 1:
+        # Validated RFP means LIVE procurement state
+        state = "LIVE"
+    elif activity_score >= 0.6:
+        # High activity means ENGAGE (sales should reach out)
+        state = "ENGAGE"
+    elif activity_score >= 0.4 or maturity_score >= 0.5:
+        # Moderate activity or high maturity means WARM (monitor closely)
+        state = "WARM"
+    else:
+        # Default monitoring state
+        state = "MONITOR"
+
+    return HypothesisState(
+        entity_id=entity_id,
+        category=category,
+        maturity_score=maturity_score,
+        activity_score=activity_score,
+        state=state,
+        last_updated=datetime.now(timezone.utc)
+    )
 
 
 # =============================================================================
