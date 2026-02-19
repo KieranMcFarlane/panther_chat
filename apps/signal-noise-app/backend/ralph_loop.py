@@ -897,29 +897,35 @@ class RalphLoop:
         self,
         raw_signals: List[Dict[str, Any]],
         entity_id: str
-    ) -> List['Signal']:
+    ) -> Dict[str, Any]:
         """
-        Ralph Loop validation pipeline
+        Ralph Loop validation pipeline with signal classification
 
         Args:
             raw_signals: List of raw signal data from scrapers
             entity_id: Entity identifier for validation context
 
         Returns:
-            List of validated Signal objects (ready for Graphiti)
+            Dict with:
+            - validated_signals: List of validated Signal objects (PROCUREMENT_INDICATOR, VALIDATED_RFP)
+            - capability_signals: List of CAPABILITY signals (early indicators)
+            - hypothesis_states: Dict of category -> HypothesisState
 
         Process:
         1. Pass 1: Rule-based filtering (min evidence, basic checks)
         2. Pass 2: Claude validation (cross-check with existing signals)
         3. Pass 3: Final confirmation (confidence scoring, duplicate detection)
+        4. Classification: Separate into CAPABILITY / PROCUREMENT_INDICATOR / VALIDATED_RFP
+        5. State Recalculation: Calculate hypothesis-level states
 
-        Only signals that survive all 3 passes are returned.
+        Only signals that survive all 3 passes are classified and returned.
         """
         from schemas import Signal
 
         logger.info(f"🔁 Starting Ralph Loop for {entity_id} with {len(raw_signals)} raw signals")
 
         validated_signals = []
+        capability_signals = []  # NEW: Track CAPABILITY signals
         pass_results = {1: [], 2: [], 3: []}
 
         # Pass 1: Rule-based filtering
@@ -932,7 +938,11 @@ class RalphLoop:
 
         if not pass1_candidates:
             logger.warning(f"⚠️ No signals survived Pass 1 for {entity_id}")
-            return []
+            return {
+                "validated_signals": [],
+                "capability_signals": [],
+                "hypothesis_states": {}
+            }
 
         # Pass 2: Claude validation
         logger.info(f"🔁 Pass 2/3: Claude validation for {entity_id}")
@@ -944,7 +954,11 @@ class RalphLoop:
 
         if not pass2_candidates:
             logger.warning(f"⚠️ No signals survived Pass 2 for {entity_id}")
-            return []
+            return {
+                "validated_signals": [],
+                "capability_signals": [],
+                "hypothesis_states": {}
+            }
 
         # Pass 3: Final confirmation
         logger.info(f"🔁 Pass 3/3: Final confirmation for {entity_id}")
@@ -956,16 +970,51 @@ class RalphLoop:
 
         if not pass3_candidates:
             logger.warning(f"⚠️ No signals survived Pass 3 for {entity_id}")
-            return []
+            return {
+                "validated_signals": [],
+                "capability_signals": [],
+                "hypothesis_states": {}
+            }
 
         # Mark all surviving signals as validated
         for signal in pass3_candidates:
             signal.validated = True
             signal.validation_pass = 3
 
-        validated_signals = pass3_candidates
+        # NEW: Classify signals into tiers
+        logger.info(f"🏷️ Classifying {len(pass3_candidates)} signals")
+        capability_signals = []
+        procurement_indicators = []
+        validated_rfps = []
 
-        # Write only validated signals to Graphiti
+        for signal in pass3_candidates:
+            signal_class = classify_signal(
+                signal.decision if hasattr(signal, 'decision') else RalphDecisionType.ACCEPT,
+                signal.confidence,
+                signal.source_url if hasattr(signal, 'source_url') else None
+            )
+
+            if signal_class == SignalClass.CAPABILITY:
+                signal.signal_class = "CAPABILITY"
+                capability_signals.append(signal)
+            elif signal_class == SignalClass.PROCUREMENT_INDICATOR:
+                signal.signal_class = "PROCUREMENT_INDICATOR"
+                procurement_indicators.append(signal)
+            elif signal_class == SignalClass.VALIDATED_RFP:
+                signal.signal_class = "VALIDATED_RFP"
+                validated_rfps.append(signal)
+            else:
+                # Default to validated_signals for backward compatibility
+                signal.signal_class = "VALIDATED"
+                procurement_indicators.append(signal)
+
+        logger.info(f"   📊 Classification: {len(capability_signals)} CAPABILITY, "
+                   f"{len(procurement_indicators)} INDICATOR, {len(validated_rfps)} VALIDATED_RFP")
+
+        # Combine INDICATOR and RFP for validated_signals (backward compatible)
+        validated_signals = procurement_indicators + validated_rfps
+
+        # Write validated signals to Graphiti
         logger.info(f"💾 Writing {len(validated_signals)} validated signals to Graphiti")
         for signal in validated_signals:
             try:
@@ -974,9 +1023,36 @@ class RalphLoop:
             except Exception as e:
                 logger.error(f"   ❌ Failed to write signal {signal.id}: {e}")
 
-        logger.info(f"✅ Ralph Loop complete: {len(validated_signals)}/{len(raw_signals)} signals validated")
+        # NEW: Recalculate hypothesis states by category
+        hypothesis_states = {}
+        categories = set(s.subtype for s in validated_signals if hasattr(s, 'subtype'))
 
-        return validated_signals
+        for category in categories:
+            # Get signals for this category
+            cat_capability = [s for s in capability_signals if hasattr(s, 'subtype') and s.subtype == category]
+            cat_indicators = [s for s in procurement_indicators if hasattr(s, 'subtype') and s.subtype == category]
+            cat_rfps = [s for s in validated_rfps if hasattr(s, 'subtype') and s.subtype == category]
+
+            # Calculate hypothesis state
+            hypothesis_states[category] = recalculate_hypothesis_state(
+                entity_id=entity_id,
+                category=category,
+                capability_signals=[s.__dict__ for s in cat_capability],
+                procurement_indicators=[s.__dict__ for s in cat_indicators],
+                validated_rfps=[s.__dict__ for s in cat_rfps]
+            )
+
+            logger.info(f"   📈 Category {category}: maturity={hypothesis_states[category].maturity_score:.2f}, "
+                       f"activity={hypothesis_states[category].activity_score:.2f}, "
+                       f"state={hypothesis_states[category].state}")
+
+        logger.info(f"✅ Ralph Loop complete: {len(validated_signals)} validated, {len(capability_signals)} capability signals")
+
+        return {
+            "validated_signals": validated_signals,
+            "capability_signals": capability_signals,
+            "hypothesis_states": hypothesis_states
+        }
 
     async def _pass1_filter(self, raw_signals: List[Dict]) -> List['Signal']:
         """
