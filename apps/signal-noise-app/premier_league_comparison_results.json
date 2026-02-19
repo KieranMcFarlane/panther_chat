@@ -1,0 +1,72 @@
+{
+  "timestamp": "2026-02-19T16:26:12.298187+00:00",
+  "clubs": {
+    "chelsea-fc": {
+      "entity_name": "Chelsea FC",
+      "total_signals": 18,
+      "capability_count": 0,
+      "procurement_indicator_count": 18,
+      "validated_rfp_count": 0,
+      "hypothesis_states": {
+        "CRM_UPGRADE": {
+          "maturity_score": 0.0,
+          "activity_score": 0.5,
+          "state": "WARM"
+        },
+        "TICKETING_SYSTEM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.5,
+          "state": "WARM"
+        }
+      }
+    },
+    "liverpool-fc": {
+      "entity_name": "Liverpool FC",
+      "total_signals": 18,
+      "capability_count": 0,
+      "procurement_indicator_count": 18,
+      "validated_rfp_count": 0,
+      "hypothesis_states": {
+        "CRM_UPGRADE": {
+          "maturity_score": 0.0,
+          "activity_score": 0.75,
+          "state": "ENGAGE"
+        },
+        "ANALYTICS_PLATFORM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.75,
+          "state": "ENGAGE"
+        },
+        "TICKETING_SYSTEM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.5,
+          "state": "WARM"
+        }
+      }
+    },
+    "manchester-city-fc": {
+      "entity_name": "Manchester City FC",
+      "total_signals": 18,
+      "capability_count": 0,
+      "procurement_indicator_count": 18,
+      "validated_rfp_count": 0,
+      "hypothesis_states": {
+        "CRM_UPGRADE": {
+          "maturity_score": 0.0,
+          "activity_score": 0.5,
+          "state": "WARM"
+        },
+        "ANALYTICS_PLATFORM": {
+          "maturity_score": 0.0,
+          "activity_score": 1.0,
+          "state": "ENGAGE"
+        },
+        "TICKETING_SYSTEM": {
+          "maturity_score": 0.0,
+          "activity_score": 0.25,
+          "state": "MONITOR"
+        }
+      }
+    }
+  }
+}
