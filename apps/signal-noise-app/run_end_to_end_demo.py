@@ -40,6 +40,7 @@ from backend.brightdata_sdk_client import BrightDataSDKClient
 from backend.ralph_loop import classify_signal, recalculate_hypothesis_state
 from backend.schemas import RalphDecisionType
 from backend.hypothesis_persistence_native import get_hypothesis_repository
+from backend.dashboard_scorer import DashboardScorer, score_entities_batch
 
 
 # Premier League clubs for demo
@@ -480,6 +481,103 @@ def print_score_diagnostics(all_results: Dict[str, Dict]):
         print()
 
 
+async def print_dashboard_scores(all_results: Dict[str, Dict]):
+    """Print Phase 4 Dashboard Scoring results"""
+    print("\n" + "="*70)
+    print("PHASE 4: THREE-AXIS DASHBOARD SCORING")
+    print("="*70)
+
+    scorer = DashboardScorer()
+
+    # Convert demo results to format expected by DashboardScorer
+    entities_list = []
+    hypotheses_map = {}
+    episodes_map = {}
+
+    for entity_id, results in all_results.items():
+        entity_name = results['entity_name']
+        entities_list.append({'entity_id': entity_id, 'entity_name': entity_name})
+
+        # Build hypotheses from hypothesis_states
+        hypotheses = []
+        for category, state_data in results['hypothesis_states'].items():
+            from backend.hypothesis_manager import Hypothesis
+            hypotheses.append(Hypothesis(
+                hypothesis_id=f"{entity_id}_{category}",
+                entity_id=entity_id,
+                category=category,
+                statement=f"{entity_name} {category} hypothesis",
+                prior_probability=0.5,
+                confidence=(state_data['maturity_score'] + state_data['activity_score']) / 2,
+                last_updated=datetime.now(timezone.utc) - timedelta(days=30),
+                status="ACTIVE"
+            ))
+        hypotheses_map[entity_id] = hypotheses
+
+        # Build episodes from classified signals
+        episodes = []
+        classified_signals = results.get('classified_signals', {})
+        for signal_class, signals in classified_signals.items():
+            for i, signal in enumerate(signals[:5]):  # Limit to 5 per class for demo
+                # Use URL hash as unique ID since signals don't have 'id' field
+                import hashlib
+                url_hash = hashlib.md5(signal.get('url', '').encode()).hexdigest()[:8]
+                episodes.append({
+                    'episode_id': f"{entity_id}_{signal_class}_{url_hash}",
+                    'entity_id': entity_id,
+                    'episode_type': signal_class,
+                    'description': signal.get('title', ''),
+                    'timestamp': signal.get('collected_at', datetime.now(timezone.utc)).isoformat(),
+                    'confidence_score': signal.get('confidence', 0.6)
+                })
+        episodes_map[entity_id] = episodes
+
+    # Batch score all entities
+    print("\n📊 Computing Three-Axis Scores...")
+    dashboard_results = await score_entities_batch(
+        entities=entities_list,
+        hypotheses_map=hypotheses_map,
+        episodes_map=episodes_map
+    )
+
+    # Display results
+    print(f"\n{'Entity':<20} {'Maturity':<10} {'Probability':<12} {'Readiness':<15} {'Confidence'}")
+    print("-" * 70)
+
+    for result in dashboard_results:
+        maturity = result['procurement_maturity']
+        probability = result['active_probability'] * 100
+        readiness = result['sales_readiness']
+        confidence = result['confidence_interval']['confidence_level']
+
+        # Color code readiness
+        readiness_emoji = {
+            'LIVE': '🔥',
+            'HIGH_PRIORITY': '🚨',
+            'ENGAGE': '🤝',
+            'MONITOR': '👁️',
+            'NOT_READY': '❄️'
+        }.get(readiness, '❓')
+
+        print(f"{result['entity_name']:<20} {maturity:>6.1f}/100 {probability:>10.1f}% "
+              f"{readiness_emoji} {readiness:<10} {confidence*100:>5.0f}%")
+
+    # Print breakdown for each entity
+    print("\n" + "="*70)
+    print("DETAILED BREAKDOWN")
+    print("="*70)
+
+    for result in dashboard_results:
+        entity_name = result['entity_name']
+        print(f"\n{entity_name}:")
+        print(f"  Maturity Breakdown:")
+        for key, value in result['breakdown']['maturity'].items():
+            print(f"    {key}: {value}")
+        print(f"  Probability Breakdown:")
+        for key, value in result['breakdown']['probability'].items():
+            print(f"    {key}: {value}")
+
+
 async def main():
     """Run the end-to-end demo"""
     start_time = datetime.now(timezone.utc)
@@ -520,6 +618,9 @@ async def main():
 
     # Print score diagnostics
     print_score_diagnostics(all_results)
+
+    # Print Phase 4 Dashboard Scoring
+    await print_dashboard_scores(all_results)
 
     # Save results to file
     output_file = Path(__file__).parent / "end_to_end_demo_results.json"
