@@ -4,23 +4,36 @@ Expected Information Gain (EIG) Calculator
 
 Calculates EIG for hypothesis prioritization in Ralph Loop.
 
-EIG Formula:
-    EIG(h) = (1 - confidence_h) × novelty_h × information_value_h
+EIG Formula (Phase 3: Time-Weighted):
+    EIG(h) = (1 - confidence_h) × novelty_h × information_value_h × temporal_weight_h
 
 Where:
     - confidence_h: Current hypothesis confidence (0.0-1.0)
     - novelty_h: Pattern novelty score (0.0-1.0, from cluster dampening)
     - information_value_h: Category value multiplier (e.g., C-suite = 1.5, general = 1.0)
+    - temporal_weight_h: Time-based decay factor (0.01-1.0, recent hypotheses = higher)
+
+Temporal Weight Formula:
+    temporal_weight = exp(-λ × age_in_days)
+
+Where λ = 0.015 produces:
+    - 0 days old: ~100% weight (1.0)
+    - 7 days old: ~90% weight
+    - 30 days old: ~64% weight
+    - 60 days old: ~41% weight
+    - 90 days old: ~26% weight
+    - 365 days old: <1% weight
 
 Key Design Principles:
 - Higher EIG = higher priority for next hop
 - Uncertainty bonus (lower confidence = higher EIG)
 - Novelty decay (cluster dampening prevents over-counting)
 - Information value (category weights reflect business importance)
+- Temporal prioritization (recently updated hypotheses get priority)
 
 Usage:
-    from backend.eig_calculator import EIGCalculator
-    from backend.hypothesis_manager import HypothesisManager
+    from eig_calculator import EIGCalculator
+    from hypothesis_manager import HypothesisManager
 
     manager = HypothesisManager()
     hypotheses = await manager.initialize_hypotheses(template_id, entity_id, entity_name)
@@ -34,7 +47,8 @@ Usage:
 """
 
 import logging
-from datetime import datetime
+import math
+from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 
@@ -130,6 +144,37 @@ class ClusterState:
 
 
 # =============================================================================
+# Phase 6: EIG Configuration
+# =============================================================================
+
+@dataclass
+class EIGConfig:
+    """
+    Configuration for EIG calculation (Phase 6 parameter tuning)
+
+    Makes EIG calculator parameters configurable for optimization.
+    """
+    category_multipliers: Dict[str, float]
+    novelty_decay_factor: float = 1.0
+    information_value_default: float = 1.0
+    # Phase 3: Temporal decay settings
+    temporal_decay_lambda: float = 0.015  # Decay rate for temporal weighting
+    temporal_decay_enabled: bool = True    # Enable/disable temporal weighting
+    max_hypothesis_age_days: int = 365     # Maximum age before minimum weight
+
+    def __post_init__(self):
+        """Validate configuration"""
+        if not self.category_multipliers:
+            raise ValueError("category_multipliers cannot be empty")
+        if self.novelty_decay_factor < 0 or self.novelty_decay_factor > 2.0:
+            raise ValueError("novelty_decay_factor must be between 0.0 and 2.0")
+        if self.temporal_decay_lambda < 0 or self.temporal_decay_lambda > 0.1:
+            raise ValueError("temporal_decay_lambda must be between 0.0 and 0.1")
+        if self.max_hypothesis_age_days < 1:
+            raise ValueError("max_hypothesis_age_days must be positive")
+
+
+# =============================================================================
 # EIG Calculator
 # =============================================================================
 
@@ -141,24 +186,42 @@ class EIGCalculator:
     1. Uncertainty (1 - confidence)
     2. Novelty (cluster dampening)
     3. Information value (category weights)
+    4. Temporal weight (recency of last update - Phase 3)
     """
 
-    def __init__(self, category_multipliers: Dict[str, float] = None, repository=None):
+    def __init__(self, config: EIGConfig = None, repository=None):
         """
-        Initialize EIG calculator
+        Initialize EIG calculator with Phase 6 configuration support
 
         Args:
-            category_multipliers: Optional custom category value multipliers
+            config: Optional EIGConfig (creates default with CATEGORY_VALUE_MULTIPLIERS if None)
             repository: Optional HypothesisRepository for cluster state persistence
         """
-        self.category_multipliers = category_multipliers or CATEGORY_VALUE_MULTIPLIERS
+        # Create default config if not provided
+        if config is None:
+            config = EIGConfig(
+                category_multipliers=CATEGORY_VALUE_MULTIPLIERS.copy(),
+                novelty_decay_factor=1.0,
+                information_value_default=1.0,
+                temporal_decay_lambda=0.015,
+                temporal_decay_enabled=True,
+                max_hypothesis_age_days=365
+            )
+
+        self.config = config
+        self.category_multipliers = config.category_multipliers
+        self.novelty_decay_factor = config.novelty_decay_factor
+        self.information_value_default = config.information_value_default
+        self.temporal_decay_lambda = config.temporal_decay_lambda
+        self.temporal_decay_enabled = config.temporal_decay_enabled
+        self.max_hypothesis_age_days = config.max_hypothesis_age_days
         self._repository = repository
         self._cluster_states_cache: Dict[str, ClusterState] = {}
 
         # Lazy load repository if not provided
         if not self._repository:
             try:
-                from backend.hypothesis_persistence_native import HypothesisRepository
+                from hypothesis_persistence_native import HypothesisRepository
                 self._repository = HypothesisRepository()
                 logger.info("🧮 Using native FalkorDB repository for EIG calculator")
             except ImportError:
@@ -172,9 +235,9 @@ class EIGCalculator:
         cluster_state: ClusterState = None
     ) -> float:
         """
-        Calculate Expected Information Gain for hypothesis
+        Calculate Expected Information Gain for hypothesis (Phase 3: Time-Weighted)
 
-        EIG(h) = (1 - confidence_h) × novelty_h × information_value_h
+        EIG(h) = (1 - confidence_h) × novelty_h × information_value_h × temporal_weight_h
 
         Args:
             hypothesis: Hypothesis object
@@ -192,15 +255,19 @@ class EIGCalculator:
         # 3. Information value (category weight)
         information_value = self._get_information_value(hypothesis.category)
 
-        # Calculate EIG
-        eig = uncertainty * novelty * information_value
+        # 4. Temporal weight (recency bonus - Phase 3)
+        temporal_weight = self._calculate_temporal_weight(hypothesis)
+
+        # Calculate EIG with temporal weighting
+        eig = uncertainty * novelty * information_value * temporal_weight
 
         logger.debug(
             f"🧮 EIG for {hypothesis.hypothesis_id}: "
             f"{eig:.3f} = "
             f"{uncertainty:.2f} (uncertainty) × "
             f"{novelty:.2f} (novelty) × "
-            f"{information_value:.2f} (info_value)"
+            f"{information_value:.2f} (info_value) × "
+            f"{temporal_weight:.2f} (temporal)"
         )
 
         return eig
@@ -288,8 +355,69 @@ class EIGCalculator:
             if known_category.lower() in category.lower():
                 return multiplier
 
-        # Default to baseline
-        return 1.0
+        # Default to baseline from config
+        return self.information_value_default
+
+    def _calculate_temporal_weight(
+        self,
+        hypothesis
+    ) -> float:
+        """
+        Calculate temporal weight for hypothesis based on last update time (Phase 3)
+
+        Uses exponential decay: weight = exp(-λ × age_in_days)
+
+        This ensures recently updated hypotheses have higher EIG (priority),
+        while stale hypotheses get lower priority unless they have high uncertainty.
+
+        Args:
+            hypothesis: Hypothesis object
+
+        Returns:
+            Temporal weight (0.01 to 1.0)
+        """
+        # If temporal decay disabled, return max weight
+        if not self.temporal_decay_enabled:
+            return 1.0
+
+        # Get last updated timestamp
+        last_updated = hypothesis.last_updated
+        
+        # Handle both datetime objects and ISO strings
+        if isinstance(last_updated, str):
+            try:
+                if last_updated.endswith('Z'):
+                    last_updated = last_updated[:-1] + '+00:00'
+                last_updated = datetime.fromisoformat(last_updated)
+            except:
+                # If parsing fails, assume recent
+                logger.warning(f"Could not parse timestamp: {last_updated}")
+                return 1.0
+        
+        # Ensure we have timezone-aware datetime
+        if last_updated.tzinfo is None:
+            last_updated = last_updated.replace(tzinfo=timezone.utc)
+        
+        # Calculate age in days
+        now = datetime.now(timezone.utc)
+        age_days = (now - last_updated).total_seconds() / 86400  # Convert to days
+        
+        # Clamp age to maximum
+        age_days = min(age_days, self.max_hypothesis_age_days)
+        
+        # Calculate exponential decay
+        # weight = exp(-lambda × age)
+        decay = math.exp(-self.temporal_decay_lambda * age_days)
+        
+        # Clamp between 1% and 100%
+        temporal_weight = max(0.01, min(1.0, decay))
+        
+        logger.debug(
+            f"⏰ Temporal weight for {hypothesis.hypothesis_id}: "
+            f"{temporal_weight:.3f} (age: {age_days:.1f} days)"
+        )
+        
+        return temporal_weight
 
     def update_cluster_state(
         self,
@@ -427,7 +555,7 @@ if __name__ == "__main__":
     # Test EIG Calculator
     import asyncio
     from datetime import datetime, timezone
-    from backend.hypothesis_manager import Hypothesis
+    from hypothesis_manager import Hypothesis
 
     async def test():
         print("=== Testing EIGCalculator ===")

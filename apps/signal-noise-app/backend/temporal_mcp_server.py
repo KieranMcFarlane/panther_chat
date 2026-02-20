@@ -29,7 +29,7 @@ import sys
 import logging
 import asyncio
 import json
-from typing import Optional, Any, Dict
+from typing import Optional, Any, Dict, List
 from datetime import datetime
 
 # Add backend to path
@@ -629,6 +629,213 @@ async def cluster_episodes(
     }
 
 
+async def calculate_temporal_eig(
+    hypothesis_id: str,
+    entity_id: str,
+    confidence: float,
+    last_updated: str,
+    category: str = "General",
+    cluster_state_id: Optional[str] = None,
+    temporal_decay_lambda: float = 0.015,
+    temporal_decay_enabled: bool = True
+) -> Dict[str, Any]:
+    """
+    Calculate Time-Weighted Expected Information Gain (EIG) for a hypothesis
+
+    Phase 3 Enhancement: EIG includes temporal decay so recently updated
+    hypotheses get higher priority.
+
+    Formula:
+        EIG(h) = (1 - confidence) × novelty × information_value × temporal_weight
+
+    Where temporal_weight = exp(-λ × age_in_days)
+
+    Args:
+        hypothesis_id: Unique hypothesis identifier
+        entity_id: Entity being investigated
+        confidence: Current hypothesis confidence (0.0-1.0)
+        last_updated: ISO timestamp of last update
+        category: Hypothesis category (affects information value)
+        cluster_state_id: Optional cluster ID for novelty dampening
+        temporal_decay_lambda: Decay rate (default: 0.015)
+        temporal_decay_enabled: Enable/disable temporal weighting
+
+    Returns:
+        EIG score with breakdown of components
+    """
+    logger.info(f"Calculating temporal EIG for {hypothesis_id}")
+
+    from backend.eig_calculator import EIGCalculator, EIGConfig
+    from backend.hypothesis_manager import Hypothesis
+
+    # Create config
+    config = EIGConfig(
+        category_multipliers={
+            "C-Suite Hiring": 1.5,
+            "Executive Change": 1.5,
+            "Strategic Hire": 1.4,
+            "Digital Transformation": 1.3,
+            "AI Platform": 1.3,
+            "Data Analytics": 1.2,
+            "CRM Implementation": 1.2,
+            "Fan Engagement": 1.1,
+            "Ticketing System": 1.1,
+            "E-commerce": 1.1,
+            "Operations": 1.0,
+            "Infrastructure": 1.0,
+            "IT Modernization": 1.0,
+            "General": 1.0
+        },
+        temporal_decay_lambda=temporal_decay_lambda,
+        temporal_decay_enabled=temporal_decay_enabled
+    )
+
+    calculator = EIGCalculator(config)
+
+    # Create hypothesis object
+    hypothesis = Hypothesis(
+        hypothesis_id=hypothesis_id,
+        entity_id=entity_id,
+        category=category,
+        statement=f"Hypothesis {hypothesis_id}",
+        prior_probability=confidence,
+        confidence=confidence,
+        last_updated=last_updated
+    )
+
+    # Calculate components
+    uncertainty = 1.0 - confidence
+    novelty = calculator._calculate_novelty(hypothesis, None)
+    information_value = calculator._get_information_value(category)
+    temporal_weight = calculator._calculate_temporal_weight(hypothesis)
+    eig = calculator.calculate_eig(hypothesis)
+
+    return {
+        "hypothesis_id": hypothesis_id,
+        "entity_id": entity_id,
+        "eig_score": round(eig, 4),
+        "components": {
+            "uncertainty": round(uncertainty, 4),
+            "novelty": round(novelty, 4),
+            "information_value": round(information_value, 4),
+            "temporal_weight": round(temporal_weight, 4)
+        },
+        "age_days": round((datetime.now() - datetime.fromisoformat(
+            last_updated.replace('Z', '+00:00') if last_updated.endswith('Z') else last_updated
+        )).total_seconds() / 86400, 1),
+        "timestamp": datetime.now().isoformat()
+    }
+
+
+async def compare_hypothesis_priority(
+    hypotheses: List[Dict[str, Any]],
+    temporal_decay_lambda: float = 0.015,
+    temporal_decay_enabled: bool = True
+) -> Dict[str, Any]:
+    """
+    Compare multiple hypotheses by Time-Weighted EIG to determine priority
+
+    Useful for ranking which hypotheses to explore next, taking into account:
+    - Uncertainty (low confidence hypotheses prioritized)
+    - Novelty (rare patterns prioritized)
+    - Information value (high-value categories prioritized)
+    - Recency (recently updated hypotheses prioritized)
+
+    Args:
+        hypotheses: List of hypothesis dicts with keys:
+            - hypothesis_id: str
+            - entity_id: str
+            - confidence: float
+            - last_updated: str (ISO timestamp)
+            - category: str
+        temporal_decay_lambda: Decay rate for temporal weighting
+        temporal_decay_enabled: Enable/disable temporal weighting
+
+    Returns:
+        Ranked hypotheses with EIG scores and priority ranking
+    """
+    logger.info(f"Comparing priority for {len(hypotheses)} hypotheses")
+
+    from backend.eig_calculator import EIGCalculator, EIGConfig
+    from backend.hypothesis_manager import Hypothesis
+
+    # Create config
+    config = EIGConfig(
+        category_multipliers={
+            "C-Suite Hiring": 1.5,
+            "Executive Change": 1.5,
+            "Strategic Hire": 1.4,
+            "Digital Transformation": 1.3,
+            "AI Platform": 1.3,
+            "Data Analytics": 1.2,
+            "CRM Implementation": 1.2,
+            "Fan Engagement": 1.1,
+            "Ticketing System": 1.1,
+            "E-commerce": 1.1,
+            "Operations": 1.0,
+            "Infrastructure": 1.0,
+            "IT Modernization": 1.0,
+            "General": 1.0
+        },
+        temporal_decay_lambda=temporal_decay_lambda,
+        temporal_decay_enabled=temporal_decay_enabled
+    )
+
+    calculator = EIGCalculator(config)
+
+    results = []
+
+    for h_data in hypotheses:
+        # Create hypothesis object
+        hypothesis = Hypothesis(
+            hypothesis_id=h_data["hypothesis_id"],
+            entity_id=h_data["entity_id"],
+            category=h_data.get("category", "General"),
+            statement=f"Hypothesis {h_data['hypothesis_id']}",
+            prior_probability=h_data["confidence"],
+            confidence=h_data["confidence"],
+            last_updated=h_data["last_updated"]
+        )
+
+        # Calculate EIG
+        eig = calculator.calculate_eig(hypothesis)
+        temporal_weight = calculator._calculate_temporal_weight(hypothesis)
+
+        # Calculate age
+        last_updated = h_data["last_updated"]
+        if last_updated.endswith('Z'):
+            last_updated = last_updated[:-1] + '+00:00'
+        age_days = (datetime.now() - datetime.fromisoformat(last_updated)).total_seconds() / 86400
+
+        results.append({
+            "hypothesis_id": h_data["hypothesis_id"],
+            "entity_id": h_data["entity_id"],
+            "category": h_data.get("category", "General"),
+            "confidence": h_data["confidence"],
+            "age_days": round(age_days, 1),
+            "temporal_weight": round(temporal_weight, 4),
+            "eig_score": round(eig, 4)
+        })
+
+    # Sort by EIG (descending)
+    results.sort(key=lambda x: x["eig_score"], reverse=True)
+
+    # Add rank
+    for i, r in enumerate(results, 1):
+        r["rank"] = i
+
+    return {
+        "total_hypotheses": len(results),
+        "ranking": results,
+        "top_recommendation": results[0] if results else None,
+        "temporal_settings": {
+            "lambda": temporal_decay_lambda,
+            "enabled": temporal_decay_enabled
+        },
+        "timestamp": datetime.now().isoformat()
+    }
+
+
 # =============================================================================
 # MCP Server using stdio protocol
 # =============================================================================
@@ -978,6 +1185,87 @@ async def main():
                 },
                 "required": ["entity_id"]
             }
+        },
+        # Phase 3: Time-Weighted EIG Tools
+        "calculate_temporal_eig": {
+            "name": "calculate_temporal_eig",
+            "description": "Calculate Time-Weighted Expected Information Gain (EIG) for a hypothesis with temporal decay. Recently updated hypotheses get higher priority.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "hypothesis_id": {
+                        "type": "string",
+                        "description": "Unique hypothesis identifier"
+                    },
+                    "entity_id": {
+                        "type": "string",
+                        "description": "Entity being investigated"
+                    },
+                    "confidence": {
+                        "type": "number",
+                        "description": "Current hypothesis confidence (0.0-1.0)"
+                    },
+                    "last_updated": {
+                        "type": "string",
+                        "description": "ISO timestamp of last update"
+                    },
+                    "category": {
+                        "type": "string",
+                        "description": "Hypothesis category (affects information value)",
+                        "default": "General"
+                    },
+                    "cluster_state_id": {
+                        "type": "string",
+                        "description": "Optional cluster ID for novelty dampening"
+                    },
+                    "temporal_decay_lambda": {
+                        "type": "number",
+                        "description": "Decay rate (default: 0.015)",
+                        "default": 0.015
+                    },
+                    "temporal_decay_enabled": {
+                        "type": "boolean",
+                        "description": "Enable/disable temporal weighting",
+                        "default": True
+                    }
+                },
+                "required": ["hypothesis_id", "entity_id", "confidence", "last_updated"]
+            }
+        },
+        "compare_hypothesis_priority": {
+            "name": "compare_hypothesis_priority",
+            "description": "Compare multiple hypotheses by Time-Weighted EIG to determine exploration priority. Takes into account uncertainty, novelty, information value, and recency.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "hypotheses": {
+                        "type": "array",
+                        "description": "List of hypotheses to compare",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "hypothesis_id": {"type": "string"},
+                                "entity_id": {"type": "string"},
+                                "confidence": {"type": "number"},
+                                "last_updated": {"type": "string"},
+                                "category": {"type": "string", "default": "General"}
+                            },
+                            "required": ["hypothesis_id", "entity_id", "confidence", "last_updated"]
+                        }
+                    },
+                    "temporal_decay_lambda": {
+                        "type": "number",
+                        "description": "Decay rate (default: 0.015)",
+                        "default": 0.015
+                    },
+                    "temporal_decay_enabled": {
+                        "type": "boolean",
+                        "description": "Enable/disable temporal weighting",
+                        "default": True
+                    }
+                },
+                "required": ["hypotheses"]
+            }
         }
     }
 
@@ -995,8 +1283,14 @@ async def main():
         "build_temporal_narrative": build_temporal_narrative,
         # Phase 2: Episode clustering tools
         "get_clustered_timeline": get_clustered_timeline,
-        "cluster_episodes": cluster_episodes
+        "cluster_episodes": cluster_episodes,
+        # Phase 3: Time-Weighted EIG tools
+        "calculate_temporal_eig": calculate_temporal_eig,
+        "compare_hypothesis_priority": compare_hypothesis_priority
     }
+
+    # Read from stdin, write to stdout
+    import sys
 
     # Read from stdin, write to stdout
     import sys

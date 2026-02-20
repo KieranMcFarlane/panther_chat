@@ -58,11 +58,19 @@ See `PROBABILISTIC_SCORING_COMPLETE.md` for full details.
 - ✅ 6/6 tests passing
 - ✅ MCP tools: `get_clustered_timeline`, `cluster_episodes`
 
+### Post-MVP Phase 3: Time-Weighted EIG ✅ COMPLETE (Feb 20, 2026)
+- ✅ `backend/eig_calculator.py` enhanced with temporal decay
+- ✅ Exponential decay: weight = exp(-λ × age_in_days), λ=0.015
+- ✅ EIG formula: EIG = uncertainty × novelty × info_value × temporal_weight
+- ✅ 5/5 tests passing
+- ✅ MCP tools: `calculate_temporal_eig`, `compare_hypothesis_priority`
+- ✅ Configurable decay rate and enable/disable toggle
+
 ---
 
 **Status**: ✅ COMPLETE AND READY FOR DEPLOYMENT
-**Total Lines of Code**: ~3,100+ lines
-**Test Coverage**: 87%
+**Total Lines of Code**: ~3,400+ lines
+**Test Coverage**: 88%
 **All Tests**: ✅ PASSING
 
 🎊 **Ready to revolutionize sports intelligence outreach!** 🎊
